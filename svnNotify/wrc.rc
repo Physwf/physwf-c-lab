@@ -1,0 +1,19 @@
+#include "resource.h"
+
+#pragma code_page(936)
+
+IDI_SVNNOTIFY_ON 		ICON	"res\\online.ico"
+IDI_SVNNOTIFY_OFF 		ICON	"res\\offline.ico"
+IDI_SVNNOTIFY_LOGIN_1 	ICON	"res\\connect-1.ico"
+IDI_SVNNOTIFY_LOGIN_2 	ICON	"res\\connect-2.ico"
+IDI_SVNNOTIFY_LOGIN_3 	ICON	"res\\connect-3.ico"
+
+IDR_POPUP_MENU MENU
+BEGIN
+	POPUP "POPUP"
+	BEGIN	
+		MENUITEM "Hide", IDM_HIDE
+		MENUITEM "Exit", IDM_EXIT
+	END
+END
+	

@@ -1,0 +1,11 @@
+<NotepadPlus>
+    <Project name="mail">
+        <File name="SVNNotifySvr.cpp" />
+        <File name="iotest.cpp" />
+        <File name="wrc.rc" />
+        <File name="resource.h" />
+        <File name="svnNotify.cpp" />
+        <File name="SVNNotifySDK.cpp" />
+        <File name="svnNotifySDK.h" />
+    </Project>
+</NotepadPlus>
