@@ -30,9 +30,9 @@ public:
 		ioctlsocket(rawSocket, FIONBIO, &iMode);
 		if(initSock() == SOCKET_ERROR)
 		{
-			printf("bind error n");
+			printf("bind error\n");
 		}
-		printf("exe");
+		printf("exe\n");
 		return ;
 	}
 	 ~RCPServer()
@@ -55,9 +55,9 @@ public:
 			SOCKET clientSock = accept(rawSocket,(SOCKADDR*)&clientAddr,&clientAddrLen);
 			clientList[numCon] = clientSock;
 			hThreads[numCon] = CreateThread(NULL,0,ReceProc,(LPVOID) clientSock,0,&tIds[numCon]);
-			printf("new client");
+			printf("new client\n");
 			numCon++;
-			printf("%d num client total!!",numCon);
+			printf("%d num client total!!\n",numCon);
 		}
 		return 0;
 	}
@@ -207,13 +207,14 @@ SELECT * FROM USERS WHERE id = 50829;
 
 DWORD WINAPI ReceProc(LPVOID params)
 {
-	printf("new thread!");
+	printf("new thread!\n");
 	SOCKET client = (SOCKET)params;
 	
 	int RECE_BUFF_SIZE = 8192;
 	
 	LPVOID recevBuff = HeapAlloc(GetProcessHeap(),0,RECE_BUFF_SIZE);
 	LPVOID longBuff = HeapAlloc(GetProcessHeap(),0,RECE_BUFF_SIZE);
+	LPVOID msgBuff = HeapAlloc(GetProcessHeap(),0,RECE_BUFF_SIZE);
 	int len = 0;
 	int lenRecved;
 	do
@@ -221,18 +222,28 @@ DWORD WINAPI ReceProc(LPVOID params)
 		lenRecved = recv(client,(char*)recevBuff,RECE_BUFF_SIZE,0);
 		memcpy(longBuff,recevBuff,lenRecved);
 		len+=lenRecved;
-		longBuff = (char*)longBuff+len;
-		char mLen[4];
-		memcpy(mLen,recevBuff,4);
-		UINT *l = (UINT*)(mLen);
-		UINT x = *l;
+		//longBuff = (char*)longBuff+len;
+		char mLenData[4];
+		UINT midData[2];
 		if(len>=18)
 		{
+			memcpy(mLenData,longBuff,4);
+			longBuff = (char*)longBuff+4;
+			memcpy(midData,longBuff,2);
+			UINT *l = (UINT*)(mLenData);
+			UINT16 *m = (UINT16*)midData;
+			UINT x = *l;
+			UINT16 mid = *m;
 			printf("mLen:%u\n", ntohl(x));
-			printf("mLen:%u\n", x);
+			printf("mid:%u\n", ntohl(mid));
+			if(len>=x)
+			{
+				len -= x;
+				memcpy(msgBuff,recevBuff,x);
+			}
 		}
 		
-		printf("%dbytes recevied!",lenRecved);
+		printf("%dbytes recevied!\n",lenRecved);
 	}while(lenRecved>0);
 
 	
