@@ -6,11 +6,11 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	LPSTR sehllDir = "E:\\SkyDrive\\ÎÄµµ\\";
-	WIN32_FIND_DATA * findData = NULL;
+	LPSTR sehllDir = "E:\\physwf-flash-lab\\FbProj\\PswGame\\PswGame_Shell\\resource\\effects\\*.*";
+	WIN32_FIND_DATA findData;
 	HANDLE hFirstFile;
-
-	hFirstFile = FindFirstFile(sehllDir,findData);
+	UINT32 errorcode;
+	hFirstFile = FindFirstFile((LPCTSTR)sehllDir,&findData);
 	
 	if(!hFirstFile) return 0;
 
@@ -18,10 +18,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		do
 		{
-			printf("%s\t\t",findData->cFileName);
+			printf("%u\t\n",findData.ftCreationTime);
+			FindNextFile(hFirstFile,&findData);
+			errorcode=GetLastError();
+			printf("%u\t\n",errorcode);
+			printf("%u\t\n",ERROR_NO_MORE_FILES);
 		}
-		while(FindNextFile(hFirstFile,findData));
+		while(hFirstFile!=INVALID_HANDLE_VALUE && errorcode!=ERROR_NO_MORE_FILES);
 	}
+	getchar();
 	return 0;
 }
 
