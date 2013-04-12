@@ -25,6 +25,14 @@ int _tmain(int argc, _TCHAR* argv[])
 			printf("%u\t\n",ERROR_NO_MORE_FILES);
 		}
 		while(hFirstFile!=INVALID_HANDLE_VALUE && errorcode!=ERROR_NO_MORE_FILES);
+		if(errorcode == ERROR_NO_MORE_FILES)
+		{
+			printf("%s\t\n","检索结束");
+		}
+		if(hFirstFile == INVALID_HANDLE_VALUE)
+		{
+			printf("%s\t\n","无效的文件");
+		}
 	}
 	getchar();
 	return 0;
