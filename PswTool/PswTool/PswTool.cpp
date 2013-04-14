@@ -16,10 +16,10 @@ DWORD ListAllFiles(TCHAR* szDir)
 	HANDLE hFind;
 	TCHAR szFind[MAX_PATH];
 	TCHAR szFullPath[MAX_PATH];
-	_tprintf (TEXT("szDir:%s\n"), szDir);
+	//_tprintf (TEXT("szDir:%s\n"), szDir);
 	lstrcpy(szFind,szDir);  
     lstrcat(szFind,TEXT("\\*"));  
-	_tprintf (TEXT("szFind:%s\n"), szFind);
+	//_tprintf (TEXT("szFind:%s\n"), szFind);
 	hFind = FindFirstFile(szFind, &FindFileData);
 	UINT32 error = 0;
 	if (hFind == INVALID_HANDLE_VALUE) 
@@ -33,12 +33,12 @@ DWORD ListAllFiles(TCHAR* szDir)
 			;
 			if( lstrcmp(FindFileData.cFileName,TEXT(".")) == 0  || lstrcmp(FindFileData.cFileName,TEXT("..")) == 0 )
 			{
-				printf("<..>\n");
+				//printf("<..>\n");
 				continue;
 			}
 			wsprintf(szFullPath,TEXT("%s\\%s"),szDir,FindFileData.cFileName);
-			_tprintf (TEXT("FullPath:%s\n"), szFullPath);
-			_tprintf (TEXT("FileName:%s\n"), FindFileData.cFileName);
+			//_tprintf (TEXT("FullPath:%s\n"), szFullPath);
+			//_tprintf (TEXT("FileName:%s\n"), FindFileData.cFileName);
 			if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 			{
 				printf("<DIR>\n");
@@ -46,7 +46,8 @@ DWORD ListAllFiles(TCHAR* szDir)
 			}
 			else
 			{
-				_tprintf (TEXT("The first file found is %s\n"), FindFileData.cFileName);
+				_tprintf (TEXT("FullPath:%s\n"), szFullPath);
+				//_tprintf (TEXT("FileName:%s\n"), FindFileData.cFileName);
 			}
 
 			//error = GetLastError();
@@ -67,16 +68,17 @@ DWORD ListAllFiles(TCHAR* szDir)
 void _tmain(int argc, TCHAR *argv[])
 {
   
-   const char *shellDir = "F:\\physwf-flash-lab\\FbProj\\PswGame\\PswGame_Shell\\resource\\effects\\*";
-   TCHAR szPath[MAX_PATH];
-   CharToTchar(shellDir,szPath);
-   if( argc != 2 )
-   {
-      _tprintf(TEXT("Usage: %s [target_file]\n"), argv[0]);
-      return;
-   }
+	LPTSTR shellDir = TEXT("F:\\physwf-flash-lab\\FbProj\\PswGame\\PswGame_Shell\\resource");
+	TCHAR szPath[MAX_PATH];
 
-   _tprintf (TEXT("Target file is %s\n"), argv[1]);
+	if( argc != 2 )
+	{
+		_tprintf(TEXT("Usage: %s [target_file]\n"), argv[0]);
+		//return;
+	}
 
-   ListAllFiles(argv[1]);
+	_tprintf (TEXT("Target file is %s\n"), shellDir);
+	
+	ListAllFiles(shellDir);
+	//getchar();
 }
