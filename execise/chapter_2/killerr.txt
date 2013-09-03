@@ -1,0 +1,1 @@
+-bash: kill: HUM: invalid signal specification

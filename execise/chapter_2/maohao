@@ -1,0 +1,7 @@
+#!/bin/sh
+
+read value
+
+: ${var=value}
+
+echo $value

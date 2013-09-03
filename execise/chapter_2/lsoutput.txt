@@ -1,0 +1,5 @@
+total 0
+-rw-r--r-- 1 root root 0 Jul 23 15:52 lsoutput.txt
+  PID TTY          TIME CMD
+25023 pts/0    00:00:00 bash
+25047 pts/0    00:00:00 ps
