@@ -4,6 +4,7 @@
 struct {
 	int sockfd;
 	char buffer[1024];
+	int position;
 } _tcpsock;
 
 typedef tcpsock _tcpsock;
