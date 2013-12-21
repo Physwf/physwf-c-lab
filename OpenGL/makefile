@@ -3,7 +3,7 @@ LINK=link /DEBUG
 
 OpenGL.exe:OpenGL.obj
 	$(LINK) OpenGL.obj
-OpenGL.obj:OpenGL.c
-	$(CL) OpenGL.c
+OpenGL.obj:OpenGL.cpp
+	$(CL) OpenGL.cpp
 clean:
-	rm *.obj *.exe *.pdb *.idb *.manifest *.ilk  
+	del *.obj *.exe *.pdb *.idb *.manifest *.ilk  
