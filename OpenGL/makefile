@@ -1,6 +1,7 @@
 CL=cl /c
 LINK=link /DEBUG
-
+Run:OpenGL.exe
+	OpenGL.exe
 OpenGL.exe:OpenGL.obj
 	$(LINK) OpenGL.obj
 OpenGL.obj:OpenGL.cpp
