@@ -4,10 +4,14 @@
 void draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(1.0,0.0,0.0);
 	// glRectf(-0.5,-0.5,0.5,0.5);
 	// glRectf(100,100,200,200);
-	drawPoints();
+	// drawPoints();
+	// drawLines();
+	// drawLineStrip();
+	drawLineLoop();
+	// drawTriangles();
+	// drawTriangleStrip();
 	glFlush();
 }
 
