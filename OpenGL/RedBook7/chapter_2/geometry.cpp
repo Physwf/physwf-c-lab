@@ -9,9 +9,13 @@ void draw()
 	// drawPoints();
 	// drawLines();
 	// drawLineStrip();
-	drawLineLoop();
+	// drawLineLoop();
 	// drawTriangles();
 	// drawTriangleStrip();
+	// drawTriangleFan();
+	// drawQuads();
+	// drawQuadStrip();
+	drawPolygon();
 	glFlush();
 }
 

@@ -96,3 +96,61 @@ void drawTriangleStrip()
 		}
 	glEnd();
 }
+
+void drawTriangleFan()
+{
+	srand(time(NULL));
+	glBegin(GL_TRIANGLE_FAN);
+		for(int i=0;i<9;i++)
+		{
+			int x = rand_by_range(0,STAGE_WIDTH);
+			int y = rand_by_range(0,STAGE_HEIGHT);
+			glColor3f(random(),random(),random());
+			glVertex2i(x,y);
+		}
+	glEnd();
+}
+
+void drawQuads()
+{
+	srand(time(NULL));
+	glBegin(GL_QUADS);
+		for(int i=0;i<8;i++)
+		{
+			int x = rand_by_range(0,STAGE_WIDTH);
+			int y = rand_by_range(0,STAGE_HEIGHT);
+			glColor3f(random(),random(),random());
+			glVertex2i(x,y);
+		}
+	glEnd();
+}
+
+void drawQuadStrip()
+{
+	srand(time(NULL));
+	int vertex[] = {100,100,200,0,300,100,400,300,500,400};
+	glBegin(GL_QUAD_STRIP);
+		for(int i=0;i<5;i+=2)
+		{
+			int x = rand_by_range(0,STAGE_WIDTH);
+			int y = rand_by_range(0,STAGE_HEIGHT);
+			glColor3f(random(),random(),random());
+			glVertex2i(vertex[i],vertex[i+1]);
+		}
+	glEnd();
+}
+
+void drawPolygon()
+{
+	srand(time(NULL));
+	int vertex[] = {100,100,200,0,300,100,400,300,500,400};
+	glBegin(GL_POLYGON);
+		for(int i=0;i<10;i+=2)
+		{
+			// int x = rand_by_range(0,STAGE_WIDTH);
+			// int y = rand_by_range(0,STAGE_HEIGHT);
+			glColor3f(random(),random(),random());
+			glVertex2i(vertex[i],vertex[i+1]);
+		}
+	glEnd();
+}
