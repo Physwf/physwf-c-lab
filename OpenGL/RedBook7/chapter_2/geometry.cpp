@@ -6,7 +6,7 @@ void draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 	// glRectf(-0.5,-0.5,0.5,0.5);
 	// glRectf(100,100,200,200);
-	// drawPoints();
+	drawPoints();
 	// drawLines();
 	// drawLineStrip();
 	// drawLineLoop();
@@ -15,7 +15,7 @@ void draw()
 	// drawTriangleFan();
 	// drawQuads();
 	// drawQuadStrip();
-	drawPolygon();
+	// drawPolygon();
 	glFlush();
 }
 

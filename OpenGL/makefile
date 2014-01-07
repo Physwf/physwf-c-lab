@@ -24,11 +24,18 @@ triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
 	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp /Fo$(BIN)/triangles.obj
 
 
-rb7.c2:geometry.obj
+rb7.c2.geometry:geometry.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj /OUT:$(BIN)/geometry.exe
 geometry.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/geometry.cpp $(DIR_RB7)$(DIR_CHAPTER_2)/draw.cpp 
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/geometry.cpp /Fo$(BIN)/geometry.obj
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw.cpp /Fo$(BIN)/draw.obj
+	
+rb7.c2.geometry2:geometry.obj
+	$(LINK) $(BIN)/geometry2.obj $(BIN)/draw2.obj $(BIN)/random.obj /OUT:$(BIN)/geometry2.exe
+geometry.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/geometry.cpp $(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp 
+	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/geometry.cpp /Fo$(BIN)/geometry2.obj
+	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp /Fo$(BIN)/draw2.obj
+	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp /Fo$(BIN)/random.obj
 	
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  
