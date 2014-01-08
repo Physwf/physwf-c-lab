@@ -37,5 +37,10 @@ geometry.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/geometry.cpp $(DIR_RB7)$(DIR_CHAPTER_2)/
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp /Fo$(BIN)/draw2.obj
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp /Fo$(BIN)/random.obj
 	
+rb7.c2.botest:buffer_object_test.obj
+	$(LINK) $(BIN)/buffer_object_test.obj /OUT:$(BIN)/buffer_object_test.exe
+buffer_object_test.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/buffer_object_test.cpp
+	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/buffer_object_test.cpp /Fo$(BIN)/buffer_object_test.obj
+	
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  
