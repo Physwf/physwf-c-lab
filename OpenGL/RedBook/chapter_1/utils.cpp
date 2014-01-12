@@ -32,19 +32,14 @@ long t_read(const char* filename,char*** text)
 		if(*pc == '\n') pc++;
 	}
 	// printf("%d",numline);
-	**text = (char**)calloc(numline+1,sizeof(char*));
-	text[0] = buffer;
+	*text = (char**)calloc(numline+1,sizeof(char*));
+	*text[0] = buffer;
 	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
 	{
 		if(*pc == '\n') *pc++='\0';
-		if(pc != NULL) text[numline++] = pc;
+		if(pc != NULL) *text[numline++] = pc;
 	}
-	text[numline] = NULL;
-	while(*text)
-	{
-		printf("%d",strlen(*text));
-		printf("%s\n",*text++);
-	}
+	*text[numline] = NULL;
 	return length;
 }
 void t_print(const char* filename)
@@ -70,12 +65,11 @@ int main(int argc,char** argv)
 	// t_print("../RedBook/chapter_1/triangles.vert");
 	char **text=NULL;
 	long len = t_read("../RedBook/chapter_1/triangles.vert",&text);
-	printf("%s",text);
-	while(*text)
-	{
-		printf("%d",strlen(*text));
-		printf("%s\n",*text++);
-	}
+	// while(*text)
+	// {
+		// printf("%d",strlen(*text));
+		// printf("%s\n",*text++);
+	// }
 	getchar();
 	return 0;
 }
