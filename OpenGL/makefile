@@ -22,7 +22,13 @@ rb8.c1:triangles.obj
 	$(LINK) $(BIN)/triangles.obj /OUT:$(BIN)/triangles.exe
 triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
 	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp /Fo$(BIN)/triangles.obj
+	
+rb8.c1.utils:utils.obj
+	$(LINK) $(BIN)/utils.obj /OUT:$(BIN)/utils.exe
 
+utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp /Fo$(BIN)/utils.obj
+	
 rb7.c2.geometry:geometry.obj draw.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj /OUT:$(BIN)/geometry.exe
 
@@ -35,7 +41,7 @@ draw2.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp /Fo$(BIN)/draw2.obj
 random.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp 
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp /Fo$(BIN)/random.obj
-	
+
 rb7.c2.botest:buffer_object_test.obj
 	$(LINK) $(BIN)/buffer_object_test.obj /OUT:$(BIN)/buffer_object_test.exe
 buffer_object_test.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/buffer_object_test.cpp
