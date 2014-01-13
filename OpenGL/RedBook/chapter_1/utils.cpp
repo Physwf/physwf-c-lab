@@ -2,7 +2,7 @@
 
 long t_read(const char* filename,char*** text)
 {
-	long length;
+	long length=0;
 	char *buffer;
 	FILE *infile = fopen(filename,"r");
 	if(infile == NULL) 
@@ -14,7 +14,7 @@ long t_read(const char* filename,char*** text)
 	length = ftell(infile);
 	fseek(infile,0,SEEK_SET);
 	
-	// printf("%d",length);
+	printf("%d",length);
 	buffer = (char*)calloc(length,sizeof(char));
 	if(buffer == NULL)
 	{
@@ -31,15 +31,15 @@ long t_read(const char* filename,char*** text)
 	{
 		if(*pc == '\n') pc++;
 	}
-	// printf("%d",numline);
+	printf("%d",numline);
 	*text = (char**)calloc(numline+1,sizeof(char*));
 	*text[0] = buffer;
-	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
-	{
-		if(*pc == '\n') *pc++='\0';
-		if(pc != NULL) *text[numline++] = pc;
-	}
-	*text[numline] = NULL;
+	// for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
+	// {
+		// if(*pc == '\n') *pc++='\0';
+		// if(pc != NULL) *text[numline++] = pc;
+	// }
+	// *text[numline] = NULL;
 	return length;
 }
 void t_print(const char* filename)
@@ -60,16 +60,47 @@ void t_print(const char* filename)
 	};
 }
 
+void pointer_test(int ***px,char ***pc)
+{
+	int a = 13;
+	int b = 14;
+	*px = (int **)calloc(2,sizeof(int*));
+	*px[0] =&a;
+	*px[1] =&b;
+	printf("%d\n",***px++);
+	printf("%d\n",***px);
+	
+	char *c1 = "a1";
+	char *c2 = "b1";
+	*pc = (char **)calloc(4,sizeof(char*));
+	*pc[0] = c1;
+	*pc[1] = c2;
+	printf("%s\n",**pc++);
+	printf("%s\n",**pc);
+}
+
 int main(int argc,char** argv)
 {
-	// t_print("../RedBook/chapter_1/triangles.vert");
-	char **text=NULL;
+	char ** text;
 	long len = t_read("../RedBook/chapter_1/triangles.vert",&text);
-	// while(*text)
+	// while(**text)
 	// {
-		// printf("%d",strlen(*text));
-		// printf("%s\n",*text++);
+		// printf("%s\n",**text++);
 	// }
+	// int **x;
+	// char ** c;
+	// pointer_test(&x,&c);
+	// printf("%d\n",(**x++));
+	// printf("%d\n",**x);
+	
+	
+	// int **y = (int **)calloc(2,sizeof(int*));
+	// int a = 15;
+	// int b = 16;
+	// y[0] = &a;
+	// y[1] = &b;
+	// printf("%d",**y++);
+	// printf("%d",**y);
 	getchar();
 	return 0;
 }

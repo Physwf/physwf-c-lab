@@ -2,5 +2,5 @@
 #include <stdlib.h>
 #include <string.h>
 
-char** t_read(const char* filename);
+long t_read(const char* filename,char*** text);
 void t_print(const char* filename);
