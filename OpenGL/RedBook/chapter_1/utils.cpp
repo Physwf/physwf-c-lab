@@ -41,7 +41,7 @@ long t_read(const char* filename,char*** text)
 		if(pc != NULL) t[numline++] = pc;
 	}
 	t[numline] = NULL;
-	text = &t;
+	*text = t;
 	return length;
 }
 void t_print(const char* filename)
@@ -86,11 +86,11 @@ int main(int argc,char** argv)
 	char *a = "0";
 	char **text=&a;
 	long len = t_read("../RedBook/chapter_1/triangles.vert",&text);
-	printf("%s\n",text[0]);
-	// while(*text)
-	// {
-		// printf("%s\n",*text++);
-	// }
+	// printf("%s\n",text[0]);
+	while(*text)
+	{
+		printf("%s\n",*text++);
+	}
 	// int **x;
 	// char ** c;
 	// pointer_test(&x,&c);
