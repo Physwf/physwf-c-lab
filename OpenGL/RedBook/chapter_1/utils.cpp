@@ -14,7 +14,7 @@ long t_read(const char* filename,char*** text)
 	length = ftell(infile);
 	fseek(infile,0,SEEK_SET);
 	
-	printf("%d",length);
+	// printf("%d",length);
 	buffer = (char*)calloc(length,sizeof(char));
 	if(buffer == NULL)
 	{
@@ -32,14 +32,16 @@ long t_read(const char* filename,char*** text)
 		if(*pc == '\n') pc++;
 	}
 	printf("%d",numline);
-	*text = (char**)calloc(numline+1,sizeof(char*));
-	*text[0] = buffer;
-	// for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
-	// {
-		// if(*pc == '\n') *pc++='\0';
-		// if(pc != NULL) *text[numline++] = pc;
-	// }
-	// *text[numline] = NULL;
+	char ** t;
+	t = (char**)calloc(numline+1,sizeof(char*));
+	t[0] = buffer;
+	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
+	{
+		if(*pc == '\n') *pc++='\0';
+		if(pc != NULL) t[numline++] = pc;
+	}
+	t[numline] = NULL;
+	text = &t;
 	return length;
 }
 void t_print(const char* filename)
@@ -81,11 +83,13 @@ void pointer_test(int ***px,char ***pc)
 
 int main(int argc,char** argv)
 {
-	char ** text;
+	char *a = "0";
+	char **text=&a;
 	long len = t_read("../RedBook/chapter_1/triangles.vert",&text);
-	// while(**text)
+	printf("%s\n",text[0]);
+	// while(*text)
 	// {
-		// printf("%s\n",**text++);
+		// printf("%s\n",*text++);
 	// }
 	// int **x;
 	// char ** c;
