@@ -18,20 +18,20 @@ DIR_RB7=./RedBook7
 DIR_CHAPTER_1=/chapter_1
 DIR_CHAPTER_2=/chapter_2
 
-rb8.c1:triangles.obj
-	$(LINK) $(BIN)/triangles.obj /OUT:$(BIN)/triangles.exe
-triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp /Fo$(BIN)/triangles.obj
-	
 rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj /OUT:$(BIN)/utils.exe
 
+rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj
+	$(LINK) $(BIN)/triangles.obj LoadShaders.obj utils.obj /OUT:$(BIN)/triangles.exe
+triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp /Fo$(BIN)/triangles.obj
+LoadShaders.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp /Fo$(BIN)/LoadShaders.obj
 utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp /Fo$(BIN)/utils.obj
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp /Fo$(BIN)/utils.obj	
 	
 rb7.c2.geometry:geometry.obj draw.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj /OUT:$(BIN)/geometry.exe
-
 rb7.c2.geometry2:geometry2.obj draw2.obj random.obj
 	$(LINK) $(BIN)/geometry2.obj $(BIN)/draw2.obj $(BIN)/random.obj /OUT:$(BIN)/geometry2.exe
 	

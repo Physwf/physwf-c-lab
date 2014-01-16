@@ -81,7 +81,7 @@ void pointer_test(int ***px,char ***pc)
 	printf("%s\n",**pc);
 }
 
-int main(int argc,char** argv)
+int __main(int argc,char** argv)
 {
 	char *a = "0";
 	char **text=&a;
@@ -91,20 +91,6 @@ int main(int argc,char** argv)
 	{
 		printf("%s\n",*text++);
 	}
-	// int **x;
-	// char ** c;
-	// pointer_test(&x,&c);
-	// printf("%d\n",(**x++));
-	// printf("%d\n",**x);
-	
-	
-	// int **y = (int **)calloc(2,sizeof(int*));
-	// int a = 15;
-	// int b = 16;
-	// y[0] = &a;
-	// y[1] = &b;
-	// printf("%d",**y++);
-	// printf("%d",**y);
 	getchar();
 	return 0;
 }

@@ -2,6 +2,8 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
+#define BUFFER_OFFSET(bytes) ((GLubyte *) NULL + (bytes))
+
 #pragma comment(lib,"opengl32.lib")
 #pragma comment(lib,"glut32.lib")
 #pragma comment(lib,"glu32.lib")

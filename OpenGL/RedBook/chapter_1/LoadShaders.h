@@ -1,4 +1,4 @@
-#include "LoadShaders.h"
+#include "vgl.h"
 
 typedef struct {
 	GLenum type;

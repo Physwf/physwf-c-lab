@@ -1,4 +1,3 @@
-#include "vgl.h"
 #include "LoadShaders.h"
 
 enum VAO_IDs { Triangles,NumVAOs};
@@ -9,11 +8,6 @@ GLuint VAOs[NumVAOs];
 GLuint Buffers[NumBuffers];
 
 const GLuint NumVertices =6;
-
-int main(int argc,char *args[])
-{
-	
-}
 
 void init()
 {
@@ -31,7 +25,7 @@ void init()
 	
 	glGenBuffers(NumBuffers,Buffers);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[ArrayBuffer]);
-	glBufferData(GL_ARRAY_BIFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
 	
 	ShaderInfo shaders[] = {
 		{GL_VERTEX_SHADER,"triangles.vert"},
@@ -40,6 +34,7 @@ void init()
 	};
 	
 	GLuint program = LoadShaders(shaders);
+	if(program == 0) return;
 	glUseProgram(program);
 	
 	glVertexAttribPointer(vPosition,2,GL_FLOAT,GL_FALSE,0,BUFFER_OFFSET(0));
@@ -74,29 +69,4 @@ int main(int argc,char** argv)
 	glutDisplayFunc(&display);
 	glutMainLoop();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
