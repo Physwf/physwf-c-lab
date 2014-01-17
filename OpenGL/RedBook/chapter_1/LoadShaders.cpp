@@ -1,7 +1,7 @@
 #include "LoadShaders.h"
 #include "utils.h"
 
-GLuint LoadShaders(ShaderInfo shaders)
+GLuint LoadShaders(ShaderInfo* shaders)
 {
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);

@@ -5,4 +5,4 @@ typedef struct {
 	const char* fileName;
 } ShaderInfo;
 
-GLuint LoadShaders(ShaderInfo shaders);
+GLuint LoadShaders(ShaderInfo* shaders);

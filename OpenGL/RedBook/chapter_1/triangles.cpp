@@ -11,7 +11,7 @@ const GLuint NumVertices =6;
 
 void init()
 {
-	glGenVertexArray(NumVAOs,VAOs);
+	glGenVertexArrays(NumVAOs,VAOs);
 	glBindVertexArray(VAOs[Triangles]);
 	
 	GLfloat vertices[NumVertices][2] = {
@@ -54,10 +54,10 @@ void display()
 int main(int argc,char** argv)
 {
 	glutInit(&argc,argv);
-	gluiInitDisplayMode(GLUT_RGBA);
+	glutInitDisplayMode(GLUT_RGBA);
 	glutInitWindowSize(512,512);
 	glutInitWindowPosition(0,0);
-	glutInitCreateProfile(GLUT_CORE_PROFILE);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow("Triangles");
 	GLenum err = glewInit();
 	if(err!=GLEW_OK)
