@@ -1,8 +1,8 @@
 BIN=./bin
 DIR_HELLO=./HelloWorldßß
 
-ifeq ($(shell uname), cygwin)
-    CL=CL=cl /c 
+ifeq ($(shell uname), CYGWIN_NT-6.1)
+    CL=cl /c 
     LINK=link /DEBUG
     CLOUT=/Fo
     LINKOUT=/OUT:
@@ -13,6 +13,8 @@ else
     LINKOUT=-o
 endif
 
+checkos:
+	echo $(shell uname)
 
 HelloWorld:OpenGL.obj
 	$(LINK) $(BIN)/OpenGL.obj LINKOUT$(BIN)/OpenGL.exe
