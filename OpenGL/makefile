@@ -1,16 +1,16 @@
 BIN=./bin
 DIR_HELLO=./HelloWorldßß
 
-ifeq ($(shell uname), CYGWIN_NT-6.1)
-    CL=cl /c 
-    LINK=link /DEBUG
-    CLOUT=/Fo
-    LINKOUT=/OUT:
-else
+ifeq ($(shell uname), Darwin)
     CL=gcc -c
     LINK=gcc -g
     CLOUT=-o
     LINKOUT=-o
+else
+    CL=cl /c
+    LINK=link /DEBUG
+    CLOUT=/Fo
+    LINKOUT=/OUT:
 endif
 
 checkos:
