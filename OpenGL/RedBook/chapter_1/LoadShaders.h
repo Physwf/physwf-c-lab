@@ -2,7 +2,7 @@
 
 typedef struct {
 	GLenum type;
-	const char* fileName;
+	const char* filename;
 } ShaderInfo;
 
 GLuint LoadShaders(ShaderInfo* shaders);

@@ -36,12 +36,14 @@ rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj $(LINKOUT)$(BIN)/utils.exe
 	
 rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj
-	$(LINK) $(BIN)/triangles.obj LoadShaders.obj utils.obj $(LINKOUT)$(BIN)/triangles.exe
+	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles.exe
+	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(BIN)/triangles.vert
+	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.frag $(BIN)/triangles.frag
 triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
 	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp $(CLOUT)$(BIN)/triangles.obj $(OPTION)
 LoadShaders.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp
 	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj $(OPTION)
-utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp
+utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp 
 	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp $(CLOUT)$(BIN)/utils.obj $(OPTION)
 	
 rb7.c2.geometry:geometry.obj draw.obj

@@ -1,6 +1,6 @@
 #include "utils.h"
 
-long t_read(const char* filename,char*** text)
+long t_read(const char* filename,const char*** text)
 {
 	long length=0;
 	char *buffer;
@@ -32,8 +32,8 @@ long t_read(const char* filename,char*** text)
 		if(*pc == '\n') pc++;
 	}
 	printf("%d",numline);
-	char ** t;
-	t = (char**)calloc(numline+1,sizeof(char*));
+	const char ** t;
+	t = (const char**)calloc(numline+1,sizeof(char*));
 	t[0] = buffer;
 	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
 	{
@@ -83,8 +83,8 @@ void pointer_test(int ***px,char ***pc)
 
 int __main(int argc,char** argv)
 {
-	char *a = "0";
-	char **text=&a;
+	const char *a = "0";
+	const char **text=&a;
 	long len = t_read("../RedBook/chapter_1/triangles.vert",&text);
 	// printf("%s\n",text[0]);
 	while(*text)
