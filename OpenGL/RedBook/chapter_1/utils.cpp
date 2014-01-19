@@ -62,7 +62,7 @@ void t_print(const char* filename)
 	};
 }
 
-void pointer_test(int ***px,char ***pc)
+void pointer_test(int ***px,const char ***pc)
 {
 	int a = 13;
 	int b = 14;
@@ -72,9 +72,9 @@ void pointer_test(int ***px,char ***pc)
 	printf("%d\n",***px++);
 	printf("%d\n",***px);
 	
-	char *c1 = "a1";
-	char *c2 = "b1";
-	*pc = (char **)calloc(4,sizeof(char*));
+	const char *c1 = "a1";
+	const char *c2 = "b1";
+	*pc = (const char **)calloc(4,sizeof(char*));
 	*pc[0] = c1;
 	*pc[1] = c2;
 	printf("%s\n",**pc++);

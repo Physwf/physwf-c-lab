@@ -2,12 +2,13 @@ BIN=./bin
 DIR_HELLO=./HelloWorldßß
 
 ifeq ($(shell uname), Darwin)
-    CL=gcc -c
-    LINK=gcc -g
+    CL=g++ -c
+    LINK=g++ -g
     CLOUT=-o
     LINKOUT=-o
     LIBS= -framework OpenGL -framework GLUT
-    OPTION = -DMAC
+    OPTION = -DMAC -Wno-deprecated
+    OUTSUFFIX=
 else
     CL=cl /c
     LINK=link /DEBUG
@@ -36,15 +37,15 @@ rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj $(LINKOUT)$(BIN)/utils.exe
 	
 rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj
-	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles.exe
+	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(BIN)/triangles.vert
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.frag $(BIN)/triangles.frag
 triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp $(CLOUT)$(BIN)/triangles.obj $(OPTION)
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp $(CLOUT)$(BIN)/triangles.obj $(OPTION) $(LIBS)
 LoadShaders.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj $(OPTION)
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj $(OPTION) $(LIBS)
 utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp 
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp $(CLOUT)$(BIN)/utils.obj $(OPTION)
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp $(CLOUT)$(BIN)/utils.obj $(OPTION) $(LIBS)
 	
 rb7.c2.geometry:geometry.obj draw.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj $(LINKOUT)$(BIN)/geometry.exe
