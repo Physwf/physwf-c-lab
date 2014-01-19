@@ -7,14 +7,14 @@ GLuint LoadShaders(ShaderInfo* shaders)
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	char ** vSrc = t_read("triangles.vert");
 	char ** fSrc = t_read("triangles.frag");
-	glShaderSource(vShader,sizeof(**src));
-	glShaderSource(fShader,sizeof(**src));
+	glShaderSource(vShader,sizeof(**vSrc));
+	glShaderSource(fShader,sizeof(**fSrc));
 	glCompileShader(vShader);
 	glCompileShader(fShader);
 	GLsizei vInfoLen;
 	GLsizei fInfoLen;
 	char* vInfoLog = NULL;
-	char* fInfoLog = NULL
+	char* fInfoLog = NULL;
 	glGetShaderInfoLog(vShader,100,&vInfoLen,vInfoLog)
 	glGetShaderInfoLog(fShader,100,&fInfoLen,fInfoLog)
 	printf("Compile Vertex Shader:%s",vInfoLog);

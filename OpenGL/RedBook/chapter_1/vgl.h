@@ -1,6 +1,13 @@
 #include <iostream>
+
+#if defined(WIN)
 #include <GL/glew.h>
 #include <GL/glut.h>
+#endif
+
+#if defined(MAC)
+#include <GLUT/glut.h>
+#endif
 
 #define BUFFER_OFFSET(bytes) ((GLubyte *) NULL + (bytes))
 

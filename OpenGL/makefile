@@ -6,11 +6,15 @@ ifeq ($(shell uname), Darwin)
     LINK=gcc -g
     CLOUT=-o
     LINKOUT=-o
+    LIBS= -framework OpenGL -framework GLUT
+    OPTION = -DMAC
 else
     CL=cl /c
     LINK=link /DEBUG
     CLOUT=/Fo
     LINKOUT=/OUT:
+    LIBS=
+    OPTION = /DWIN
 endif
 
 checkos:
@@ -34,11 +38,11 @@ rb8.c1.utils:utils.obj
 rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj
 	$(LINK) $(BIN)/triangles.obj LoadShaders.obj utils.obj $(LINKOUT)$(BIN)/triangles.exe
 triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp $(CLOUT)$(BIN)/triangles.obj
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp $(CLOUT)$(BIN)/triangles.obj $(OPTION)
 LoadShaders.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj $(OPTION)
 utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp $(CLOUT)$(BIN)/utils.obj
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp $(CLOUT)$(BIN)/utils.obj $(OPTION)
 	
 rb7.c2.geometry:geometry.obj draw.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj $(LINKOUT)$(BIN)/geometry.exe

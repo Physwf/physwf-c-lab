@@ -11,8 +11,15 @@ const GLuint NumVertices =6;
 
 void init()
 {
+#if defined(WIN)
 	glGenVertexArrays(NumVAOs,VAOs);
-	glBindVertexArray(VAOs[Triangles]);
+    glBindVertexArray(VAOs[Triangles]);
+#endif
+#if defined(MAC)
+    glGenVertexArraysAPPLE(NumVAOs,VAOs);
+    glBindVertexArrayAPPLE(VAOs[Triangles]);
+#endif
+	
 	
 	GLfloat vertices[NumVertices][2] = {
 		{-0.90,-0.90},
@@ -44,8 +51,12 @@ void init()
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+#if defined(WIN)
 	glBindVertexArray(VAOs[Triangles]);
+#endif
+#if defined(MAC)
+    glBindVertexArrayAPPLE(VAOs[Triangles]);
+#endif
 	glDrawArrays(GL_TRIANGLES,0,NumVertices);
 	
 	glFlush();
@@ -57,14 +68,16 @@ int main(int argc,char** argv)
 	glutInitDisplayMode(GLUT_RGBA);
 	glutInitWindowSize(512,512);
 	glutInitWindowPosition(0,0);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
+	//glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow("Triangles");
+#if defined(WIN)
 	GLenum err = glewInit();
 	if(err!=GLEW_OK)
 	{
 		printf("Glew Init Error!");
 		return 1;
 	}
+#endif
 	init();
 	glutDisplayFunc(&display);
 	glutMainLoop();
