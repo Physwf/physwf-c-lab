@@ -1,4 +1,4 @@
-#version 330 core
+#version 120
 
 layout(location=0) in vec4 vPosition;
 

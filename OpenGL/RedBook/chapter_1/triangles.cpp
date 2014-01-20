@@ -36,8 +36,8 @@ void init()
 	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
 	
 	ShaderInfo shaders[] = {
-		{GL_VERTEX_SHADER,"triangles.vert"},
-		{GL_FRAGMENT_SHADER,"triangles.frag"},
+		{GL_VERTEX_SHADER,"./triangles.vert"},
+		{GL_FRAGMENT_SHADER,"./triangles.frag"},
 		{GL_NONE,NULL}
 	};
 	printf("init 2\n");

@@ -7,7 +7,7 @@ long t_read(const char* filename,const char*** text)
 	FILE *infile = fopen(filename,"r");
 	if(infile == NULL) 
 	{
-		printf("Can't open file:%s",filename);
+		printf("Can't open file:%s\n",filename);
 		return -1;
 	}
 	fseek(infile,0,SEEK_END);
@@ -18,7 +18,7 @@ long t_read(const char* filename,const char*** text)
 	buffer = (char*)calloc(length,sizeof(char));
 	if(buffer == NULL)
 	{
-		printf("Allocate memory error!");
+		printf("Allocate memory error!\n");
 		return -1;
 	}
 	fread(buffer,sizeof(char),length,infile);
@@ -37,7 +37,8 @@ long t_read(const char* filename,const char*** text)
 	t[0] = buffer;
 	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
 	{
-		if(*pc == '\n') *pc++='\0';
+		//if(*pc == '\n') *pc++='\0';
+        if(*pc == '\n') *pc++;
 		if(pc != NULL) t[numline++] = pc;
 	}
 	t[numline] = NULL;
