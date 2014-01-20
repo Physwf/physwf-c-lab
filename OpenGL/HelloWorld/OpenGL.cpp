@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-#include <GL/glut.h>
 #include "OpenGL.h"
 #include <stdio.h>
 
@@ -21,11 +19,13 @@ int main(int argc, char *argv[])
 	glClearColor(0.0,0.0,0.0,0.5);
 	const char* version =  (const char*)glGetString(GL_VERSION);
 	printf("OpenGL version %s\n",version);
+#if defined(WIN)
 	GLenum err = glewInit();
 	if(err != GLEW_OK)
 	{
 		printf("glew error");
 	}
+#endif
 	// const GLubyte *str = glGetString(GL_EXTENSIONS); 
 	// printf("%s",str);
     glutDisplayFunc(&myDisplay);

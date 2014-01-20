@@ -23,9 +23,9 @@ checkos:
 	echo $(shell uname)
 
 HelloWorld:OpenGL.obj
-	$(LINK) $(BIN)/OpenGL.obj LINKOUT$(BIN)/OpenGL.exe
+	$(LINK) $(BIN)/OpenGL.obj $(LINKOUT)$(BIN)/OpenGL$(OUTSUFFIX) $(LIBS)
 OpenGL.obj:$(DIR_HELLO)/OpenGL.cpp
-	$(CL) $(DIR_HELLO)/OpenGL.cpp $($(CLOUT))$(BIN)/OpenGL.obj
+	$(CL) $(DIR_HELLO)/OpenGL.cpp $(CLOUT)$(BIN)/OpenGL.obj $(OPTION)
 
 
 #RedBook chapter_1
