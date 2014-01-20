@@ -11,6 +11,7 @@ const GLuint NumVertices =6;
 
 void init()
 {
+	printf("init start\n");
 #if defined(WIN)
 	glGenVertexArrays(NumVAOs,VAOs);
     glBindVertexArray(VAOs[Triangles]);
@@ -39,7 +40,7 @@ void init()
 		{GL_FRAGMENT_SHADER,"triangles.frag"},
 		{GL_NONE,NULL}
 	};
-	
+	printf("init 2\n");
 	GLuint program = LoadShaders(shaders);
 	if(program == 0) return;
 	glUseProgram(program);

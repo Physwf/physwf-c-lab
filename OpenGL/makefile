@@ -1,5 +1,5 @@
 BIN=./bin
-DIR_HELLO=./HelloWorldßß
+DIR_HELLO=./HelloWorld
 
 ifeq ($(shell uname), Darwin)
     CL=g++ -c
@@ -16,6 +16,7 @@ else
     LINKOUT=/OUT:
     LIBS=
     OPTION = /DWIN
+	OUTSUFFIX = .exe
 endif
 
 checkos:
@@ -37,7 +38,7 @@ rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj $(LINKOUT)$(BIN)/utils.exe
 	
 rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj
-	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles
+	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(BIN)/triangles.vert
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.frag $(BIN)/triangles.frag
 triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
@@ -49,7 +50,6 @@ utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp
 	
 rb7.c2.geometry:geometry.obj draw.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj $(LINKOUT)$(BIN)/geometry.exe
-
 rb7.c2.geometry2:geometry2.obj draw2.obj random.obj
 	$(LINK) $(BIN)/geometry2.obj $(BIN)/draw2.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/geometry2.exe
 	
