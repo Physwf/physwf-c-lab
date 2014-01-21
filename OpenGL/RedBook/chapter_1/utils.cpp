@@ -1,8 +1,9 @@
 #include "utils.h"
 
-long t_read(const char* filename,const char*** text)
+int* t_read(const char* filename,const char*** text)
 {
-	long length=0;
+	int *lengths=NULL;
+	int size=0;
 	char *buffer;
 	FILE *infile = fopen(filename,"r");
 	if(infile == NULL) 
@@ -11,17 +12,17 @@ long t_read(const char* filename,const char*** text)
 		return -1;
 	}
 	fseek(infile,0,SEEK_END);
-	length = ftell(infile);
+	size = ftell(infile);
 	fseek(infile,0,SEEK_SET);
 	
-	// printf("%d",length);
-	buffer = (char*)calloc(length,sizeof(char));
+	// printf("%d",size);
+	buffer = (char*)calloc(size,sizeof(char));
 	if(buffer == NULL)
 	{
 		printf("Allocate memory error!\n");
 		return -1;
 	}
-	fread(buffer,sizeof(char),length,infile);
+	fread(buffer,sizeof(char),size,infile);
 	fclose(infile);
 	
 	// printf("%s",buffer);
@@ -32,18 +33,23 @@ long t_read(const char* filename,const char*** text)
 		if(*pc == '\n') pc++;
 	}
 	printf("%d",numline);
+	lengths = (int *)calloc(numline,sizeof(int*));
 	const char ** t;
 	t = (const char**)calloc(numline+1,sizeof(char*));
 	t[0] = buffer;
 	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
 	{
 		//if(*pc == '\n') *pc++='\0';
-        if(*pc == '\n') *pc++;
+        if(*pc == '\n') 
+		{
+			*lengths++=
+			pc++;
+		}
 		if(pc != NULL) t[numline++] = pc;
 	}
 	t[numline] = NULL;
 	*text = t;
-	return length;
+	return lengths;
 }
 void t_print(const char* filename)
 {
