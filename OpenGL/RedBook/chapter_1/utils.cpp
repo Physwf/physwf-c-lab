@@ -1,15 +1,14 @@
 #include "utils.h"
 
-int* t_read(const char* filename,const char*** text)
+int t_read(const char* filename,const char*** text,int** lengths)
 {
-	int *lengths=NULL;
 	int size=0;
 	char *buffer;
 	FILE *infile = fopen(filename,"r");
 	if(infile == NULL) 
 	{
 		printf("Can't open file:%s\n",filename);
-		return -1;
+		return 0;
 	}
 	fseek(infile,0,SEEK_END);
 	size = ftell(infile);
@@ -20,7 +19,7 @@ int* t_read(const char* filename,const char*** text)
 	if(buffer == NULL)
 	{
 		printf("Allocate memory error!\n");
-		return -1;
+		return 0;
 	}
 	fread(buffer,sizeof(char),size,infile);
 	fclose(infile);
@@ -32,24 +31,27 @@ int* t_read(const char* filename,const char*** text)
 	{
 		if(*pc == '\n') pc++;
 	}
-	printf("%d",numline);
-	lengths = (int *)calloc(numline,sizeof(int*));
+	printf("numline%d\n",numline);
+	*lengths = (int *)calloc(numline,sizeof(int*));
 	const char ** t;
 	t = (const char**)calloc(numline+1,sizeof(char*));
 	t[0] = buffer;
 	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
 	{
-		//if(*pc == '\n') *pc++='\0';
         if(*pc == '\n') 
 		{
-			*lengths++=
+			// *pc++='\0';
+			**lengths++= (pc - buffer);
 			pc++;
+			buffer = pc;
+			printf("length:%d\n",*(lengths-1));
 		}
 		if(pc != NULL) t[numline++] = pc;
 	}
 	t[numline] = NULL;
 	*text = t;
-	return lengths;
+	*lengths -= (numline-1);
+	return numline;
 }
 void t_print(const char* filename)
 {
@@ -69,35 +71,8 @@ void t_print(const char* filename)
 	};
 }
 
-void pointer_test(int ***px,const char ***pc)
-{
-	int a = 13;
-	int b = 14;
-	*px = (int **)calloc(2,sizeof(int*));
-	*px[0] =&a;
-	*px[1] =&b;
-	printf("%d\n",***px++);
-	printf("%d\n",***px);
-	
-	const char *c1 = "a1";
-	const char *c2 = "b1";
-	*pc = (const char **)calloc(4,sizeof(char*));
-	*pc[0] = c1;
-	*pc[1] = c2;
-	printf("%s\n",**pc++);
-	printf("%s\n",**pc);
-}
-
 int __main(int argc,char** argv)
 {
-	const char *a = "0";
-	const char **text=&a;
-	long len = t_read("../RedBook/chapter_1/triangles.vert",&text);
-	// printf("%s\n",text[0]);
-	while(*text)
-	{
-		printf("%s\n",*text++);
-	}
 	getchar();
 	return 0;
 }

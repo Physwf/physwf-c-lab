@@ -8,15 +8,19 @@ GLuint LoadShaders(ShaderInfo* shaders)
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	const char ** vSrc;
 	const char ** fSrc;
-	const GLint vLen = t_read(shaders[0].filename,&vSrc);
-	const GLint fLen = t_read(shaders[1].filename,&fSrc);
-    if (vLen < 0 || fLen < 0) {
-        printf("load shader failed!\n");
+	GLint *vLens = NULL;
+	GLint *fLens = NULL;
+	GLsizei vSize = t_read(shaders[0].filename,&vSrc,&vLens);
+	GLsizei fSize = t_read(shaders[1].filename,&fSrc,&fLens);
+    if (vSize == 0 || fSize == 0) {
+        if (vSize == 0) printf("load vertex shader failed!\n");
+		if (fSize == 0) printf("load fragment shader failed!\n");
         return 0;
     }
+
 	printf("read complete\n");
-	glShaderSource(vShader,sizeof(**vSrc),vSrc,&vLen);
-	glShaderSource(fShader,sizeof(**fSrc),fSrc,&fLen);
+	glShaderSource(vShader,vSize,vSrc,vLens);
+	glShaderSource(fShader,fSize,fSrc,fLens);
 	printf("start compile\n");
 	glCompileShader(vShader);
 	glCompileShader(fShader);
