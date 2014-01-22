@@ -41,16 +41,21 @@ int t_read(const char* filename,const char*** text,int** lengths)
         if(*pc == '\n') 
 		{
 			// *pc++='\0';
-			**lengths++= (pc - buffer);
-			pc++;
+			int length = pc - buffer;
+			*(lengths++)= &length;
+			*pc++='\0';
+			
+			// pc++;
 			buffer = pc;
-			printf("length:%d\n",*(lengths-1));
+			printf("length:%d\n",**(lengths-1));
 		}
 		if(pc != NULL) t[numline++] = pc;
 	}
 	t[numline] = NULL;
 	*text = t;
-	*lengths -= (numline-1);
+	printf("numline end%d\n",numline);
+	lengths -= (numline-1);
+	printf("---%d\n",**lengths);
 	return numline;
 }
 void t_print(const char* filename)

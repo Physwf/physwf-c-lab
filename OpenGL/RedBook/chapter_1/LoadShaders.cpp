@@ -60,7 +60,10 @@ GLuint LoadShaders(ShaderInfo* shaders)
 	printf("link program complete\n");
 	GLint param;
 	glGetProgramiv(program,GL_LINK_STATUS,&param);
-	
+	GLsizei infoLen;
+	char infoLog[100];
+	glGetProgramInfoLog(program,100,&infoLen,infoLog);
+	printf("Link program:%s\n",infoLog);
 	printf("glGetProgramiv complete\n");
 	if(param == GL_TRUE)
 	{
