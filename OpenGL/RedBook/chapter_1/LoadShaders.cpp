@@ -22,8 +22,9 @@ GLuint LoadShaders(ShaderInfo* shaders)
 	glShaderSource(vShader,vSize,vSrc,vLens);
 	glShaderSource(fShader,fSize,fSrc,fLens);
 	printf("start compile\n");
-	glCompileShader(vShader);
 	glCompileShader(fShader);
+	glCompileShader(vShader);
+	
     
 	GLint vStatus=1;
 	GLint fStatus=1;
@@ -53,26 +54,31 @@ GLuint LoadShaders(ShaderInfo* shaders)
 
 	printf("start create program\n");
 	GLuint program = glCreateProgram();
+	if(program == 0)
+	{
+		printf("Create Program Error!");
+		return 0;
+	}
 	glAttachShader(program,vShader);
 	glAttachShader(program,fShader);
 	printf("attach shader complete\n");
 	glLinkProgram(program);
 	printf("link program complete\n");
-	GLint param;
-	glGetProgramiv(program,GL_LINK_STATUS,&param);
+	GLint linked;
+	glGetProgramiv(program,GL_LINK_STATUS,&linked);
 	GLsizei infoLen;
 	char infoLog[100];
 	glGetProgramInfoLog(program,100,&infoLen,infoLog);
 	printf("Link program:%s\n",infoLog);
 	printf("glGetProgramiv complete\n");
-	if(param == GL_TRUE)
+	if(linked == GL_TRUE)
 	{
-		printf("Compile success!");
+		printf("Link success!");
 		return program;
 	}
 	else
 	{
-		printf("Compile failed!");
+		printf("Link failed!");
 		return 0;
 	}
 	

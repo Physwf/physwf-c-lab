@@ -31,7 +31,7 @@ int t_read(const char* filename,const char*** text,int** lengths)
 	{
 		if(*pc == '\n') pc++;
 	}
-	printf("numline%d\n",numline);
+	printf("%s numline:%d\n",filename,numline);
 	*lengths = (int *)calloc(numline,sizeof(int*));
 	const char ** t;
 	t = (const char**)calloc(numline+1,sizeof(char*));
@@ -54,8 +54,8 @@ int t_read(const char* filename,const char*** text,int** lengths)
 	t[numline] = NULL;
 	*text = t;
 	printf("numline end%d\n",numline);
-	lengths -= (numline-1);
-	printf("---%d\n",**lengths);
+	// lengths -= (numline-2);
+	// printf("---%d\n",**lengths);
 	return numline;
 }
 void t_print(const char* filename)
