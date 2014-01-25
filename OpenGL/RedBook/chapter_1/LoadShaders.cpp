@@ -10,14 +10,15 @@ GLuint LoadShaders(ShaderInfo* shaders)
 	const char ** fSrc;
 	GLint *vLens = NULL;
 	GLint *fLens = NULL;
-	GLsizei vSize = t_read(shaders[0].filename,&vSrc,&vLens);
-	GLsizei fSize = t_read(shaders[1].filename,&fSrc,&fLens);
+	int vSize = t_read(shaders[0].filename,&vSrc,&vLens);
+	int fSize = t_read(shaders[1].filename,&fSrc,&fLens);
     if (vSize == 0 || fSize == 0) {
         if (vSize == 0) printf("load vertex shader failed!\n");
 		if (fSize == 0) printf("load fragment shader failed!\n");
         return 0;
     }
-
+    printf("vSize:%d\n",vSize);
+    printf("fSize:%d\n",fSize);
 	printf("read complete\n");
 	glShaderSource(vShader,vSize,vSrc,vLens);
 	glShaderSource(fShader,fSize,fSrc,fLens);

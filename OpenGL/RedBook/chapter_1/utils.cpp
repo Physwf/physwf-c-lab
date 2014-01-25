@@ -32,30 +32,26 @@ int t_read(const char* filename,const char*** text,int** lengths)
 		if(*pc == '\n') pc++;
 	}
 	printf("%s numline:%d\n",filename,numline);
-	*lengths = (int *)calloc(numline,sizeof(int*));
+	int *lens = (int *)calloc(numline,sizeof(int));
 	const char ** t;
 	t = (const char**)calloc(numline+1,sizeof(char*));
 	t[0] = buffer;
+    lens[0] = strchr(buffer,'\n') - buffer;
 	for(pc = strchr(buffer,'\n'),numline=1;pc!=NULL;pc=strchr(pc,'\n'))
 	{
         if(*pc == '\n') 
 		{
-			// *pc++='\0';
-			int length = pc - buffer;
-			*(lengths++)= &length;
 			*pc++='\0';
-			
-			// pc++;
-			buffer = pc;
-			printf("length:%d\n",**(lengths-1));
+            if (strchr(pc,'\n') !=NULL) {
+                lens[numline]= strchr(pc,'\n') - pc;
+            }
 		}
 		if(pc != NULL) t[numline++] = pc;
 	}
 	t[numline] = NULL;
 	*text = t;
+    *lengths = lens;
 	printf("numline end%d\n",numline);
-	// lengths -= (numline-2);
-	// printf("---%d\n",**lengths);
 	return numline;
 }
 void t_print(const char* filename)
@@ -78,6 +74,16 @@ void t_print(const char* filename)
 
 int __main(int argc,char** argv)
 {
-	getchar();
+    const char ** text;
+    int *lengths;
+
+    int numlines = t_read("./triangles.vert",&text,&lengths);
+	printf("numline%d\n",numlines);
+    for (int i=0; i<numlines; i++) {
+        printf("len:%d\n",lengths[i]);
+        printf("%s\n",text[i]);
+    }
+//    t_print("./triangles.vert");
+    //getchar();
 	return 0;
 }
