@@ -41,7 +41,8 @@ int t_read(const char* filename,const char*** text,int** lengths)
 	{
         if(*pc == '\n') 
 		{
-			*pc++='\0';
+			*pc++=NULL;
+			// pc++;
             if (strchr(pc,'\n') !=NULL) {
                 lens[numline]= strchr(pc,'\n') - pc;
             }
@@ -84,6 +85,6 @@ int __main(int argc,char** argv)
         printf("%s\n",text[i]);
     }
 //    t_print("./triangles.vert");
-    //getchar();
+    getchar();
 	return 0;
 }

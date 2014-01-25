@@ -20,8 +20,8 @@ GLuint LoadShaders(ShaderInfo* shaders)
     printf("vSize:%d\n",vSize);
     printf("fSize:%d\n",fSize);
 	printf("read complete\n");
-	glShaderSource(vShader,vSize,vSrc,vLens);
-	glShaderSource(fShader,fSize,fSrc,fLens);
+	glShaderSource(vShader,vSize,vSrc,NULL);
+	glShaderSource(fShader,fSize,fSrc,NULL);
 	printf("start compile\n");
 	glCompileShader(fShader);
 	glCompileShader(vShader);
