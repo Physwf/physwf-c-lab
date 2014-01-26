@@ -40,9 +40,8 @@ DIR_CHAPTER_2=/chapter_2
 
 rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj $(LINKOUT)$(BIN)/utils$(OUTSUFFIX)
-rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj copy
-	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
-
+rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj textfile.obj copy
+	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(BIN)/textfile.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
 
 copy:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.frag
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(BIN)/triangles.vert
@@ -67,9 +66,18 @@ random.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp $(CLOUT)$(BIN)/random.obj
 
 rb7.c2.botest:buffer_object_test.obj
-	$(LINK) $(BIN)/buffer_object_test.obj $(LINKOUT)$(BIN)/buffer_object_test.exe
+	$(LINK) $(BIN)/buffer_object_test.obj $(LINKOUT)$(BIN)/buffer_object_test$(OUTSUFFIX)
 buffer_object_test.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/buffer_object_test.cpp
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/buffer_object_test.cpp $(CLOUT)$(BIN)/buffer_object_test.obj
-	
+
+DIR_OGL=./glutglsl5_2.0
+
+ogl:ogl3.obj textfile.obj
+	$(LINK) $(BIN)/ogl3.obj $(BIN)/textfile.obj $(LINKOUT)$(BIN)/ogl3$(OUTSUFFIX)
+ogl3.obj:
+	$(CL) $(DIR_OGL)/ogl3.cpp $(CLOUT)$(BIN)/ogl3.obj
+textfile.obj:
+	$(CL) $(DIR_OGL)/textfile.cpp $(CLOUT)$(BIN)/textfile.obj
+
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  

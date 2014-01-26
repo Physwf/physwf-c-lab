@@ -1,5 +1,6 @@
 #include "LoadShaders.h"
 #include "utils.h"
+#include "textfile.h"
 
 GLuint LoadShaders(ShaderInfo* shaders)
 {
@@ -20,8 +21,15 @@ GLuint LoadShaders(ShaderInfo* shaders)
     printf("vSize:%d\n",vSize);
     printf("fSize:%d\n",fSize);
 	printf("read complete\n");
-	glShaderSource(vShader,vSize,vSrc,vLens);
-	glShaderSource(fShader,fSize,fSrc,fLens);
+	// glShaderSource(vShader,vSize,vSrc,vLens);
+	// glShaderSource(fShader,fSize,fSrc,fLens);
+	char *vs; char *fs;
+	vs = textFileRead("./triangles.vert");
+	fs = textFileRead("./triangles.frag");
+	const char * vv = vs;
+	const char * ff = fs;
+	glShaderSource(vShader,1,&vv,0);
+	glShaderSource(fShader,1,&ff,0);
 	printf("start compile\n");
 	glCompileShader(fShader);
 	glCompileShader(vShader);
