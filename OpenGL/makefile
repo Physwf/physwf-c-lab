@@ -7,6 +7,7 @@ ifeq ($(shell uname), Darwin)
     CLOUT=-o
     LINKOUT=-o
     LIBS= -framework OpenGL -framework GLUT
+	INCLUDE=-I./include
     OPTION = -DMAC -Wno-deprecated
     OUTSUFFIX=
 else
@@ -15,6 +16,7 @@ else
     CLOUT=/Fo
     LINKOUT=/OUT:
     LIBS=
+	INCLUDE=/I./include
     OPTION = /DWIN
 	OUTSUFFIX = .exe
 endif
@@ -29,6 +31,8 @@ OpenGL.obj:$(DIR_HELLO)/OpenGL.cpp
 
 
 #RedBook chapter_1
+DIR_L=./lib
+DIR_I=./include
 DIR_RB8=./RedBook
 DIR_RB7=./RedBook7
 DIR_CHAPTER_1=/chapter_1
@@ -46,9 +50,9 @@ copy:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(DIR_RB8)$(DIR_CHAPTER_1)/triang
 triangles.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp
 	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.cpp $(CLOUT)$(BIN)/triangles.obj $(OPTION) $(LIBS)
 LoadShaders.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj $(OPTION) $(LIBS)
-utils.obj:$(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp 
-	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/utils.cpp $(CLOUT)$(BIN)/utils.obj $(OPTION)
+	$(CL) $(DIR_RB8)$(DIR_CHAPTER_1)/LoadShaders.cpp $(CLOUT)$(BIN)/LoadShaders.obj $(OPTION) $(LIBS) $(INCLUDE)
+utils.obj:$(DIR_L)/utils.cpp 
+	$(CL) $(DIR_L)/utils.cpp $(CLOUT)$(BIN)/utils.obj $(OPTION) $(INCLUDE)
 	
 rb7.c2.geometry:geometry.obj draw.obj
 	$(LINK) $(BIN)/geometry.obj $(BIN)/draw.obj $(LINKOUT)$(BIN)/geometry.exe
