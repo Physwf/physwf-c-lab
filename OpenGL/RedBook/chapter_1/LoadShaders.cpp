@@ -20,15 +20,15 @@ GLuint LoadShaders(ShaderInfo* shaders)
     printf("vSize:%d\n",vSize);
     printf("fSize:%d\n",fSize);
 	printf("read complete\n");
-	glShaderSource(vShader,vSize,vSrc,NULL);
-	glShaderSource(fShader,fSize,fSrc,NULL);
+	glShaderSource(vShader,vSize,vSrc,vLens);
+	glShaderSource(fShader,fSize,fSrc,fLens);
 	printf("start compile\n");
 	glCompileShader(fShader);
 	glCompileShader(vShader);
 	
     
-	GLint vStatus=1;
-	GLint fStatus=1;
+	GLint vStatus;
+	GLint fStatus;
 	glGetShaderiv(vShader,GL_COMPILE_STATUS,&vStatus);
 	glGetShaderiv(fShader,GL_COMPILE_STATUS,&fStatus);
 	printf("vStatus:%d\n",vStatus);
@@ -36,10 +36,12 @@ GLuint LoadShaders(ShaderInfo* shaders)
     
     GLsizei vInfoLen;
 	GLsizei fInfoLen;
-    char vInfoLog[100];
-	char fInfoLog[100];
-    glGetShaderInfoLog(vShader,100,&vInfoLen,vInfoLog);
-	glGetShaderInfoLog(fShader,100,&fInfoLen,fInfoLog);
+	glGetShaderiv(vShader,GL_INFO_LOG_LENGTH,&vInfoLen);
+	glGetShaderiv(fShader,GL_INFO_LOG_LENGTH,&fInfoLen);
+    char *vInfoLog = (char*)malloc(vInfoLen);
+	char *fInfoLog = (char*)malloc(fInfoLen);
+    glGetShaderInfoLog(vShader,vInfoLen,&vInfoLen,vInfoLog);
+	glGetShaderInfoLog(fShader,fInfoLen,&fInfoLen,fInfoLog);
     printf("Compile Vertex Shader:%s\n",vInfoLog);
 	printf("Compile Fragment Shader:%s\n",fInfoLog);
     
