@@ -69,7 +69,8 @@ int main(int argc,char** argv)
 	glutInitDisplayMode(GLUT_RGBA);
 	glutInitWindowSize(512,512);
 	glutInitWindowPosition(0,0);
-	//glutInitContextProfile(GLUT_CORE_PROFILE);
+	glutInitContextVersion(3,1);
+	// glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow("Triangles");
 #if defined(WIN)
 	GLenum err = glewInit();
