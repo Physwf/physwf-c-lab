@@ -1,35 +1,20 @@
 #include "LoadShaders.h"
 #include "utils.h"
-#include "textfile.h"
 
 GLuint LoadShaders(ShaderInfo* shaders)
 {
 	printf("load shaders start\n");
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
-	const char ** vSrc;
-	const char ** fSrc;
+	const char * vSrc;
+	const char * fSrc;
 	GLint *vLens = NULL;
 	GLint *fLens = NULL;
-	int vSize = t_read(shaders[0].filename,&vSrc,&vLens);
-	int fSize = t_read(shaders[1].filename,&fSrc,&fLens);
-    if (vSize == 0 || fSize == 0) {
-        if (vSize == 0) printf("load vertex shader failed!\n");
-		if (fSize == 0) printf("load fragment shader failed!\n");
-        return 0;
-    }
-    printf("vSize:%d\n",vSize);
-    printf("fSize:%d\n",fSize);
+	vSrc = t_read(shaders[0].filename);
+	fSrc = t_read(shaders[1].filename);
 	printf("read complete\n");
-	// glShaderSource(vShader,vSize,vSrc,vLens);
-	// glShaderSource(fShader,fSize,fSrc,fLens);
-	char *vs; char *fs;
-	vs = textFileRead("./triangles.vert");
-	fs = textFileRead("./triangles.frag");
-	const char * vv = vs;
-	const char * ff = fs;
-	glShaderSource(vShader,1,&vv,0);
-	glShaderSource(fShader,1,&ff,0);
+	glShaderSource(vShader,1,&vSrc,0);
+	glShaderSource(fShader,1,&fSrc,0);
 	printf("start compile\n");
 	glCompileShader(fShader);
 	glCompileShader(vShader);

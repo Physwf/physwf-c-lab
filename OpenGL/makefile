@@ -40,8 +40,8 @@ DIR_CHAPTER_2=/chapter_2
 
 rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj $(LINKOUT)$(BIN)/utils$(OUTSUFFIX)
-rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj textfile.obj copy
-	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(BIN)/textfile.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
+rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj  copy
+	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
 
 copy:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.frag
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(BIN)/triangles.vert

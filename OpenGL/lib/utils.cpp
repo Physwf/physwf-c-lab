@@ -1,6 +1,6 @@
 #include "utils.h"
 
-int t_read(const char* filename,const char*** text,int** lengths)
+int __t_read(const char* filename,const char*** text,int** lengths)
 {
 	int size=0;
 	char *buffer;
@@ -56,6 +56,28 @@ int t_read(const char* filename,const char*** text,int** lengths)
 	printf("numline end%d\n",numline);
 	return numline-1;
 }
+
+char* t_read(const char* filename)
+{
+	int size;
+	FILE *infile = fopen(filename,"r");
+	if(infile == NULL) 
+	{
+		printf("t_read:%s read error!\n",filename);
+		return NULL;
+	}
+	fseek(infile,0,SEEK_END);
+	size = ftell(infile);
+	fseek(infile,0,SEEK_SET);
+	
+	char* content = (char*) calloc(size+1,sizeof(char));
+	fread(content,sizeof(char),size,infile);
+	fclose(infile);
+	
+	content[size] = '\0';
+	return content;
+}
+
 void t_print(const char* filename)
 {
 	char c;
@@ -76,16 +98,6 @@ void t_print(const char* filename)
 
 int __main(int argc,char** argv)
 {
-    const char ** text;
-    int *lengths;
-
-    int numlines = t_read("./triangles.vert",&text,&lengths);
-	printf("numline%d\n",numlines);
-    for (int i=0; i<numlines; i++) {
-        printf("len:%d\n",*lengths);
-        printf("%s\n",text[i]);
-    }
-//    t_print("./triangles.vert");
     getchar();
 	return 0;
 }
