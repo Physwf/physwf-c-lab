@@ -1,5 +1,10 @@
 #include "TetrisMain.h"
 
+
+enum Buffer_IDs {VERTEX,INDEX,NumBuffers}
+GLuint buffers[NumBuffers];
+
+
 void display()
 {
 	
@@ -7,7 +12,10 @@ void display()
 
 void init()
 {
+	glGenBuffers(NumBuffers,buffers);
+	glBindBuffer(GL_ARRAY_BUFFER,buffers[VERTEX]);
 	
+	glEnableClientState();
 }
 
 int main(int argc,char** argv)
