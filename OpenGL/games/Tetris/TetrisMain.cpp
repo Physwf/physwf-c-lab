@@ -1,5 +1,5 @@
 #include "TetrisMain.h"
-
+#define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + bytes)
 
 enum Buffer_IDs {VERTEX,INDEX,NumBuffers}
 GLuint buffers[NumBuffers];
@@ -14,8 +14,10 @@ void init()
 {
 	glGenBuffers(NumBuffers,buffers);
 	glBindBuffer(GL_ARRAY_BUFFER,buffers[VERTEX]);
+	glBufferData();
 	
-	glEnableClientState();
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVetexPointer(2,GL_INT,0,BUFFER_OFFSET(0));
 }
 
 int main(int argc,char** argv)
