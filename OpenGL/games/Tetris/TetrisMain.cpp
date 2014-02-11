@@ -1,9 +1,9 @@
 #include "TetrisMain.h"
 #define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + bytes)
 
-enum Buffer_IDs {VERTEX,INDEX,NumBuffers}
+enum Buffer_IDs {VERTEX,INDEX,NumBuffers};
 GLuint buffers[NumBuffers];
-
+enum Attrib_IDs {vPosition};
 
 void display()
 {
@@ -12,12 +12,13 @@ void display()
 
 void init()
 {
+	GLint vertices[];
 	glGenBuffers(NumBuffers,buffers);
 	glBindBuffer(GL_ARRAY_BUFFER,buffers[VERTEX]);
-	glBufferData();
+	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_DYNAMIC_DRAW);
 	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVetexPointer(2,GL_INT,0,BUFFER_OFFSET(0));
+	glVetexAttribPointer(vPosition,2,GL_INT,GLfalse,0,BUFFER_OFFSET(0));
+	glEnableVertexAttribPointer(vPosition);
 }
 
 int main(int argc,char** argv)
