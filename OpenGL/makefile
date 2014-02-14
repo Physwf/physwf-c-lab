@@ -79,5 +79,14 @@ ogl3.obj:
 textfile.obj:
 	$(CL) $(DIR_OGL)/textfile.cpp $(CLOUT)$(BIN)/textfile.obj
 
+DIR_GAMES=./games
+DIR_TETRIS=/Tetris
+tetris:TetrisMain.obj utils.obj
+	$(LINK) $(BIN)/TetrisMain.obj $(BIN)/utils.obj $(LINKOUT)$(BIN)/tetris$(OUTSUFFIX)
+	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.vert $(BIN)/tetris.vert
+	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.frag $(BIN)/tetris.frag
+TetrisMain.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisMain.cpp
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisMain.cpp $(CLOUT)$(BIN)/TetrisMain.obj $(INCLUDE)
+
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  
