@@ -87,6 +87,11 @@ void init()
 	glUseProgram(program);
 }
 
+void update()
+{
+	
+}
+
 int main(int argc,char** argv)
 {
 	glutInit(&argc,argv);
