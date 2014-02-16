@@ -62,8 +62,8 @@ draw.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/draw.cpp
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw.cpp $(CLOUT)$(BIN)/draw.obj
 draw2.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp 
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp $(CLOUT)$(BIN)/draw2.obj
-random.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp 
-	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp $(CLOUT)$(BIN)/random.obj
+random.obj:$(DIR_L)/random.cpp 
+	$(CL) $(DIR_L)/random.cpp $(CLOUT)$(BIN)/random.obj $(INCLUDE)
 
 rb7.c2.botest:buffer_object_test.obj
 	$(LINK) $(BIN)/buffer_object_test.obj $(LINKOUT)$(BIN)/buffer_object_test$(OUTSUFFIX)
@@ -81,12 +81,14 @@ textfile.obj:
 
 DIR_GAMES=./games
 DIR_TETRIS=/Tetris
-tetris:TetrisMain.obj utils.obj
-	$(LINK) $(BIN)/TetrisMain.obj $(BIN)/utils.obj $(LINKOUT)$(BIN)/tetris$(OUTSUFFIX)
+tetris:TetrisMain.obj utils.obj TetrisData.obj random.obj
+	$(LINK) $(BIN)/TetrisMain.obj $(BIN)/utils.obj $(BIN)/TetrisData.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/tetris$(OUTSUFFIX)
 	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.vert $(BIN)/tetris.vert
 	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.frag $(BIN)/tetris.frag
 TetrisMain.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisMain.cpp
 	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisMain.cpp $(CLOUT)$(BIN)/TetrisMain.obj $(INCLUDE)
+TetrisData.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp $(CLOUT)$(BIN)/TetrisData.obj $(INCLUDE)
 
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  

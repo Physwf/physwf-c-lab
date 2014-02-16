@@ -1,74 +1,62 @@
 #include "TetrisData.h"
 #include "random.h"
 
-#define NUM_UNIT 4
-#define NUM_X 15
-#define NUM_Y 23;
-#define MAX_SQUARES (NUM_X * NUM_Y)
+#define KEY_LEFT 100
+#define KEY_UP 101
+#define KEY_RIGHT 102
+#define KEY_DOWN 103
 
-#define KEY_LEFT 37
-#define KEY_RIGHT 38
-#define KEY_UP 39
-#define KEY_DOWN 40
+int num_squares;
+Square *squares;
 
-Square moving_squares[NUM_UNIT];
-Square still_squares[];
+Square *moving_squares;
+Square *still_squares;
 int num_still_squares;
-
-void initData()
-{
-	squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
-	num_squares = 0;
-	
-	still_squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
-	num_still_squares = 0;
-}
 
 Square* getNext()
 {
 	Square* next = (Square*) calloc(NUM_UNIT,sizeof(Square));
-	Square start;
-	start.x = start.y = 0;
-	next[0] = start;
+	Square* start = next;
+	start->x = NUM_X / 2;
+	start->y = 0;
 	srand(time(NULL));
+	int dirs[4][2] = {{0,1},{1,0},{-1,0},{0,-1}};
+	int dir[2] = {0,0};
 	for(int i=1;i<NUM_UNIT;i++)
 	{
-		int dir = rand_by_range(0,3);
-		Square s;
-		switch(dir)
+		int j = rand_by_range(0,3);
+		while(dirs[j][0] * dir[0] + dirs[j][1] * dir[1] == -1)
 		{
-			case 0://up
-				s.x = start.x;
-				s.y = start.y-1;
-				break;
-			case 1://down
-				s.x = start.x;
-				s.y = start.y+1;
-				break;
-			case 2://left
-				s.x = start.x-1;
-				s.y = start.y;
-				break;
-			case 3://right
-				s.x = start.x+1;
-				s.y = start.y;
-				break;
+			j = rand_by_range(0,3);
 		}
-		next[i] = s;
+		memcpy(dir,dirs[j],sizeof(dir));
+		Square* s = next+i;
+		s->x = start->x + dir[0];
+		s->y = start->y + dir[1];
 		start = s;
 	}
 	return next;
 }
 
+void initData()
+{
+	squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
+	
+	
+	still_squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
+	num_still_squares = 0;
+	
+	moving_squares = getNext();
+	num_squares = NUM_UNIT;
+}
+
 bool checkCollision(Square *moving)
 {
-	for(int i=0;i<NUM_UNIT;i++)
-		moving[i].y++;
 	for(int i=0;i<num_still_squares;i++)
 	{
 		for(int j=0;j<NUM_UNIT;j++)
 		{
-			if(still_squares[i].x == moving[j].x && still_squares[i].y == moving[j].y)
+			if(still_squares[i].x == moving[j].x && still_squares[i].y == moving[j].y+1)
 				return true;
 		}
 	}
@@ -89,7 +77,7 @@ bool checkRight()
 {
 	for(int i=0;i<NUM_UNIT;i++)
 	{
-		if(moving_squares[i].x == NUM_X)
+		if(moving_squares[i].x == NUM_X-1)
 			return true;
 	}
 	return false;
@@ -99,7 +87,7 @@ bool checkBottom()
 {
 	for(int i=0;i<NUM_UNIT;i++)
 	{
-		if(moving_squares[i].y == NUM_Y)
+		if(moving_squares[i].y == NUM_Y-1)
 			return true;
 	}
 	return false;
@@ -107,17 +95,57 @@ bool checkBottom()
 
 void rotate()
 {
-
+	int l=100,r=-100;
+	int t=100,b=-100;
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		if(moving_squares[i].x > r) r = moving_squares[i].x;
+		if(moving_squares[i].x < l) l = moving_squares[i].x;
+		if(moving_squares[i].y > b) b = moving_squares[i].y;
+		if(moving_squares[i].y < t) t = moving_squares[i].y;
+		printf("%dx:%d\n",i,moving_squares[i].x);
+		printf("%dy:%d\n",i,moving_squares[i].y);
+	}
+	int org_x = 100;
+	int org_y = 100;
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		if(moving_squares[i].x < org_x)
+			org_x = moving_squares[i].x;
+		if(moving_squares[i].y < org_y)
+			org_y = moving_squares[i].y;
+	}
+	int center_x = (r - l) / 2;
+	int center_y = (b - t) / 2;
+	printf("center_x:%d\n",center_x);
+	printf("center_y:%d\n",center_y);
+	printf("org_x:%d\n",org_x);
+	printf("org_y:%d\n",org_y);
+	/* rotate matrix
+	|0  1|
+	|-1 0|
+	*/
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		int x = (moving_squares[i].y - center_y - org_y) * (1);
+		int y = (moving_squares[i].x - center_x - org_x) * (-1);
+		moving_squares[i].x = x + org_x + center_x;
+		moving_squares[i].y = y + org_y + center_y;
+		printf("%dx:%d\n",i,moving_squares[i].x);
+		printf("%dy:%d\n",i,moving_squares[i].y);
+	}
+	
 }
 
 void translate(char dir)
 {
+	printf("translate:%c\n",dir);
 	if(dir == 'L')
 	{
 		if(!checkLeft()) 
 		{
 			for(int i=0;i<NUM_UNIT;i++)
-				moving[i].x--;
+				moving_squares[i].x--;
 		}
 	}
 	else if(dir == 'R')
@@ -125,7 +153,7 @@ void translate(char dir)
 		if(!checkRight()) 
 		{
 			for(int i=0;i<NUM_UNIT;i++)
-				moving[i].x++;
+				moving_squares[i].x++;
 		}
 	}
 }
@@ -134,10 +162,10 @@ void drop()
 {
 	if(!checkBottom() && !checkCollision(moving_squares))
 		for(int i=0;i<NUM_UNIT;i++)
-				moving[i].y++;
+				moving_squares[i].y++;
 }
 
-void onKeyDown(const char keycode)
+void onKeyDown(unsigned char keycode)
 {
 	switch(keycode)
 	{
@@ -151,7 +179,7 @@ void onKeyDown(const char keycode)
 			rotate();
 			break;
 		case KEY_DOWN:
-			dorp();
+			drop();
 			break;
 	}
 }
@@ -168,14 +196,28 @@ bool loop()
 	//check bottom and collision
 	if(checkBottom() || checkCollision(moving_squares))
 	{
-		memcpy(still_squares,moving_squares,NUM_UNIT*sizeof(Square));
+		memcpy(still_squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
 		num_still_squares+=NUM_UNIT;
 		moving_squares = getNext();
+		num_squares = num_still_squares + NUM_UNIT;
 	}
 	else
 	{
 		for(int i=0;i<NUM_UNIT;i++)
 			moving_squares[i].y++;
+	}
+	memcpy(squares,still_squares,NUM_UNIT*sizeof(Square));
+	memcpy(squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
+	printf("num_still_squares:%d\n",num_still_squares);
+	for(int i=0;i<num_still_squares;i++)
+	{
+		// printf("%dx:%d\n",i,still_squares[i].x);
+		// printf("%dy:%d\n",i,still_squares[i].y);
+	}
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		// printf("%dx:%d\n",i,moving_squares[i].x);
+		// printf("%dy:%d\n",i,moving_squares[i].y);
 	}
 	return true;
 }

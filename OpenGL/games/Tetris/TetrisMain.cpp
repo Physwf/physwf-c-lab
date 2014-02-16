@@ -1,30 +1,31 @@
 #include "TetrisMain.h"
+#include "TetrisData.h"
+
 #define BUFFER_OFFSET(bytes) ((GLubyte*)NULL + bytes)
+#define WINDOW_WIDTH 200
+#define WINDOW_HEIGHT 300
+#define SQUARE_WIDTH (WINDOW_WIDTH/NUM_X)
+#define SQUARE_HEIGHT (WINDOW_HEIGHT/NUM_Y)
 
 enum Buffer_IDs {VERTEX,INDEX,NumBuffers};
 GLuint buffers[NumBuffers];
 enum Attrib_IDs {vPosition};
 
+GLfloat *vertices;
+
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glDrawArrays(GL_QUADS,0,4);
+	glDrawArrays(GL_QUADS,0,4*num_squares);
 	glFlush();
 }
 
 void init()
 {
-	GLfloat vertices[] = 
-	{
-		10.0,10.0,
-		110.0,10.0,
-		110.0,110.0,
-		10.0,110.0
-	};
 	glGenBuffers(NumBuffers,buffers);
 	glBindBuffer(GL_ARRAY_BUFFER,buffers[VERTEX]);
 	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_DYNAMIC_DRAW);
-	
+
 	glVertexAttribPointer(vPosition,2,GL_FLOAT,GL_FALSE,0,BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(vPosition);
 	
@@ -85,18 +86,70 @@ void init()
 		return;
 	}
 	glUseProgram(program);
+	
+	GLint mvpLoc = glGetUniformLocation(program,"mvp");
+	GLfloat mvp[] = 
+	{
+		2.0/WINDOW_WIDTH,		0.0,		0.0, 0.0,
+		0.0,		-2.0/WINDOW_HEIGHT,	0.0, 0.0,
+		0.0,		0.0,				1.0, 0.0,
+		-1.0,		1.0,				0.0, 1.0
+	};
+	printf("mvp:%f\n",mvp[0]);
+	printf("mvp:%f\n",mvp[5]);
+	glUniformMatrix4fv(mvpLoc,1,GL_FALSE,mvp);
 }
 
-void update()
+void update(int value)
 {
-	
+	if(loop())
+		;
+	vertices = (GLfloat*) calloc(num_squares*8,sizeof(GLfloat));
+	for(int i=0;i < num_squares;i++)
+	{
+		// printf("%d:%d\n",i,squares[i].x);
+		// printf("%d:%d\n",i,squares[i].y);
+	}
+	for(int i=0;i < num_squares;i++)
+	{
+		vertices[i*8] = squares[i].x * (int)SQUARE_WIDTH;
+		vertices[i*8+1] = squares[i].y * (int)SQUARE_HEIGHT;
+		vertices[i*8+2] = squares[i].x * (int)SQUARE_WIDTH + (int)SQUARE_WIDTH;
+		vertices[i*8+3] = squares[i].y * (int)SQUARE_HEIGHT;
+		vertices[i*8+4] = squares[i].x * (int)SQUARE_WIDTH + (int)SQUARE_WIDTH;
+		vertices[i*8+5] = squares[i].y * (int)SQUARE_HEIGHT + (int)SQUARE_HEIGHT;
+		vertices[i*8+6] = squares[i].x * (int)SQUARE_WIDTH;
+		vertices[i*8+7] = squares[i].y * (int)SQUARE_HEIGHT + (int)SQUARE_HEIGHT;
+	}
+	for(int i=0;i < num_squares;i++)
+	{
+		// printf("%d:%f\n",i,vertices[i*8]);
+		// printf("%d:%f\n",i,vertices[i*8+1]);
+		// printf("%d:%f\n",i,vertices[i*8+2]);
+		// printf("%d:%f\n",i,vertices[i*8+3]);
+		// printf("%d:%f\n",i,vertices[i*8+4]);
+		// printf("%d:%f\n",i,vertices[i*8+5]);
+		// printf("%d:%f\n",i,vertices[i*8+6]);
+		// printf("%d:%f\n",i,vertices[i*8+7]);
+	}
+	glBufferData(GL_ARRAY_BUFFER,num_squares*8*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
+	glutPostRedisplay();
+	free(vertices);
+	glutTimerFunc(1000,update,0);
+}
+
+void onKeyBoardEvent(int keycode,int x,int y)
+{
+	onKeyDown(keycode);
+	glutPostRedisplay();
+	glFinish();
 }
 
 int main(int argc,char** argv)
 {
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_RGBA);
-	glutInitWindowSize(512,512);
+	glutInitWindowSize(200,300);
 	glutInitWindowPosition(0,0);
 	glutInitContextVersion(3,0);
 	// glutInitContextProfile(GLUT_CORE_PROFILE);
@@ -107,7 +160,10 @@ int main(int argc,char** argv)
 		return 1;
 	}
 	init();
+	initData();
 	glClearColor(0.0,0.0,0.0,1.0);
 	glutDisplayFunc(&display);
+	glutSpecialFunc(onKeyBoardEvent);
+	glutTimerFunc(1000,update,0);
 	glutMainLoop();
 }
