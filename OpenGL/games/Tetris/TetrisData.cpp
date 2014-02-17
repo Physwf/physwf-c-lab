@@ -50,13 +50,13 @@ void initData()
 	num_squares = NUM_UNIT;
 }
 
-bool checkCollision(Square *moving)
+bool checkCollision()
 {
 	for(int i=0;i<num_still_squares;i++)
 	{
 		for(int j=0;j<NUM_UNIT;j++)
 		{
-			if(still_squares[i].x == moving[j].x && still_squares[i].y == moving[j].y+1)
+			if(still_squares[i].x == moving_squares[j].x && still_squares[i].y == moving_squares[j].y+1)
 				return true;
 		}
 	}
@@ -125,16 +125,27 @@ void rotate()
 	|0  1|
 	|-1 0|
 	*/
+	Square test_squares[NUM_UNIT];
+	
 	for(int i=0;i<NUM_UNIT;i++)
 	{
 		int x = (moving_squares[i].y - center_y - org_y) * (1);
 		int y = (moving_squares[i].x - center_x - org_x) * (-1);
-		moving_squares[i].x = x + org_x + center_x;
-		moving_squares[i].y = y + org_y + center_y;
-		printf("%dx:%d\n",i,moving_squares[i].x);
-		printf("%dy:%d\n",i,moving_squares[i].y);
+		
+		//check collision
+		for(int j=0;j<num_still_squares;j++)
+		{
+			if(x == still_squares[j].x && y == still_squares[j].y) return;
+		}
+		
+		test_squares[i].x = x + org_x + center_x;
+		test_squares[i].y = y + org_y + center_y;
+		printf("%dx:%d\n",i,test_squares[i].x);
+		printf("%dy:%d\n",i,test_squares[i].y);
 	}
-	
+	//check out of boarder
+		if(x < 0 || x >= NUM_X) return;
+		if(y >= NUM_Y) return;
 }
 
 void translate(char dir)
@@ -160,7 +171,7 @@ void translate(char dir)
 
 void drop()
 {
-	if(!checkBottom() && !checkCollision(moving_squares))
+	if(!checkBottom() && !checkCollision())
 		for(int i=0;i<NUM_UNIT;i++)
 				moving_squares[i].y++;
 }
@@ -194,7 +205,7 @@ bool loop()
 			return false;
 	}
 	//check bottom and collision
-	if(checkBottom() || checkCollision(moving_squares))
+	if(checkBottom() || checkCollision())
 	{
 		memcpy(still_squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
 		num_still_squares+=NUM_UNIT;
