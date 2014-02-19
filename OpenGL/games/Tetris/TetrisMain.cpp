@@ -135,14 +135,14 @@ void update(int value)
 	glBufferData(GL_ARRAY_BUFFER,num_squares*8*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glutPostRedisplay();
 	free(vertices);
-	glutTimerFunc(1000,update,0);
+	if(value >= 0)glutTimerFunc(1000,update,0);
 }
 
 void onKeyBoardEvent(int keycode,int x,int y)
 {
 	onKeyDown(keycode);
 	glutPostRedisplay();
-	glFinish();
+	update(-1);
 }
 
 int main(int argc,char** argv)
