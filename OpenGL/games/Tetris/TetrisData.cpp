@@ -103,8 +103,8 @@ void rotate()
 		if(moving_squares[i].x < l) l = moving_squares[i].x;
 		if(moving_squares[i].y > b) b = moving_squares[i].y;
 		if(moving_squares[i].y < t) t = moving_squares[i].y;
-		printf("%dx:%d\n",i,moving_squares[i].x);
-		printf("%dy:%d\n",i,moving_squares[i].y);
+		// printf("%dx:%d\n",i,moving_squares[i].x);
+		// printf("%dy:%d\n",i,moving_squares[i].y);
 	}
 	int org_x = 100;
 	int org_y = 100;
@@ -117,10 +117,10 @@ void rotate()
 	}
 	int center_x = (r - l) / 2;
 	int center_y = (b - t) / 2;
-	printf("center_x:%d\n",center_x);
-	printf("center_y:%d\n",center_y);
-	printf("org_x:%d\n",org_x);
-	printf("org_y:%d\n",org_y);
+	// printf("center_x:%d\n",center_x);
+	// printf("center_y:%d\n",center_y);
+	// printf("org_x:%d\n",org_x);
+	// printf("org_y:%d\n",org_y);
 	/* rotate matrix
 	|0  1|
 	|-1 0|
@@ -132,25 +132,52 @@ void rotate()
 		int x = (moving_squares[i].y - center_y - org_y) * (1);
 		int y = (moving_squares[i].x - center_x - org_x) * (-1);
 		
-		//check collision
+		//check collision and bottom
 		for(int j=0;j<num_still_squares;j++)
 		{
-			if(x == still_squares[j].x && y == still_squares[j].y) return;
+			if(x == still_squares[j].x && y == still_squares[j].y) 
+			{
+				printf("collision\n");
+				return;
+			}
+			if(y>=NUM_Y) return;
 		}
 		
 		test_squares[i].x = x + org_x + center_x;
 		test_squares[i].y = y + org_y + center_y;
-		printf("%dx:%d\n",i,test_squares[i].x);
-		printf("%dy:%d\n",i,test_squares[i].y);
+		// printf("%dx:%d\n",i,test_squares[i].x);
+		// printf("%dy:%d\n",i,test_squares[i].y);
 	}
 	//check out of boarder
-		if(x < 0 || x >= NUM_X) return;
-		if(y >= NUM_Y) return;
+	l=100;r=-100;
+	t=100;b=-100;
+	for(int i=0;i<NUM_UNIT;i++)	
+	{
+		if(test_squares[i].x < l) l = test_squares[i].x;
+		if(test_squares[i].y > r) r = test_squares[i].x;
+	}
+	int offset=0;
+	if(l<0) offset = l;
+	if(r>=NUM_X) offset = r - NUM_X+1;
+	int test_x[NUM_UNIT];
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		test_x[i] = test_squares[i].x - offset;
+		for(int j=0;j<num_still_squares;j++)
+		{
+			if(test_x[i] == still_squares[j].x && test_squares[i].y == still_squares[j].y) return;
+		}
+	}
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		moving_squares[i].x = test_x[i];
+		moving_squares[i].y = test_squares[i].y;
+	}
 }
 
 void translate(char dir)
 {
-	printf("translate:%c\n",dir);
+	// printf("translate:%c\n",dir);
 	if(dir == 'L')
 	{
 		if(!checkLeft()) 
@@ -174,6 +201,7 @@ void drop()
 	if(!checkBottom() && !checkCollision())
 		for(int i=0;i<NUM_UNIT;i++)
 				moving_squares[i].y++;
+	printf("drop\n");
 }
 
 void onKeyDown(unsigned char keycode)

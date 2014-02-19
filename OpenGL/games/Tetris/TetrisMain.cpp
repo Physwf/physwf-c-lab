@@ -17,6 +17,7 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDrawArrays(GL_QUADS,0,4*num_squares);
+	glDrawArrays(GL_LINE_STRIP,0,4*num_squares);
 	glFlush();
 }
 
