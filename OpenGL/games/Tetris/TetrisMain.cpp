@@ -17,7 +17,7 @@ void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDrawArrays(GL_QUADS,0,4*num_squares);
-	glDrawArrays(GL_LINE_STRIP,0,4*num_squares);
+	// glDrawArrays(GL_LINE_STRIP,0,4*num_squares);
 	glFlush();
 }
 
@@ -101,10 +101,8 @@ void init()
 	glUniformMatrix4fv(mvpLoc,1,GL_FALSE,mvp);
 }
 
-void update(int value)
+void post()
 {
-	if(loop())
-		;
 	vertices = (GLfloat*) calloc(num_squares*8,sizeof(GLfloat));
 	for(int i=0;i < num_squares;i++)
 	{
@@ -136,14 +134,20 @@ void update(int value)
 	glBufferData(GL_ARRAY_BUFFER,num_squares*8*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glutPostRedisplay();
 	free(vertices);
-	if(value >= 0)glutTimerFunc(1000,update,0);
+}
+
+void update(int value)
+{
+	if(loop())
+		;
+	post();
+	glutTimerFunc(1000,update,0);
 }
 
 void onKeyBoardEvent(int keycode,int x,int y)
 {
 	onKeyDown(keycode);
-	glutPostRedisplay();
-	update(-1);
+	post();
 }
 
 int main(int argc,char** argv)
