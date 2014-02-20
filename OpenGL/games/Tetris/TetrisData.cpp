@@ -13,6 +13,8 @@ Square *moving_squares;
 Square *still_squares;
 int num_still_squares;
 
+FILE *log_file;
+
 Square* getNext()
 {
 	Square* next = (Square*) calloc(NUM_UNIT,sizeof(Square));
@@ -48,6 +50,8 @@ void initData()
 	
 	moving_squares = getNext();
 	num_squares = NUM_UNIT;
+	
+	log_file = fopen("log_tetris.log","w");
 }
 
 bool checkCollision(int dirX,int dirY)
@@ -222,6 +226,80 @@ void onKeyDown(unsigned char keycode)
 	}
 }
 
+void log()
+{
+	for(int i=0;i<num_still_squares;i++)
+	{
+		fprintf(log_file,"i:%d,x:%d,y:%d\n",i,still_squares[i].x,still_squares[i].y);
+	}
+	fprintf(log_file,"-----------------\n");
+	fflush(log_file);
+}
+
+void sort(int l,int r)
+{
+	if(l>=r) return;
+	int i=l,j=r;
+	Square s = still_squares[l];
+	while(i<j)
+	{
+		while(i<j)
+		{
+			if(still_squares[j].y < s.y)
+			{
+				still_squares[i].x = still_squares[j].x;
+				still_squares[i].y = still_squares[j].y;
+				i++;
+				break;
+			}
+			j--;
+		}
+		while(i<j)
+		{
+			if(still_squares[i].y >= s.y)
+			{
+				still_squares[j].x = still_squares[i].x;
+				still_squares[j].y = still_squares[i].y;
+				j--;
+				break;
+			}
+			i++;
+		}
+	}
+	still_squares[i].x = s.x;
+	still_squares[i].y = s.y;
+	sort(l,i);
+	sort(i+1,r);
+}
+
+void checkElimination()
+{
+	int y=-1;
+	int count=0;
+	for(int i=0;i<num_still_squares;i++)
+	{
+		if(still_squares[i].y == y)
+		{
+			count++;
+		}
+		else
+		{
+			y = still_squares[i].y;
+			count = 1;
+		}
+		if(count == NUM_X)
+		{
+			for(int j=i+1;j<num_still_squares;j++)
+			{
+				still_squares[j].y--;
+				printf("j:%d,num:%d\n",j,num_still_squares);
+			}
+			memcpy(still_squares+i,still_squares+i+NUM_X,sizeof(Square)*(num_still_squares - i));
+			num_still_squares -= NUM_X;
+		}
+	}
+}
+
 bool loop()
 {
 	//check game over
@@ -250,9 +328,13 @@ bool loop()
 			}
 			printf("check collision\n");
 		}
+		log();
 		memcpy(still_squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
-		
 		num_still_squares+=NUM_UNIT;
+		
+		sort(0,num_still_squares-1);
+		log();
+		checkElimination();
 		if(checkBottom() || checkCollision(0,1))
 		{
 			for(int i=0;i<num_still_squares;i++)
