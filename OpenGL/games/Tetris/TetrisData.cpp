@@ -289,13 +289,14 @@ void checkElimination()
 		}
 		if(count == NUM_X)
 		{
-			for(int j=i+1;j<num_still_squares;j++)
+			for(int j=0;j<i-NUM_X+1;j++)
 			{
-				still_squares[j].y--;
+				still_squares[j].y++;
 				printf("j:%d,num:%d\n",j,num_still_squares);
 			}
-			memcpy(still_squares+i,still_squares+i+NUM_X,sizeof(Square)*(num_still_squares - i));
+			memcpy(still_squares+i-NUM_X+1,still_squares+i+1,sizeof(Square)*(num_still_squares - i-1));
 			num_still_squares -= NUM_X;
+			i -= (NUM_X+1);
 		}
 	}
 }

@@ -141,7 +141,7 @@ void update(int value)
 	if(loop())
 		;
 	post();
-	glutTimerFunc(500,update,0);
+	glutTimerFunc(800,update,0);
 }
 
 void onKeyBoardEvent(int keycode,int x,int y)
@@ -169,6 +169,6 @@ int main(int argc,char** argv)
 	glClearColor(0.0,0.0,0.0,1.0);
 	glutDisplayFunc(&display);
 	glutSpecialFunc(onKeyBoardEvent);
-	glutTimerFunc(500,update,0);
+	glutTimerFunc(800,update,0);
 	glutMainLoop();
 }
