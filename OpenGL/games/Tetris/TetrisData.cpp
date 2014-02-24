@@ -15,27 +15,108 @@ int num_still_squares;
 
 FILE *log_file;
 
+int* getNodes()
+{
+	int dirs[4][2] = {{0,1},{1,0},{-1,0},{0,-1}};
+	int candi_nodes[10*2];
+	int num_candi_nodes = 0;
+	int* rslt_nodes = (int*)calloc(NUM_UNIT*2,sizeof(int));
+	int num_rslt_nodes = 1;
+	int new_node[2] = {0,0};
+	int test_node[2] = {0,0};
+	printf("rslt node:x:%d,y:%d\n",rslt_nodes[0],rslt_nodes[1]);
+	for(int k=0;k<3;k++)
+	{
+		for(int i=0;i<NUM_UNIT;i++)
+		{
+			
+			bool flag = false;
+			test_node[0] = new_node[0]+ dirs[i][0];
+			test_node[1] = new_node[1]+ dirs[i][1];
+			for(int j=0;j<num_rslt_nodes;j++)
+			{
+				if(test_node[0] == rslt_nodes[j*2+0] && test_node[1] == rslt_nodes[j*2+1])
+				{
+					flag = true;
+					break;
+				}
+			}
+			for(int j=0;j<num_candi_nodes;j++)
+			{
+				if(flag) break;
+				if(test_node[0] == candi_nodes[j*2+0] && test_node[1] == candi_nodes[j*2+1])
+				{
+					flag = true;
+					break;
+				}
+			}
+			if(flag) continue;
+			candi_nodes[num_candi_nodes*2+0] = test_node[0];
+			candi_nodes[num_candi_nodes*2+1] = test_node[1];
+			num_candi_nodes++;
+		}
+		// printf("num candidates %d\n",num_candi_nodes);
+		printf("-----------------------\n");
+		for(int j=0;j<num_candi_nodes;j++)
+		{
+			printf("cand:x:%d,y:%d\n",candi_nodes[j*2+0],candi_nodes[j*2+1]);
+		}
+		printf("*********\n");
+		int rad = rand_by_range(0,num_candi_nodes);
+		printf("rad:%d\n",rad);
+		new_node[0] = rslt_nodes[num_rslt_nodes*2+0] = candi_nodes[rad*2+0];
+		new_node[1] = rslt_nodes[num_rslt_nodes*2+1] = candi_nodes[rad*2+1];
+		num_rslt_nodes++;
+		// printf("candi node,x:%d,y:%d\n",candi_nodes[rad*2+0],candi_nodes[rad*2+1]);
+		// printf("new node,x:%d,y:%d\n",new_node[0],new_node[1]);
+		memcpy(candi_nodes+rad*2,candi_nodes+rad*2+2,(num_candi_nodes-rad-1)*2);
+		num_candi_nodes--;
+		for(int j=0;j<num_candi_nodes;j++)
+		{
+			printf("cand:x:%d,y:%d\n",candi_nodes[j*2+0],candi_nodes[j*2+1]);
+		}
+		printf("-----------------------\n");
+		
+	}
+	// for(int i=0;i<NUM_UNIT;i++) printf("i:%d,j:%d\n",rslt_nodes[i*2+0],rslt_nodes[i*2+1]);
+	return rslt_nodes;
+}
+
 Square* getNext()
 {
 	Square* next = (Square*) calloc(NUM_UNIT,sizeof(Square));
-	Square* start = next;
-	start->x = NUM_X / 2;
-	start->y = 0;
-	srand(time(NULL));
-	int dirs[4][2] = {{0,1},{1,0},{-1,0},{0,-1}};
-	int dir[2] = {0,0};
-	for(int i=1;i<NUM_UNIT;i++)
+	// Square* start = next;
+	// start->x = NUM_X / 2;
+	// start->y = 0;
+	// srand(time(NULL));
+	// int dirs[4][2] = {{0,1},{1,0},{-1,0},{0,-1}};
+	// int dir[2] = {0,0};
+	// for(int i=1;i<NUM_UNIT;i++)
+	// {
+		// int j = rand_by_range(0,3);
+		// while(dirs[j][0] * dir[0] + dirs[j][1] * dir[1] == -1)
+		// {
+			// j = rand_by_range(0,3);
+		// }
+		// memcpy(dir,dirs[j],sizeof(dir));
+		// Square* s = next+i;
+		// s->x = start->x + dir[0];
+		// s->y = start->y + dir[1];
+		// start = s;
+	// }
+	int *nodes = getNodes();
+	int l=100;int r=-100;
+	for(int i=0;i<NUM_UNIT;i++)
 	{
-		int j = rand_by_range(0,3);
-		while(dirs[j][0] * dir[0] + dirs[j][1] * dir[1] == -1)
-		{
-			j = rand_by_range(0,3);
-		}
-		memcpy(dir,dirs[j],sizeof(dir));
-		Square* s = next+i;
-		s->x = start->x + dir[0];
-		s->y = start->y + dir[1];
-		start = s;
+		if(nodes[2*i+0] <l) l = nodes[2*i+0];
+		if(nodes[2*i+0] >r) r = nodes[2*i+0];
+	}
+	int cen_x = (NUM_X - (r-l))/2;
+	
+	for(int i=0;i<NUM_UNIT;i++)
+	{
+		((Square*)(next+i))->x = nodes[i*2+0]+cen_x;
+		((Square*)(next+i))->y = nodes[i*2+1];
 	}
 	return next;
 }
