@@ -88,7 +88,7 @@ Square* getNext()
 	// Square* start = next;
 	// start->x = NUM_X / 2;
 	// start->y = 0;
-	// srand(time(NULL));
+	srand(time(NULL));
 	// int dirs[4][2] = {{0,1},{1,0},{-1,0},{0,-1}};
 	// int dir[2] = {0,0};
 	// for(int i=1;i<NUM_UNIT;i++)
