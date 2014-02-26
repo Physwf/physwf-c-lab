@@ -24,12 +24,10 @@ int* getNodes()
 	int num_rslt_nodes = 1;
 	int new_node[2] = {0,0};
 	int test_node[2] = {0,0};
-	printf("rslt node:x:%d,y:%d\n",rslt_nodes[0],rslt_nodes[1]);
 	for(int k=0;k<3;k++)
 	{
 		for(int i=0;i<NUM_UNIT;i++)
 		{
-			
 			bool flag = false;
 			test_node[0] = new_node[0]+ dirs[i][0];
 			test_node[1] = new_node[1]+ dirs[i][1];
@@ -55,7 +53,6 @@ int* getNodes()
 			candi_nodes[num_candi_nodes*2+1] = test_node[1];
 			num_candi_nodes++;
 		}
-		// printf("num candidates %d\n",num_candi_nodes);
 		fprintf(log_file,"-----------------------\n");
 		for(int j=0;j<num_candi_nodes;j++)
 		{
@@ -67,8 +64,6 @@ int* getNodes()
 		new_node[0] = rslt_nodes[num_rslt_nodes*2+0] = candi_nodes[rad*2+0];
 		new_node[1] = rslt_nodes[num_rslt_nodes*2+1] = candi_nodes[rad*2+1];
 		num_rslt_nodes++;
-		// printf("candi node,x:%d,y:%d\n",candi_nodes[rad*2+0],candi_nodes[rad*2+1]);
-		// printf("new node,x:%d,y:%d\n",new_node[0],new_node[1]);
 		memcpy(candi_nodes+rad*2,candi_nodes+rad*2+2,(num_candi_nodes-rad-1)*2*sizeof(int));
 		num_candi_nodes--;
 		for(int j=0;j<num_candi_nodes;j++)
@@ -78,32 +73,13 @@ int* getNodes()
 		fprintf(log_file,"-----------------------\n");
 		
 	}
-	// for(int i=0;i<NUM_UNIT;i++) printf("i:%d,j:%d\n",rslt_nodes[i*2+0],rslt_nodes[i*2+1]);
 	return rslt_nodes;
 }
 
 Square* getNext()
 {
 	Square* next = (Square*) calloc(NUM_UNIT,sizeof(Square));
-	// Square* start = next;
-	// start->x = NUM_X / 2;
-	// start->y = 0;
-	srand(time(NULL));
-	// int dirs[4][2] = {{0,1},{1,0},{-1,0},{0,-1}};
-	// int dir[2] = {0,0};
-	// for(int i=1;i<NUM_UNIT;i++)
-	// {
-		// int j = rand_by_range(0,3);
-		// while(dirs[j][0] * dir[0] + dirs[j][1] * dir[1] == -1)
-		// {
-			// j = rand_by_range(0,3);
-		// }
-		// memcpy(dir,dirs[j],sizeof(dir));
-		// Square* s = next+i;
-		// s->x = start->x + dir[0];
-		// s->y = start->y + dir[1];
-		// start = s;
-	// }
+	
 	int *nodes = getNodes();
 	int l=100;int r=-100;
 	for(int i=0;i<NUM_UNIT;i++)
@@ -125,16 +101,15 @@ void initData()
 {
 	log_file = fopen("log_tetris.log","w");
 	
-	squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
+	srand(time(NULL));
 	
+	squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
 	
 	still_squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
 	num_still_squares = 0;
 	
 	moving_squares = getNext();
 	num_squares = NUM_UNIT;
-	
-	
 }
 
 bool checkCollision(int dirX,int dirY)
@@ -190,8 +165,6 @@ void rotate()
 		if(moving_squares[i].x < l) l = moving_squares[i].x;
 		if(moving_squares[i].y > b) b = moving_squares[i].y;
 		if(moving_squares[i].y < t) t = moving_squares[i].y;
-		// printf("%dx:%d\n",i,moving_squares[i].x);
-		// printf("%dy:%d\n",i,moving_squares[i].y);
 	}
 	int org_x = 100;
 	int org_y = 100;
@@ -204,10 +177,6 @@ void rotate()
 	}
 	int center_x = (r - l) / 2;
 	int center_y = (b - t) / 2;
-	// printf("center_x:%d\n",center_x);
-	// printf("center_y:%d\n",center_y);
-	// printf("org_x:%d\n",org_x);
-	// printf("org_y:%d\n",org_y);
 	/* rotate matrix
 	|0  1|
 	|-1 0|
@@ -232,8 +201,6 @@ void rotate()
 		
 		test_squares[i].x = x + org_x + center_x;
 		test_squares[i].y = y + org_y + center_y;
-		// printf("%dx:%d\n",i,test_squares[i].x);
-		// printf("%dy:%d\n",i,test_squares[i].y);
 	}
 	//check out of boarder
 	l=100;r=-100;
@@ -375,7 +342,6 @@ void checkElimination()
 			for(int j=0;j<i-NUM_X+1;j++)
 			{
 				still_squares[j].y++;
-				printf("j:%d,num:%d\n",j,num_still_squares);
 			}
 			memcpy(still_squares+i-NUM_X+1,still_squares+i+1,sizeof(Square)*(num_still_squares - i-1));
 			num_still_squares -= NUM_X;
@@ -396,36 +362,11 @@ bool loop()
 	//check bottom and collision
 	if(checkBottom() || checkCollision(0,1))
 	{
-		if(checkBottom()) 
-		{
-			for(int i=0;i<NUM_UNIT;i++)
-			{
-				printf("i:%d,x:%d,y:%d\n",i,moving_squares[i].x,moving_squares[i].y);
-			}
-			printf("check bottom\n");
-		}
-		if(checkCollision(0,1)) 
-		{
-			for(int i=0;i<NUM_UNIT;i++)
-			{
-				printf("i:%d,x:%d,y:%d\n",i,moving_squares[i].x,moving_squares[i].y);
-			}
-			printf("check collision\n");
-		}
-		// log();
 		memcpy(still_squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
 		num_still_squares+=NUM_UNIT;
 		
 		sort(0,num_still_squares-1);
-		// log();
 		checkElimination();
-		if(checkBottom() || checkCollision(0,1))
-		{
-			for(int i=0;i<num_still_squares;i++)
-			{
-				printf("i:%d,x:%d,y:%d\n",i,still_squares[i].x,still_squares[i].y);
-			}
-		}
 		moving_squares = getNext();
 		num_squares = num_still_squares + NUM_UNIT;
 	}
@@ -436,16 +377,5 @@ bool loop()
 	}
 	memcpy(squares,still_squares,num_still_squares*sizeof(Square));
 	memcpy(squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
-	// printf("num_still_squares:%d\n",num_still_squares);
-	for(int i=0;i<num_still_squares;i++)
-	{
-		// printf("%dx:%d\n",i,still_squares[i].x);
-		// printf("%dy:%d\n",i,still_squares[i].y);
-	}
-	for(int i=0;i<NUM_UNIT;i++)
-	{
-		// printf("%dx:%d\n",i,moving_squares[i].x);
-		// printf("%dy:%d\n",i,moving_squares[i].y);
-	}
 	return true;
 }
