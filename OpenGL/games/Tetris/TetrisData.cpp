@@ -56,26 +56,26 @@ int* getNodes()
 			num_candi_nodes++;
 		}
 		// printf("num candidates %d\n",num_candi_nodes);
-		printf("-----------------------\n");
+		fprintf(log_file,"-----------------------\n");
 		for(int j=0;j<num_candi_nodes;j++)
 		{
-			printf("cand:x:%d,y:%d\n",candi_nodes[j*2+0],candi_nodes[j*2+1]);
+			fprintf(log_file,"cand:x:%d,y:%d\n",candi_nodes[j*2+0],candi_nodes[j*2+1]);
 		}
-		printf("*********\n");
+		fprintf(log_file,"*********\n");
 		int rad = rand_by_range(0,num_candi_nodes);
-		printf("rad:%d\n",rad);
+		fprintf(log_file,"rad:%d\n",rad);
 		new_node[0] = rslt_nodes[num_rslt_nodes*2+0] = candi_nodes[rad*2+0];
 		new_node[1] = rslt_nodes[num_rslt_nodes*2+1] = candi_nodes[rad*2+1];
 		num_rslt_nodes++;
 		// printf("candi node,x:%d,y:%d\n",candi_nodes[rad*2+0],candi_nodes[rad*2+1]);
 		// printf("new node,x:%d,y:%d\n",new_node[0],new_node[1]);
-		memcpy(candi_nodes+rad*2,candi_nodes+rad*2+2,(num_candi_nodes-rad-1)*2);
+		memcpy(candi_nodes+rad*2,candi_nodes+rad*2+2,(num_candi_nodes-rad-1)*2*sizeof(int));
 		num_candi_nodes--;
 		for(int j=0;j<num_candi_nodes;j++)
 		{
-			printf("cand:x:%d,y:%d\n",candi_nodes[j*2+0],candi_nodes[j*2+1]);
+			fprintf(log_file,"cand:x:%d,y:%d\n",candi_nodes[j*2+0],candi_nodes[j*2+1]);
 		}
-		printf("-----------------------\n");
+		fprintf(log_file,"-----------------------\n");
 		
 	}
 	// for(int i=0;i<NUM_UNIT;i++) printf("i:%d,j:%d\n",rslt_nodes[i*2+0],rslt_nodes[i*2+1]);
@@ -123,6 +123,8 @@ Square* getNext()
 
 void initData()
 {
+	log_file = fopen("log_tetris.log","w");
+	
 	squares = (Square*) calloc(MAX_SQUARES,sizeof(Square));
 	
 	
@@ -132,7 +134,7 @@ void initData()
 	moving_squares = getNext();
 	num_squares = NUM_UNIT;
 	
-	log_file = fopen("log_tetris.log","w");
+	
 }
 
 bool checkCollision(int dirX,int dirY)
@@ -410,12 +412,12 @@ bool loop()
 			}
 			printf("check collision\n");
 		}
-		log();
+		// log();
 		memcpy(still_squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
 		num_still_squares+=NUM_UNIT;
 		
 		sort(0,num_still_squares-1);
-		log();
+		// log();
 		checkElimination();
 		if(checkBottom() || checkCollision(0,1))
 		{
@@ -434,7 +436,7 @@ bool loop()
 	}
 	memcpy(squares,still_squares,num_still_squares*sizeof(Square));
 	memcpy(squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
-	printf("num_still_squares:%d\n",num_still_squares);
+	// printf("num_still_squares:%d\n",num_still_squares);
 	for(int i=0;i<num_still_squares;i++)
 	{
 		// printf("%dx:%d\n",i,still_squares[i].x);
