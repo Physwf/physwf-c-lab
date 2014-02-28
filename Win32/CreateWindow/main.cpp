@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tchar.h>
+#include <GL/GL.h>
 
 #pragma comment (lib,"kernel32.lib")
 #pragma comment (lib,"user32.lib")
+#pragma comment (lib,"opengl32.lib")
+#pragma comment (lib,"Gdi32.lib")
 
 LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara);
 
@@ -35,6 +38,37 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara)
 	switch(msg)
 	{
 		case WM_CREATE:
+			{
+				PIXELFORMATDESCRIPTOR pfd =
+				{
+					sizeof(PIXELFORMATDESCRIPTOR),
+					1,
+					PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+					PFD_TYPE_RGBA,
+					32,
+					0,0,0,0,0,0,
+					0,
+					0,
+					0,
+					0,0,0,0,
+					24,
+					8,
+					0,
+					PFD_MAIN_PLANE,
+					0,
+					0,0,0
+				};
+				HDC ourWindowHandleToDeviceContext = GetDC(hWnd);
+				
+				int letWindowChooseThisPixelFormat = ChoosePixelFormat(ourWindowHandleToDeviceContext,&pfd);
+				SetPixelFormat(ourWindowHandleToDeviceContext,letWindowChooseThisPixelFormat,&pfd);
+				
+				HGLRC ourOpenGLRenderingContext = wglCreateContext(ourWindowHandleToDeviceContext);
+				wglMakeCurrent(ourWindowHandleToDeviceContext,ourOpenGLRenderingContext);
+				
+				MessageBoxA(0,(char*)glGetString(GL_VERSION),"OPENGL VERSION",0);
+				
+			}
 			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
