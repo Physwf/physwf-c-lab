@@ -12,9 +12,11 @@
 #pragma comment (lib,"opengl32.lib")
 #pragma comment (lib,"Gdi32.lib")
 
-long appTime;
+long lastRenderTime;
+long lastUpdateTime;
 float FPS;
-int interval;
+int renderInterval;
+int updateInterval;
 bool inited;
 
 LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara);
@@ -22,9 +24,11 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	FPS = 1.0/60.0;
-	interval = 1000.0 * FPS;
+	renderInterval = 1000.0 * FPS;
+	updateInterval = 800;//ms
 	inited = false;
-	appTime = GetTickCount();
+	lastRenderTime = GetTickCount();
+	lastUpdateTime = lastRenderTime;
 	
 	AllocConsole();
 	freopen("CONOUT$","w+t",stdout);
@@ -91,18 +95,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	initView();
 	initData();
 	initialized = true;
-	printf("interval:%d\n",interval);
+	printf("renderInterval:%d\n",renderInterval);
 	
 	while(true)
 	{
-		int elapse = GetTickCount() - appTime;
-		if(elapse >= interval)
+		int elapse = GetTickCount() - lastRenderTime;
+		if(elapse >= renderInterval)
 		{
-			appTime += elapse;
+			lastRenderTime += elapse;
 			if(initialized)
 			{
 				display();
-				update(appTime);
+				elapse = GetTickCount() - lastUpdateTime;
+				if(elapse >= updateInterval)
+				{
+					update(lastUpdateTime);
+					lastUpdateTime += elapse;
+				}
 				SwapBuffers(ourWindowHandleToDeviceContext);
 			}
 		}
