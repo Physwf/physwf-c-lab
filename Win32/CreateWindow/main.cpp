@@ -34,16 +34,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.cbWndExtra = 0;
 	wc.hCursor		= LoadCursor(NULL,IDC_ARROW);
 	wc.hIcon		= LoadIconW(NULL,MAKEINTRESOURCEW(IDI_APPLICATION));
-	wc.hIconSm		= LoadIconW(wc.hInstance,MAKEINTRESOURCEW(IDI_APPLICATION));
+	wc.hIconSm		= LoadIconW(NULL,MAKEINTRESOURCEW(IDI_APPLICATION));
 	if(!RegisterClassEx(&wc))
 		return 1;
 	hwnd = CreateWindowW(L"Hello,World",L"Hello,World",WS_OVERLAPPEDWINDOW|WS_VISIBLE,0,0,640,480,0,0,hInstance,0);
-	// ShowWindow(hwnd, nCmdShow);              //display the window on the screen
-	// UpdateWindow(hwnd);
-	while(1)
+	ShowWindow(hwnd, nCmdShow);              //display the window on the screen
+	UpdateWindow(hwnd);
+	while(GetMessage(&msg,NULL,0,0) > 0)
 	{
-		if(GetMessage(&msg,NULL,0,0) > 0)
-			DispatchMessage(&msg);
+		DispatchMessage(&msg);
 		time_t elapse = time(NULL) - appTime;
 		if(elapse >= interval)
 		{
@@ -90,7 +89,24 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara)
 				
 				printf("opengl version: %s\n",glGetString(GL_VERSION));
 				
-				MessageBoxA(0,(char*)glGetString(GL_VERSION),"OPENGL VERSION",0);
+				// MessageBoxA(0,(char*)glGetString(GL_VERSION),"OPENGL VERSION",0);
+			}
+			break;
+		case WM_KEYDOWN:
+			switch(wPara)
+			{
+				case VK_LEFT:
+					MessageBoxA(0,"LEFT","KEY DOWN",MB_OK);
+					break;
+				case VK_UP:
+					MessageBoxA(0,"UP","KEY DOWN",MB_OK);
+					break;
+				case VK_RIGHT:
+					MessageBoxA(0,"RIGHT","KEY DOWN",MB_OK);
+					break;
+				case VK_DOWN:
+					MessageBoxA(0,"DOWN","KEY DOWN",MB_OK);
+					break;
 			}
 			break;
 		case WM_DESTROY:

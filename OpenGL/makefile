@@ -81,12 +81,14 @@ textfile.obj:
 
 DIR_GAMES=./games
 DIR_TETRIS=/Tetris
-tetris:TetrisMain.obj utils.obj TetrisData.obj random.obj
-	$(LINK) $(BIN)/TetrisMain.obj $(BIN)/utils.obj $(BIN)/TetrisData.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/tetris$(OUTSUFFIX)
+tetris:TetrisMain.obj TetrisView.obj TetrisData.obj random.obj utils.obj 
+	$(LINK) $(BIN)/TetrisMain.obj $(BIN)/TetrisView.obj $(BIN)/TetrisData.obj $(BIN)/random.obj $(BIN)/utils.obj $(LINKOUT)$(BIN)/tetris$(OUTSUFFIX)
 	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.vert $(BIN)/tetris.vert
 	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.frag $(BIN)/tetris.frag
-TetrisMain.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisMain.cpp
-	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisMain.cpp $(CLOUT)$(BIN)/TetrisMain.obj $(INCLUDE)
+TetrisMain.obj:$(DIR_GAMES)$(DIR_TETRIS)/main.cpp
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/main.cpp $(CLOUT)$(BIN)/TetrisMain.obj $(INCLUDE)
+TetrisView.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisView.cpp
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisView.cpp $(CLOUT)$(BIN)/TetrisView.obj $(INCLUDE)
 TetrisData.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp
 	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp $(CLOUT)$(BIN)/TetrisData.obj $(INCLUDE)
 
