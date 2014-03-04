@@ -89,7 +89,7 @@ TetrisMain.obj:$(DIR_GAMES)$(DIR_TETRIS)/main.cpp
 	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/main.cpp $(CLOUT)$(BIN)/TetrisMain.obj $(INCLUDE)
 TetrisView.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisView.cpp
 	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisView.cpp $(CLOUT)$(BIN)/TetrisView.obj $(INCLUDE)
-TetrisData.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp
+TetrisData.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp 
 	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp $(CLOUT)$(BIN)/TetrisData.obj $(INCLUDE)
 
 clean:

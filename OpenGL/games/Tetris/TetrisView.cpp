@@ -8,6 +8,7 @@
 #define SQUARE_HEIGHT (WINDOW_HEIGHT/NUM_Y)
 
 bool initialized = false;
+int accumTime;
 
 enum Buffer_IDs {VERTEX,INDEX,NumBuffers};
 GLuint buffers[NumBuffers];
@@ -107,19 +108,14 @@ void initView()
 		0.0,		0.0,				1.0, 0.0,
 		-1.0,		1.0,				0.0, 1.0
 	};
-	printf("mvp:%f\n",mvp[0]);
-	printf("mvp:%f\n",mvp[5]);
 	glUniformMatrix4fv(mvpLoc,1,GL_FALSE,mvp);
+	
+	vertices = (GLfloat*) calloc(MAX_SQUARES*8,sizeof(GLfloat));
 }
 
 void post()
 {
-	vertices = (GLfloat*) calloc(num_squares*8,sizeof(GLfloat));
-	for(int i=0;i < num_squares;i++)
-	{
-		// printf("%d:%d\n",i,squares[i].x);
-		// printf("%d:%d\n",i,squares[i].y);
-	}
+	// vertices = (GLfloat*) calloc(num_squares*8,sizeof(GLfloat));
 	for(int i=0;i < num_squares;i++)
 	{
 		vertices[i*8] = squares[i].x * (int)SQUARE_WIDTH;
@@ -131,53 +127,24 @@ void post()
 		vertices[i*8+6] = squares[i].x * (int)SQUARE_WIDTH;
 		vertices[i*8+7] = squares[i].y * (int)SQUARE_HEIGHT + (int)SQUARE_HEIGHT;
 	}
-	for(int i=0;i < num_squares;i++)
-	{
-		// printf("%d:%f\n",i,vertices[i*8]);
-		// printf("%d:%f\n",i,vertices[i*8+1]);
-		// printf("%d:%f\n",i,vertices[i*8+2]);
-		// printf("%d:%f\n",i,vertices[i*8+3]);
-		// printf("%d:%f\n",i,vertices[i*8+4]);
-		// printf("%d:%f\n",i,vertices[i*8+5]);
-		// printf("%d:%f\n",i,vertices[i*8+6]);
-		// printf("%d:%f\n",i,vertices[i*8+7]);
-	}
 	glBufferData(GL_ARRAY_BUFFER,num_squares*8*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
-	free(vertices);
+	// free(vertices);
 }
 
-void update(int value)
+
+void update(int elapse)
 {
-	if(loop())
-		;
-	post();
+	accumTime+=elapse;
+	if(accumTime>=800)
+	{
+		if(!tick()) return;
+		post();
+		accumTime = 0;
+	}
 }
 
 void onKeyBoardEvent(int keycode,int x,int y)
 {
 	onKeyDown(keycode);
 	post();
-}
-
-int _main(int argc,char** argv)
-{
-	glutInit(&argc,argv);
-	glutInitDisplayMode(GLUT_RGBA);
-	glutInitWindowSize(200,300);
-	glutInitWindowPosition(0,0);
-	glutInitContextVersion(3,0);
-	// glutInitContextProfile(GLUT_CORE_PROFILE);
-	glutCreateWindow("Tetris");
-	if(glewInit() != GLEW_OK)
-	{
-		printf("Glew Init Error!");
-		return 1;
-	}
-	initView();
-	initData();
-	glClearColor(0.0,0.0,0.0,1.0);
-	glutDisplayFunc(&display);
-	glutSpecialFunc(onKeyBoardEvent);
-	glutTimerFunc(800,update,0);
-	glutMainLoop();
 }

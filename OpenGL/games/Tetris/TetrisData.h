@@ -17,5 +17,6 @@ extern int num_squares;
 
 void initData();
 void onKeyDown(unsigned char keycode);
-bool loop();
+bool tick();
+void scan();
 

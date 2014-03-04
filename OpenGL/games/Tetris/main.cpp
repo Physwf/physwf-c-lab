@@ -30,9 +30,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	lastRenderTime = GetTickCount();
 	lastUpdateTime = lastRenderTime;
 	
-	AllocConsole();
-	freopen("CONOUT$","w+t",stdout);
-	freopen("CONIN$","r+t",stdin);
+	// AllocConsole();
+	// freopen("CONOUT$","w+t",stdout);
+	// freopen("CONIN$","r+t",stdin);
 
 	HWND hwnd;
 	MSG msg 		= {0};
@@ -50,7 +50,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hIconSm		= LoadIconW(NULL,MAKEINTRESOURCEW(IDI_APPLICATION));
 	if(!RegisterClassEx(&wc))
 		return 1;
-	hwnd = CreateWindowW(L"Hello,World",L"Hello,World",WS_OVERLAPPEDWINDOW|WS_VISIBLE,0,0,VIEW_W,VIEW_H,0,0,hInstance,0);
+	RECT wr = {0,0,VIEW_W,VIEW_H};
+	AdjustWindowRect(&wr,WS_OVERLAPPEDWINDOW,false);
+	hwnd = CreateWindowW(L"Hello,World",
+						L"Hello,World",
+						WS_OVERLAPPEDWINDOW|WS_VISIBLE,
+						0,0,
+						wr.right - wr.left,
+						wr.bottom - wr.top,
+						0,0,
+						hInstance,
+						0);
 	
 	
 	PIXELFORMATDESCRIPTOR pfd =
@@ -96,30 +106,36 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	initData();
 	initialized = true;
 	printf("renderInterval:%d\n",renderInterval);
-	
-	while(true)
+	bool done = false;
+	while(!done)
 	{
-		int elapse = GetTickCount() - lastRenderTime;
-		if(elapse >= renderInterval)
+		if(PeekMessage(&msg,NULL,0,0,PM_REMOVE))
+		// if(GetMessage(&msg,NULL,0,0))
 		{
-			lastRenderTime += elapse;
-			if(initialized)
+			if(msg.message == WM_QUIT)
 			{
-				display();
-				elapse = GetTickCount() - lastUpdateTime;
-				if(elapse >= updateInterval)
+				done = true;
+			}
+			TranslateMessage(&msg);	
+			DispatchMessage(&msg);
+		}
+		else
+		{
+			int elapse = GetTickCount() - lastRenderTime;
+			if(elapse >= renderInterval)
+			{
+				lastRenderTime += elapse;
+				if(initialized)
 				{
-					update(lastUpdateTime);
-					lastUpdateTime += elapse;
+					display();
+					update(elapse);
+					SwapBuffers(ourWindowHandleToDeviceContext);
 				}
-				SwapBuffers(ourWindowHandleToDeviceContext);
 			}
 		}
-		if(PeekMessage(&msg,NULL,0,0,PM_REMOVE) > 0)
-			DispatchMessage(&msg);
+		Sleep(1);
 	}
-	FreeConsole();
-	return 0;
+	return msg.wParam;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara)
@@ -127,58 +143,20 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT msg,WPARAM wPara,LPARAM lPara)
 	switch(msg)
 	{
 		case WM_CREATE:
-			{
-				// PIXELFORMATDESCRIPTOR pfd =
-				// {
-					// sizeof(PIXELFORMATDESCRIPTOR),
-					// 1,
-					// PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-					// PFD_TYPE_RGBA,
-					// 32,
-					// 0,0,0,0,0,0,
-					// 0,
-					// 0,
-					// 0,
-					// 0,0,0,0,
-					// 24,
-					// 8,
-					// 0,
-					// PFD_MAIN_PLANE,
-					// 0,
-					// 0,0,0
-				// };
-				// HDC ourWindowHandleToDeviceContext = GetDC(hWnd);
-				
-				// int letWindowChooseThisPixelFormat = ChoosePixelFormat(ourWindowHandleToDeviceContext,&pfd);
-				// SetPixelFormat(ourWindowHandleToDeviceContext,letWindowChooseThisPixelFormat,&pfd);
-				
-				// HGLRC ourOpenGLRenderingContext = wglCreateContext(ourWindowHandleToDeviceContext);
-				// wglMakeCurrent(ourWindowHandleToDeviceContext,ourOpenGLRenderingContext);
-				
-				// printf("opengl version: %s\n",glGetString(GL_VERSION));
-				
-				// initView();
-				// initData();
-				// initialized = true;
-			}
 			break;
 		case WM_KEYDOWN:
 			switch(wPara)
 			{
 				case VK_LEFT:
-					// MessageBoxA(0,"LEFT","KEY DOWN",MB_OK);
 					onKeyBoardEvent(100,0,0);
 					break;
 				case VK_UP:
-					// MessageBoxA(0,"UP","KEY DOWN",MB_OK);
 					onKeyBoardEvent(101,0,0);
 					break;
 				case VK_RIGHT:
-					// MessageBoxA(0,"RIGHT","KEY DOWN",MB_OK);
 					onKeyBoardEvent(102,0,0);
 					break;
 				case VK_DOWN:
-					// MessageBoxA(0,"DOWN","KEY DOWN",MB_OK);
 					onKeyBoardEvent(103,0,0);
 					break;
 			}

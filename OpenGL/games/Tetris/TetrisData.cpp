@@ -155,6 +155,12 @@ bool checkBottom()
 	return false;
 }
 
+void scan()
+{
+	memcpy(squares,still_squares,num_still_squares*sizeof(Square));
+	memcpy(squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
+}
+
 void rotate()
 {
 	int l=100,r=-100;
@@ -263,15 +269,19 @@ void onKeyDown(unsigned char keycode)
 	{
 		case KEY_LEFT:
 			translate('L');
+			scan();
 			break;
 		case KEY_RIGHT:
 			translate('R');
+			scan();
 			break;
 		case KEY_UP:
 			rotate();
+			scan();
 			break;
 		case KEY_DOWN:
 			drop();
+			scan();
 			break;
 	}
 }
@@ -350,7 +360,7 @@ void checkElimination()
 	}
 }
 
-bool loop()
+bool tick()
 {
 	//check game over
 	for(int i=0;i<num_still_squares;i++)
@@ -375,7 +385,6 @@ bool loop()
 		for(int i=0;i<NUM_UNIT;i++)
 			moving_squares[i].y++;
 	}
-	memcpy(squares,still_squares,num_still_squares*sizeof(Square));
-	memcpy(squares+num_still_squares,moving_squares,NUM_UNIT*sizeof(Square));
+	scan();
 	return true;
 }
