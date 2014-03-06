@@ -1,6 +1,6 @@
-#include <EGL/egl.h>
 #include <stdio.h>
 #include <windows.h>
+#include "PopoView.h"
 
 #pragma comment (lib,"kernel32.lib")
 #pragma comment (lib,"user32.lib")
@@ -106,7 +106,7 @@ int main()
 		printf("Choose Config failed!\n");
 	}
 	
-	HWND window = create_window(500,400);
+	HWND window = create_window(VIEW_W,VIEW_H);
 	
 	EGLSurface surface;
 	surface = eglCreateWindowSurface(display,configs[0],window,NULL);
@@ -129,7 +129,13 @@ int main()
 		printf("Create context error!\n");
 	}
 	
-	eglMakeCurrent(display,window,window,context);
+	if(!eglMakeCurrent(display,surface,surface,context))
+	{
+		printf("Make current error!\n");
+		
+	}
+	
+	initView();
 	
 	bool done = false;
 	MSG msg;
@@ -144,10 +150,10 @@ int main()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		else
-		{
-			
-		}
+		
+		render();
+		eglSwapBuffers(display,surface);
+		Sleep(10);
 	}
 	return 0;
 }
