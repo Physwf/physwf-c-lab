@@ -1,8 +1,8 @@
-precision medium float;
+precision mediump float;
 
 varying vec2 v_texCoord;
 
-uniform sample2D s_texture;
+uniform sampler2D s_texture;
 
 void main()
 {

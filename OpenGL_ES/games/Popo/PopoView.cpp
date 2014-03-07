@@ -1,8 +1,9 @@
 #include "PopoView.h"
+#include "utils.h"
 #include <atlstr.h>
 #include <atlimage.h>
 
-#define BUFFER_OFFSET(offset) ((GLbytes*)NULL+offset)
+#define BUFFER_OFFSET(offset) ((GLbyte*)NULL+offset)
 GLfloat *vertices;
 GLshort *indices;
 
@@ -26,9 +27,12 @@ void initView()
 		100,100,1,1,
 		0,100,0,1
 	};
-	glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),vbos[vertex],GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),square,GL_STATIC_DRAW);
+	
+	glBindBuffer(GL_ARRAY_BUFFER,vbos[index]);
 	GLshort square_indices[] = {0,1,2,2,3,0};
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,vbos[index],6*sizeof(GLshort),square_indices,GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,6*sizeof(GLshort),square_indices,GL_STATIC_DRAW);
+	
 	indices = square_indices;
 	
 	glVertexAttribPointer(a_postion,2,GL_FLOAT,false,4,BUFFER_OFFSET(0));
@@ -80,7 +84,7 @@ void initView()
 	glLinkProgram(program);
 	
 	GLint pStatus;
-	glGetProgramiv(program,GL_LINK_STATIS,pStatus);
+	glGetProgramiv(program,GL_LINK_STATUS,&pStatus);
 	if(!pStatus)
 	{
 		GLint infoLen;
@@ -92,10 +96,9 @@ void initView()
 		free(infoLog);
 	}
 	
-	glUseProgram(program);
 	
 	GLint mvpLoc = glGetUniformLocation(program,"u_mvp");
-	Glfloat mvp[] =
+	GLfloat mvp[] =
 	{
 		2.0/VIEW_W,		0.0,		0.0, 0.0,
 		0.0,		-2.0/VIEW_H,	0.0, 0.0,
@@ -110,25 +113,31 @@ void initView()
 	
 	BITMAP bm;
 	CImage img;
-	HRESULT hr = img.Load("Alcedo.jpg");
+	HRESULT hr = img.Load("./Data/Popo.png");
 	if(!SUCCEEDED(hr))
 	{
 		printf("load image error!\n");
 	}
 	HBITMAP hbmp = img;
 	
-	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,bm.bmWidth,bm.bmHeight,GL_RGBA,GL_UNSIGNED_BYTE,bm.bmBits);
+	glTexImage2D(GL_TEXTURE_2D,0,
+				GL_RGBA,
+				bm.bmWidth,bm.bmHeight,0,
+				GL_RGBA,GL_UNSIGNED_BYTE,bm.bmBits);
 	
-	glTexParameteriv(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteriv(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	
-	glTexParameteriv(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
-	glTexParameteriv(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
 	
 	GLint sampleLoc = glGetUniformLocation(program,"s_texture");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D,textures[0]);
 	glUniform1i(sampleLoc,0);
+	
+	
+	glUseProgram(program);
 }
 
 void render()
