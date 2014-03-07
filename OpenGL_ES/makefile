@@ -13,11 +13,15 @@ BIN=./bin
 
 DIR_GMAES=./games
 DIR_POPO=/Popo
+DIR_DATA=/Data
 
 popo:PopoMain.obj PopoView.obj utils.obj
 	$(LINK) $(BIN)/PopoMain.obj $(BIN)/PopoView.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/Popo.exe
 PopoMain.obj:$(DIR_GMAES)$(DIR_POPO)/main.cpp
 	$(CL) $(DIR_GMAES)$(DIR_POPO)/main.cpp $(CLOUT)$(BIN)/PopoMain.obj $(INCLUDE)
+	cp $(DIR_GMAES)$(DIR_POPO)/popo.vert $(BIN)/popo.vert
+	cp $(DIR_GMAES)$(DIR_POPO)/popo.frag $(BIN)/popo.frag
+	cp -R $(DIR_GMAES)$(DIR_POPO)$(DIR_DATA) $(BIN)$(DIR_DATA)
 PopoView.obj:$(DIR_GMAES)$(DIR_POPO)/PopoView.cpp
 	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoView.cpp $(CLOUT)$(BIN)/PopoView.obj $(INCLUDE)
 utils.obj:$(DIR_SHARED)/src/utils.cpp
