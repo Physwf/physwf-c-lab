@@ -3,13 +3,20 @@
 #include <atlstr.h>
 #include <atlimage.h>
 
-#define BUFFER_OFFSET(offset) ((GLbyte*)NULL+offset)
-GLfloat *vertices;
-GLshort *indices;
+#define BUFFER_OFFSET(offset) ((GLfloat*)NULL+offset)
+
+GLfloat vertices[]=
+	{
+		0,0,0,0,	
+		128,0,	1,0,
+		128,128,1,1,
+		0,128,0,1
+	};
+GLushort indices[]={0,1,2,2,3,0};
 
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
-enum Tex_IDs {s_all,numTexs};
+enum Tex_IDs {s_popo,numTexs};
 
 void initView()
 {
@@ -18,27 +25,17 @@ void initView()
 	
 	GLuint vbos[numVBOs];
 	glGenBuffers(numVBOs,vbos);
+	
 	glBindBuffer(GL_ARRAY_BUFFER,vbos[vertex]);
-	// vertices = (GLfloat*)calloc(4*4,sizeof(GLfloat));
-	GLfloat square[] = 
-	{
-		0,0,0,0,
-		100,0,1,0,
-		100,100,1,1,
-		0,100,0,1
-	};
-	glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),square,GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
 	
-	glBindBuffer(GL_ARRAY_BUFFER,vbos[index]);
-	GLshort square_indices[] = {0,1,2,2,3,0};
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,6*sizeof(GLshort),square_indices,GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vbos[index]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,6*sizeof(GLushort),indices,GL_STATIC_DRAW);
 	
-	indices = square_indices;
-	
-	glVertexAttribPointer(a_postion,2,GL_FLOAT,false,4,BUFFER_OFFSET(0));
+	glVertexAttribPointer(a_postion,2,GL_FLOAT,GL_FALSE,4*sizeof(GLfloat),BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(a_postion);
 	
-	glVertexAttribPointer(a_texCoord,2,GL_FLOAT,false,4,BUFFER_OFFSET(2));
+	glVertexAttribPointer(a_texCoord,2,GL_FLOAT,GL_FALSE,4*sizeof(GLfloat),BUFFER_OFFSET(2));
 	glEnableVertexAttribArray(a_texCoord);
 	
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
@@ -81,6 +78,10 @@ void initView()
 	GLuint program = glCreateProgram();
 	glAttachShader(program,vShader);
 	glAttachShader(program,fShader);
+	
+	glBindAttribLocation(program,a_postion,"a_position");
+	glBindAttribLocation(program,a_texCoord,"a_texCoord");
+	
 	glLinkProgram(program);
 	
 	GLint pStatus;
@@ -97,6 +98,12 @@ void initView()
 	}
 	
 	
+	
+	
+	
+	
+	glUseProgram(program);
+	
 	GLint mvpLoc = glGetUniformLocation(program,"u_mvp");
 	GLfloat mvp[] =
 	{
@@ -109,7 +116,7 @@ void initView()
 	
 	GLuint textures[numTexs];
 	glGenTextures(numTexs,textures);
-	glBindTexture(GL_TEXTURE_2D,textures[0]);
+	glBindTexture(GL_TEXTURE_2D,textures[s_popo]);
 	
 	BITMAP bm;
 	CImage img;
@@ -119,6 +126,7 @@ void initView()
 		printf("load image error!\n");
 	}
 	HBITMAP hbmp = img;
+	GetObject(hbmp, sizeof(bm), &bm);
 	
 	glTexImage2D(GL_TEXTURE_2D,0,
 				GL_RGBA,
@@ -130,19 +138,128 @@ void initView()
 	
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1); 
 	
 	GLint sampleLoc = glGetUniformLocation(program,"s_texture");
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D,textures[0]);
+	
+	glBindTexture(GL_TEXTURE_2D,textures[s_popo]);
 	glUniform1i(sampleLoc,0);
-	
-	
-	glUseProgram(program);
 }
 
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_SHORT,indices);
+	glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_SHORT,NULL);
 	glFlush();
+}
+
+
+void _initView()
+{
+	// printf("%s\n", glGetString(GL_VERSION));
+	glClearColor(0,0,0,1);
+	
+	GLuint vbos[numVBOs];
+	glGenBuffers(numVBOs,vbos);
+	
+	glBindBuffer(GL_ARRAY_BUFFER,vbos[vertex]);
+	glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vbos[index]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,6*sizeof(GLushort),indices,GL_STATIC_DRAW);
+	
+	glVertexAttribPointer(a_postion,2,GL_FLOAT,GL_FALSE,4*sizeof(GLfloat),BUFFER_OFFSET(0));
+	glEnableVertexAttribArray(a_postion);
+	
+	glVertexAttribPointer(a_texCoord,2,GL_FLOAT,GL_FALSE,4*sizeof(GLfloat),BUFFER_OFFSET(2));
+	glEnableVertexAttribArray(a_texCoord);
+	
+	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
+	
+	const char* vSrc = t_read("test.vert");
+	const char* fSrc = t_read("test.frag");
+	
+	glShaderSource(vShader,1,&vSrc,NULL);
+	glShaderSource(fShader,1,&fSrc,NULL);
+	
+	GLint vStatus,fStatus;
+	
+	glCompileShader(vShader);
+	glGetShaderiv(vShader,GL_COMPILE_STATUS,&vStatus);
+	if(!vStatus)
+	{
+		GLint infoLen;
+		char* infoLog;
+		glGetShaderiv(vShader,GL_INFO_LOG_LENGTH,&infoLen);
+		infoLog = (char*) malloc(infoLen);
+		glGetShaderInfoLog(vShader,infoLen,NULL,infoLog);
+		printf("vertex shader compile error:%s\n",infoLog);
+		free(infoLog);
+	}
+	
+	glCompileShader(fShader);
+	glGetShaderiv(fShader,GL_COMPILE_STATUS,&fStatus);
+	if(!fStatus)
+	{
+		GLint infoLen;
+		char* infoLog;
+		glGetShaderiv(fShader,GL_INFO_LOG_LENGTH,&infoLen);
+		infoLog = (char*) malloc(infoLen);
+		glGetShaderInfoLog(fShader,infoLen,NULL,infoLog);
+		printf("fragment shader compile error:%s\n",infoLog);
+		free(infoLog);
+	}
+	
+	GLuint program = glCreateProgram();
+	if(program ==0) printf("create program failed!\n");
+	
+	glAttachShader(program,vShader);
+	glAttachShader(program,fShader);
+	
+	glBindAttribLocation(program, 0, "vPosition");
+	
+	
+	glLinkProgram(program);
+	
+	
+	GLint pStatus;
+	glGetProgramiv(program,GL_LINK_STATUS,&pStatus);
+	if(!pStatus)
+	{
+		GLint infoLen;
+		char* infoLog;
+		glGetProgramiv(program,GL_INFO_LOG_LENGTH,&infoLen);
+		infoLog = (char*) malloc(infoLen);
+		glGetProgramInfoLog(program,infoLen,NULL,infoLog);
+		printf("program link error:%s\n");
+		free(infoLog);
+	}
+	
+	glUseProgram(program);
+	
+	GLint mvpLoc = glGetUniformLocation(program,"u_mvp");
+	GLfloat mvp[] =
+	{
+		2.0/VIEW_W,		0.0,		0.0, 0.0,
+		0.0,		-2.0/VIEW_H,	0.0, 0.0,
+		0.0,		0.0,				1.0, 0.0,
+		-1.0,		1.0,				0.0, 1.0
+	};
+	glUniformMatrix4fv(mvpLoc,1,false,mvp);
+}
+
+void _render()
+{
+	glViewport(0,0,VIEW_W,VIEW_H);
+	// Clear the color buffer
+	glClear(GL_COLOR_BUFFER_BIT);
+	// Load the vertex data
+	// glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+	// glEnableVertexAttribArray(0);
+	// 
+	// glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_SHORT,NULL);
+	// glFlush();
 }
