@@ -1,14 +1,14 @@
 CL=cl /c
-LINK=link /DEBUG
+LINK=link
 CLOUT=/Fo
 LINKOUT=/OUT:
 
 DIR_SHARED=../shared
-INCLUDE=/I./include /I $(DIR_SHARED)/include
+INCLUDE=/I./include /I$(DIR_SHARED)/include
 
 LIB_GLES2=./lib/2.0/libEGL.lib ./lib/2.0/libGLESv2.lib 
-LIB_PNG=$(DIR_SHARED)/lib/libpng.lib $(DIR_SHARED)/lib/zlib.lib 
-OPTION= 
+LIB_PNG=$(DIR_SHARED)/lib/libpng.lib $(DIR_SHARED)/lib/zlib.lib
+OPTION=/MD
 
 BIN=./bin
 
@@ -29,6 +29,10 @@ utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE)
 	
 pu:png_utils.obj
-	$(LINK) $(BIN)/png_utils.obj $(LIB_PNG) $(LINKOUT)$(BIN)/png_utils.exe  /NODEFAULTLIB:library
+	$(LINK) $(BIN)/png_utils.obj $(LIB_PNG) $(LINKOUT)$(BIN)/png_utils.exe 
 png_utils.obj:$(DIR_GMAES)$(DIR_POPO)/png_utils.cpp
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/png_utils.cpp $(CLOUT)$(BIN)/png_utils.obj $(INCLUDE) /MD
+	$(CL) $(DIR_GMAES)$(DIR_POPO)/png_utils.cpp $(CLOUT)$(BIN)/png_utils.obj $(INCLUDE) $(OPTION)
+	
+	
+clean:
+	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  
