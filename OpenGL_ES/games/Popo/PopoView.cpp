@@ -123,11 +123,19 @@ void initView()
 	HBITMAP hbmp = img;
 	GetObject(hbmp, sizeof(bm), &bm);
 	
-	glTexImage2D(GL_TEXTURE_2D,0,
-				GL_RGBA,
-				bm.bmWidth,bm.bmHeight,0,
-				GL_RGBA,GL_UNSIGNED_BYTE,bm.bmBits);
-	
+	// glTexImage2D(GL_TEXTURE_2D,0,
+				// GL_RGBA,
+				// bm.bmWidth,bm.bmHeight,0,
+				// GL_RGBA,GL_UNSIGNED_BYTE,bm.bmBits);
+	png_data_t png_data;
+	if(!png_read("./Data/Popo.png",&png_data))
+	{
+		glTexImage2D(GL_TEXTURE_2D,0,
+					GL_RGBA,
+					png_data.width,png_data.height,0,
+					GL_RGBA,GL_UNSIGNED_BYTE,png_data.data);
+		free(png_data.data);
+	}
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	

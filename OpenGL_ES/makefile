@@ -17,16 +17,16 @@ DIR_POPO=/Popo
 DIR_DATA=/Data
 
 popo:PopoMain.obj PopoView.obj utils.obj
-	$(LINK) $(BIN)/PopoMain.obj $(BIN)/PopoView.obj $(LIB_GLES2) $(BIN)/utils.obj $(LINKOUT)$(BIN)/$@.exe
+	$(LINK) $(BIN)/PopoMain.obj $(BIN)/PopoView.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(LINKOUT)$(BIN)/$@.exe
 PopoMain.obj:$(DIR_GMAES)$(DIR_POPO)/main.cpp
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/main.cpp $(CLOUT)$(BIN)/PopoMain.obj $(INCLUDE)
+	$(CL) $(DIR_GMAES)$(DIR_POPO)/main.cpp $(CLOUT)$(BIN)/PopoMain.obj $(INCLUDE) $(OPTION)
 	cp $(DIR_GMAES)$(DIR_POPO)/popo.vert $(BIN)/popo.vert
 	cp $(DIR_GMAES)$(DIR_POPO)/popo.frag $(BIN)/popo.frag
 	cp -R $(DIR_GMAES)$(DIR_POPO)$(DIR_DATA) $(BIN)$(DIR_DATA)
-PopoView.obj:$(DIR_GMAES)$(DIR_POPO)/PopoView.cpp
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoView.cpp $(CLOUT)$(BIN)/PopoView.obj $(INCLUDE)
+PopoView.obj:$(DIR_GMAES)$(DIR_POPO)/PopoView.cpp 
+	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoView.cpp $(CLOUT)$(BIN)/PopoView.obj $(INCLUDE) $(OPTION)
 utils.obj:$(DIR_SHARED)/src/utils.cpp
-	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE)
+	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
 	
 pu:png_utils.obj
 	$(LINK) $(BIN)/png_utils.obj $(LIB_PNG) $(LINKOUT)$(BIN)/png_utils.exe 
