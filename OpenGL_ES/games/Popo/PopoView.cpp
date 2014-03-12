@@ -19,6 +19,7 @@ GLushort *indices;
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
+int num_squares;
 
 void initView()
 {
@@ -179,7 +180,7 @@ void setVertex(popo_ptr popo,GLfloat* vertex,int index)
 void scan()
 {
 	int offset;
-	int num_squares=0;
+	num_squares = 0;
 	for(int i=0;i<num_slots;i++)
 	{
 		popo_ptr popo = popos+i;
