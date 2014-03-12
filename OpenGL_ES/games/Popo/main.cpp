@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include "PopoView.h"
+#include "PopoData.h"
 
 #pragma comment (lib,"kernel32.lib")
 #pragma comment (lib,"user32.lib")
@@ -135,6 +136,7 @@ int main()
 		
 	}
 	
+	initData();
 	initView();
 	
 	bool done = false;

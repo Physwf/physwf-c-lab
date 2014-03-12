@@ -16,8 +16,8 @@ DIR_GMAES=./games
 DIR_POPO=/Popo
 DIR_DATA=/Data
 
-popo:PopoMain.obj PopoView.obj utils.obj
-	$(LINK) $(BIN)/PopoMain.obj $(BIN)/PopoView.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(LINKOUT)$(BIN)/$@.exe
+popo:PopoMain.obj PopoView.obj PopoData.obj utils.obj random.obj
+	$(LINK) $(BIN)/PopoMain.obj $(BIN)/PopoView.obj $(BIN)/PopoData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 PopoMain.obj:$(DIR_GMAES)$(DIR_POPO)/main.cpp
 	$(CL) $(DIR_GMAES)$(DIR_POPO)/main.cpp $(CLOUT)$(BIN)/PopoMain.obj $(INCLUDE) $(OPTION)
 	cp $(DIR_GMAES)$(DIR_POPO)/popo.vert $(BIN)/popo.vert
@@ -25,8 +25,13 @@ PopoMain.obj:$(DIR_GMAES)$(DIR_POPO)/main.cpp
 	cp -R $(DIR_GMAES)$(DIR_POPO)$(DIR_DATA) $(BIN)$(DIR_DATA)
 PopoView.obj:$(DIR_GMAES)$(DIR_POPO)/PopoView.cpp 
 	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoView.cpp $(CLOUT)$(BIN)/PopoView.obj $(INCLUDE) $(OPTION)
+PopoData.obj:$(DIR_GMAES)$(DIR_POPO)/PopoData.cpp 
+	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoData.cpp $(CLOUT)$(BIN)/PopoData.obj $(INCLUDE) $(OPTION)
+	
 utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
+random.obj:$(DIR_SHARED)/src/random.cpp
+	$(CL) $(DIR_SHARED)/src/random.cpp $(CLOUT)$(BIN)/random.obj $(INCLUDE) $(OPTION)
 	
 pu:png_utils.obj
 	$(LINK) $(BIN)/png_utils.obj $(LIB_PNG) $(LINKOUT)$(BIN)/png_utils.exe 
