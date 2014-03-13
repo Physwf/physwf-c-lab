@@ -4,7 +4,7 @@
 #define RADIUS 64.0
 
 #define VIEW_W 640.0//NUM_POPO_ROW*RADIUS
-#define VIEW_H 400.0
+#define VIEW_H 960.0
 
 
 
