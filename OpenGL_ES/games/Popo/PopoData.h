@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#define NUM_POPO_ROW 10
+
 #define POPO_TYPE_NONE 0
 #define POPO_TYPE_1 1
 #define POPO_TYPE_2 2
@@ -9,7 +11,7 @@
 typedef struct popo_t
 {
 	int row;
-	int collum;
+	int column;
 	unsigned char type;
 } *popo_ptr;
 

@@ -21,6 +21,8 @@ enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
 int num_squares;
 
+void scan();
+
 void initView()
 {
 	glClearColor(0,0,0,1);
@@ -156,25 +158,39 @@ void initView()
 	
 	glBindTexture(GL_TEXTURE_2D,textures[s_popo]);
 	glUniform1i(sampleLoc,0);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	scan();
 }
 
 const float EVEN_OFFSET_X = RADIUS/2;
 const float ODD_OFFSET_X = RADIUS;
 const float OFFSET_Y = RADIUS/2;
 
-const float DIST_ROW = sqrt(3.0) * RADIUS;
+const float DIST_ROW = sqrt(3.0) * RADIUS/2.0;
 const float DIST_COLLUM = RADIUS;
+
+const float TEX_TYPES[4][2] = {{0.0,0.0},{ 0.5,0.0}, {0.5,0.5}, {0.0,0.5}};
 
 void setVertex(popo_ptr popo,GLfloat* vertex,int index)
 {
-	int orginX,orginY;
-	orginX = ((popo->row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + popo->collum * DIST_COLLUM;
+	float orginX,orginY;
+	orginX = ((popo->row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + popo->column * DIST_COLLUM;
 	orginY = OFFSET_Y + popo->row * DIST_ROW;
-	*vertex = orginX + (index%2-0.5) * RADIUS;
-	*(vertex+1) = orginY + (index/2-0.5) * RADIUS/2;
+	// printf("ox:%f,oy:%f\n",orginX,orginY);
+	// return;
+	*(vertex+0) = orginX + (index%2-0.5) * RADIUS;
+	*(vertex+1) = orginY + (index/2-0.5) * RADIUS;
 	
-	*(vertex+2) = (index%2)*0.5;//to do
-	*(vertex+3) = (index/2)*0.5;
+	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[popo->type-1][0];//to do
+	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[popo->type-1][1];
+	
+	printf("x:%f\n",*(vertex+0));
+	printf("y:%f\n",*(vertex+1));
+	printf("s:%f\n",*(vertex+2));
+	printf("t:%f\n",*(vertex+3));
+	printf("----------------\n");
 }
 
 void scan()
@@ -183,30 +199,55 @@ void scan()
 	num_squares = 0;
 	for(int i=0;i<num_slots;i++)
 	{
-		popo_ptr popo = popos+i;
-		offset = i*16*sizeof(GLfloat);
+		offset = num_squares*16;
+		popo_ptr popo = popos + i;
+		// printf("type:%d,row:%d,column:%d\n",popo->type,popo->row,popo->column);
+		// continue;
 		if(popo->type != POPO_TYPE_NONE)
 		{
-			
+			GLfloat* vertex = vertices + offset;
 			for(int j=0;j<4;j++)
 			{
-				GLfloat* vertex = vertices + offset;
-				setVertex(popo,vertex+i*STRIDE,i);
+				setVertex(popo,vertex+j*STRIDE,j);
 			}
-			for(int j=0;j<6;j++)
+
 			{
 				unsigned short index_offset = num_squares*4;
-				indices[0+index_offset] = 0+index_offset;
-				indices[1+index_offset] = 1+index_offset;
-				indices[2+index_offset] = 2+index_offset;
-				indices[3+index_offset] = 2+index_offset;
-				indices[4+index_offset] = 3+index_offset;
-				indices[5+index_offset] = 0+index_offset;
+				indices[0+num_squares*6] = 0+index_offset;
+				indices[1+num_squares*6] = 1+index_offset;
+				indices[2+num_squares*6] = 3+index_offset;
+				indices[3+num_squares*6] = 3+index_offset;
+				indices[4+num_squares*6] = 2+index_offset;
+				indices[5+num_squares*6] = 0+index_offset;
 			}
 			num_squares++;
 		}
 	}
-	
+	for(int i=0;i<num_squares;i++)
+	{
+		// printf("x:%f\n",*(vertices+0+i*16));
+		// printf("y:%f\n",*(vertices+1+i*16));
+		// printf("s:%f\n",*(vertices+2+i*16));
+		// printf("t:%f\n",*(vertices+3+i*16));
+		// printf("x:%f\n",*(vertices+4+i*16));
+		// printf("y:%f\n",*(vertices+5+i*16));
+		// printf("s:%f\n",*(vertices+6+i*16));
+		// printf("t:%f\n",*(vertices+7+i*16));
+		// printf("x:%f\n",*(vertices+8+i*16));
+		// printf("y:%f\n",*(vertices+9+i*16));
+		// printf("s:%f\n",*(vertices+10+i*16));
+		// printf("t:%f\n",*(vertices+11+i*16));
+		// printf("x:%f\n",*(vertices+12+i*16));
+		// printf("y:%f\n",*(vertices+13+i*16));
+		// printf("s:%f\n",*(vertices+14+i*16));
+		// printf("t:%f\n",*(vertices+15+i*16));
+		// printf("index:%d\n",indices[0+i*6]);
+		// printf("index:%d\n",indices[1+i*6]);
+		// printf("index:%d\n",indices[2+i*6]);
+		// printf("index:%d\n",indices[3+i*6]);
+		// printf("index:%d\n",indices[4+i*6]);
+		// printf("index:%d\n",indices[5+i*6]);
+	}
 	glBufferData(GL_ARRAY_BUFFER,num_squares*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_squares*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
 }
@@ -214,7 +255,7 @@ void scan()
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	scan();
-	glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_SHORT,NULL);
+	// scan();
+	glDrawElements(GL_TRIANGLES,num_squares*6,GL_UNSIGNED_SHORT,NULL);
 	glFlush();
 }
