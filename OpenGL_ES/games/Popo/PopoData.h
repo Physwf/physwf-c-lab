@@ -19,5 +19,10 @@ extern popo_ptr popos;
 extern int num_popos;
 extern int num_slots;
 
+extern float pos[2];
+extern popo_t flying;
+extern bool isFlying;
+
 void initData();
-void update();
+void update(int eclipse);
+void fire(float x,float y,float spd);

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
+#include <windowsx.h>
 
 #include "PopoData.h"
 #include "PopoView.h"
@@ -12,6 +13,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
 	{
+		case WM_LBUTTONDOWN:
+			printf("x:%d,y:%d\n",GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+			onMousePressed(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+			break;
 		case WM_CLOSE:
 			PostQuitMessage(0);
 			break;
@@ -72,6 +77,10 @@ HWND create_window(int w,int h)
 	
 	return window;
 }
+
+int lastTick;
+const int FPS = 60;
+const int interval = 1000/FPS;
 
 int main()
 {
@@ -136,7 +145,7 @@ int main()
 		printf("Make current error!\n");
 		
 	}
-	
+	lastTick = GetTickCount();
 	initData();
 	initView();
 	
@@ -153,9 +162,14 @@ int main()
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		
-		render();
-		eglSwapBuffers(display,surface);
+		int eclipse = GetTickCount() - lastTick;
+		if(eclipse>=interval)
+		{
+			update(eclipse);
+			lastTick += eclipse;
+			render();
+			eglSwapBuffers(display,surface);
+		}
 		Sleep(10);
 	}
 	return 0;

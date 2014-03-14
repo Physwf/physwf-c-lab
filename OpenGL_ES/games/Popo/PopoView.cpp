@@ -1,27 +1,18 @@
 #include "PopoView.h"
 #include "PopoData.h"
 #include "utils.h"
-#include <math.h>
+
 
 #define BUFFER_OFFSET(offset) ((GLfloat*)NULL+offset)
 #define STRIDE 4
 
 GLfloat *vertices;
-	// {
-		// 0,0,0,0,	
-		// 128,0,	1,0,
-		// 128,128,1,1,
-		// 0,128,0,1
-	// };
 GLushort *indices;
-// {0,1,2,2,3,0};
 
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
 int num_squares;
-
-void scan();
 
 void initView()
 {
@@ -33,11 +24,11 @@ void initView()
 	
 	glBindBuffer(GL_ARRAY_BUFFER,vbos[vertex]);
 	
-	int vSize = num_slots * 16 * sizeof(GLfloat);
+	int vSize = (num_slots+1) * 16 * sizeof(GLfloat);
 	vertices = (GLfloat*)malloc(vSize);
 	memset(vertices,0,vSize);
 	
-	int iSize = num_slots * 6 * sizeof(GLushort);
+	int iSize = (num_slots+1) * 6 * sizeof(GLushort);
 	indices = (GLushort*)malloc(iSize);
 	memset(indices,0,iSize);
 	
@@ -161,7 +152,7 @@ void initView()
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	scan();
+	// post();
 }
 
 const float EVEN_OFFSET_X = RADIUS/2;
@@ -186,14 +177,26 @@ void setVertex(popo_ptr popo,GLfloat* vertex,int index)
 	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[popo->type-1][0];//to do
 	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[popo->type-1][1];
 	
-	printf("x:%f\n",*(vertex+0));
-	printf("y:%f\n",*(vertex+1));
-	printf("s:%f\n",*(vertex+2));
-	printf("t:%f\n",*(vertex+3));
-	printf("----------------\n");
+	// printf("x:%f\n",*(vertex+0));
+	// printf("y:%f\n",*(vertex+1));
+	// printf("s:%f\n",*(vertex+2));
+	// printf("t:%f\n",*(vertex+3));
+	// printf("----------------\n");
 }
 
-void scan()
+void setFlyingVetex(popo_ptr popo,GLfloat* vertex,int index)
+{
+	float orginX,orginY;
+	orginX = pos[0];
+	orginY = pos[1];
+	*(vertex+0) = orginX + (index%2-0.5) * RADIUS;
+	*(vertex+1) = orginY + (index/2-0.5) * RADIUS;
+	
+	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[popo->type-1][0];//to do
+	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[popo->type-1][1];
+}
+
+void post()
 {
 	int offset;
 	num_squares = 0;
@@ -248,6 +251,24 @@ void scan()
 		// printf("index:%d\n",indices[4+i*6]);
 		// printf("index:%d\n",indices[5+i*6]);
 	}
+	offset = num_squares*16;
+	GLfloat* vertex = vertices + offset;
+	for(int j=0;j<4;j++)
+	{
+		setFlyingVetex(&flying,vertex+j*STRIDE,j);
+	}
+
+	{
+		unsigned short index_offset = num_squares*4;
+		indices[0+num_squares*6] = 0+index_offset;
+		indices[1+num_squares*6] = 1+index_offset;
+		indices[2+num_squares*6] = 3+index_offset;
+		indices[3+num_squares*6] = 3+index_offset;
+		indices[4+num_squares*6] = 2+index_offset;
+		indices[5+num_squares*6] = 0+index_offset;
+	}
+	num_squares++;
+			
 	glBufferData(GL_ARRAY_BUFFER,num_squares*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_squares*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
 }
@@ -255,7 +276,18 @@ void scan()
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	// scan();
+	post();
 	glDrawElements(GL_TRIANGLES,num_squares*6,GL_UNSIGNED_SHORT,NULL);
 	glFlush();
+}
+
+void onMousePressed(int x,int y)
+{
+	if(isFlying) return;
+	
+	float xOffset = x - FIRE_POS_X;
+	float yOffset = y - FIRE_POS_Y;
+	float xDir = xOffset / sqrt((float)(xOffset*xOffset+yOffset*yOffset));
+	float yDir = yOffset / sqrt((float)(xOffset*xOffset+yOffset*yOffset));
+	fire(xDir,yDir,1.0);
 }
