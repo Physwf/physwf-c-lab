@@ -39,8 +39,8 @@ void initData()
 			index++;
 			temp->row = i;
 			temp->column = j;
-			temp->type = rand_by_range(POPO_TYPE_NONE,POPO_TYPE_4);
-			// printf("index:%d\n",index);
+			temp->type = rand_by_range(POPO_TYPE_NONE,POPO_TYPE_4+1);
+			printf("type:%d\n",temp->type);
 			
 		}
 	}
@@ -57,15 +57,17 @@ void initData()
 
 void makeEasing(int column,int row)
 {
-	printf("target column:%d,target row:%d\n",column,row);
-	easing_target[0] = ((flying.row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + flying.column * DIST_COLLUM;
-	easing_target[1] = OFFSET_Y + flying.row * DIST_ROW;
+	// printf("target column:%d,target row:%d\n",column,row);
+	easing_target[0] = ((row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + column * DIST_COLLUM;
+	easing_target[1] = OFFSET_Y + row * DIST_ROW;
 	printf("target x:%f,target y:%f\n",easing_target[0],easing_target[1]);
-	speed = 0.1;
+	
 	float xOffset = easing_target[0] - pos[0];
 	float yOffset = easing_target[1] - pos[1];
-	dir[0] = xOffset / sqrt((float)(xOffset*xOffset+yOffset*yOffset));
-	dir[1] = yOffset / sqrt((float)(xOffset*xOffset+yOffset*yOffset));
+	float dist = sqrt(xOffset*xOffset+yOffset*yOffset);
+	dir[0] = xOffset / dist;
+	dir[1] = yOffset / dist;
+	speed = 0.3 * dist / RADIUS;
 	// easing_target[0]
 	isEasing = true;
 }
@@ -74,8 +76,8 @@ void checkEasing()
 {
 	float offsetX = easing_target[0] - pos[0];
 	float offsetY = easing_target[1] - pos[1];
-	printf("offsetX:%f,offsetY:%f\n",offsetX,offsetY);
-	if(offsetX*offsetX + offsetY*offsetY < 20)
+	// printf("offsetX:%f,offsetY:%f\n",offsetX,offsetY);
+	if(offsetX*offsetX + offsetY*offsetY < 60)
 	{
 		pos[0] = easing_target[0];
 		pos[1] = easing_target[1];
@@ -91,35 +93,61 @@ void checkCollision()
 	{
 		dir[0] = -dir[0];
 	}
-	//calculate row and column
-	flying.row = ceil((pos[1]-OFFSET_Y)/DIST_ROW);
-	if(flying.row%2 == 0)
+	popo_ptr popo = popos;
+	int column,row;
+	for(int i=0;i<num_slots;i++)
 	{
-		flying.column = round((pos[0] - EVEN_OFFSET_X)/DIST_COLLUM);
-	}
-	else
-	{
-		flying.column = round((pos[0] - ODD_OFFSET_X)/DIST_COLLUM);
-	}
-	// printf("row:%d,column%d\n",flying.row,flying.column);
-	int neighbor_offsets[6][2] = {{-1,-1},{0,-1},{-1,0},{1,0},{-1,1},{0,1}};
-	for(int i=0;i<6;i++)
-	{
-		int neighbor[2] = {neighbor_offsets[i][0]+flying.column,neighbor_offsets[i][1]+flying.row};
-		if(neighbor[0] < 0 || neighbor[1] < 0) continue;
-		for(int j=0;j<num_slots;j++)
+		popo = popos+i;
+		if(popo->type == POPO_TYPE_NONE) continue;
+		float y = OFFSET_Y + popo->row * DIST_ROW;
+		float x = (popo->column%2==0?EVEN_OFFSET_X:ODD_OFFSET_X)+DIST_COLLUM*popo->column;
+		float offsetx = pos[0] - x;
+		float offsety = pos[1] - y;
+		printf("i:%d\n",i);
+		if(sqrt(offsetx*offsetx + offsety*offsety)<RADIUS)
 		{
-			popo_ptr temp = popos+j;
-			if(temp->type == POPO_TYPE_NONE) continue;
-			if(temp->row == neighbor[1] && temp->column == neighbor[0])
-			{
-				// printf("xpos:%f,ypos%f\n",pos[0],pos[1]);
-				makeEasing(flying.column,flying.row);
-				// isFlying = false;
-				return;
-			}
+			printf("i:%d\n",i);
+			printf("collision column:%d, row:%d\n",popo->column,popo->row);
+			printf("collision x:%f y:%f\n",x,y);
+			printf("pos x:%f y:%f\n",pos[0],pos[1]);
+			printf("offset x:%f y:%f\n",offsetx,offsety);
+			row = ceil((pos[1]-OFFSET_Y)/DIST_ROW);
+			if(row%2==0) column = round((pos[0] - EVEN_OFFSET_X)/DIST_COLLUM);
+			else column = round((pos[0] - ODD_OFFSET_X)/DIST_COLLUM);
+			makeEasing(column,row);
+			return;
 		}
+		
 	}
+	//calculate row and column
+	// flying.row = ceil((pos[1]-OFFSET_Y)/DIST_ROW);
+	// if(flying.row%2 == 0)
+	// {
+		// flying.column = round((pos[0] - EVEN_OFFSET_X)/DIST_COLLUM);
+	// }
+	// else
+	// {
+		// flying.column = round((pos[0] - ODD_OFFSET_X)/DIST_COLLUM);
+	// }
+	// printf("row:%d,column%d\n",flying.row,flying.column);
+	// int neighbor_offsets[6][2] = {{-1,-1},{0,-1},{-1,0},{1,0},{-1,1},{0,1}};
+	// for(int i=0;i<6;i++)
+	// {
+		// int neighbor[2] = {neighbor_offsets[i][0]+flying.column,neighbor_offsets[i][1]+flying.row};
+		// if(neighbor[0] < 0 || neighbor[1] < 0) continue;
+		// for(int j=0;j<num_slots;j++)
+		// {
+			// popo_ptr temp = popos+j;
+			// if(temp->type == POPO_TYPE_NONE) continue;
+			// if(temp->row == neighbor[1] && temp->column == neighbor[0])
+			// {
+				// printf("xpos:%f,ypos%f\n",pos[0],pos[1]);
+				// makeEasing(flying.column,flying.row);
+				// isFlying = false;
+				// return;
+			// }
+		// }
+	// }
 }
 
 void update(int eclipse)

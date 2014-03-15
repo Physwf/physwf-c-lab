@@ -9,6 +9,6 @@ uniform sampler2D s_popo;
 void main()
 {
 	vec4 color = texture2D(s_popo,v_texCoord);
-	color.a*=0.1;
+	//color.a*=0.1;
 	gl_FragColor = color;
 }

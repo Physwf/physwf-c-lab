@@ -6,7 +6,7 @@
 #define RADIUS 64.0
 
 #define VIEW_W 640.0//NUM_POPO_ROW*RADIUS
-#define VIEW_H 560.0
+#define VIEW_H 760.0
 
 #define FIRE_POS_X VIEW_W/2
 #define FIRE_POS_Y VIEW_H
