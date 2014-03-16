@@ -95,26 +95,42 @@ void checkCollision()
 	}
 	popo_ptr popo = popos;
 	int column,row;
+	int neighbor_offsets[4][2] = {{-1,0},{1,0},{-1,1},{0,1}};
 	for(int i=0;i<num_slots;i++)
 	{
 		popo = popos+i;
 		if(popo->type == POPO_TYPE_NONE) continue;
 		float y = OFFSET_Y + popo->row * DIST_ROW;
-		float x = (popo->column%2==0?EVEN_OFFSET_X:ODD_OFFSET_X)+DIST_COLLUM*popo->column;
+		float x = (popo->row%2==0?EVEN_OFFSET_X:ODD_OFFSET_X)+DIST_COLLUM*popo->column;
 		float offsetx = pos[0] - x;
 		float offsety = pos[1] - y;
-		printf("i:%d\n",i);
 		if(sqrt(offsetx*offsetx + offsety*offsety)<RADIUS)
 		{
-			printf("i:%d\n",i);
 			printf("collision column:%d, row:%d\n",popo->column,popo->row);
 			printf("collision x:%f y:%f\n",x,y);
 			printf("pos x:%f y:%f\n",pos[0],pos[1]);
 			printf("offset x:%f y:%f\n",offsetx,offsety);
-			row = ceil((pos[1]-OFFSET_Y)/DIST_ROW);
+			row = round((pos[1]-OFFSET_Y)/DIST_ROW);
 			if(row%2==0) column = round((pos[0] - EVEN_OFFSET_X)/DIST_COLLUM);
 			else column = round((pos[0] - ODD_OFFSET_X)/DIST_COLLUM);
-			makeEasing(column,row);
+			int min = RADIUS*2;
+			int minJ;
+			for(int j=0;j<4;j++)
+			{
+				int nr = row + neighbor_offsets[j][1];
+				int nc = column + neighbor_offsets[j][0];
+				float nx = OFFSET_Y + (nr) * DIST_ROW;
+				float ny = (nr?EVEN_OFFSET_X:ODD_OFFSET_X)+DIST_COLLUM*nc;
+				float nox = pos[0] - nx;
+				float noy = pos[1] - ny;
+				float dist = sqrt(nox*nox+noy*noy);
+				if(dist<min) 
+				{
+					min = dist;
+					minJ = j;
+				}
+			}
+			makeEasing(column + neighbor_offsets[minJ][0],row + neighbor_offsets[minJ][1]);
 			return;
 		}
 		
