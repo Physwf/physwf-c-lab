@@ -27,6 +27,20 @@ PopoView.obj:$(DIR_GMAES)$(DIR_POPO)/PopoView.cpp
 	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoView.cpp $(CLOUT)$(BIN)/PopoView.obj $(INCLUDE) $(OPTION)
 PopoData.obj:$(DIR_GMAES)$(DIR_POPO)/PopoData.cpp 
 	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoData.cpp $(CLOUT)$(BIN)/PopoData.obj $(INCLUDE) $(OPTION)
+
+DIR_BUBBLE=/Bubble
+
+bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj
+	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+BubbleMain.obj:$(DIR_GMAES)$(DIR_BUBBLE)/main.cpp
+	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/main.cpp $(CLOUT)$(BIN)/BubbleMain.obj $(INCLUDE) $(OPTION)
+	cp $(DIR_GMAES)$(DIR_BUBBLE)/bubble.vert $(BIN)/bubble.vert
+	cp $(DIR_GMAES)$(DIR_BUBBLE)/bubble.frag $(BIN)/bubble.frag
+	cp -R $(DIR_GMAES)$(DIR_BUBBLE)$(DIR_DATA) $(BIN)$(DIR_DATA)
+BubbleView.obj:$(DIR_GMAES)$(DIR_BUBBLE)/BubbleView.cpp 
+	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/BubbleView.cpp $(CLOUT)$(BIN)/BubbleView.obj $(INCLUDE) $(OPTION)
+BubbleData.obj:$(DIR_GMAES)$(DIR_BUBBLE)/BubbleData.cpp 
+	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/BubbleData.cpp $(CLOUT)$(BIN)/BubbleData.obj $(INCLUDE) $(OPTION)
 	
 utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
