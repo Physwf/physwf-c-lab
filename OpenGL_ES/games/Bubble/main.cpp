@@ -170,7 +170,7 @@ int main()
 			render();
 			eglSwapBuffers(display,surface);
 		}
-		Sleep(10);
+		Sleep(1);
 	}
 	return 0;
 }

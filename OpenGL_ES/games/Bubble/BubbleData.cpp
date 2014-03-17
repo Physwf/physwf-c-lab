@@ -22,7 +22,7 @@ int getType(int column,int row);
 void initData()
 {
 	num_popos = 0;
-	num_rows = 8;//to do: read config
+	num_rows = 7;//to do: read config
 	
 	num_slots = (num_rows%2 == 0)?
 					(num_rows)/2 * ((NUM_POPO_ROW-1)+NUM_POPO_ROW):
@@ -138,20 +138,28 @@ void checkCollision()
 	{
 		printf("column:%d,row:%d\n",neighbors[i*2+0],neighbors[i*2+1]);
 		printf("type:%d\n",getType(neighbors[i*2+0],neighbors[i*2+1]));
+		//out of screen
+		if(neighbors[i*2+0] < 0) continue;
+		if(neighbors[i*2+1]%2==0 && neighbors[i*2+0]>=NUM_POPO_ROW) continue;
+		if(neighbors[i*2+1]%2!=0 && neighbors[i*2+0]>=NUM_POPO_ROW-1) continue;
+		float y = OFFSET_Y + neighbors[i*2+1] * DIST_ROW;
+		float x = (neighbors[i*2+1]%2==0?EVEN_OFFSET_X:ODD_OFFSET_X)+DIST_COLLUM*neighbors[i*2+0];
+		float ox = pos[0] - x;
+		float oy = pos[1] - y;
+		float dist = sqrt(ox*ox+oy*oy);
 		if(getType(neighbors[i*2+0],neighbors[i*2+1]) == 0)
 		{
-			float y = OFFSET_Y + neighbors[i*2+1] * DIST_ROW;
-			float x = (neighbors[i*2+1]%2==0?EVEN_OFFSET_X:ODD_OFFSET_X)+DIST_COLLUM*neighbors[i*2+0];
-			float ox = pos[0] - x;
-			float oy = pos[1] - y;
-			float dist = sqrt(ox*ox+oy*oy);
 			if(dist < min_dist)
 			{
 				min_dist = dist;
 				I = i;
 			}
 		}
-		else will_collide = true;
+		else 
+		{
+			if(dist<RADIUS)
+				will_collide = true;
+		}
 		printf(will_collide?"true\n":"false\n");
 	}
 	if(will_collide) {

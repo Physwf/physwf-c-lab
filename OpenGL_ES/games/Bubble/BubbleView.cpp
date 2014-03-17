@@ -46,8 +46,8 @@ void initView()
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	
-	const char* vSrc = t_read("popo.vert");
-	const char* fSrc = t_read("popo.frag");
+	const char* vSrc = t_read("bubble.vert");
+	const char* fSrc = t_read("bubble.frag");
 	
 	glShaderSource(vShader,1,&vSrc,0);
 	glShaderSource(fShader,1,&fSrc,0);
