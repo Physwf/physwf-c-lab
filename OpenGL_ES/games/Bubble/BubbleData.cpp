@@ -97,6 +97,42 @@ int elemin_type;
 int check_list[MAX_ELEMIN];
 int num_check;
 
+int isolated_list[MAX_ELEMIN];
+int num_isolated;
+
+bool checkIsolated(int column,int row)
+{
+	if(row==0) return false;
+	int top_left,top_right;
+	
+	if(row%2==0)
+	{
+		top_left = column-1;
+		top_right = column;
+	}
+	else
+	{
+		top_left = column;
+		top_right = column+1;
+	}
+	int top = row - 1;
+	if(top%2 == 0)
+	{
+		if(top_left>=0 && top_left<NUM_POPO_ROW)
+			return checkIsolated(top_left,row-1);
+		if(top_right>=0 && top_right<NUM_POPO_ROW)
+			return checkIsolated(top_right,row-1);
+	}
+	else
+	{
+		if(top_left>=0 && top_left<NUM_POPO_ROW-1)
+			return checkIsolated(top_left,row-1);
+		if(top_right>=0 && top_right<NUM_POPO_ROW-1)
+			return checkIsolated(top_right,row-1);
+	}
+	return true;
+}
+
 void checkElemination(int column,int row)
 {
 	if(column < 0) return;
@@ -114,7 +150,7 @@ void checkElemination(int column,int row)
 	}
 	check_list[num_check++]=index;
 	
-	if(*(popos+index) != elemin_type) return;
+	if(*(popos+index) != elemin_type && *(popos+index) != POPO_TYPE_NONE) return;
 	elemin_list[num_elemin++] = index;
 	
 	printf("elemin,column:%d,row:%d\n",column,row);
@@ -191,6 +227,7 @@ void checkEasing()
 		elemin_type = flying;
 		num_elemin = 0;
 		num_check = 0;
+		// num_isolated = 0;
 		checkElemination(target_slot[0],target_slot[1]);
 		makeElemination();
 		isEasing = false;
