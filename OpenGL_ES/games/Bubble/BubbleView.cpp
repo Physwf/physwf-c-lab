@@ -223,25 +223,27 @@ void post()
 			num_squares++;
 		}
 	}
-
-	offset = num_squares*16;
-	GLfloat* vertex = vertices + offset;
-	for(int j=0;j<4;j++)
+	if(isFlying)
 	{
-		setFlyingVetex(vertex+j*STRIDE,j);
-	}
+		offset = num_squares*16;
+		GLfloat* vertex = vertices + offset;
+		for(int j=0;j<4;j++)
+		{
+			setFlyingVetex(vertex+j*STRIDE,j);
+		}
 
-	{
-		unsigned short index_offset = num_squares*4;
-		indices[0+num_squares*6] = 0+index_offset;
-		indices[1+num_squares*6] = 1+index_offset;
-		indices[2+num_squares*6] = 3+index_offset;
-		indices[3+num_squares*6] = 3+index_offset;
-		indices[4+num_squares*6] = 2+index_offset;
-		indices[5+num_squares*6] = 0+index_offset;
+		{
+			unsigned short index_offset = num_squares*4;
+			indices[0+num_squares*6] = 0+index_offset;
+			indices[1+num_squares*6] = 1+index_offset;
+			indices[2+num_squares*6] = 3+index_offset;
+			indices[3+num_squares*6] = 3+index_offset;
+			indices[4+num_squares*6] = 2+index_offset;
+			indices[5+num_squares*6] = 0+index_offset;
+		}
+		num_squares++;
 	}
-	num_squares++;
-			
+	
 	glBufferData(GL_ARRAY_BUFFER,num_squares*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_squares*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
 }

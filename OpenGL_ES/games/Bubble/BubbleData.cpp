@@ -12,9 +12,12 @@ float dir[2];
 float speed;
 bool isFlying;
 float easing_target[2];
+int target_slot[2];
 bool isEasing;
 
-int num_rows;
+int num_bubble_rows;
+int num_empty_rows;
+int num_total_rows;
 int num_slots;
 
 int getType(int column,int row);
@@ -22,16 +25,20 @@ int getType(int column,int row);
 void initData()
 {
 	num_popos = 0;
-	num_rows = 7;//to do: read config
+	num_bubble_rows = 7;//to do: read config
+	num_empty_rows = 7;
+	num_total_rows = num_bubble_rows + num_empty_rows;
 	
-	num_slots = (num_rows%2 == 0)?
-					(num_rows)/2 * ((NUM_POPO_ROW-1)+NUM_POPO_ROW):
-					(num_rows-1)/2 * ((NUM_POPO_ROW-1)+NUM_POPO_ROW) + NUM_POPO_ROW;
+	num_slots = (num_total_rows%2 == 0)?
+					(num_total_rows)/2 * ((NUM_POPO_ROW-1)+NUM_POPO_ROW):
+					(num_total_rows-1)/2 * ((NUM_POPO_ROW-1)+NUM_POPO_ROW) + NUM_POPO_ROW;
 	popos = (int*)malloc(num_slots*sizeof(int));
 	int index = 0;
-	for(int i=0;i<num_rows;i++)
+	int num;
+	int i=0;
+	for(;i<num_bubble_rows;i++)
 	{
-		int num;
+		
 		if(i%2==0) num = NUM_POPO_ROW;
 		else num = NUM_POPO_ROW - 1;
 		
@@ -40,17 +47,28 @@ void initData()
 			int* temp = popos+index;
 			index++;
 			*temp = rand_by_range(POPO_TYPE_NONE,POPO_TYPE_4+1);
-			printf("type:%d\n",*temp);
+			// printf("type:%d\n",*temp);
 		}
 	}
-
+	//empty rows
+	for(;i<num_total_rows;i++)
+	{
+		if(i%2==0) num = NUM_POPO_ROW;
+		else num = NUM_POPO_ROW - 1;
+		
+		for(int j=0;j<num;j++)
+		{
+			int* temp = popos+index;
+			index++;
+			*temp = POPO_TYPE_NONE;
+		}
+	}
 	isFlying = false;
 	isEasing = false;
 	
-	printf("type:%d\n",getType(0,0));
 }
 
-int getType(int column,int row)
+int getIndex(int column,int row)
 {
 	int index;
 	if(row%2==0)
@@ -61,16 +79,79 @@ int getType(int column,int row)
 	{
 		index = (row-1)/2 * (2*NUM_POPO_ROW-1) + column + NUM_POPO_ROW;
 	}
+	return index;
+}
+
+int getType(int column,int row)
+{
+	int index = getIndex(column,row);
 	if(index >=num_slots) return 0;
 	return *(popos+index);
+}
+
+const int MAX_ELEMIN = 100;
+int elemin_list[MAX_ELEMIN];
+int num_elemin;
+int elemin_type;
+
+int check_list[MAX_ELEMIN];
+int num_check;
+
+void checkElemination(int column,int row)
+{
+	if(column < 0) return;
+	if(row%2==0 && column>= NUM_POPO_ROW) return;
+	if(row%2!=0 && column>= NUM_POPO_ROW-1) return;
+	
+	if(row < 0) return;
+	if(row >= num_total_rows) return;
+
+	
+	int index = getIndex(column,row);
+	for(int i=0;i<num_check;i++)
+	{
+		if(check_list[i] == index) return;
+	}
+	check_list[num_check++]=index;
+	
+	if(*(popos+index) != elemin_type) return;
+	elemin_list[num_elemin++] = index;
+	
+	printf("elemin,column:%d,row:%d\n",column,row);
+	printf("num_elemin:%d\n",num_elemin);
+	int diff_left,diff_right;
+	int same_left,same_right;
+	if(row%2==0)
+	{
+		diff_left = column-1;
+		diff_right = column;
+	}
+	else
+	{
+		diff_left = column;
+		diff_right = column+1;
+	}
+	int neighbors[12]={
+				diff_left,row-1,diff_right,row-1,
+				column - 1,row,column+1,row,
+				diff_left,row+1,diff_right,row+1
+				};
+	for(int i=0;i<6;i++)
+	{
+		// index = getIndex(neighbors[i*2+0],neighbors[i*2+1]);
+		checkElemination(neighbors[i*2+0],neighbors[i*2+1]);
+	}
+	
 }
 
 void makeEasing(int column,int row)
 {
 	// printf("target column:%d,target row:%d\n",column,row);
+	target_slot[0] = column;
+	target_slot[1] = row;
 	easing_target[0] = ((row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + column * DIST_COLLUM;
 	easing_target[1] = OFFSET_Y + row * DIST_ROW;
-	printf("target x:%f,target y:%f\n",easing_target[0],easing_target[1]);
+	// printf("target x:%f,target y:%f\n",easing_target[0],easing_target[1]);
 	
 	float xOffset = easing_target[0] - pos[0];
 	float yOffset = easing_target[1] - pos[1];
@@ -82,6 +163,19 @@ void makeEasing(int column,int row)
 	isEasing = true;
 }
 
+void makeElemination()
+{
+	if(num_elemin>2)
+	{
+		for(int i=0;i<num_elemin;i++)
+		{
+			printf("eleminate\n");
+			printf("index:%d\n",elemin_list[i]);
+			*(popos+elemin_list[i]) = POPO_TYPE_NONE;
+		}
+	}
+}
+
 void checkEasing()
 {
 	float offsetX = easing_target[0] - pos[0];
@@ -91,6 +185,14 @@ void checkEasing()
 	{
 		pos[0] = easing_target[0];
 		pos[1] = easing_target[1];
+		int index = getIndex(target_slot[0],target_slot[1]);
+		*(popos+index) = flying;
+		printf("target index:%d\n",index);
+		elemin_type = flying;
+		num_elemin = 0;
+		num_check = 0;
+		checkElemination(target_slot[0],target_slot[1]);
+		makeElemination();
 		isEasing = false;
 		isFlying = false;
 	}
@@ -133,11 +235,11 @@ void checkCollision()
 	float min_dist = RADIUS*2;
 	int I;
 	bool will_collide = false;
-	printf("---------------------\n");
+	// printf("---------------------\n");
 	for(int i=0;i<4;i++)
 	{
-		printf("column:%d,row:%d\n",neighbors[i*2+0],neighbors[i*2+1]);
-		printf("type:%d\n",getType(neighbors[i*2+0],neighbors[i*2+1]));
+		// printf("column:%d,row:%d\n",neighbors[i*2+0],neighbors[i*2+1]);
+		// printf("type:%d\n",getType(neighbors[i*2+0],neighbors[i*2+1]));
 		//out of screen
 		if(neighbors[i*2+0] < 0) continue;
 		if(neighbors[i*2+1]%2==0 && neighbors[i*2+0]>=NUM_POPO_ROW) continue;
@@ -160,7 +262,7 @@ void checkCollision()
 			if(dist<RADIUS)
 				will_collide = true;
 		}
-		printf(will_collide?"true\n":"false\n");
+		// printf(will_collide?"true\n":"false\n");
 	}
 	if(will_collide) {
 		makeEasing(neighbors[I*2+0],neighbors[I*2+1]);
