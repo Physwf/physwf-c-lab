@@ -15,6 +15,7 @@ extern int num_slots;
 extern float pos[2];
 extern int flying;
 extern bool isFlying;
+extern int waiting;
 
 void initData();
 void update(int eclipse);

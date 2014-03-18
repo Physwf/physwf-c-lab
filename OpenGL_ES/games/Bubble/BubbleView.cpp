@@ -24,11 +24,11 @@ void initView()
 	
 	glBindBuffer(GL_ARRAY_BUFFER,vbos[vertex]);
 	
-	int vSize = (num_slots+1) * 16 * sizeof(GLfloat);
+	int vSize = (num_slots+2) * 16 * sizeof(GLfloat);
 	vertices = (GLfloat*)malloc(vSize);
 	memset(vertices,0,vSize);
 	
-	int iSize = (num_slots+1) * 6 * sizeof(GLushort);
+	int iSize = (num_slots+2) * 6 * sizeof(GLushort);
 	indices = (GLushort*)malloc(iSize);
 	memset(indices,0,iSize);
 	
@@ -193,6 +193,18 @@ void setFlyingVetex(GLfloat* vertex,int index)
 	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[flying-1][1];
 }
 
+void setWaitingVertex(GLfloat* vertex,int index)
+{
+	float orginX,orginY;
+	orginX = FIRE_POS_X;
+	orginY = FIRE_POS_Y;
+	*(vertex+0) = orginX + (index%2-0.5) * RADIUS;
+	*(vertex+1) = orginY + (index/2-0.5) * RADIUS;
+	
+	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[waiting-1][0];//to do
+	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[waiting-1][1];
+}
+
 void post()
 {
 	int offset;
@@ -230,6 +242,25 @@ void post()
 		for(int j=0;j<4;j++)
 		{
 			setFlyingVetex(vertex+j*STRIDE,j);
+		}
+
+		{
+			unsigned short index_offset = num_squares*4;
+			indices[0+num_squares*6] = 0+index_offset;
+			indices[1+num_squares*6] = 1+index_offset;
+			indices[2+num_squares*6] = 3+index_offset;
+			indices[3+num_squares*6] = 3+index_offset;
+			indices[4+num_squares*6] = 2+index_offset;
+			indices[5+num_squares*6] = 0+index_offset;
+		}
+		num_squares++;
+	}
+	{
+		offset = num_squares*16;
+		GLfloat* vertex = vertices + offset;
+		for(int j=0;j<4;j++)
+		{
+			setWaitingVertex(vertex+j*STRIDE,j);
 		}
 
 		{

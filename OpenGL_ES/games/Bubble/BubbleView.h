@@ -9,7 +9,7 @@
 #define VIEW_H 760.0
 
 #define FIRE_POS_X VIEW_W/2
-#define FIRE_POS_Y VIEW_H
+#define FIRE_POS_Y VIEW_H-RADIUS
 
 extern const float EVEN_OFFSET_X;
 extern const float ODD_OFFSET_X;
