@@ -82,11 +82,55 @@ int getIndex(int column,int row)
 	return index;
 }
 
+void getRowAndColumn(int index, int* column, int* row)
+{
+	int d_row = index / (2*NUM_POPO_ROW-1);
+	int remain = index % (2*NUM_POPO_ROW-1);
+	if(remain>NUM_POPO_ROW)
+	{
+		*column = remain - NUM_POPO_ROW;
+		*row = d_row * 2 + 1;
+	}
+	else 
+	{
+		*column = remain;
+		*row = d_row * 2;
+	}
+}
+
 int getType(int column,int row)
 {
 	int index = getIndex(column,row);
 	if(index >=num_slots) return 0;
 	return *(popos+index);
+}
+
+void getNeighbors(int column,int row,int* neighbors)
+{
+	int diff_left,diff_right;
+	int same_left,same_right;
+	if(row%2==0)
+	{
+		diff_left = column-1;
+		diff_right = column;
+	}
+	else
+	{
+		diff_left = column;
+		diff_right = column+1;
+	}
+	neighbors[0]=diff_left;
+	neighbors[1]=row-1;
+	neighbors[2]=diff_right;
+	neighbors[3]=row-1;
+	neighbors[4]=column - 1;
+	neighbors[5]=row;
+	neighbors[6]=column+1;
+	neighbors[7]=row;
+	neighbors[8]=diff_left;
+	neighbors[9]=row+1;
+	neighbors[10]=diff_right;
+	neighbors[11]=row+1;
 }
 
 const int MAX_ELEMIN = 100;
@@ -97,40 +141,43 @@ int elemin_type;
 int check_list[MAX_ELEMIN];
 int num_check;
 
-int isolated_list[MAX_ELEMIN];
-int num_isolated;
+int non_isolated_list[MAX_ELEMIN];
+int num_non_isolated;
 
-bool checkIsolated(int column,int row)
+const int MAX_POPO = 500;
+int isolated_check_list[MAX_POPO];
+int num_isolated_checked;
+
+void checkIsland(int column,int row)
 {
-	if(row==0) return false;
-	int top_left,top_right;
+	if(getType(column,row) != POPO_TYPE_NONE) return;
+	if(row<0) return;
+	if(column<0) return;
+	if(row%2 == 0)
+	{
+		if(column > NUM_POPO_ROW) return;
+	}
+	else
+	{
+		if(column > NUM_POPO_ROW-1) return;
+	}
 	
-	if(row%2==0)
+	int index = getIndex(column,row);
+	
+	for(int i=0;i<num_isolated_checked;i++)
 	{
-		top_left = column-1;
-		top_right = column;
+		if(isolated_check_list[i] == index) return;
 	}
-	else
+
+	non_isolated_list[num_non_isolated++] = index;
+	isolated_check_list[num_isolated_checked++] = index;
+	
+	int neighbors[12];
+	getNeighbors(column,row,neighbors);
+	for(int i=0;i<12;i++)
 	{
-		top_left = column;
-		top_right = column+1;
+		checkIsland(neighbors[i*2+0],neighbors[i*2+1]);
 	}
-	int top = row - 1;
-	if(top%2 == 0)
-	{
-		if(top_left>=0 && top_left<NUM_POPO_ROW)
-			return checkIsolated(top_left,row-1);
-		if(top_right>=0 && top_right<NUM_POPO_ROW)
-			return checkIsolated(top_right,row-1);
-	}
-	else
-	{
-		if(top_left>=0 && top_left<NUM_POPO_ROW-1)
-			return checkIsolated(top_left,row-1);
-		if(top_right>=0 && top_right<NUM_POPO_ROW-1)
-			return checkIsolated(top_right,row-1);
-	}
-	return true;
 }
 
 void checkElemination(int column,int row)
@@ -150,7 +197,8 @@ void checkElemination(int column,int row)
 	}
 	check_list[num_check++]=index;
 	
-	if(*(popos+index) != elemin_type && *(popos+index) != POPO_TYPE_NONE) return;
+	if(*(popos+index) != elemin_type) return;
+	// if(*(popos+index) != elemin_type || *(popos+index) != POPO_TYPE_NONE) return;
 	elemin_list[num_elemin++] = index;
 	
 	printf("elemin,column:%d,row:%d\n",column,row);
@@ -210,6 +258,31 @@ void makeElemination()
 			*(popos+elemin_list[i]) = POPO_TYPE_NONE;
 		}
 	}
+	return;
+}
+
+void makeIslandElemination()
+{
+	int island[MAX_ELEMIN];
+	int num=0;
+	for(int i=0;i<num_slots;i++)
+	{
+		if(*(popos+i) == POPO_TYPE_NONE) continue;
+		int isIsolated = false;
+		for(int j=0;j<num_non_isolated;j++)
+		{
+			if(i == non_isolated_list[j])
+			{
+				isIsolated = true;
+				break;
+			}
+		}
+		if(isIsolated) island[num++] = i;
+	}
+	for(int i=0;i<num;i++)
+	{
+		*(popos+island[i]) = POPO_TYPE_NONE;
+	}
 }
 
 void checkEasing()
@@ -227,9 +300,13 @@ void checkEasing()
 		elemin_type = flying;
 		num_elemin = 0;
 		num_check = 0;
-		// num_isolated = 0;
+		num_isolated_checked = 0;
+		num_non_isolated = 0;
 		checkElemination(target_slot[0],target_slot[1]);
 		makeElemination();
+		for(int i=0;i<NUM_POPO_ROW;i++)
+			checkIsland(i,0);
+		makeIslandElemination();
 		isEasing = false;
 		isFlying = false;
 	}
