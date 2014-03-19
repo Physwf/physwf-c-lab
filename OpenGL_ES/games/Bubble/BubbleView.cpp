@@ -287,12 +287,13 @@ void render()
 	glFlush();
 }
 
-void onMousePressed(int x,int y)
+void onMousePressed(float x,float y)
 {
 	if(isFlying) return;
-	
+	printf("x:%f,y:%f\n",x,y);
 	float xOffset = x - FIRE_POS_X;
 	float yOffset = y - FIRE_POS_Y;
+	printf("ox:%f,oy:%f\n",xOffset,yOffset);
 	float xDir = xOffset / sqrt((float)(xOffset*xOffset+yOffset*yOffset));
 	float yDir = yOffset / sqrt((float)(xOffset*xOffset+yOffset*yOffset));
 	fire(xDir,yDir,1.0);

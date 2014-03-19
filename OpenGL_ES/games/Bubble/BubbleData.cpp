@@ -172,16 +172,16 @@ void checkIsland(int column,int row)
 
 	non_isolated_list[num_non_isolated++] = index;
 	isolated_check_list[num_isolated_checked++] = index;
-	printf("non isolated:%d\n",index);
+	// printf("non isolated:%d\n",index);
 	
 	int neighbors[12]={0};
 	getNeighbors(column,row,neighbors);
-	printf("%d neighbors:\n",index);
+	// printf("%d neighbors:\n",index);
 	for(int i=0;i<6;i++)
 	{
-		printf("%d,%d  ",neighbors[i*2+0],neighbors[i*2+1]);
+		// printf("%d,%d  ",neighbors[i*2+0],neighbors[i*2+1]);
 	}
-	printf("\n");
+	// printf("\n");
 	for(int i=0;i<6;i++)
 	{
 		checkIsland(neighbors[i*2+0],neighbors[i*2+1]);
@@ -327,13 +327,20 @@ void checkEasing()
 void checkCollision()
 {
 	//check out of border
-	if(pos[0]+RADIUS/2 > VIEW_W || pos[0]-RADIUS/2 < 0)
+	if(pos[0]+RADIUS/2 > VIEW_W)
 	{
+		pos[0] = VIEW_W - RADIUS/2;
+		dir[0] = -dir[0];
+	}
+	if(pos[0]-RADIUS/2 < 0)
+	{
+		pos[0] = RADIUS/2;
 		dir[0] = -dir[0];
 	}
 	bool will_collide = false;
 	if(pos[1]-RADIUS/2 <= 0)
 	{
+		pos[1]=RADIUS/2;
 		will_collide = true;
 	}
 	int top_row = floor((pos[1]-OFFSET_Y)/DIST_ROW);
@@ -420,6 +427,7 @@ void fire(float x,float y,float spd)
 	pos[1] = FIRE_POS_Y;
 	dir[0] = x;
 	dir[1] = y;
+	printf("dirx:%f,diry:%f\n",dir[0],dir[1]);
 	speed = spd;
 	waiting = rand_by_range(POPO_TYPE_1,POPO_TYPE_4+1)+1;
 	isFlying = true;
