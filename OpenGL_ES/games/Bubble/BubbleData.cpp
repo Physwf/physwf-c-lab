@@ -11,7 +11,7 @@ float pos[2];
 float dir[2];
 float speed;
 bool isFlying;
-float easing_target[2];
+float target_pos[2];
 int target_slot[2];
 bool isEasing;
 int waiting;
@@ -241,17 +241,15 @@ void makeEasing(int column,int row)
 	// printf("target column:%d,target row:%d\n",column,row);
 	target_slot[0] = column;
 	target_slot[1] = row;
-	easing_target[0] = ((row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + column * DIST_COLLUM;
-	easing_target[1] = OFFSET_Y + row * DIST_ROW;
-	// printf("target x:%f,target y:%f\n",easing_target[0],easing_target[1]);
+	target_pos[0] = ((row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + column * DIST_COLLUM;
+	target_pos[1] = OFFSET_Y + row * DIST_ROW;
 	
-	float xOffset = easing_target[0] - pos[0];
-	float yOffset = easing_target[1] - pos[1];
+	float xOffset = target_pos[0] - pos[0];
+	float yOffset = target_pos[1] - pos[1];
 	float dist = sqrt(xOffset*xOffset+yOffset*yOffset);
 	dir[0] = xOffset / dist;
 	dir[1] = yOffset / dist;
 	speed = 0.3 * dist / RADIUS;
-	// easing_target[0]
 	isEasing = true;
 }
 
@@ -298,13 +296,13 @@ void makeIslandElemination()
 
 void checkEasing()
 {
-	float offsetX = easing_target[0] - pos[0];
-	float offsetY = easing_target[1] - pos[1];
+	float offsetX = target_pos[0] - pos[0];
+	float offsetY = target_pos[1] - pos[1];
 	// printf("offsetX:%f,offsetY:%f\n",offsetX,offsetY);
 	if(offsetX*offsetX + offsetY*offsetY < 60)
 	{
-		pos[0] = easing_target[0];
-		pos[1] = easing_target[1];
+		pos[0] = target_pos[0];
+		pos[1] = target_pos[1];
 		int index = getIndex(target_slot[0],target_slot[1]);
 		*(popos+index) = flying;
 		// printf("target index:%d\n",index);
