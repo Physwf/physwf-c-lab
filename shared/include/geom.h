@@ -1,5 +1,3 @@
-typedef float matrix2[4];
-typedef float vector2[2];
+#include <matrix.h>
 
-
-void mirror_transform(vector2* input,vector2* output,vector2* mirror);
+void mirror_transform(vector2d* input,vector2d* output,vector2d* mirror);

@@ -13,21 +13,7 @@ OPTION=/MD
 BIN=./bin
 
 DIR_GMAES=./games
-DIR_POPO=/Popo
 DIR_DATA=/Data
-
-popo:PopoMain.obj PopoView.obj PopoData.obj utils.obj random.obj
-	$(LINK) $(BIN)/PopoMain.obj $(BIN)/PopoView.obj $(BIN)/PopoData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
-PopoMain.obj:$(DIR_GMAES)$(DIR_POPO)/main.cpp
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/main.cpp $(CLOUT)$(BIN)/PopoMain.obj $(INCLUDE) $(OPTION)
-	cp $(DIR_GMAES)$(DIR_POPO)/popo.vert $(BIN)/popo.vert
-	cp $(DIR_GMAES)$(DIR_POPO)/popo.frag $(BIN)/popo.frag
-	cp -R $(DIR_GMAES)$(DIR_POPO)$(DIR_DATA) $(BIN)$(DIR_DATA)
-PopoView.obj:$(DIR_GMAES)$(DIR_POPO)/PopoView.cpp 
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoView.cpp $(CLOUT)$(BIN)/PopoView.obj $(INCLUDE) $(OPTION)
-PopoData.obj:$(DIR_GMAES)$(DIR_POPO)/PopoData.cpp 
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/PopoData.cpp $(CLOUT)$(BIN)/PopoData.obj $(INCLUDE) $(OPTION)
-
 DIR_BUBBLE=/Bubble
 
 bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj
@@ -46,12 +32,16 @@ utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
 random.obj:$(DIR_SHARED)/src/random.cpp
 	$(CL) $(DIR_SHARED)/src/random.cpp $(CLOUT)$(BIN)/random.obj $(INCLUDE) $(OPTION)
+vector2d.obj:$(DIR_SHARED)/src/vector2d.cpp
+	$(CL) $(DIR_SHARED)/src/vector2d.cpp $(CLOUT)$(BIN)/vector2d.obj $(INCLUDE) $(OPTION)
+matrix.obj:$(DIR_SHARED)/src/matrix.cpp
+	$(CL) $(DIR_SHARED)/src/matrix.cpp $(CLOUT)$(BIN)/matrix.obj $(INCLUDE) $(OPTION)
+geom.obj:$(DIR_SHARED)/src/geom.cpp
+	$(CL) $(DIR_SHARED)/src/geom.cpp $(CLOUT)$(BIN)/geom.obj $(INCLUDE) $(OPTION)	
 	
-pu:png_utils.obj
-	$(LINK) $(BIN)/png_utils.obj $(LIB_PNG) $(LINKOUT)$(BIN)/png_utils.exe 
-png_utils.obj:$(DIR_GMAES)$(DIR_POPO)/png_utils.cpp
-	$(CL) $(DIR_GMAES)$(DIR_POPO)/png_utils.cpp $(CLOUT)$(BIN)/png_utils.obj $(INCLUDE) $(OPTION)
-	
-	
+gt:geom_test.obj geom.obj matrix.obj vector2d.obj
+	$(LINK) $(BIN)/geom_test.obj $(BIN)/geom.obj $(BIN)/matrix.obj $(BIN)/vector2d.obj $(LIB_PNG) $(LINKOUT)$(BIN)/geom_test.exe 
+geom_test.obj:$(DIR_GMAES)$(DIR_BUBBLE)/geom_test.cpp
+	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/geom_test.cpp $(CLOUT)$(BIN)/geom_test.obj $(INCLUDE) $(OPTION)	
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  
