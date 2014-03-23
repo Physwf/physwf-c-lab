@@ -4,10 +4,8 @@
 void vector2d_rotate(vector2d source,float angle)
 {
 	matrix2d mr={0};
-	matrix2d_print(mr);
 	matrix2d_get_identity(mr);
 	matrix2d_rotate(mr,angle);
-	matrix2d_print(mr);
 	float x = mr[0]*(source[0])+mr[1]*(source[1]);
 	float y = mr[3]*(source[0])+mr[4]*(source[1]);
 	source[0] = x;

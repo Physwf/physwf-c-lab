@@ -8,16 +8,15 @@
 */
 void matrix2d_concat(matrix2d source,matrix2d m)
 {
-	matrix2d_print(m);
-	float a = (source[0]) * (m[0]) + (source[1]) * (m[3]) + (source[2]) * (m[6]);
-	float c = (source[0]) * (m[1]) + (source[1]) * (m[4]) + (source[2]) * (m[7]);
-	float tx = (source[0]) * (m[2]) + (source[1]) * (m[5]) + (source[2]) * (m[8]);
-	float b = (source[3]) * (m[0]) + (source[4]) * (m[3]) + (source[5]) * (m[6]);
-	float d = (source[3]) * (m[1]) + (source[4]) * (m[4]) + (source[5]) * (m[7]);
-	float ty = (source[3]) * (m[2]) + (source[4]) * (m[5]) + (source[5]) * (m[8]);
-	float u = (source[6]) * (m[0]) + (source[7]) * (m[3]) + (source[8]) * (m[6]);
-	float v = (source[6]) * (m[1]) + (source[7]) * (m[4]) + (source[8]) * (m[7]);
-	float w = (source[6]) * (m[2]) + (source[7]) * (m[5]) + (source[8]) * (m[8]);
+	float a = source[0] * m[0] + source[1] * m[3] + source[2] * m[6];
+	float c = source[0] * m[1] + source[1] * m[4] + source[2] * m[7];
+	float tx = source[0] * m[2] + source[1] * m[5] + source[2] * m[8];
+	float b = source[3] * m[0] + source[4] * m[3] + source[5] * m[6];
+	float d = source[3] * m[1] + source[4] * m[4] + source[5] * m[7];
+	float ty = source[3] * m[2] + source[4] * m[5] + source[5] * m[8];
+	float u = source[6] * m[0] + source[7] * m[3] + source[8] * m[6];
+	float v = source[6] * m[1] + source[7] * m[4] + source[8] * m[7];
+	float w = source[6] * m[2] + source[7] * m[5] + source[8] * m[8];
 	
 	 source[0] = a; source[1] = c; source[2] = tx; 
 	 source[3] = b; source[4] = d; source[5] = ty; 
@@ -36,8 +35,8 @@ void matrix2d_rotate(matrix2d source,float angle)
 
 void matrix2d_transform_vector2d(matrix2d source,vector2d v)
 {
-	float x = (source[0])*(v[0]) + (source[1])*(v[1]);
-	float y = (source[3])*(v[0]) + (source[4])*(v[1]);
+	float x = source[0]*v[0] + source[1]*v[1];
+	float y = source[3]*v[0] + source[4]*v[1];
 	v[0] = x; v[1] = y;
 }
 
