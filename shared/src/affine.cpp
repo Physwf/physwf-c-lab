@@ -1,8 +1,8 @@
-#include <geom.h>
+#include <geom/affine.h>
 #include <math.h>
 #include <stdio.h>
 
-void mirror_transform(vector2d input,vector2d output,vector2d mirror)
+void affine_mirror_transform(vector2d input,vector2d output,vector2d mirror)
 {
 	float mother = sqrt(mirror[0] * mirror[0] + mirror[1] * mirror[1]);
 	float cos_m = mirror[0] / mother;

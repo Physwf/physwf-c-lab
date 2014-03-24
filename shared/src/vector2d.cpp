@@ -1,4 +1,4 @@
-#include <matrix.h>
+#include <geom/matrix.h>
 #include <stdio.h>
 
 void vector2d_rotate(vector2d source,float angle)

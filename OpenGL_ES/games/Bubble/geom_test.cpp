@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <geom.h>
+#include <geom/affine.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -10,7 +10,7 @@ int main(int argc,char** argv)
 	vector2d_print(v);
 	vector2d mirror = {0,-1};
 	vector2d output;
-	mirror_transform(v,output,mirror);
+	affine_mirror_transform(v,output,mirror);
 	vector2d_print(output);
 	getchar();
 	return 0;
