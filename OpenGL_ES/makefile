@@ -16,8 +16,8 @@ DIR_GMAES=./games
 DIR_DATA=/Data
 DIR_BUBBLE=/Bubble
 
-bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj
-	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj kinematics.obj vector2d.obj matrix.obj affine.obj
+	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(BIN)/kinematics.obj $(BIN)/vector2d.obj $(BIN)/matrix.obj $(BIN)/affine.obj $(LINKOUT)$(BIN)/$@.exe
 BubbleMain.obj:$(DIR_GMAES)$(DIR_BUBBLE)/main.cpp
 	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/main.cpp $(CLOUT)$(BIN)/BubbleMain.obj $(INCLUDE) $(OPTION)
 	cp $(DIR_GMAES)$(DIR_BUBBLE)/bubble.vert $(BIN)/bubble.vert

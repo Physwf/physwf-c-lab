@@ -2,6 +2,9 @@
 #include "BubbleView.h"
 #include "random.h"
 #include <stdio.h>
+#include <physics/kinematics.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 int* popos;
 int num_popos;
@@ -336,6 +339,7 @@ void checkCollision()
 		dir[0] = -dir[0];
 	}
 	bool will_collide = false;
+	bool may_collide = false;
 	if(pos[1]-RADIUS/2 <= 0)
 	{
 		pos[1]=RADIUS/2;
@@ -371,6 +375,8 @@ void checkCollision()
 	int I;
 	//bool will_collide = false;
 	// printf("---------------------\n");
+	float nearest_x;
+	float nearest_y;
 	for(int i=0;i<4;i++)
 	{
 		// printf("column:%d,row:%d\n",neighbors[i*2+0],neighbors[i*2+1]);
@@ -390,6 +396,8 @@ void checkCollision()
 			{
 				min_dist = dist;
 				I = i;
+				nearest_x = x;
+				nearest_y = y;
 			}
 		}
 		else 
@@ -399,9 +407,29 @@ void checkCollision()
 		}
 		// printf(will_collide?"true\n":"false\n");
 	}
-	if(will_collide) {
-		makeEasing(neighbors[I*2+0],neighbors[I*2+1]);
+	bool will_stick = false;
+	if(will_collide)
+	{
+		vector2d vec_pos = { pos[0]-nearest_x , pos[1]-nearest_y };
+		vector2d vec_v = { dir[0],dir[1] };
+		float angle = vector2d_get_angle_between(vec_pos,vec_v);
+		if(angle > 0.75 * M_PI && angle < 1.75 * M_PI)
+		{
+			will_stick = true;
+		}
+		else
+		{
+			particle_t a = {1,nearest_x,nearest_y,0,0};
+			particle_t b = {1,pos[0],pos[1],speed*dir[0],speed*dir[1]};
+			particle_eslatic_collide(&a,&b);
+			speed = sqrt(b.vx * b.vx + b.vy * b.vy);
+			dir[0] = b.vx/speed;
+			dir[1] = b.vy/speed;
+			printf("speed:%f,dir[0]:%f.dir[1]:%f\n",speed,dir[0],dir[1]);
+		}
 	}
+	if(will_stick) 
+		makeEasing(neighbors[I*2+0],neighbors[I*2+1]);
 }
 
 void update(int eclipse)

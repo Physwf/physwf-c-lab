@@ -1,5 +1,6 @@
 #include <geom/matrix.h>
 #include <stdio.h>
+#include <math.h>
 
 void vector2d_rotate(vector2d source,float angle)
 {
@@ -12,8 +13,13 @@ void vector2d_rotate(vector2d source,float angle)
 	source[1] = y;
 }
 
-float get_angle_between(vector2d v1,vector2d v2)
+float vector2d_get_angle_between(vector2d v1,vector2d v2)
 {
+	float dot_prod = v1[0]*v2[0] + v1[1]*v2[1];
+	float model_1 = sqrt(v1[0]*v1[0]+v1[1]*v1[1]);
+	float model_2 = sqrt(v2[0]*v2[0]+v2[1]*v2[1]);
+	float cos_theta = dot_prod / (model_1 * model_2);
+	return acosf(cos_theta);
 	return 0;
 }
 
