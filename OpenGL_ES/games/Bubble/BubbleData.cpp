@@ -301,8 +301,9 @@ void checkEasing()
 {
 	float offsetX = target_pos[0] - pos[0];
 	float offsetY = target_pos[1] - pos[1];
-	// printf("offsetX:%f,offsetY:%f\n",offsetX,offsetY);
-	if(offsetX*offsetX + offsetY*offsetY < 60)
+	printf("offsetx:%f,offsety:%f\n",offsetX,offsetY);
+	printf("ease target%f\n",sqrt(offsetX*offsetX + offsetY*offsetY));
+	if(sqrt(offsetX*offsetX + offsetY*offsetY) < 20)
 	{
 		pos[0] = target_pos[0];
 		pos[1] = target_pos[1];
@@ -328,22 +329,26 @@ void checkEasing()
 void checkCollision()
 {
 	//check out of border
+	bool will_out = false;
 	if(pos[0]+RADIUS/2 > VIEW_W)
 	{
 		pos[0] = VIEW_W - RADIUS/2;
 		dir[0] = -dir[0];
+		will_out = true;
 	}
 	if(pos[0]-RADIUS/2 < 0)
 	{
 		pos[0] = RADIUS/2;
 		dir[0] = -dir[0];
+		will_out = true;
 	}
 	bool will_collide = false;
 	bool may_collide = false;
 	if(pos[1]-RADIUS/2 <= 0)
 	{
 		pos[1]=RADIUS/2;
-		will_collide = true;
+		dir[1] = -dir[1];
+		will_out = true;
 	}
 	int top_row = floor((pos[1]-OFFSET_Y)/DIST_ROW);
 	int bottom_row = ceil((pos[1]-OFFSET_Y)/DIST_ROW);
@@ -384,6 +389,7 @@ void checkCollision()
 		// printf("type:%d\n",getType(neighbors[i*2+0],neighbors[i*2+1]));
 		//out of screen
 		if(neighbors[i*2+0] < 0) continue;
+		if(neighbors[i*2+1] < 0) continue;
 		if(neighbors[i*2+1]%2==0 && neighbors[i*2+0]>=NUM_POPO_ROW) continue;
 		if(neighbors[i*2+1]%2!=0 && neighbors[i*2+0]>=NUM_POPO_ROW-1) continue;
 		float y = OFFSET_Y + neighbors[i*2+1] * DIST_ROW;
@@ -419,7 +425,7 @@ void checkCollision()
 		vector2d vec_v = { dir[0],dir[1] };
 		float angle = vector2d_get_angle_between(vec_pos,vec_v);
 		printf("angle:%f\n",angle*180/M_PI);
-		if(angle > 0 && angle < 0.7 * M_PI)
+		if(angle > 0 && angle < 0.5 * M_PI)
 		{
 			particle_t a = {1,nearest_x,nearest_y,0,0};
 			particle_t b = {1,pos[0],pos[1],speed*dir[0],speed*dir[1]};
@@ -438,8 +444,12 @@ void checkCollision()
 			will_stick = true;
 		}
 	}
-	if(will_stick) 
+	if(will_stick || will_out) 
+	{
 		makeEasing(neighbors[I*2+0],neighbors[I*2+1]);
+		if(will_out) printf("out: column%d,row%d",neighbors[I*2+0],neighbors[I*2+1]);
+	}
+		
 }
 
 void update(int eclipse)
@@ -450,6 +460,7 @@ void update(int eclipse)
 		pos[1] += speed * dir[1] * eclipse;
 		if(isEasing) checkEasing();
 		else checkCollision();
+		// printf("x%f,y%f\n",pos[0],pos[1]);
 		// printf("speed:%f,dir[0]:%f,dir[1]:%f,eclipse:%d\n",speed,dir[0],dir[1],eclipse);
 	}
 }
