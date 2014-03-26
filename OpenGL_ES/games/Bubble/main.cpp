@@ -14,7 +14,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_LBUTTONDOWN:
-			onMousePressed(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
+			printf("win msg l b d\n");
+			if(MK_LBUTTON & wParam)
+				onMousePressed(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 			break;
 		case WM_CLOSE:
 			PostQuitMessage(0);

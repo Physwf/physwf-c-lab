@@ -323,32 +323,35 @@ void checkEasing()
 		makeIslandElemination();
 		isEasing = false;
 		isFlying = false;
+		printf(isEasing?"checkEasing isEasing:true\n":"checkEasing isEasing:false\n");
+		printf(isFlying?"checkEasing isFlying:true\n":"checkEasing isFlying:false\n");
 	}
 }
 
 void checkCollision()
 {
 	//check out of border
-	bool will_out = false;
+	bool will_stick = false;
+	bool will_collide = false;
+
 	if(pos[0]+RADIUS/2 > VIEW_W)
 	{
 		pos[0] = VIEW_W - RADIUS/2;
 		dir[0] = -dir[0];
-		will_out = true;
+		will_stick = true;
 	}
 	if(pos[0]-RADIUS/2 < 0)
 	{
 		pos[0] = RADIUS/2;
 		dir[0] = -dir[0];
-		will_out = true;
+		will_stick = true;
 	}
-	bool will_collide = false;
-	bool may_collide = false;
+
 	if(pos[1]-RADIUS/2 <= 0)
 	{
 		pos[1]=RADIUS/2;
 		dir[1] = -dir[1];
-		will_out = true;
+		will_stick = true;
 	}
 	int top_row = floor((pos[1]-OFFSET_Y)/DIST_ROW);
 	int bottom_row = ceil((pos[1]-OFFSET_Y)/DIST_ROW);
@@ -418,7 +421,7 @@ void checkCollision()
 		}
 		// printf(will_collide?"true\n":"false\n");
 	}
-	bool will_stick = false;
+
 	if(will_collide)
 	{
 		vector2d vec_pos = { pos[0]-nearest_x , pos[1]-nearest_y };
@@ -444,16 +447,18 @@ void checkCollision()
 			will_stick = true;
 		}
 	}
-	if(will_stick || will_out) 
+	if(will_stick) 
 	{
 		makeEasing(neighbors[I*2+0],neighbors[I*2+1]);
-		if(will_out) printf("out: column%d,row%d",neighbors[I*2+0],neighbors[I*2+1]);
+		printf("out: column%d,row%d\n",neighbors[I*2+0],neighbors[I*2+1]);
 	}
 		
 }
 
 void update(int eclipse)
 {
+	// printf("isFlying:%s\n",isFlying?"true":"false");
+	// printf("isEasing:%s\n",isEasing?"true":"false");
 	if(isFlying)
 	{
 		pos[0] += speed * dir[0] * eclipse;
@@ -478,4 +483,6 @@ void fire(float x,float y,float spd)
 	speed = spd;
 	waiting = rand_by_range(POPO_TYPE_1,POPO_TYPE_4+1)+1;
 	isFlying = true;
+	isEasing = false;//必须加上这一行,如果不加这一行,当射到第一行第一个位置时,bubble会消失.这是一个奇怪的bug.
+	//如果不加最后isEasing = false,当第一行第一个位置为空,并且试图射击这个位置时,代码会自动执行onMouseDown方法.
 }
