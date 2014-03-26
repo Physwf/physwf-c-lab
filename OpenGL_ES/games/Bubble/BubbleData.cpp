@@ -483,6 +483,5 @@ void fire(float x,float y,float spd)
 	speed = spd;
 	waiting = rand_by_range(POPO_TYPE_1,POPO_TYPE_4+1)+1;
 	isFlying = true;
-	isEasing = false;//必须加上这一行,如果不加这一行,当射到第一行第一个位置时,bubble会消失.这是一个奇怪的bug.
-	//如果不加最后isEasing = false,当第一行第一个位置为空,并且试图射击这个位置时,代码会自动执行onMouseDown方法.
+	isEasing = false;
 }
