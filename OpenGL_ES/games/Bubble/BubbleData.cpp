@@ -241,7 +241,7 @@ void checkElemination(int column,int row)
 
 void makeEasing(int column,int row)
 {
-	// printf("target column:%d,target row:%d\n",column,row);
+	printf("target column:%d,target row:%d\n",column,row);
 	target_slot[0] = column;
 	target_slot[1] = row;
 	target_pos[0] = ((row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + column * DIST_COLLUM;
@@ -372,6 +372,7 @@ void checkCollision()
 		neighbors[7] = bottom_row;
 	}
 	float min_dist = RADIUS*2;
+	float min_dist_collide = RADIUS;
 	int I;
 	//bool will_collide = false;
 	// printf("---------------------\n");
@@ -396,14 +397,18 @@ void checkCollision()
 			{
 				min_dist = dist;
 				I = i;
-				nearest_x = x;
-				nearest_y = y;
 			}
 		}
 		else 
 		{
-			if(dist<RADIUS)
+			if(dist<min_dist_collide)
+			{
+				min_dist_collide = dist;
+				nearest_x = x;
+				nearest_y = y;
+				printf("collide:column:%d,row:%d\n",neighbors[i*2+0],neighbors[i*2+1]);
 				will_collide = true;
+			}
 		}
 		// printf(will_collide?"true\n":"false\n");
 	}
@@ -413,11 +418,8 @@ void checkCollision()
 		vector2d vec_pos = { pos[0]-nearest_x , pos[1]-nearest_y };
 		vector2d vec_v = { dir[0],dir[1] };
 		float angle = vector2d_get_angle_between(vec_pos,vec_v);
-		if(angle > 0.75 * M_PI && angle < 1.75 * M_PI)
-		{
-			will_stick = true;
-		}
-		else
+		printf("angle:%f\n",angle*180/M_PI);
+		if(angle > 0 && angle < 0.7 * M_PI)
 		{
 			particle_t a = {1,nearest_x,nearest_y,0,0};
 			particle_t b = {1,pos[0],pos[1],speed*dir[0],speed*dir[1]};
@@ -426,6 +428,14 @@ void checkCollision()
 			dir[0] = b.vx/speed;
 			dir[1] = b.vy/speed;
 			printf("speed:%f,dir[0]:%f.dir[1]:%f\n",speed,dir[0],dir[1]);
+			if(speed<0.005)//to optimize
+			{
+				will_stick = true;
+			}
+		}
+		else
+		{
+			will_stick = true;
 		}
 	}
 	if(will_stick) 
