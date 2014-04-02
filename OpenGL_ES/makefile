@@ -18,6 +18,7 @@ DIR_BUBBLE=/Bubble
 
 DIR_EFFECTS=./effects
 DIR_GRAY=/gray
+DIR_BLUR=/blur
 
 bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj kinematics.obj vector2d.obj matrix.obj affine.obj
 	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(BIN)/kinematics.obj $(BIN)/vector2d.obj $(BIN)/matrix.obj $(BIN)/affine.obj $(LINKOUT)$(BIN)/$@.exe
@@ -40,6 +41,16 @@ grayMain.obj:
 	cp $(DIR_EFFECTS)$(DIR_GRAY)/gray.png $(BIN)/gray.png
 gray.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_GRAY)/gray.cpp $(CLOUT)$(BIN)/gray.obj $(INCLUDE) $(OPTION)
+
+e.blur:	blurMain.obj blur.obj utils.obj
+	$(LINK) $(BIN)/blurMain.obj $(BIN)/blur.obj $(BIN)/utils.obj $(LIB_GLES2) $(LIB_PNG) $(LINKOUT)$(BIN)/$@.exe
+blurMain.obj:
+	$(CL) $(DIR_EFFECTS)$(DIR_BLUR)/main.cpp $(CLOUT)$(BIN)/blurMain.obj $(INCLUDE) $(OPTION)
+	cp $(DIR_EFFECTS)$(DIR_BLUR)/blur.vert $(BIN)/blur.vert
+	cp $(DIR_EFFECTS)$(DIR_BLUR)/blur.frag $(BIN)/blur.frag
+	cp $(DIR_EFFECTS)$(DIR_BLUR)/blur.png $(BIN)/blur.png
+blur.obj:
+	$(CL) $(DIR_EFFECTS)$(DIR_BLUR)/blur.cpp $(CLOUT)$(BIN)/blur.obj $(INCLUDE) $(OPTION)
 	
 utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
