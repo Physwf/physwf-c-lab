@@ -13,7 +13,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_LBUTTONDOWN:
-			printf("win msg l b d\n");
 			if(MK_LBUTTON & wParam)
 				//onMousePressed(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 			break;
@@ -53,7 +52,7 @@ HWND create_window(int w,int h)
 	wc.hCursor = LoadCursor(NULL,IDC_ARROW);
 	wc.hbrBackground = NULL;
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = "Popo";
+	wc.lpszClassName = "Blur";
 	
 	RegisterClass(&wc);
 	
@@ -61,8 +60,8 @@ HWND create_window(int w,int h)
 	
 	window = CreateWindowEx(
 	WS_EX_APPWINDOW|WS_EX_WINDOWEDGE,
-	"Popo",
-	"Popo",
+	"Blur",
+	"Blur",
 	WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
 	0,0,
 	rect.right - rect.left,

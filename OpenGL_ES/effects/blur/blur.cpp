@@ -106,8 +106,8 @@ void initGray()
 	
 	GLint blurXLoc = glGetUniformLocation(program,"blurX");
 	GLint blurYLoc = glGetUniformLocation(program,"blurY");
-	glUniform1i(blurXLoc,4);
-	glUniform1i(blurYLoc,4);
+	glUniform1i(blurXLoc,2);
+	glUniform1i(blurYLoc,2);
 	
 	GLuint textures[numTexs];
 	glGenTextures(numTexs,textures);
