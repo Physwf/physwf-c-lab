@@ -46,8 +46,8 @@ vec4 blur()
 			float offsetX = float(i)/float(width);
 			float offsetY = float(j)/float(height);
 			vec2 t_coord = v_texCoords + vec2(offsetX,offsetY);
-			//float g = Gaussian(offsetX,offsetY,2.5);
-			float g = normal(offsetX,offsetY,2.5,0.0);
+			float g = Gaussian(offsetX,offsetY,2.5);
+			//float g = normal(offsetX,offsetY,2.5,0.0);
 			color += texture2D(s_tex,t_coord)*g;
 			sum += g;
 		}
@@ -81,8 +81,8 @@ vec4 radialBlur()
 
 void main()
 {
-	//vec4 color = blur();
-	vec4 color = radialBlur();
+	vec4 color = blur();
+	//vec4 color = radialBlur();
 	gl_FragColor = color;
 }
 

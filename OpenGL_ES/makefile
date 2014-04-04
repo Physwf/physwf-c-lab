@@ -19,6 +19,7 @@ DIR_BUBBLE=/Bubble
 DIR_EFFECTS=./effects
 DIR_GRAY=/gray
 DIR_BLUR=/blur
+DIR_COLORMATRIX=/ColorMatrix
 
 bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj kinematics.obj vector2d.obj matrix.obj affine.obj
 	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(BIN)/kinematics.obj $(BIN)/vector2d.obj $(BIN)/matrix.obj $(BIN)/affine.obj $(LINKOUT)$(BIN)/$@.exe
@@ -52,6 +53,17 @@ blurMain.obj:
 blur.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_BLUR)/blur.cpp $(CLOUT)$(BIN)/blur.obj $(INCLUDE) $(OPTION)
 	
+e.cm:ColorMatrixMain.obj ColorMatrix.obj utils.obj color_matrix.obj
+	$(LINK) $(BIN)/ColorMatrixMain.obj $(BIN)/ColorMatrix.obj $(BIN)/utils.obj $(BIN)/color_matrix.obj $(LIB_GLES2) $(LIB_PNG) $(LINKOUT)$(BIN)/$@.exe
+ColorMatrixMain.obj:
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/main.cpp $(CLOUT)$(BIN)/ColorMatrixMain.obj $(INCLUDE) $(OPTION)
+	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.vert $(BIN)/ColorMatrix.vert
+	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.frag $(BIN)/ColorMatrix.frag
+	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.png $(BIN)/ColorMatrix.png
+ColorMatrix.obj:
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.cpp $(CLOUT)$(BIN)/ColorMatrix.obj $(INCLUDE) $(OPTION)
+	
+
 utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
 random.obj:$(DIR_SHARED)/src/random.cpp
@@ -64,6 +76,8 @@ affine.obj:$(DIR_SHARED)/src/affine.cpp
 	$(CL) $(DIR_SHARED)/src/affine.cpp $(CLOUT)$(BIN)/affine.obj $(INCLUDE) $(OPTION)	
 kinematics.obj:$(DIR_SHARED)/src/kinematics.cpp
 	$(CL) $(DIR_SHARED)/src/kinematics.cpp $(CLOUT)$(BIN)/kinematics.obj $(INCLUDE) $(OPTION)
+color_matrix.obj:$(DIR_SHARED)/src/color_matrix.cpp
+	$(CL) $(DIR_SHARED)/src/color_matrix.cpp $(CLOUT)$(BIN)/color_matrix.obj $(INCLUDE) $(OPTION)
 	
 gt:geom_test.obj affine.obj matrix.obj vector2d.obj kinematics.obj
 	$(LINK) $(BIN)/geom_test.obj $(BIN)/affine.obj $(BIN)/matrix.obj $(BIN)/vector2d.obj $(BIN)/kinematics.obj $(LIB_PNG) $(LINKOUT)$(BIN)/geom_test.exe 
