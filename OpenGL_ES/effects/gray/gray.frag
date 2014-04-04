@@ -22,7 +22,7 @@ float calcGray2(vec4 color)
 void main()
 {
 	vec4 color = texture2D(s_tex,v_texCoords);
-	float gray = calcGray2(color);
+	float gray = calcGray1(color);
 	color.r = color.g = color.b = gray;
 	gl_FragColor = color;
 }
