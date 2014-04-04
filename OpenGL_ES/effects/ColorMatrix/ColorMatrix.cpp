@@ -106,8 +106,9 @@ void initGray()
 	glUniformMatrix4fv(mvpLoc,1,GL_FALSE,mvp);
 	
 	GLint cmLoc = glGetUniformLocation(program,"cm");
-	color_matrix cm = INDENTITY;
-	glUniform1v(mvpLoc,1,GL_FALSE,mvp);
+	color_matrix cm = IDENTITY;
+	adjustHue(cm,1);
+	glUniform1fv(cmLoc,20,cm);
 	
 	GLuint textures[numTexs];
 	glGenTextures(numTexs,textures);

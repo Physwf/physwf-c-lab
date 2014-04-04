@@ -1,7 +1,7 @@
 #include <color_matrix.h>
 #include <string.h>
 #include <math.h>
-#define IDENTITY ({1,0,0,0,0,  0,1,0,0,0,  0,0,1,0,0,  0,0,0,1,0})
+
 #define LUMA_R 0.299
 #define LUMA_G 0.587
 #define LUMA_B 0.114
@@ -100,12 +100,12 @@ void concat(color_matrix left,color_matrix right,color_matrix out)
 		for (int x=0; x<5; ++x)
 		{
 			out[(i+x)] = 
-				left[i]        * right[x]           +
+				left[i]    	* right[x]        +
 				left[(i+1)] * right[(x +  5)] +
 				left[(i+2)] * right[(x + 10)] +
 				left[(i+3)] * right[(x + 15)] +
 				(x == 4 ? left[(i+4)] : 0);
-		}
+		};
 		i+=5;
-	}
+	};
 }

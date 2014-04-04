@@ -1,3 +1,5 @@
+#define IDENTITY {1,0,0,0,0,  0,1,0,0,0,  0,0,1,0,0,  0,0,0,1,0}
+
 typedef float color_matrix[20];
 
 void adjustHue(color_matrix mat,float value);
