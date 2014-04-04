@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include "gray.h"
+#include "blur.h"
 
 #pragma comment (lib,"kernel32.lib")
 #pragma comment (lib,"user32.lib")
@@ -13,6 +13,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch(msg)
 	{
 		case WM_LBUTTONDOWN:
+			printf("win msg l b d\n");
 			if(MK_LBUTTON & wParam)
 				//onMousePressed(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 			break;

@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include "gray.h"
+#include "ColorMatrix.h"
 
 #pragma comment (lib,"kernel32.lib")
 #pragma comment (lib,"user32.lib")
