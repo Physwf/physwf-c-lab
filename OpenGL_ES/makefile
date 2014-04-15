@@ -8,6 +8,8 @@ INCLUDE=/I./include /I$(DIR_SHARED)/include
 
 LIB_GLES2=./lib/2.0/libEGL.lib ./lib/2.0/libGLESv2.lib 
 LIB_PNG=$(DIR_SHARED)/lib/libpng.lib $(DIR_SHARED)/lib/zlib.lib
+LIB_DUI=$(DIR_SHARED)/lib/DuiLib.lib
+LIB_DUI_D=$(DIR_SHARED)/lib/DuiLib_d.lib
 OPTION=/MD
 
 BIN=./bin
@@ -63,7 +65,12 @@ ColorMatrixMain.obj:
 ColorMatrix.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.cpp $(CLOUT)$(BIN)/ColorMatrix.obj $(INCLUDE) $(OPTION)
 	
-
+dui:dui_test.obj
+	$(LINK) $(BIN)/dui_test.obj $(LIB_DUI) $(LINKOUT)$(BIN)/$@.exe
+dui_test.obj:
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/dui_test.cpp $(CLOUT)$(BIN)/dui_test.obj $(INCLUDE) $(OPTION)
+	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/duilib.xml $(BIN)/duilib.xml
+	
 utils.obj:$(DIR_SHARED)/src/utils.cpp
 	$(CL) $(DIR_SHARED)/src/utils.cpp $(CLOUT)$(BIN)/utils.obj $(INCLUDE) $(OPTION)
 random.obj:$(DIR_SHARED)/src/random.cpp
@@ -78,6 +85,7 @@ kinematics.obj:$(DIR_SHARED)/src/kinematics.cpp
 	$(CL) $(DIR_SHARED)/src/kinematics.cpp $(CLOUT)$(BIN)/kinematics.obj $(INCLUDE) $(OPTION)
 color_matrix.obj:$(DIR_SHARED)/src/color_matrix.cpp
 	$(CL) $(DIR_SHARED)/src/color_matrix.cpp $(CLOUT)$(BIN)/color_matrix.obj $(INCLUDE) $(OPTION)
+
 	
 gt:geom_test.obj affine.obj matrix.obj vector2d.obj kinematics.obj
 	$(LINK) $(BIN)/geom_test.obj $(BIN)/affine.obj $(BIN)/matrix.obj $(BIN)/vector2d.obj $(BIN)/kinematics.obj $(LIB_PNG) $(LINKOUT)$(BIN)/geom_test.exe 
