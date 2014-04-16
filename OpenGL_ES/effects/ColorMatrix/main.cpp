@@ -2,9 +2,8 @@
 #include <windows.h>
 #include <windowsx.h>
 
-#include <DuiLib/UILib.h>
-
 #include "ColorMatrix.h"
+#include "ColorMatrixUI.h"
 
 #pragma comment (lib,"kernel32.lib")
 #pragma comment (lib,"user32.lib")
@@ -12,8 +11,20 @@
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	CPaintManagerUI m_PaintManager;
 	switch(msg)
 	{
+		case WM_CREATE:
+			{
+				m_PaintManager.Init(hWnd);
+				CDialogBuilder builder;
+				CControlUI* pRoot = builder.Create(_T("Data/ColorMatrixFrame.xml"), (UINT)0, NULL, &m_PaintManager);  
+				ASSERT(pRoot && "Failed to parse XML\n");
+				if(pRoot) printf("pRoot\n");
+				m_PaintManager.AttachDialog(pRoot);
+				return 0;
+			}
+			break;
 		case WM_LBUTTONDOWN:
 			if(MK_LBUTTON & wParam)
 				//onMousePressed(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
@@ -44,6 +55,15 @@ HWND create_window(int w,int h)
 	rect.bottom = (long)h;
 	
 	hInstance = GetModuleHandle(NULL);
+	
+	CPaintManagerUI::SetInstance(hInstance);
+	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
+	//CColorMatrixFrame cmFrame;
+	// window = cmFrame.Create(NULL,_T(""),UI_WNDSTYLE_FRAME,WS_EX_WINDOWEDGE);
+	//window = cmFrame.Create(NULL,_T("ColorMatrix"),WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,WS_EX_APPWINDOW|WS_EX_WINDOWEDGE,rect);
+	//cmFrame.ShowModal();
+	//cmFrame.ShowWindow(true,true);
+	//return window;
 	
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = WndProc;
@@ -117,17 +137,17 @@ int main()
 	{
 		printf("Choose Config failed!\n");
 	}
-	
+	printf("creating!\n");
 	HWND window = create_window(VIEW_W,VIEW_H);
-	
+	printf("created!\n");
 	EGLSurface surface;
 	surface = eglCreateWindowSurface(display,configs[0],window,NULL);
-	
+
 	if(surface == EGL_NO_SURFACE)
 	{
 		printf("Surface create error!\n");
 	}
-	
+
 	EGLContext context;
 	EGLint contextAttribList[] = 
 	{
@@ -135,7 +155,7 @@ int main()
 		EGL_NONE
 	};
 	context = eglCreateContext(display,configs[0],EGL_NO_CONTEXT,contextAttribList);
-	
+
 	if(context == EGL_NO_CONTEXT)
 	{
 		printf("Create context error!\n");
@@ -146,11 +166,12 @@ int main()
 		printf("Make current error!\n");
 		
 	}
+
 	lastTick = GetTickCount();
 	//initData();
 	//initView();
 	initGray();
-	
+
 	bool done = false;
 	MSG msg;
 	while(!done)
@@ -160,11 +181,17 @@ int main()
 			if(msg.message == WM_QUIT)
 			{
 				done = true;
+				PostQuitMessage(0);
+				break;
 			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			
+			{
+				::TranslateMessage(&msg);
+				::DispatchMessage(&msg);
+			}
 		}
 		int eclipse = GetTickCount() - lastTick;
+		
 		if(eclipse>=interval)
 		{
 			update(eclipse);

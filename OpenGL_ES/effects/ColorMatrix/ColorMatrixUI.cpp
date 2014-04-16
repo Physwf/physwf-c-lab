@@ -1,8 +1,5 @@
 #include "ColorMatrixUI.h"
-
-LPCTSTR GetWindowClassName() { return _T("ColorMatrixFrame"); };
-
-void Notify(TNotifyUI& msg) {};
+#include <stdio.h>
 
 LRESULT CColorMatrixFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -12,9 +9,10 @@ LRESULT CColorMatrixFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam
 	{
 		m_PaintManager.Init(m_hWnd);
 		CDialogBuilder builder;
-		CControlUI* pRoot = builder.Create(_T("duilib.xml"), (UINT)0, NULL, &m_PaintManager);   // duilib.xml需要放到exe目录下
-		ASSERT(pRoot && "Failed to parse XML");
+		CControlUI* pRoot = builder.Create(_T("./Data/ColorMatrixFrame.xml"), (UINT)0, NULL, &m_PaintManager);  
+		ASSERT(pRoot && "Failed to parse XML\n");
 		m_PaintManager.AttachDialog(pRoot);
+		printf("WM_CREATE\n");
 		return lRes;
 	}
 

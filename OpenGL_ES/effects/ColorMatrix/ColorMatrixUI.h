@@ -19,8 +19,8 @@ using namespace DuiLib;
 class CColorMatrixFrame : public CWindowWnd, public INotifyUI
 {
 	public:
-		virtual LPCTSTR GetWindowClassName();
-		virtual void Notfiy(TNotifyUI& msg);
+		virtual LPCTSTR GetWindowClassName() const { return _T("ColorMatrixFrame"); };
+		virtual void Notify(TNotifyUI& msg) {};
 		virtual LRESULT HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam);
 	protected:
 		CPaintManagerUI m_PaintManager;

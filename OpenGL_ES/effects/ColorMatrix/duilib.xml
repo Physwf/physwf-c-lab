@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="800,600">
+<Window size="500,400">
     <HorizontalLayout bkcolor="#FF00FF00">
-	<Slider float="true" pos="30,77,0,0" width="139" height="18" bkcolor="#FFFF0000" thumbimage="ColorMatrix.png"/>
+	<Slider float="true" pos="256,256,123,18" width="123" height="18" bkcolor="#FF00FF00" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
     </HorizontalLayout>
 </Window>

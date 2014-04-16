@@ -29,7 +29,7 @@ BubbleMain.obj:$(DIR_GMAES)$(DIR_BUBBLE)/main.cpp
 	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/main.cpp $(CLOUT)$(BIN)/BubbleMain.obj $(INCLUDE) $(OPTION)
 	cp $(DIR_GMAES)$(DIR_BUBBLE)/bubble.vert $(BIN)/bubble.vert
 	cp $(DIR_GMAES)$(DIR_BUBBLE)/bubble.frag $(BIN)/bubble.frag
-	cp -R $(DIR_GMAES)$(DIR_BUBBLE)$(DIR_DATA) $(BIN)$(DIR_DATA)
+	cp -R $(DIR_GMAES)$(DIR_BUBBLE)$(DIR_DATA) $(BIN)
 BubbleView.obj:$(DIR_GMAES)$(DIR_BUBBLE)/BubbleView.cpp 
 	$(CL) $(DIR_GMAES)$(DIR_BUBBLE)/BubbleView.cpp $(CLOUT)$(BIN)/BubbleView.obj $(INCLUDE) $(OPTION)
 BubbleData.obj:$(DIR_GMAES)$(DIR_BUBBLE)/BubbleData.cpp 
@@ -62,6 +62,7 @@ ColorMatrixMain.obj:
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.vert $(BIN)/ColorMatrix.vert
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.frag $(BIN)/ColorMatrix.frag
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.png $(BIN)/ColorMatrix.png
+	cp -R $(DIR_EFFECTS)$(DIR_COLORMATRIX)$(DIR_DATA) $(BIN)
 ColorMatrix.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.cpp $(CLOUT)$(BIN)/ColorMatrix.obj $(INCLUDE) $(OPTION)
 ColorMatrixUI.obj:
