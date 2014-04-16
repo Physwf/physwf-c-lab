@@ -9,9 +9,11 @@
 #pragma comment (lib,"user32.lib")
 #pragma comment (lib,"Gdi32.lib")
 
+CPaintManagerUI m_PaintManager;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	CPaintManagerUI m_PaintManager;
+	
 	switch(msg)
 	{
 		case WM_CREATE:
@@ -56,8 +58,8 @@ HWND create_window(int w,int h)
 	
 	hInstance = GetModuleHandle(NULL);
 	
-	CPaintManagerUI::SetInstance(hInstance);
-	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
+	//CPaintManagerUI::SetInstance(hInstance);
+	//CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
 	//CColorMatrixFrame cmFrame;
 	// window = cmFrame.Create(NULL,_T(""),UI_WNDSTYLE_FRAME,WS_EX_WINDOWEDGE);
 	//window = cmFrame.Create(NULL,_T("ColorMatrix"),WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,WS_EX_APPWINDOW|WS_EX_WINDOWEDGE,rect);
@@ -137,9 +139,12 @@ int main()
 	{
 		printf("Choose Config failed!\n");
 	}
-	printf("creating!\n");
+
 	HWND window = create_window(VIEW_W,VIEW_H);
-	printf("created!\n");
+	CPaintManagerUI::SetInstance(GetModuleHandle(NULL));
+	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
+	CColorMatrixFrame cmFrame;
+	cmFrame.Create(window,_T("ColorMatrix"), UI_WNDSTYLE_CHILD, 0, 0, 0, 500, 400);
 	EGLSurface surface;
 	surface = eglCreateWindowSurface(display,configs[0],window,NULL);
 
