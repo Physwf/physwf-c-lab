@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <windowsx.h>
 
+#include <DuiLib/UILib.h>
+
 #include "ColorMatrix.h"
 
 #pragma comment (lib,"kernel32.lib")

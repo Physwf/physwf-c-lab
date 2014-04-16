@@ -55,8 +55,8 @@ blurMain.obj:
 blur.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_BLUR)/blur.cpp $(CLOUT)$(BIN)/blur.obj $(INCLUDE) $(OPTION)
 	
-e.cm:ColorMatrixMain.obj ColorMatrix.obj utils.obj color_matrix.obj
-	$(LINK) $(BIN)/ColorMatrixMain.obj $(BIN)/ColorMatrix.obj $(BIN)/utils.obj $(BIN)/color_matrix.obj $(LIB_GLES2) $(LIB_PNG) $(LINKOUT)$(BIN)/$@.exe
+e.cm:ColorMatrixMain.obj ColorMatrix.obj utils.obj color_matrix.obj ColorMatrixUI.obj
+	$(LINK) $(BIN)/ColorMatrixMain.obj $(BIN)/ColorMatrix.obj $(BIN)/ColorMatrixUI.obj $(LIB_DUI) $(BIN)/utils.obj $(BIN)/color_matrix.obj $(LIB_GLES2) $(LIB_PNG) $(LINKOUT)$(BIN)/$@.exe
 ColorMatrixMain.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/main.cpp $(CLOUT)$(BIN)/ColorMatrixMain.obj $(INCLUDE) $(OPTION)
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.vert $(BIN)/ColorMatrix.vert
@@ -64,6 +64,8 @@ ColorMatrixMain.obj:
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.png $(BIN)/ColorMatrix.png
 ColorMatrix.obj:
 	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.cpp $(CLOUT)$(BIN)/ColorMatrix.obj $(INCLUDE) $(OPTION)
+ColorMatrixUI.obj:
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrixUI.cpp $(CLOUT)$(BIN)/ColorMatrixUI.obj $(INCLUDE) $(OPTION)
 	
 dui:dui_test.obj
 	$(LINK) $(BIN)/dui_test.obj $(LIB_DUI) $(LINKOUT)$(BIN)/$@.exe
