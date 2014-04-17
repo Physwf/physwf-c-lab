@@ -9,7 +9,7 @@
 #pragma comment (lib,"user32.lib")
 #pragma comment (lib,"Gdi32.lib")
 
-CPaintManagerUI m_PaintManager;
+//CPaintManagerUI m_PaintManager;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -24,7 +24,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				// ASSERT(pRoot && "Failed to parse XML\n");
 				// if(pRoot) printf("pRoot\n");
 				// m_PaintManager.AttachDialog(pRoot);
-				printf("WM_CREATE\n");
+				printf("WM_CREATE main\n");
 				return 0;
 			}
 			break;

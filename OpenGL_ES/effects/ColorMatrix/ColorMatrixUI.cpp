@@ -23,7 +23,7 @@ LRESULT CColorMatrixFrame::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam
 		// slider->SetThumbSize(s);
 		// slider->SetThumbImage(_T("./Data/Controls/Slider/thumb.png"));
 		m_PaintManager.AttachDialog(pRoot);
-		printf("WM_CREATE\n");
+		printf("WM_CREATE child\n");
 		return lRes;
 	}
 
