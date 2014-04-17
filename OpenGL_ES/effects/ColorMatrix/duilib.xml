@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="500,400">
-    <HorizontalLayout bkcolor="#FF00FF00">
-	<Slider float="true" pos="256,256,123,18" width="123" height="18" bkcolor="#FF00FF00" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
-    </HorizontalLayout>
-</Window>
+
+<HorizontalLayout name="HSV" bkcolor="#FF00FF00" visible="true">
+	<HorizontalLayout name="H" float="true" pos="0,0,123,18">
+	<Slider name="Hue" float="true" pos="0,0,123,18" width="123" height="18" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	</HorizontalLayout>
+	
+	<HorizontalLayout name="S" float="true" pos="0,24,123,18">
+	<Slider name="Saturation" float="true" pos="0,24,123,18" width="123" height="18" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	</HorizontalLayout >
+	
+	<HorizontalLayout name="V" float="true" pos="0,48,123,18">
+	<Slider name="Value" float="true" pos="0,48,123,18" width="123" height="18" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	</HorizontalLayout>
+</HorizontalLayout>

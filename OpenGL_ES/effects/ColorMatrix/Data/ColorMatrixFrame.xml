@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Window size="500,400">
-    <HorizontalLayout bkcolor="#00FFFFFF">
-	<Slider float="true" pos="256,256,123,14" width="123" height="14" bkcolor="#FF00FF00" bkimage="./Data/Controls/Slider/bk.png" thumbimage="./Data/Controls/Slider/thumb.png"/>
-    </HorizontalLayout>
-</Window>
+<HorizontalLayout bkcolor="#00FFFFFF" pos="100,0,123,100" width="123" height="100">
+	<HorizontalLayout float="true" pos="0,100,123,100">
+		<Slider name="Hue" float="true" pos="0,0,123,14" width="123" height="14" bkimage="./Data/Controls/Slider/bk.png" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	</HorizontalLayout>
+	<HorizontalLayout float="true" pos="0,24,123,100">
+		<Slider name="Saturation" float="true" pos="0,0,123,14" width="123" height="14" bkimage="./Data/Controls/Slider/bk.png" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	</HorizontalLayout>
+	<HorizontalLayout float="true" pos="0,48,123,100">
+		<Slider name="Value" float="true" pos="0,0,123,14" width="123" height="14" bkimage="./Data/Controls/Slider/bk.png" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	</HorizontalLayout>
+</HorizontalLayout>
