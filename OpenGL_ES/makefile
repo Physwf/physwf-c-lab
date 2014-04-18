@@ -11,6 +11,7 @@ LIB_PNG=$(DIR_SHARED)/lib/libpng.lib $(DIR_SHARED)/lib/zlib.lib
 LIB_DUI=$(DIR_SHARED)/lib/DuiLib.lib
 LIB_DUI_D=$(DIR_SHARED)/lib/DuiLib_d.lib
 OPTION=/MD
+DEBUG=
 
 BIN=./bin
 
@@ -58,15 +59,15 @@ blur.obj:
 e.cm:ColorMatrixMain.obj ColorMatrix.obj utils.obj color_matrix.obj ColorMatrixUI.obj
 	$(LINK) $(BIN)/ColorMatrixMain.obj $(BIN)/ColorMatrix.obj $(BIN)/ColorMatrixUI.obj $(LIB_DUI) $(BIN)/utils.obj $(BIN)/color_matrix.obj $(LIB_GLES2) $(LIB_PNG) $(LINKOUT)$(BIN)/$@.exe
 ColorMatrixMain.obj:
-	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/main.cpp $(CLOUT)$(BIN)/ColorMatrixMain.obj $(INCLUDE) $(OPTION)
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/main.cpp $(CLOUT)$(BIN)/ColorMatrixMain.obj $(INCLUDE) $(OPTION) $(DEBUG) 
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.vert $(BIN)/ColorMatrix.vert
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.frag $(BIN)/ColorMatrix.frag
 	cp $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.png $(BIN)/ColorMatrix.png
 	cp -R $(DIR_EFFECTS)$(DIR_COLORMATRIX)$(DIR_DATA) $(BIN)
 ColorMatrix.obj:
-	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.cpp $(CLOUT)$(BIN)/ColorMatrix.obj $(INCLUDE) $(OPTION)
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrix.cpp $(CLOUT)$(BIN)/ColorMatrix.obj $(INCLUDE) $(OPTION) $(DEBUG) 
 ColorMatrixUI.obj:
-	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrixUI.cpp $(CLOUT)$(BIN)/ColorMatrixUI.obj $(INCLUDE) $(OPTION)
+	$(CL) $(DIR_EFFECTS)$(DIR_COLORMATRIX)/ColorMatrixUI.cpp $(CLOUT)$(BIN)/ColorMatrixUI.obj $(INCLUDE) $(OPTION) $(DEBUG) 
 	
 dui:dui_test.obj
 	$(LINK) $(BIN)/dui_test.obj $(LIB_DUI) $(LINKOUT)$(BIN)/$@.exe

@@ -19,7 +19,7 @@ using namespace DuiLib;
 class CDuiFrameWnd : public CWindowWnd, public INotifyUI
 {
 public:
-    virtual LPCTSTR GetWindowClassName() const { return _T("DUIMainFrame"); }
+    virtual LPCTSTR GetWindowClassName() const { return _T("DUIFrame"); }
     virtual void    Notify(TNotifyUI& msg) {}
 
     virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -33,6 +33,7 @@ public:
             CControlUI* pRoot = builder.Create(_T("duilib.xml"), (UINT)0, NULL, &m_PaintManager);   // duilib.xml需要放到exe目录下
             ASSERT(pRoot && "Failed to parse XML");
             m_PaintManager.AttachDialog(pRoot);
+			m_PaintManager.AddNotifier(this); 
             return lRes;
         }
 

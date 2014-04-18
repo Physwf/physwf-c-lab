@@ -10,6 +10,8 @@
 #pragma comment (lib,"Gdi32.lib")
 
 //CPaintManagerUI m_PaintManager;
+HWND frame;
+CColorMatrixFrame cmFrame;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -18,13 +20,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_CREATE:
 			{
-				// m_PaintManager.Init(hWnd);
-				// CDialogBuilder builder;
-				// CControlUI* pRoot = builder.Create(_T("Data/ColorMatrixFrame.xml"), (UINT)0, NULL, &m_PaintManager);  
-				// ASSERT(pRoot && "Failed to parse XML\n");
-				// if(pRoot) printf("pRoot\n");
-				// m_PaintManager.AttachDialog(pRoot);
 				printf("WM_CREATE main\n");
+				
+				frame = cmFrame.Create(hWnd,_T("ColorMatrix"), UI_WNDSTYLE_CHILD, 0, 500-125, 0, 125,100);
+				//cmFrame.ShowWindow(true,true);
+				//CoInitialize(NULL);
+				SetWindowLong(frame, GWL_EXSTYLE, GetWindowLong(frame, GWL_EXSTYLE) | WS_EX_LAYERED);
+				SetLayeredWindowAttributes(frame,RGB(0,0,0),0,LWA_ALPHA);
 				return 0;
 			}
 			break;
@@ -144,8 +146,7 @@ int main()
 	HWND window = create_window(VIEW_W,VIEW_H);
 	CPaintManagerUI::SetInstance(GetModuleHandle(NULL));
 	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
-	CColorMatrixFrame cmFrame;
-	HWND frame = cmFrame.Create(window,_T("ColorMatrix"), UI_WNDSTYLE_CHILD, 0, 0, 0, 500, 400);
+	
 	// SetWindowLong(frame, GWL_EXSTYLE, GetWindowLong(frame, GWL_EXSTYLE) | WS_EX_LAYERED);
 	// SetLayeredWindowAttributes(frame,RGB(0,0,0),0,LWA_ALPHA);
 	// CSliderUI *slider = new CSliderUI();

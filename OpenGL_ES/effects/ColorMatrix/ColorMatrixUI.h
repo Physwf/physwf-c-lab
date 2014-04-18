@@ -20,7 +20,7 @@ class CColorMatrixFrame : public CWindowWnd, public INotifyUI
 {
 	public:
 		virtual LPCTSTR GetWindowClassName() const { return _T("ColorMatrixFrame"); };
-		virtual void Notify(TNotifyUI& msg) {};
+		virtual void Notify(TNotifyUI& msg);
 		virtual LRESULT HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam);
 	protected:
 		CPaintManagerUI m_PaintManager;
