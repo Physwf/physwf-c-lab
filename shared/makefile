@@ -64,7 +64,7 @@ all:Control Core Layout Utils UI
 				$(DIR_LIB)$(DIR_OBJ)/stb_image.obj \
 				$(DIR_LIB)$(DIR_OBJ)/StdAfx.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIlib.obj \
-				$(LINKOUT)$(DIR_LIB)/Duilib.dll
+				$(LINKOUT)$(DIR_LIB)/Duilib.dll /DYNAMICBASE "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib"
 Control:$(DIR_DUILIB)$(DIR_CONTROL)/UIActiveX.cpp \
 		$(DIR_DUILIB)$(DIR_CONTROL)/UIButton.cpp \
 		$(DIR_DUILIB)$(DIR_CONTROL)/UICheckBox.cpp \
