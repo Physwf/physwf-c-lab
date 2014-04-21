@@ -1,7 +1,6 @@
-#ifndef WIN_IMPL_BASE_HPP
-#define WIN_IMPL_BASE_HPP
-
 #include "stdafx.h"
+#include "WinImplBase.h"
+
 
 namespace DuiLib
 {
@@ -455,3 +454,4 @@ void WindowImplBase::Notify(TNotifyUI& msg)
 }
 
 }
+

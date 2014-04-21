@@ -7,7 +7,21 @@
 #define __UIFLASH_H__
 #pragma once
 // \Utils\Flash11.tlb 为Flash11接口文件，部分方法在低版本不存在，使用需注意
-#import "..\Utils/Flash11.tlb" raw_interfaces_only, named_guids
+//#import "..\Utils/Flash11.tlb" raw_interfaces_only, named_guids
+#if _MSC_VER<=1500		//vs2008
+ #import "..\Utils/Flash11.tlb" raw_interfaces_only, named_guids
+#elif _MSC_VER<=1600		//vs2010
+#import "PROGID:ShockwaveFlash.ShockwaveFlash"  \
+	raw_interfaces_only,       /* Don't add raw_ to method names */ \
+	named_guids,           /* Named guids and declspecs */    \
+	rename("IDispatchEx","IMyDispatchEx")	/* fix conflicting with IDispatchEx ant dispex.h */  
+#else		//vs2013
+#import "PROGID:ShockwaveFlash.ShockwaveFlash"  \
+	raw_interfaces_only,       /* Don't add raw_ to method names */ \
+	named_guids,           /* Named guids and declspecs */    \
+	rename("IDispatchEx", "IMyDispatchEx")	/* fix conflicting with IDispatchEx ant dispex.h */	\
+	rename("ICanHandleException", "IMyICanHandleException")
+#endif
 using namespace ShockwaveFlashObjects;
 #include "Utils/FlashEventHandler.h"
 class CActiveXCtrl;
