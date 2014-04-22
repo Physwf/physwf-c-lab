@@ -33,18 +33,12 @@ all:Control Core Layout Utils UI
 				$(DIR_LIB)$(DIR_OBJ)/UIList.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIOption.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIProgress.obj \
+				$(DIR_LIB)$(DIR_OBJ)/UIRichEdit.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIScrollBar.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UISlider.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIText.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UITreeView.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIWebBrowser.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIBase.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIContainer.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIControl.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIDlgBuilder.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIManager.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIMarkup.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIRender.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIBase.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIContainer.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIControl.obj \
@@ -95,6 +89,7 @@ Control:$(DIR_DUILIB)$(DIR_CONTROL)/UIActiveX.cpp \
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIList.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIList.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIOption.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIOption.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIProgress.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIProgress.obj $(OPTIONS) $(INCLUDE)
+	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIRichEdit.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIRichEdit.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIScrollBar.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIScrollBar.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UISlider.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UISlider.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIText.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIText.obj $(OPTIONS) $(INCLUDE)
