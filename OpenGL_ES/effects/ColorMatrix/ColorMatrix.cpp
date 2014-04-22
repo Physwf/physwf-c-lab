@@ -5,6 +5,8 @@ enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_position,a_texCoords};
 enum Tex_IDs {s_tex,numTexs};
 
+GLuint program;
+
 GLfloat vertices[] = {  0,0,	0,0,
 						256,0,	1,0,
 						256,256,1,1,
@@ -70,7 +72,7 @@ void initGray()
 		free(infoLog);
 	}
 	//program
-	GLuint program = glCreateProgram();
+	program = glCreateProgram();
 	glAttachShader(program,vShader);
 	glAttachShader(program,fShader);
 	
@@ -107,7 +109,9 @@ void initGray()
 	
 	GLint cmLoc = glGetUniformLocation(program,"cm");
 	color_matrix cm = IDENTITY;
-	adjustHue(cm,1);
+	adjustHue(cm,-1);
+	adjustSaturation(cm,-1);
+	adjustBrightness(cm,0);
 	glUniform1fv(cmLoc,20,cm);
 	
 	GLuint textures[numTexs];
@@ -149,4 +153,37 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_SHORT,NULL);
+}
+float hue = -1;
+float sat = -1;
+float bri = 0;
+void updateHue(float H)
+{
+	hue = H;
+	GLint cmLoc = glGetUniformLocation(program,"cm");
+	color_matrix cm = IDENTITY;
+	adjustHue(cm,H);
+	adjustSaturation(cm,sat);
+	adjustBrightness(cm,bri);
+	glUniform1fv(cmLoc,20,cm);
+}
+void updateSat(float S)
+{
+	sat = S;
+	GLint cmLoc = glGetUniformLocation(program,"cm");
+	color_matrix cm = IDENTITY;
+	adjustHue(cm,hue);
+	adjustSaturation(cm,S);
+	adjustBrightness(cm,bri);
+	glUniform1fv(cmLoc,20,cm);
+}
+void updateBri(float B)
+{
+	bri = B;
+	GLint cmLoc = glGetUniformLocation(program,"cm");
+	color_matrix cm = IDENTITY;
+	adjustHue(cm,hue);
+	adjustSaturation(cm,sat);
+	adjustBrightness(cm,B);
+	glUniform1fv(cmLoc,20,cm);
 }
