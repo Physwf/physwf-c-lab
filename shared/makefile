@@ -13,7 +13,17 @@ DIR_CONTROL=/Control
 DIR_CORE=/Core
 DIR_LAYOUT=/Layout
 DIR_UTILS=/Utils
-OPTIONS=/D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS"
+
+DEBUG=/D "_DEBUG"
+RELEASE=/D "NDEBUG"
+DEBUG_SWITCH=no
+ifeq ($(DEBUG_SWITCH),yes)
+ OPTIONS=/D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd $(DEBUG)
+ SUFFIX=_d
+else
+ OPTIONS=/D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd $(RELEASE)
+ SUFFIX=
+endif
 
 hello:hello.obj
 	$(LINK) /def:hello.def /dll $(DIR_LIB)/hello.obj $(LINKOUT)$(DIR_LIB)/hello.dll
@@ -58,7 +68,7 @@ all:Control Core Layout Utils UI
 				$(DIR_LIB)$(DIR_OBJ)/stb_image.obj \
 				$(DIR_LIB)$(DIR_OBJ)/StdAfx.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIlib.obj \
-				$(LINKOUT)$(DIR_LIB)/Duilib.dll
+				$(LINKOUT)$(DIR_LIB)/Duilib$(SUFFIX).dll /DYNAMICBASE "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /DEBUG 
 Control:$(DIR_DUILIB)$(DIR_CONTROL)/UIActiveX.cpp \
 		$(DIR_DUILIB)$(DIR_CONTROL)/UIButton.cpp \
 		$(DIR_DUILIB)$(DIR_CONTROL)/UICheckBox.cpp \

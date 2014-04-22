@@ -1,0 +1,118 @@
+cl /c ./include/DuiLib/Control/UIActiveX.cpp /Fo./lib/obj/UIActiveX.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIActiveX.cpp
+cl /c ./include/DuiLib/Control/UIButton.cpp /Fo./lib/obj/UIButton.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIButton.cpp
+cl /c ./include/DuiLib/Control/UICheckBox.cpp /Fo./lib/obj/UICheckBox.obj  /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UICheckBox.cpp
+cl /c ./include/DuiLib/Control/UICombo.cpp /Fo./lib/obj/UICombo.obj  /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UICombo.cpp
+cl /c ./include/DuiLib/Control/UIComboBox.cpp /Fo./lib/obj/UIComboBox.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIComboBox.cpp
+cl /c ./include/DuiLib/Control/UIDateTime.cpp /Fo./lib/obj/UIDateTime.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIDateTime.cpp
+cl /c ./include/DuiLib/Control/UIEdit.cpp /Fo./lib/obj/UIEdit.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIEdit.cpp
+cl /c ./include/DuiLib/Control/UIFlash.cpp /Fo./lib/obj/UIFlash.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIFlash.cpp
+cl /c ./include/DuiLib/Control/UILabel.cpp /Fo./lib/obj/UILabel.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UILabel.cpp
+./include/DuiLib/Control/UILabel.cpp(62) : warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+cl /c ./include/DuiLib/Control/UIList.cpp /Fo./lib/obj/UIList.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIList.cpp
+cl /c ./include/DuiLib/Control/UIOption.cpp /Fo./lib/obj/UIOption.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIOption.cpp
+cl /c ./include/DuiLib/Control/UIProgress.cpp /Fo./lib/obj/UIProgress.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIProgress.cpp
+cl /c ./include/DuiLib/Control/UIRichEdit.cpp /Fo./lib/obj/UIRichEdit.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIRichEdit.cpp
+cl /c ./include/DuiLib/Control/UIScrollBar.cpp /Fo./lib/obj/UIScrollBar.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIScrollBar.cpp
+cl /c ./include/DuiLib/Control/UISlider.cpp /Fo./lib/obj/UISlider.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UISlider.cpp
+cl /c ./include/DuiLib/Control/UIText.cpp /Fo./lib/obj/UIText.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIText.cpp
+cl /c ./include/DuiLib/Control/UITreeView.cpp /Fo./lib/obj/UITreeView.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UITreeView.cpp
+cl /c ./include/DuiLib/Control/UIWebBrowser.cpp /Fo./lib/obj/UIWebBrowser.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIWebBrowser.cpp
+cl /c ./include/DuiLib/Core/UIBase.cpp /Fo./lib/obj/UIBase.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIBase.cpp
+cl /c ./include/DuiLib/Core/UIContainer.cpp /Fo./lib/obj/UIContainer.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIContainer.cpp
+cl /c ./include/DuiLib/Core/UIControl.cpp /Fo./lib/obj/UIControl.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIControl.cpp
+cl /c ./include/DuiLib/Core/UIDlgBuilder.cpp /Fo./lib/obj/UIDlgBuilder.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIDlgBuilder.cpp
+cl /c ./include/DuiLib/Core/UIManager.cpp /Fo./lib/obj/UIManager.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIManager.cpp
+./include/DuiLib/Core/UIManager.cpp(1218) : warning C4530: C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+cl /c ./include/DuiLib/Core/UIMarkup.cpp /Fo./lib/obj/UIMarkup.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIMarkup.cpp
+cl /c ./include/DuiLib/Core/UIRender.cpp /Fo./lib/obj/UIRender.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIRender.cpp
+cl /c ./include/DuiLib/Layout/UIChildLayout.cpp /Fo./lib/obj/UIChildLayout.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG"  /I./include/DuiLib
+UIChildLayout.cpp
+cl /c ./include/DuiLib/Layout/UIHorizontalLayout.cpp /Fo./lib/obj/UIHorizontalLayout.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG"  /I./include/DuiLib
+UIHorizontalLayout.cpp
+cl /c ./include/DuiLib/Layout/UITabLayout.cpp /Fo./lib/obj/UITabLayout.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UITabLayout.cpp
+cl /c ./include/DuiLib/Layout/UITileLayout.cpp /Fo./lib/obj/UITileLayout.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UITileLayout.cpp
+cl /c ./include/DuiLib/Layout/UIVerticalLayout.cpp /Fo./lib/obj/UIVerticalLayout.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIVerticalLayout.cpp
+cl /c ./include/DuiLib/Utils/UIDelegate.cpp /Fo./lib/obj/UIDelegate.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIDelegate.cpp
+cl /c ./include/DuiLib/Utils/Utils.cpp /Fo./lib/obj/Utils.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+Utils.cpp
+cl /c ./include/DuiLib/Utils/WinImplBase.cpp /Fo./lib/obj/WinImplBase.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+WinImplBase.cpp
+cl /c ./include/DuiLib/Utils/XUnzip.cpp /Fo./lib/obj/XUnzip.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+XUnzip.cpp
+cl /c ./include/DuiLib/Utils/stb_image.c /Fo./lib/obj/stb_image.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+stb_image.c
+cl /c ./include/DuiLib/StdAfx.cpp /Fo./lib/obj/StdAfx.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+StdAfx.cpp
+cl /c ./include/DuiLib/UIlib.cpp /Fo./lib/obj/UIlib.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIlib.cpp
+link /dll ./lib/obj/UIActiveX.obj \
+			./lib/obj/UIButton.obj \
+			./lib/obj/UICheckBox.obj \
+			./lib/obj/UICombo.obj \
+			./lib/obj/UIComboBox.obj \
+			./lib/obj/UIDateTime.obj \
+			./lib/obj/UIEdit.obj \
+			./lib/obj/UIFlash.obj \
+			./lib/obj/UILabel.obj \
+			./lib/obj/UIList.obj \
+			./lib/obj/UIOption.obj \
+			./lib/obj/UIProgress.obj \
+			./lib/obj/UIRichEdit.obj \
+			./lib/obj/UIScrollBar.obj \
+			./lib/obj/UISlider.obj \
+			./lib/obj/UIText.obj \
+			./lib/obj/UITreeView.obj \
+			./lib/obj/UIWebBrowser.obj \
+			./lib/obj/UIBase.obj \
+			./lib/obj/UIContainer.obj \
+			./lib/obj/UIControl.obj \
+			./lib/obj/UIDlgBuilder.obj \
+			./lib/obj/UIManager.obj \
+			./lib/obj/UIMarkup.obj \
+			./lib/obj/UIRender.obj \
+			./lib/obj/UIChildLayout.obj \
+			./lib/obj/UIHorizontalLayout.obj \
+			./lib/obj/UITabLayout.obj \
+			./lib/obj/UITileLayout.obj \
+			./lib/obj/UIVerticalLayout.obj \
+			./lib/obj/UIDelegate.obj \
+			./lib/obj/Utils.obj \
+			./lib/obj/WinImplBase.obj \
+			./lib/obj/XUnzip.obj \
+			./lib/obj/stb_image.obj \
+			./lib/obj/StdAfx.obj \
+			./lib/obj/UIlib.obj \
+			/OUT:./lib/Duilib.dll /DYNAMICBASE "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /DEBUG 
+Microsoft (R) Incremental Linker Version 12.00.21005.1
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+   Creating library ./lib/Duilib.lib and object ./lib/Duilib.exp
