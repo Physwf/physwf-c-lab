@@ -1,37 +1,19 @@
 #include <stdio.h>
 
-#define JEWEL_TYPE_1 1
-#define JEWEL_TYPE_2 2
-#define JEWEL_TYPE_3 3
-#define JEWEL_TYPE_4 4
-#define JEWEL_TYPE_5 5
-#define JEWEL_TYPE_6 6
+#define JEWEL_COLOR_0 0
+#define JEWEL_COLOR_1 2
+#define JEWEL_COLOR_2 4
+#define JEWEL_COLOR_3 8
+#define JEWEL_COLOR_4 16
+#define JEWEL_COLOR_5 32
+#define JEWEL_COLOR_6 64
 
-#define BOMB_TYPE_V_BASE 6
-#define BOMB_TYPE_1_H 7
-#define BOMB_TYPE_2_H 8
-#define BOMB_TYPE_3_H 9
-#define BOMB_TYPE_4_H 10
-#define BOMB_TYPE_5_H 11
-#define BOMB_TYPE_6_H 12
+#define JEWEL_DIR_NONE 128
+#define JEWEL_DIR_HERIZ 256
+#define JEWEL_DIR_VERTI 512
 
-#define BOMB_TYPE_H_BASE 12
-#define BOMB_TYPE_1_V 13
-#define BOMB_TYPE_2_V 14
-#define BOMB_TYPE_3_V 15
-#define BOMB_TYPE_4_V 16
-#define BOMB_TYPE_5_V 17
-#define BOMB_TYPE_6_V 18
-
-#define BOMB_TYPE_BASE 18
-#define BOMB_TYPE_1_V 19
-#define BOMB_TYPE_2_V 20
-#define BOMB_TYPE_3_V 21
-#define BOMB_TYPE_4_V 22
-#define BOMB_TYPE_5_V 23
-#define BOMB_TYPE_6_V 24
-
-#define JEWEL_TYPE_DIAMOND 25
+#define JEWEL_BOMB 1024
+#define JEWEL_DIAMOND 2048
 
 extern int* jewels;
 extern int num_jewels;
