@@ -6,13 +6,16 @@
 #define BUFFER_OFFSET(offset) ((GLfloat*)NULL+offset)
 #define STRIDE 4
 
+#define GRID_SIZE 80
+
+
 GLfloat *vertices;
 GLushort *indices;
 
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
-int num_squares;
+float *offsetYPixels;
 
 void initView()
 {
@@ -24,14 +27,16 @@ void initView()
 	
 	glBindBuffer(GL_ARRAY_BUFFER,vbos[vertex]);
 	
-	int vSize = (num_slots+2) * 16 * sizeof(GLfloat);
+	int vSize = num_jewels * 16 * sizeof(GLfloat);
 	vertices = (GLfloat*)malloc(vSize);
 	memset(vertices,0,vSize);
 	
-	int iSize = (num_slots+2) * 6 * sizeof(GLushort);
+	int iSize = num_jewels * 6 * sizeof(GLushort);
 	indices = (GLushort*)malloc(iSize);
 	memset(indices,0,iSize);
 	
+	offsetYPixels = (float*)malloc(num_jewels*sizeof(float));
+	memsest(offsetYPixels,0,num_jewels*sizeof(float));
 	// glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vbos[index]);
@@ -142,131 +147,58 @@ void initView()
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	// post();
 }
 
-const float EVEN_OFFSET_X = RADIUS/2;
-const float ODD_OFFSET_X = RADIUS;
-const float OFFSET_Y = RADIUS/2;
-
-const float DIST_ROW = sqrt(3.0) * RADIUS/2.0;
-const float DIST_COLLUM = RADIUS;
-
-const float TEX_TYPES[4][2] = {{0.0,0.0},{ 0.5,0.0}, {0.5,0.5}, {0.0,0.5}};
-
-void setVertex(int slot,int type,GLfloat* vertex,int index)
+void setVertex(int index)
 {
-	int remain = slot%(2*NUM_POPO_ROW-1);
-	int row = slot/(2*NUM_POPO_ROW-1) * 2 + remain / NUM_POPO_ROW;
-	int column = remain % NUM_POPO_ROW;
-	float orginX,orginY;
-	orginX = ((row%2 == 0)?EVEN_OFFSET_X:ODD_OFFSET_X) + column * DIST_COLLUM;
-	orginY = OFFSET_Y + row * DIST_ROW;
-	// printf("ox:%f,oy:%f\n",orginX,orginY);
-	// return;
-	*(vertex+0) = orginX + (index%2-0.5) * RADIUS;
-	*(vertex+1) = orginY + (index/2-0.5) * RADIUS;
 	
-	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[type-1][0];//to do
-	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[type-1][1];
 }
-
-void setFlyingVetex(GLfloat* vertex,int index)
-{
-	float orginX,orginY;
-	orginX = pos[0];
-	orginY = pos[1];
-	*(vertex+0) = orginX + (index%2-0.5) * RADIUS;
-	*(vertex+1) = orginY + (index/2-0.5) * RADIUS;
-	
-	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[flying-1][0];//to do
-	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[flying-1][1];
-}
-
-void setWaitingVertex(GLfloat* vertex,int index)
-{
-	float orginX,orginY;
-	orginX = FIRE_POS_X;
-	orginY = FIRE_POS_Y;
-	*(vertex+0) = orginX + (index%2-0.5) * RADIUS;
-	*(vertex+1) = orginY + (index/2-0.5) * RADIUS;
-	
-	*(vertex+2) = (index%2)*0.5 + TEX_TYPES[waiting-1][0];//to do
-	*(vertex+3) = (index/2)*0.5 + TEX_TYPES[waiting-1][1];
-}
-
+/**
+	0--1
+	|  |
+	2--3
+**/
 void post()
 {
-	int offset;
-	num_squares = 0;
-	for(int i=0;i<num_slots;i++)
+	memsest(offsetYPixels,0,num_jewels*sizeof(float));
+	//calculate offsetY
+	for(int i=0;i<num_jewels;i++)
 	{
-		offset = num_squares*16;
-		int* popo = popos + i;
-		// printf("type:%d,row:%d,column:%d\n",popo->type,popo->row,popo->column);
-		// continue;
-		if(*popo != POPO_TYPE_NONE)
+		int col = i % 8;
+		int row = -(i / 8);
+		int offsetY = *(offsetYs+i);
+		int offsetIndex = i - offsetY * NUM_COLS;
+		int type;
+		if(offsetIndex < 0)
+			type = *(jewels_buffer+i);
+		else 
+			type = *(jewels+i);
+		if(type == 0)
 		{
-			GLfloat* vertex = vertices + offset;
-			for(int j=0;j<4;j++)
-			{
-				setVertex(i,*popo,vertex+j*STRIDE,j);
-			}
-
-			{
-				unsigned short index_offset = num_squares*4;
-				indices[0+num_squares*6] = 0+index_offset;
-				indices[1+num_squares*6] = 1+index_offset;
-				indices[2+num_squares*6] = 3+index_offset;
-				indices[3+num_squares*6] = 3+index_offset;
-				indices[4+num_squares*6] = 2+index_offset;
-				indices[5+num_squares*6] = 0+index_offset;
-			}
-			num_squares++;
+			type = *(jewels+i);
 		}
-	}
-	if(isFlying)
-	{
-		offset = num_squares*16;
-		GLfloat* vertex = vertices + offset;
 		for(int j=0;j<4;j++)
 		{
-			setFlyingVetex(vertex+j*STRIDE,j);
+			*(offsetYPixels+i+j+0) = (col + j%2)* GRID_SIZE;
+			*(offsetYPixels+i+j+1) = (row +j/2 - 1) * GRID_SIZE;
+			//to do set texture coords
+			*(offsetYPixels+i+j+2) = ();
+			*(offsetYPixels+i+j+3) = ();
 		}
-
-		{
-			unsigned short index_offset = num_squares*4;
-			indices[0+num_squares*6] = 0+index_offset;
-			indices[1+num_squares*6] = 1+index_offset;
-			indices[2+num_squares*6] = 3+index_offset;
-			indices[3+num_squares*6] = 3+index_offset;
-			indices[4+num_squares*6] = 2+index_offset;
-			indices[5+num_squares*6] = 0+index_offset;
-		}
-		num_squares++;
-	}
-	{
-		offset = num_squares*16;
-		GLfloat* vertex = vertices + offset;
+		
+		type = *(jewels+i);
 		for(int j=0;j<4;j++)
 		{
-			setWaitingVertex(vertex+j*STRIDE,j);
+			*vertices
 		}
-
-		{
-			unsigned short index_offset = num_squares*4;
-			indices[0+num_squares*6] = 0+index_offset;
-			indices[1+num_squares*6] = 1+index_offset;
-			indices[2+num_squares*6] = 3+index_offset;
-			indices[3+num_squares*6] = 3+index_offset;
-			indices[4+num_squares*6] = 2+index_offset;
-			indices[5+num_squares*6] = 0+index_offset;
-		}
-		num_squares++;
 	}
-	
-	glBufferData(GL_ARRAY_BUFFER,num_squares*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_squares*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
+	//set vertices
+	for(int i=0;i<num_jewels;i++)
+	{
+		
+	}
+	glBufferData(GL_ARRAY_BUFFER,num_jewels*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_jewels*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
 }
 
 void render()
