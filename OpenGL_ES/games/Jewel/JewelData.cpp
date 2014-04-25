@@ -15,20 +15,90 @@ typedef struct elimination_area_t {
 
 int* jewels;
 int num_jewels;
+int *offsetYs;
+int* jewels_buffer;
+bool updatable;
+
+int getStableType(int index)
+{
+	//left
+	int left_type;
+	int left_index = index--;
+	int left_left_index = left_index--;
+	if(left_index / NUM_COLS == left_left_index / NUM_COLS)
+	{
+		left_type = (*(jewels+left_index) == *(jewels+left_left_index)) ? *(jewels+left_index) : 0;
+	}
+	//top
+	int top_type;
+	int top_index = index -= NUM_COLS;
+	int top_top_index = index -= 2*NUM_COLS;
+	if(top_index % NUM_COLS == top_top_index % NUM_COLS)
+	{
+		top_type = (*(jewels+top_index) == *(jewels+top_top_index)) ? *(jewels+top_index) : 0;
+	}
+	int type = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+	while(type == left_type || type == top_type)
+	{
+		type = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+	}
+	return type;
+}
 
 void initData()
 {
 	int num_columns = 8;
 	int num_rows = 8;
 	num_jewels = num_columns * num_rows;
+	
 	jewels = (int*)malloc(num_jewels*sizeof(int));
 	memset(jewels,0,num_jewels*sizeof(int));
+	
+	offsetYs = (int*)malloc(num_jewels*sizeof(int));
+	memset(offsetYs,0,num_jewels*sizeof(int));
+	
+	jewels_buffer = (int*)malloc(num_jewels*sizeof(int));
+	memset(jewels_buffer,0,num_jewels*sizeof(int));
 	
 	for(int i=0;i<num_jewels;i++)
 	{
 		int* jewel = jewels+i;
-		int exp = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+		int exp = getStableType(i);
 		*jewel = pow(2,exp);
+	}
+	updatable = false;
+}
+
+void checkDrop()
+{
+	for(int i=0;i<NUM_COLS;i++)
+	{
+		float offsetY = 0;
+		for(int j=NUM_ROWS-1;j>=0;j--)
+		{
+			int index = i + j * NUM_COLS;
+			if( *(jewel+index) == 0 )
+			{
+				offsetY ++;
+			}
+			else
+			{
+				*(offsetYs+index) = offsetY;
+			}
+		}
+	}
+}
+
+void makeBuffer()
+{
+	for(int i=0;i<NUM_COLS;i++)
+	{
+		float offsetY = *(offsetYs+i);
+		for(int j=0;j<offsetYs;j++)
+		{
+			int index = i + NUM_COLS * offsetY;
+			*( jewels_buffer + index) = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+		}
 	}
 }
 
@@ -68,13 +138,56 @@ void makeExplosion(int type, int col, int row)
 	}
 }
 
-void checkEliminationOverall()
+void makeElimination(elim_area_p areas, int num_areas)
+{
+	for(int i=0;i<num_areas;i++)
+	{
+		elim_area area = areas[i];
+		for(int j=0;j<area.num_indices;j++)
+		{
+			int type = *(jewels+area.indices[j]);
+			if(type & JEWEL_BOMB)
+			{
+				int col = area.indices[j] % 8;
+				int row = area.indices[j] / 8;
+				makeExplosion(type,col,row);
+			}
+			*(jewels+area.indices[j]) = 0;
+		}
+
+		if(area.num_heriz > 4 || area.num_verti > 4)//diamen
+		{
+			*(jewels+area.orgin) &= JEWEL_DIAMOND;
+		}
+		else if(area.num_heriz > 3)
+		{
+			*(jewels+area.orgin) &= JEWEL_BOMB;
+			*(jewels+area.orgin) &= JEWEL_DIR_VERTI;
+		}
+		else if(area.num_verti > 3)
+		{
+			*(jewels+area.orgin) &= JEWEL_BOMB;
+			*(jewels+area.orgin) &= JEWEL_DIR_HERIZ;
+		}
+		else if(area.num_heriz > 2 && area.num_verti > 2)
+		{
+			*(jewels+area.orgin) &= JEWEL_BOMB;
+			*(jewels+area.orgin) &= JEWEL_DIR_NONE;
+		}
+		else
+		{
+			// do noting;
+		}
+	}
+}
+
+bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 {
 	bool in_horiz_flag[100];
 	bool in_verti_flag[100];
 	memset(in_horiz_flag,false,sizeof(in_horiz_flag));
 	memset(in_verti_flag,false,sizeof(in_verti_flag));
-	elim_area areas[30];
+	//elim_area areas[30];
 	memset(areas,0,sizeof(areas));
 	int num_areas = 0;
 	for(int i=0;i<num_jewels;i++)
@@ -131,48 +244,12 @@ void checkEliminationOverall()
 		if(area.num_heriz > 2 || area.num_verti > 2) num_areas++;
 	}
 	
-	for(int i=0;i<num_areas;i++)
-	{
-		elim_area area = areas[i];
-		for(int j=0;j<area.num_indices;j++)
-		{
-			int type = *(jewels+area.indices[j]);
-			if(type & JEWEL_BOMB)
-			{
-				int col = area.indices[j] % 8;
-				int row = area.indices[j] / 8;
-				makeExplosion(type,col,row);
-			}
-			*(jewels+area.indices[j]) = 0;
-		}
-
-		if(area.num_heriz > 4 || area.num_verti > 4)//diamen
-		{
-			*(jewels+area.orgin) &= JEWEL_DIAMOND;
-		}
-		else if(area.num_heriz > 3)
-		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_VERTI;
-		}
-		else if(area.num_verti > 3)
-		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_HERIZ;
-		}
-		else if(area.num_heriz > 2 && area.num_verti > 2)
-		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_NONE;
-		}
-		else
-		{
-			// do noting;
-		}
-	}
+	//makeElimination(areas,num_areas);
+	num_areas_out = num_areas;
+	return num_areas > 0;
 }
 
-void checkEliminationLocalized(int index, elim_area* area)
+void checkLocalElimination(int index, elim_area* area)
 {
 	bool in_horiz_flag[NUM_HERIZ];
 	bool in_verti_flag[NUM_VERTI];
@@ -268,18 +345,65 @@ void checkEliminationLocalized(int index, elim_area* area)
 			area->num_indices ++;
 		}
 	}
+	return area->num_indices > 0;
 }
 
 void trySwitch(int source,int target)
 {
 	elim_area src_area;
 	elim_area tgt_area;
-	checkEliminationLocalized(source,&scr_area);
-	checkEliminationLocalized(target,&tgt_area);
-	if(src_area.num_indices >0 || tgt_area.num_indices >0)
+	if(checkEliminationLocalized(source,&scr_area))
 	{
-		
+		if(src_area.num_indices > 0)
+		{
+			int num_areas = 1;
+			makeElimination(&scr_area,&num_areas);
+		}
+	}
+	if(checkEliminationLocalized(target,&tgt_area))
+	{
+		if(tgt_area.num_indices > 0)
+		{
+			int num_areas = 1;
+			makeElimination(&tgt_area,&num_areas);
+		}
+	}
+	if(src_area.num_indices > 0 || tgt_area.num_indices > 0)
+	{
+		checkDrop();
+		makeBuffer();
 	}
 }
 
+void rematch(int swap_times)
+{
+	for(int i=0;i<swap_times;i++)
+	{
+		int swapA = random_by_range(0,num_jewels);
+		int swapB = random_by_range(0,num_jewels);
+		//never mind the (swapA == swapB) situation
+		int temp = *(jewel+swapA);
+		*(jewel+swapA) = *(jewel+swapB);
+		*(jewel+swapB) = temp;
+	}
+}
 
+void update(int eclipse)
+{
+	if(updatable)
+	{
+		elim_area areas[30];
+		int num_areas;
+		int swap_times = 5;
+		while(!checkGlobalElimination(areas,&num_areas))
+		{
+			rematch(swap_times+=5);
+		}
+		
+		makeElimination(areas,&num_areas);
+		checkDrop();
+		makeBuffer();
+
+		updatable = false;
+	}
+}

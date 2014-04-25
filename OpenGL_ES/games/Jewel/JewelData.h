@@ -17,6 +17,9 @@
 
 extern int* jewels;
 extern int num_jewels;
+extern int *offsetYs;
+extern int* jewels_buffer;
+extern bool updatable;
 
 void initData();
 void update(int eclipse);
