@@ -1,12 +1,25 @@
 #include <stdio.h>
 
-#define JEWEL_TYPE_1 1
-#define JEWEL_TYPE_2 2
-#define JEWEL_TYPE_3 3
-#define JEWEL_TYPE_4 4
-#define JEWEL_TYPE_MAX 5
+#define JEWEL_COLOR_0 0
+#define JEWEL_COLOR_1 2
+#define JEWEL_COLOR_2 4
+#define JEWEL_COLOR_3 8
+#define JEWEL_COLOR_4 16
+#define JEWEL_COLOR_5 32
+#define JEWEL_COLOR_6 64
+
+#define JEWEL_DIR_NONE 128
+#define JEWEL_DIR_HERIZ 256
+#define JEWEL_DIR_VERTI 512
+
+#define JEWEL_BOMB 1024
+#define JEWEL_DIAMOND 2048
+
 extern int* jewels;
 extern int num_jewels;
+extern int *offsetYs;
+extern int* jewels_buffer;
+extern bool updatable;
 
 void initData();
 void update(int eclipse);

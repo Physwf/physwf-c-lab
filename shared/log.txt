@@ -1,0 +1,6 @@
+cl /c ./src/DuiLib/Control/UIActiveX.cpp /Fo./lib/obj/UIActiveX.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIActiveX.cpp
+cl /c ./src/DuiLib/Control/UIButton.cpp /Fo./lib/obj/UIButton.obj /D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /MTd /D "NDEBUG" /I./include/DuiLib
+UIButton.cpp
+./src/DuiLib/Control/UIButton.cpp(2) : fatal error C1083: Cannot open include file: 'UIButton.h': No such file or directory
+makefile:90: recipe for target 'Control' failed

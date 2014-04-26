@@ -8,3 +8,6 @@
 void initGray();
 void update(int eclipse);
 void render();
+void updateHue(float H);
+void updateSat(float S);
+void updateBri(float B);

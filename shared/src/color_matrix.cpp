@@ -1,6 +1,7 @@
 #include <color_matrix.h>
 #include <string.h>
 #include <math.h>
+#include <stdio.h>
 
 #define LUMA_R 0.299
 #define LUMA_G 0.587
@@ -45,8 +46,8 @@ void adjustSaturation(color_matrix mat,float sat)
 
 void adjustBrightness(color_matrix mat,float value)
 {
-	 value *= 255;
-	 color_matrix temp1;
+	// value *= 255.0;
+	color_matrix temp1;
 	memcpy(temp1,mat,sizeof(mat));
 	color_matrix temp2 = 
 	{
@@ -57,6 +58,7 @@ void adjustBrightness(color_matrix mat,float value)
 	};
 	concat(temp2,mat,temp1);
 	memcpy(mat,temp1,sizeof(temp1));
+	color_matrix_print(mat);
 }
 
 void adjustContrast(color_matrix mat,float value)
@@ -108,4 +110,17 @@ void concat(color_matrix left,color_matrix right,color_matrix out)
 		};
 		i+=5;
 	};
+}
+
+void color_matrix_print(color_matrix cm)
+{
+	for (int y=0; y<4; ++y)
+	{
+		for (int x=0; x<5; ++x)
+		{
+			printf("cm%d:%f  ",y*5+x,cm[y*5+x]);
+		};
+		printf("\n");
+	};
+	
 }

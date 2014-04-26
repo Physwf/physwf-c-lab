@@ -8,3 +8,4 @@ void adjustBrightness(color_matrix mat,float value);
 void adjustContrast(color_matrix mat,float value);
 void invert(color_matrix mat);
 void concat(color_matrix left,color_matrix right,color_matrix out);
+void color_matrix_print(color_matrix cm);

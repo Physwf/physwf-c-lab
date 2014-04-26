@@ -13,7 +13,20 @@ DIR_CONTROL=/Control
 DIR_CORE=/Core
 DIR_LAYOUT=/Layout
 DIR_UTILS=/Utils
-OPTIONS=/D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS"
+
+
+DEBUG=/D "_DEBUG"
+RELEASE=/D "NDEBUG"
+DEBUG_SWITCH=no
+ifeq ($(DEBUG_SWITCH),yes)
+ OPTIONS=/D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS"  /GS /analyze- /W3 /Gy /Zi /Gm- /O1 /Ob1 /GF /WX- /Zc:forScope /Gd /Oy- /MTd $(DEBUG)
+ SUFFIX=_d
+ LINK_DEBUG=/DEBUG
+else
+ OPTIONS=/D "WIN32" /D "_WINDOWS" /D "UILIB_EXPORTS" /D "_VC80_UPGRADE=0x0600" /D "_WINDLL" /D "_MBCS" /GS /analyze- /W3 /Gy /Zi /Gm- /O1 /Ob1 /GF /WX- /Zc:forScope /Gd /Oy- /MT $(RELEASE)
+ SUFFIX=
+ LINK_DEBUG=
+endif
 
 hello:hello.obj
 	$(LINK) /def:hello.def /dll $(DIR_LIB)/hello.obj $(LINKOUT)$(DIR_LIB)/hello.dll
@@ -33,18 +46,12 @@ all:Control Core Layout Utils UI
 				$(DIR_LIB)$(DIR_OBJ)/UIList.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIOption.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIProgress.obj \
+				$(DIR_LIB)$(DIR_OBJ)/UIRichEdit.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIScrollBar.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UISlider.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIText.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UITreeView.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIWebBrowser.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIBase.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIContainer.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIControl.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIDlgBuilder.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIManager.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIMarkup.obj \
-				$(DIR_LIB)$(DIR_OBJ)/UIRender.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIBase.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIContainer.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIControl.obj \
@@ -64,7 +71,7 @@ all:Control Core Layout Utils UI
 				$(DIR_LIB)$(DIR_OBJ)/stb_image.obj \
 				$(DIR_LIB)$(DIR_OBJ)/StdAfx.obj \
 				$(DIR_LIB)$(DIR_OBJ)/UIlib.obj \
-				$(LINKOUT)$(DIR_LIB)/Duilib.dll /DYNAMICBASE "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib"
+				$(LINKOUT)$(DIR_LIB)/Duilib$(SUFFIX).dll /DYNAMICBASE "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" $(LINK_DEBUG)
 Control:$(DIR_DUILIB)$(DIR_CONTROL)/UIActiveX.cpp \
 		$(DIR_DUILIB)$(DIR_CONTROL)/UIButton.cpp \
 		$(DIR_DUILIB)$(DIR_CONTROL)/UICheckBox.cpp \
@@ -95,6 +102,7 @@ Control:$(DIR_DUILIB)$(DIR_CONTROL)/UIActiveX.cpp \
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIList.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIList.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIOption.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIOption.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIProgress.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIProgress.obj $(OPTIONS) $(INCLUDE)
+	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIRichEdit.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIRichEdit.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIScrollBar.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIScrollBar.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UISlider.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UISlider.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)$(DIR_CONTROL)/UIText.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIText.obj $(OPTIONS) $(INCLUDE)
@@ -141,4 +149,3 @@ Utils: 	$(DIR_DUILIB)$(DIR_UTILS)/UIDelegate.cpp \
 UI:$(DIR_DUILIB)/StdAfx.cpp $(DIR_DUILIB)/UIlib.cpp
 	$(CL) $(DIR_DUILIB)/StdAfx.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/StdAfx.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)/UIlib.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIlib.obj $(OPTIONS) $(INCLUDE)
-
