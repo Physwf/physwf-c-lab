@@ -15,8 +15,8 @@ typedef struct elimination_area_t {
 
 int* jewels;
 int num_jewels;
-int *offsetYs;
-int* jewels_buffer;
+float *offsetYs;
+
 bool updatable;
 
 int getStableType(int index)
@@ -37,10 +37,10 @@ int getStableType(int index)
 	{
 		top_type = (*(jewels+top_index) == *(jewels+top_top_index)) ? *(jewels+top_index) : 0;
 	}
-	int type = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+	int type = random_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6);
 	while(type == left_type || type == top_type)
 	{
-		type = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+		type = random_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6);
 	}
 	return type;
 }
@@ -54,11 +54,8 @@ void initData()
 	jewels = (int*)malloc(num_jewels*sizeof(int));
 	memset(jewels,0,num_jewels*sizeof(int));
 	
-	offsetYs = (int*)malloc(num_jewels*sizeof(int));
-	memset(offsetYs,0,num_jewels*sizeof(int));
-	
-	jewels_buffer = (int*)malloc(num_jewels*sizeof(int));
-	memset(jewels_buffer,0,num_jewels*sizeof(int));
+	offsetYs = (float*)malloc(num_jewels*sizeof(float));
+	memset(offsetYs,0,num_jewels*sizeof(float));
 	
 	for(int i=0;i<num_jewels;i++)
 	{
@@ -66,38 +63,36 @@ void initData()
 		int exp = getStableType(i);
 		*jewel = pow(2,exp);
 	}
-	updatable = false;
+	// updatable = false;
 }
 
-void checkDrop()
+void fillEmpty()
 {
 	for(int i=0;i<NUM_COLS;i++)
 	{
-		float offsetY = 0;
+		int num_empty = 0;
+		int jewels_col[NUM_ROWS] = {0};
+		int num_emptys[NUM_ROWS] = {0};
+		
 		for(int j=NUM_ROWS-1;j>=0;j--)
 		{
 			int index = i + j * NUM_COLS;
-			if( *(jewel+index) == 0 )
+			if( *(jewel+index) == 0)
 			{
-				offsetY ++;
+				num_empty ++;
 			}
 			else
 			{
-				*(offsetYs+index) = offsetY;
+				jewels_col[j] = *(jewel+index);
 			}
+			num_emptys[j] = num_empty;
 		}
-	}
-}
-
-void makeBuffer()
-{
-	for(int i=0;i<NUM_COLS;i++)
-	{
-		float offsetY = *(offsetYs+i);
-		for(int j=0;j<offsetYs;j++)
+		
+		for(int j=NUM_ROWS-1;j>=0;j--)
 		{
-			int index = i + NUM_COLS * offsetY;
-			*( jewels_buffer + index) = random_by_range(JEWEL_TYPE_1,JEWEL_TYPE_6);
+			int index = i + j * NUM_COLS;
+			*(jewel+index) = (j<num_empty) ? pow(2,random_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6)) :jewels_col[j];
+			*(offsetYs + index) = num_emptys[j] * GIRD_SIZE;
 		}
 	}
 }
@@ -179,6 +174,7 @@ void makeElimination(elim_area_p areas, int num_areas)
 			// do noting;
 		}
 	}
+	fillEmpty();
 }
 
 bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
@@ -249,7 +245,7 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 	return num_areas > 0;
 }
 
-void checkLocalElimination(int index, elim_area* area)
+bool checkLocalElimination(int index, elim_area* area)
 {
 	bool in_horiz_flag[NUM_HERIZ];
 	bool in_verti_flag[NUM_VERTI];
@@ -348,7 +344,13 @@ void checkLocalElimination(int index, elim_area* area)
 	return area->num_indices > 0;
 }
 
-void trySwitch(int source,int target)
+bool canSwitch(int source,int target)
+{
+	if(offsetYs[source] != 0 || offsetYs[target] != 0) return false;
+	return true;
+}
+
+bool trySwitch(int source,int target)
 {
 	elim_area src_area;
 	elim_area tgt_area;
@@ -370,9 +372,10 @@ void trySwitch(int source,int target)
 	}
 	if(src_area.num_indices > 0 || tgt_area.num_indices > 0)
 	{
-		checkDrop();
-		makeBuffer();
+		//fillEmpty();
+		return true;
 	}
+	return false;
 }
 
 void rematch(int swap_times)
@@ -388,22 +391,30 @@ void rematch(int swap_times)
 	}
 }
 
+
 void update(int eclipse)
 {
-	if(updatable)
+	bool ready = true;
+	for(int i=0;i<num_jewels;i++)
 	{
-		elim_area areas[30];
-		int num_areas;
-		int swap_times = 5;
-		while(!checkGlobalElimination(areas,&num_areas))
+		if(offsetYs[i] == 0) continue;
+		else
 		{
-			rematch(swap_times+=5);
+			offsetYs[i] -= eclipse * 0.5;
+			if(offsetYs[i] < 0) 
+			{
+				offsetYs[i] = 0;
+				elim_area area;
+				int num_area = 1;
+				checkLocalElimination(i,&area);
+				makeElimination(&area,&num_area);
+			}
+			ready = false;
 		}
-		
-		makeElimination(areas,&num_areas);
-		checkDrop();
-		makeBuffer();
-
-		updatable = false;
+	}
+	if(ready)
+	{
+		// check match
+		// rematch(swap_times+=5);
 	}
 }

@@ -15,6 +15,7 @@
 #define JEWEL_BOMB 1024
 #define JEWEL_DIAMOND 2048
 
+#define NUM_TYPES 25
 extern int* jewels;
 extern int num_jewels;
 extern int *offsetYs;
@@ -23,3 +24,6 @@ extern bool updatable;
 
 void initData();
 void update(int eclipse);
+
+bool canSwitch(int source,int target);
+bool trySwitch(int source,int target);

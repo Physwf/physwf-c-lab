@@ -15,8 +15,10 @@ GLushort *indices;
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
-float *offsetYPixels;
 
+// float tex_coords[NUM_TYPES][4][2] = { 
+		// { {0,0},{GRID},{},{} },
+	// };
 void initView()
 {
 	glClearColor(0,0,0,1);
@@ -34,9 +36,7 @@ void initView()
 	int iSize = num_jewels * 6 * sizeof(GLushort);
 	indices = (GLushort*)malloc(iSize);
 	memset(indices,0,iSize);
-	
-	offsetYPixels = (float*)malloc(num_jewels*sizeof(float));
-	memsest(offsetYPixels,0,num_jewels*sizeof(float));
+
 	// glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
 	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vbos[index]);
@@ -160,42 +160,22 @@ void setVertex(int index)
 **/
 void post()
 {
-	memsest(offsetYPixels,0,num_jewels*sizeof(float));
 	//calculate offsetY
 	for(int i=0;i<num_jewels;i++)
 	{
 		int col = i % 8;
-		int row = -(i / 8);
-		int offsetY = *(offsetYs+i);
-		int offsetIndex = i - offsetY * NUM_COLS;
-		int type;
-		if(offsetIndex < 0)
-			type = *(jewels_buffer+i);
-		else 
-			type = *(jewels+i);
-		if(type == 0)
-		{
-			type = *(jewels+i);
-		}
+		int row = i / 8;
+		float offsetY = *(offsetYs+i);
+		int type = *(jewels+i);
+		float ltx = col * GRID_SIZE;
+		float lty = row * GRID_SIZE;
 		for(int j=0;j<4;j++)
 		{
-			*(offsetYPixels+i+j+0) = (col + j%2)* GRID_SIZE;
-			*(offsetYPixels+i+j+1) = (row +j/2 - 1) * GRID_SIZE;
-			//to do set texture coords
-			*(offsetYPixels+i+j+2) = ();
-			*(offsetYPixels+i+j+3) = ();
+			*(vertices+i*4+0) = (ltx + j%2*GRID_SIZE);//x
+			*(vertices+i*4+1) = (lty + j/2*GRID_SIZE);//y
+			*(vertices+i*4+2) = (0);//u
+			*(vertices+i*4+3) = (0);//v
 		}
-		
-		type = *(jewels+i);
-		for(int j=0;j<4;j++)
-		{
-			*vertices
-		}
-	}
-	//set vertices
-	for(int i=0;i<num_jewels;i++)
-	{
-		
 	}
 	glBufferData(GL_ARRAY_BUFFER,num_jewels*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_jewels*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
