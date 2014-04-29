@@ -6,9 +6,6 @@
 #define BUFFER_OFFSET(offset) ((GLfloat*)NULL+offset)
 #define STRIDE 4
 
-#define GRID_SIZE 80
-
-
 GLfloat *vertices;
 GLushort *indices;
 
@@ -185,7 +182,7 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	post();
-	glDrawElements(GL_TRIANGLES,num_squares*6,GL_UNSIGNED_SHORT,NULL);
+	glDrawElements(GL_TRIANGLES,num_jewels*6,GL_UNSIGNED_SHORT,NULL);
 	glFlush();
 }
 

@@ -1,5 +1,8 @@
 #include "JewelData.h"
+#include "JewelView.h"
 #include <math.h>
+#include <string.h>
+#include <random.h>
 
 #define NUM_ROWS 8
 #define NUM_COLS 8
@@ -37,10 +40,10 @@ int getStableType(int index)
 	{
 		top_type = (*(jewels+top_index) == *(jewels+top_top_index)) ? *(jewels+top_index) : 0;
 	}
-	int type = random_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6);
+	int type = rand_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6);
 	while(type == left_type || type == top_type)
 	{
-		type = random_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6);
+		type = rand_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6);
 	}
 	return type;
 }
@@ -61,7 +64,7 @@ void initData()
 	{
 		int* jewel = jewels+i;
 		int exp = getStableType(i);
-		*jewel = pow(2,exp);
+		*jewels = (int)pow((double)2,(double)exp);
 	}
 	// updatable = false;
 }
@@ -77,13 +80,13 @@ void fillEmpty()
 		for(int j=NUM_ROWS-1;j>=0;j--)
 		{
 			int index = i + j * NUM_COLS;
-			if( *(jewel+index) == 0)
+			if( *(jewels+index) == 0)
 			{
 				num_empty ++;
 			}
 			else
 			{
-				jewels_col[j] = *(jewel+index);
+				jewels_col[j] = *(jewels+index);
 			}
 			num_emptys[j] = num_empty;
 		}
@@ -91,15 +94,15 @@ void fillEmpty()
 		for(int j=NUM_ROWS-1;j>=0;j--)
 		{
 			int index = i + j * NUM_COLS;
-			*(jewel+index) = (j<num_empty) ? pow(2,random_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6)) :jewels_col[j];
-			*(offsetYs + index) = num_emptys[j] * GIRD_SIZE;
+			*(jewels+index) = (j<num_empty) ? (int)pow((double)2,(double)rand_by_range(JEWEL_COLOR_1,JEWEL_COLOR_6)) :jewels_col[j];
+			*(offsetYs + index) = num_emptys[j] * GRID_SIZE;
 		}
 	}
 }
 
 void makeExplosion(int type, int col, int row)
 {
-	if(dir & JEWEL_DIR_NONE)
+	if(type & JEWEL_DIR_NONE)
 	{
 		for(int i=-1;i<=1;i++)
 		{
@@ -107,28 +110,28 @@ void makeExplosion(int type, int col, int row)
 			{
 				int neighbor_col = col + i;
 				int neighbor_row = row + i;
-				if( (neibor_col >=0 && neibor_col< NUM_COLS) && (neibor_row >=0 && neibor_row < NUM_ROWS) )
+				if( (neighbor_col >=0 && neighbor_col< NUM_COLS) && (neighbor_row >=0 && neighbor_row < NUM_ROWS) )
 				{
 					int index = neighbor_row * NUM_COLS + neighbor_col;
-					*(jewel+index) = 0;
+					*(jewels+index) = 0;
 				}
 			}
 		}
 	}
-	else if(dir & JEWEL_DIR_HERIZ)
+	else if(type & JEWEL_DIR_HERIZ)
 	{
 		for(int i=0;i<NUM_COLS;++i)
 		{
 			int index = neighbor_row * NUM_COLS + i;
-			*(jewel+index) = 0;
+			*(jewels+index) = 0;
 		}
 	}
-	else if(dir & JEWEL_DIR_VERTI)
+	else if(type & JEWEL_DIR_VERTI)
 	{
 		for(int i=0;i<NUM_COLS;++i)
 		{
 			int index = neighbor_row * NUM_COLS + i;
-			*(jewel+index) = 0;
+			*(jewels+index) = 0;
 		}
 	}
 }

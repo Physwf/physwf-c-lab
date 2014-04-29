@@ -18,9 +18,7 @@
 #define NUM_TYPES 25
 extern int* jewels;
 extern int num_jewels;
-extern int *offsetYs;
-extern int* jewels_buffer;
-extern bool updatable;
+extern float *offsetYs;
 
 void initData();
 void update(int eclipse);
