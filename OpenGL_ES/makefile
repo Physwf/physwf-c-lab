@@ -18,12 +18,27 @@ BIN=./bin
 DIR_GMAES=./games
 DIR_DATA=/Data
 DIR_BUBBLE=/Bubble
+DIR_JEWEL=/Jewel
 
 DIR_EFFECTS=./effects
 DIR_GRAY=/gray
 DIR_BLUR=/blur
 DIR_COLORMATRIX=/ColorMatrix
 
+#Jewel
+jewel:JewelMain.obj JewelView.obj JewelData.obj utils.obj random.obj 
+	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+JewelMain.obj:$(DIR_GMAES)$(DIR_JEWEL)/main.cpp
+	$(CL) $(DIR_GMAES)$(DIR_JEWEL)/main.cpp $(CLOUT)$(BIN)/JewelMain.obj $(INCLUDE) $(OPTION)
+	cp $(DIR_GMAES)$(DIR_JEWEL)/jewel.vert $(BIN)/jewel.vert
+	cp $(DIR_GMAES)$(DIR_JEWEL)/jewel.frag $(BIN)/jewel.frag
+	cp -R $(DIR_GMAES)$(DIR_JEWEL)$(DIR_DATA) $(BIN)
+JewelView.obj:
+	$(CL) $(DIR_GMAES)$(DIR_JEWEL)/JewelView.cpp $(CLOUT)$(BIN)/JewelView.obj $(INCLUDE) $(OPTION)
+JewelData.obj:
+	$(CL) $(DIR_GMAES)$(DIR_JEWEL)/JewelData.cpp $(CLOUT)$(BIN)/JewelData.obj $(INCLUDE) $(OPTION)
+	
+#Bubble
 bb:BubbleMain.obj BubbleView.obj BubbleData.obj utils.obj random.obj kinematics.obj vector2d.obj matrix.obj affine.obj
 	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(BIN)/kinematics.obj $(BIN)/vector2d.obj $(BIN)/matrix.obj $(BIN)/affine.obj $(LINKOUT)$(BIN)/$@.exe
 BubbleMain.obj:$(DIR_GMAES)$(DIR_BUBBLE)/main.cpp
