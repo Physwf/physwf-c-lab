@@ -149,4 +149,3 @@ Utils: 	$(DIR_DUILIB)$(DIR_UTILS)/UIDelegate.cpp \
 UI:$(DIR_DUILIB)/StdAfx.cpp $(DIR_DUILIB)/UIlib.cpp
 	$(CL) $(DIR_DUILIB)/StdAfx.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/StdAfx.obj $(OPTIONS) $(INCLUDE)
 	$(CL) $(DIR_DUILIB)/UIlib.cpp $(CLOUT)$(DIR_LIB)$(DIR_OBJ)/UIlib.obj $(OPTIONS) $(INCLUDE)
-
