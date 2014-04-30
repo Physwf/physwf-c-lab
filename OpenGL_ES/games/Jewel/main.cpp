@@ -54,7 +54,7 @@ HWND create_window(int w,int h)
 	wc.hCursor = LoadCursor(NULL,IDC_ARROW);
 	wc.hbrBackground = NULL;
 	wc.lpszMenuName = NULL;
-	wc.lpszClassName = "Popo";
+	wc.lpszClassName = "Jewel";
 	
 	RegisterClass(&wc);
 	
@@ -62,8 +62,8 @@ HWND create_window(int w,int h)
 	
 	window = CreateWindowEx(
 	WS_EX_APPWINDOW|WS_EX_WINDOWEDGE,
-	"Popo",
-	"Popo",
+	"Jewel",
+	"Jewel",
 	WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
 	0,0,
 	rect.right - rect.left,

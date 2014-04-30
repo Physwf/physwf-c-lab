@@ -145,11 +145,6 @@ void initView()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 }
-
-void setVertex(int index)
-{
-	
-}
 /**
 	0--1
 	|  |
@@ -165,14 +160,30 @@ void post()
 		float offsetY = *(offsetYs+i);
 		int type = *(jewels+i);
 		float ltx = col * GRID_SIZE;
-		float lty = row * GRID_SIZE;
+		float lty = row * GRID_SIZE + offsetY;
+		printf("%d\n",i);
 		for(int j=0;j<4;j++)
 		{
-			*(vertices+i*4+0) = (ltx + j%2*GRID_SIZE);//x
-			*(vertices+i*4+1) = (lty + j/2*GRID_SIZE);//y
-			*(vertices+i*4+2) = (0);//u
-			*(vertices+i*4+3) = (0);//v
+			*(vertices+i*16+0+j*4) = (ltx + j%2*GRID_SIZE);//x
+			*(vertices+i*16+1+j*4) = (lty + j/2*GRID_SIZE);//y
+			*(vertices+i*16+2+j*4) = (type);//u
+			*(vertices+i*16+3+j*4) = (type);//v
+			
+			printf("%f\n",*(vertices+i*4+0));
+			printf("%f\n",*(vertices+i*4+1));
 		}
+		*(indices+6*i+0) = 4 * i + 0;
+		*(indices+6*i+1) = 4 * i + 1;
+		*(indices+6*i+2) = 4 * i + 3;
+		*(indices+6*i+3) = 4 * i + 3;
+		*(indices+6*i+4) = 4 * i + 2;
+		*(indices+6*i+5) = 4 * i + 0;
+		// printf("%d\n",*(indices+6*i+0));
+		// printf("%d\n",*(indices+6*i+1));
+		// printf("%d\n",*(indices+6*i+2));
+		// printf("%d\n",*(indices+6*i+3));
+		// printf("%d\n",*(indices+6*i+4));
+		// printf("%d\n",*(indices+6*i+5));
 	}
 	glBufferData(GL_ARRAY_BUFFER,num_jewels*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_jewels*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);

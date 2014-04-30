@@ -27,7 +27,7 @@ DIR_COLORMATRIX=/ColorMatrix
 
 #Jewel
 jewel:JewelMain.obj JewelView.obj JewelData.obj utils.obj random.obj 
-	$(LINK) $(BIN)/BubbleMain.obj $(BIN)/BubbleView.obj $(BIN)/BubbleData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+	$(LINK) $(BIN)/JewelMain.obj $(BIN)/JewelView.obj $(BIN)/JewelData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 JewelMain.obj:$(DIR_GMAES)$(DIR_JEWEL)/main.cpp
 	$(CL) $(DIR_GMAES)$(DIR_JEWEL)/main.cpp $(CLOUT)$(BIN)/JewelMain.obj $(INCLUDE) $(OPTION)
 	cp $(DIR_GMAES)$(DIR_JEWEL)/jewel.vert $(BIN)/jewel.vert
