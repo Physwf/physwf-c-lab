@@ -1,7 +1,7 @@
 #include "JewelView.h"
 #include "JewelData.h"
 #include "utils.h"
-
+#include <random.h>
 
 #define BUFFER_OFFSET(offset) ((GLfloat*)NULL+offset)
 #define STRIDE 4
@@ -12,10 +12,13 @@ GLushort *indices;
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
-
-// float tex_coords[NUM_TYPES][4][2] = { 
-		// { {0,0},{GRID},{},{} },
-	// };
+const float coords_unit = GRID_SIZE/256.0;
+float tex_coords[NUM_TYPES][4][2] = { 
+		{ {0,0},{coords_unit,0},{0,coords_unit},{coords_unit,coords_unit} },
+		{ {coords_unit+0,0},{coords_unit+coords_unit,0},{coords_unit+0,coords_unit},{coords_unit+coords_unit,coords_unit} },
+		{ {2*coords_unit+0,0},{2*coords_unit+coords_unit,0},{2*coords_unit+0,coords_unit},{2*coords_unit+coords_unit,coords_unit} },
+		{ {0,coords_unit+0},{coords_unit,coords_unit+0},{0,coords_unit+coords_unit},{coords_unit,coords_unit+coords_unit} },
+	};
 void initView()
 {
 	glClearColor(0,0,0,1);
@@ -162,12 +165,14 @@ void post()
 		float ltx = col * GRID_SIZE;
 		float lty = row * GRID_SIZE + offsetY;
 		printf("%d\n",i);
+		int r = rand_by_range(0,3);
 		for(int j=0;j<4;j++)
 		{
 			*(vertices+i*16+0+j*4) = (ltx + j%2*GRID_SIZE);//x
 			*(vertices+i*16+1+j*4) = (lty + j/2*GRID_SIZE);//y
-			*(vertices+i*16+2+j*4) = (type);//u
-			*(vertices+i*16+3+j*4) = (type);//v
+			
+			*(vertices+i*16+2+j*4) = tex_coords[r][j][0];//u
+			*(vertices+i*16+3+j*4) = tex_coords[r][j][1];//v
 			
 			printf("%f\n",*(vertices+i*4+0));
 			printf("%f\n",*(vertices+i*4+1));

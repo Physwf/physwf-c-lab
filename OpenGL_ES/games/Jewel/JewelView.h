@@ -3,7 +3,7 @@
 
 #define VIEW_W 640.0
 #define VIEW_H 640.0
-#define GRID_SIZE 80
+#define GRID_SIZE 80.0
 
 void initView();
 void render();
