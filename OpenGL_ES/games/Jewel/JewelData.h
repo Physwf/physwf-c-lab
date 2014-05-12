@@ -8,6 +8,8 @@
 #define JEWEL_COLOR_5 32
 #define JEWEL_COLOR_6 64
 
+#define JEWEL_COLOR_NUM 5
+
 #define JEWEL_DIR_NONE 128
 #define JEWEL_DIR_HERIZ 256
 #define JEWEL_DIR_VERTI 512

@@ -2,6 +2,7 @@
 #include "JewelData.h"
 #include "utils.h"
 #include <random.h>
+#include <math.h>
 
 #define BUFFER_OFFSET(offset) ((GLfloat*)NULL+offset)
 #define STRIDE 4
@@ -18,6 +19,7 @@ float tex_coords[NUM_TYPES][4][2] = {
 		{ {coords_unit+0,0},{coords_unit+coords_unit,0},{coords_unit+0,coords_unit},{coords_unit+coords_unit,coords_unit} },
 		{ {2*coords_unit+0,0},{2*coords_unit+coords_unit,0},{2*coords_unit+0,coords_unit},{2*coords_unit+coords_unit,coords_unit} },
 		{ {0,coords_unit+0},{coords_unit,coords_unit+0},{0,coords_unit+coords_unit},{coords_unit,coords_unit+coords_unit} },
+		{ {0,2*coords_unit+0},{coords_unit,2*coords_unit+0},{0,2*coords_unit+coords_unit},{coords_unit,2*coords_unit+coords_unit} },
 	};
 void initView()
 {
@@ -164,8 +166,9 @@ void post()
 		int type = *(jewels+i);
 		float ltx = col * GRID_SIZE;
 		float lty = row * GRID_SIZE + offsetY;
-		printf("%d\n",i);
-		int r = rand_by_range(0,3);
+		// printf("%d\n",i);
+		int r = log2((float)type);
+		// printf("r:%d,type:%d\n",r,type);
 		for(int j=0;j<4;j++)
 		{
 			*(vertices+i*16+0+j*4) = (ltx + j%2*GRID_SIZE);//x
@@ -174,8 +177,7 @@ void post()
 			*(vertices+i*16+2+j*4) = tex_coords[r][j][0];//u
 			*(vertices+i*16+3+j*4) = tex_coords[r][j][1];//v
 			
-			printf("%f\n",*(vertices+i*4+0));
-			printf("%f\n",*(vertices+i*4+1));
+			
 		}
 		*(indices+6*i+0) = 4 * i + 0;
 		*(indices+6*i+1) = 4 * i + 1;
