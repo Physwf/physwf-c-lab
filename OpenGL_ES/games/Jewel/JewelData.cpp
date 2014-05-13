@@ -26,26 +26,29 @@ int getStableType(int index)
 {
 	//left
 	int left_type =-1;
-	int left_index = index--;
-	int left_left_index = left_index--;
-	if(left_index / NUM_COLS == left_left_index / NUM_COLS)
+	int left_index = index-1;
+	int left_left_index = left_index-1;
+	if(left_index / NUM_COLS == left_left_index / NUM_COLS && left_left_index>=0)
 	{
 		left_type = (*(jewels+left_index) == *(jewels+left_left_index)) ? *(jewels+left_index) : -2;
 	}
 	//top
 	int top_type=-1;
-	int top_index = (index -= NUM_COLS);
-	int top_top_index = (index -= 2*NUM_COLS);
-	if(top_index % NUM_COLS == top_top_index % NUM_COLS)
+	int top_index = (index - NUM_COLS);
+	int top_top_index = (index - 2*NUM_COLS);
+	if( (top_index % NUM_COLS) == (top_top_index % NUM_COLS) && top_top_index >= 0 )
 	{
 		top_type = (*(jewels+top_index) == *(jewels+top_top_index)) ? *(jewels+top_index) : -3;
 	}
-	int type = rand_by_range(0,JEWEL_COLOR_NUM);
+	int color = rand_by_range(0,JEWEL_COLOR_NUM);
+	int type = (int)pow((double)2,color);
 	while(type == left_type || type == top_type)
 	{
-		type = rand_by_range(0,JEWEL_COLOR_NUM);
+		color = rand_by_range(0,JEWEL_COLOR_NUM);
+		type = (int)pow((double)2,color);
 	}
-	return type;
+	printf("index:%d,type:%d,top_type:%d,left_type:%d\n",index,type,top_type,left_type);
+	return color;
 }
 
 void initData()
@@ -65,7 +68,7 @@ void initData()
 	{
 		int* jewel = jewels+i;
 		int exp = getStableType(i);
-		printf("exp:%d\n",exp);
+		// printf("exp:%d\n",exp);
 		*jewel = (int)pow((double)2,(double)exp);
 	}
 	// updatable = false;
