@@ -4,9 +4,6 @@
 #include <string.h>
 #include <random.h>
 
-#define NUM_ROWS 8
-#define NUM_COLS 8
-
 typedef struct elimination_area_t {
 	int type;
 	int orgin;
@@ -255,6 +252,7 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 
 bool checkLocalElimination(int index, elim_area* area)
 {
+	printf("checkLocalElimination start\n");
 	bool in_horiz_flag[NUM_COLS];
 	bool in_verti_flag[NUM_ROWS];
 	memset(in_horiz_flag,false,sizeof(in_horiz_flag));
@@ -268,9 +266,12 @@ bool checkLocalElimination(int index, elim_area* area)
 	area->num_horiz = 1;
 	area->num_verti = 1;
 	//left
+	printf("index:%d\n",index);
+	printf("left\n");
 	int left = index;
 	while(left-- / 8 == row)
 	{
+		printf("left:%d\n",left);
 		if(!in_horiz_flag[left])
 		{
 			if( *(jewels+left) == *(jewels+index)) continue;
@@ -279,19 +280,22 @@ bool checkLocalElimination(int index, elim_area* area)
 	}
 	if( index - left > 2)
 	{
+		printf("left > 2\n");
 		for(int j=index;j>left;j--)
 		{
-			in_horiz_flag[j] = true;
+			in_horiz_flag[j%NUM_ROWS] = true;
 			area->num_horiz ++;
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
 	//right
+	printf("right\n");
 	int right = index;
 	while(right++ / 8 == row)
 	{
-		if(!in_horiz_flag[right])
+		printf("right:%d\n",right);
+		if(!in_horiz_flag[right%NUM_ROWS])
 		{
 			if( *(jewels+right) == *(jewels+index)) continue;
 			else break;
@@ -299,19 +303,21 @@ bool checkLocalElimination(int index, elim_area* area)
 	}
 	if( right - index > 2)
 	{
+		printf("right > 2\n");
 		for(int j=index;j<right;j++)
 		{
-			in_horiz_flag[j] = true;
+			in_horiz_flag[j/NUM_COLS] = true;
 			area->num_horiz ++;
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
 	//up
+	printf("up\n");
 	int up = index;
-	up -= NUM_COLS;
-	while(up % 8 == col)
+	while((up -= NUM_COLS) % 8 == col && up > 0)
 	{
+		printf("up:%d\n",up);
 		if(!in_verti_flag[up])
 		{
 			if( *(jewels+up) == *(jewels+index)) continue;
@@ -320,20 +326,22 @@ bool checkLocalElimination(int index, elim_area* area)
 	}
 	if( (index - up) / 8 > 2)
 	{
+		printf("up > 2\n");
 		for(int j=index;j>up;j-=8)
 		{
-			in_verti_flag[j] = true;
+			in_verti_flag[j/NUM_COLS] = true;
 			area->num_verti ++;
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
 	//down
+	printf("down\n");
 	int down = index;
-	down+=NUM_COLS;
-	while( down % 8 == col)
+	while( (down+=NUM_COLS) % 8 == col && down < num_jewels)
 	{
-		if(!in_verti_flag[down])
+		printf("down:%d\n",down);
+		if(!in_verti_flag[down/NUM_COLS])
 		{
 			if( *(jewels+down) == *(jewels+index)) continue;
 			else break;
@@ -341,14 +349,16 @@ bool checkLocalElimination(int index, elim_area* area)
 	}
 	if(( down - index) / 8 > 2)
 	{
+		printf("down > 2\n");
 		for(int j=index;j<down;j+=8)
 		{
-			in_verti_flag[j] = true;
+			in_verti_flag[j/NUM_COLS] = true;
 			area->num_verti ++;
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
+	printf("checkLocalElimination end\n");
 	return area->num_indices > 0;
 }
 
@@ -360,24 +370,30 @@ bool canSwitch(int source,int target)
 
 bool trySwitch(int source,int target)
 {
-	elim_area src_area;
-	elim_area tgt_area;
+	elim_area src_area = {0,0,0,0,{0},0};
+	elim_area tgt_area = {0,0,0,0,{0},0};
+	printf("trySwitch start--------------------\n");
 	if(checkLocalElimination(source,&src_area))
 	{
+		printf("checkLocalElimination source\n");
 		if(src_area.num_indices > 0)
 		{
+			printf("makeElimination start\n");
 			int num_areas = 1;
-			makeElimination(&src_area,num_areas);
+			// makeElimination(&src_area,num_areas);
 		}
 	}
 	if(checkLocalElimination(target,&tgt_area))
 	{
+		printf("checkLocalElimination target\n");
 		if(tgt_area.num_indices > 0)
 		{
+			printf("makeElimination start\n");
 			int num_areas = 1;
-			makeElimination(&tgt_area,num_areas);
+			// makeElimination(&tgt_area,num_areas);
 		}
 	}
+	printf("trySwitch end--------------------\n");
 	if(src_area.num_indices > 0 || tgt_area.num_indices > 0)
 	{
 		//fillEmpty();

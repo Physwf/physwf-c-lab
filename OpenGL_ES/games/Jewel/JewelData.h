@@ -18,6 +18,10 @@
 #define JEWEL_DIAMOND 2048
 
 #define NUM_TYPES 25
+
+#define NUM_ROWS 8
+#define NUM_COLS 8
+
 extern int* jewels;
 extern int num_jewels;
 extern float *offsetYs;

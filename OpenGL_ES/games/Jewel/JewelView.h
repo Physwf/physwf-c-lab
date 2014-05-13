@@ -7,4 +7,6 @@
 
 void initView();
 void render();
-void onMousePressed(float x,float y);
+void onMouseDown(float x,float y);
+void onMouseMove(float x,float y);
+void onMouseUp(float x,float y);

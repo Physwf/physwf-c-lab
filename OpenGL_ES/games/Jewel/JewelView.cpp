@@ -21,6 +21,10 @@ float tex_coords[NUM_TYPES][4][2] = {
 		{ {0,coords_unit+0},{coords_unit,coords_unit+0},{0,coords_unit+coords_unit},{coords_unit,coords_unit+coords_unit} },
 		{ {0,2*coords_unit+0},{coords_unit,2*coords_unit+0},{0,2*coords_unit+coords_unit},{coords_unit,2*coords_unit+coords_unit} },
 	};
+
+float *dragXs;
+float *dragYs;
+
 void initView()
 {
 	glClearColor(0,0,0,1);
@@ -39,8 +43,11 @@ void initView()
 	indices = (GLushort*)malloc(iSize);
 	memset(indices,0,iSize);
 
+	dragXs = (float*) malloc(num_jewels * sizeof(float));
+	dragYs = (float*) malloc(num_jewels * sizeof(float));
 	// glBufferData(GL_ARRAY_BUFFER,4*4*sizeof(GLfloat),vertices,GL_STATIC_DRAW);
-	
+	memset(dragXs,0,num_jewels * sizeof(float));
+	memset(dragYs,0,num_jewels * sizeof(float));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vbos[index]);
 	// glBufferData(GL_ELEMENT_ARRAY_BUFFER,6*sizeof(GLushort),indices,GL_STATIC_DRAW);
 	
@@ -163,9 +170,11 @@ void post()
 		int col = i % 8;
 		int row = i / 8;
 		float offsetY = *(offsetYs+i);
+		float dragX = *(dragXs+i);
+		float dragY = *(dragYs+i);
 		int type = *(jewels+i);
-		float ltx = col * GRID_SIZE;
-		float lty = row * GRID_SIZE + offsetY;
+		float ltx = col * GRID_SIZE + dragX;
+		float lty = row * GRID_SIZE + offsetY + dragY;
 		// printf("%d\n",i);
 		int r = log2((float)type);
 		// printf("r:%d,type:%d\n",r,type);
@@ -204,7 +213,62 @@ void render()
 	glFlush();
 }
 
-void onMousePressed(float x,float y)
+int switchPositive;
+float positiveX;
+float positiveY;
+int switchPassive;
+void onMouseDown(float x,float y)
 {
-	
+	int col = x / GRID_SIZE;
+	int row = y / GRID_SIZE;
+	int index = col + row * NUM_COLS;
+	switchPositive = index;
+	switchPassive = index;
+	positiveX = x;
+	positiveY = y;
+}
+
+void onMouseMove(float x,float y)
+{
+	float offsetX = x - positiveX;
+	float offsetY = y - positiveY;
+	dragXs[switchPositive] = 0;
+	dragYs[switchPositive] = 0;
+	dragXs[switchPassive] = 0;
+	dragYs[switchPassive] = 0;
+	if(abs(offsetX) > abs(offsetY) && abs(offsetX)/abs(offsetY) > tan(3.14/6.0))
+	{
+		if(offsetX >= 0)
+			switchPassive = switchPositive + 1;
+		else
+			switchPassive = switchPositive - 1;
+		if(switchPassive / NUM_COLS == switchPositive / NUM_COLS)
+		{
+			dragXs[switchPositive] = (abs(offsetX) > GRID_SIZE) ? GRID_SIZE*(offsetX/abs(offsetX)) : offsetX;
+			dragXs[switchPassive] = -dragXs[switchPositive];
+		}
+	}
+	else if(abs(offsetX) < abs(offsetY) && abs(offsetY)/abs(offsetX) > tan(3.14/6.0))
+	{
+		if(offsetY >= 0)
+			switchPassive = switchPositive + NUM_COLS;
+		else
+			switchPassive = switchPositive - NUM_COLS;
+		if(switchPassive % NUM_COLS == switchPositive % NUM_COLS)
+		{
+			dragYs[switchPositive] = (abs(offsetY) > GRID_SIZE) ? GRID_SIZE *(offsetY/abs(offsetY)): offsetY;
+			dragYs[switchPassive] = -dragYs[switchPositive];
+		}
+	}
+}
+
+void onMouseUp(float x,float y)
+{
+	printf("switchPositive:%d,switchPassive:%d\n",switchPositive,switchPassive);
+	if( switchPositive == switchPassive) return;
+	if(!trySwitch(switchPositive,switchPassive))
+	{
+		memset(dragXs,0,num_jewels * sizeof(float));
+		memset(dragYs,0,num_jewels * sizeof(float));
+	}
 }
