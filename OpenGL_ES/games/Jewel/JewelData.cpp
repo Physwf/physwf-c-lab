@@ -76,6 +76,7 @@ void fillEmpty()
 	for(int i=0;i<NUM_COLS;i++)
 	{
 		int num_empty = 0;
+		int stack_bottom = NUM_ROWS-1;
 		int jewels_col[NUM_ROWS] = {0};
 		int num_emptys[NUM_ROWS] = {0};
 		
@@ -88,7 +89,7 @@ void fillEmpty()
 			}
 			else
 			{
-				jewels_col[j] = *(jewels+index);
+				jewels_col[stack_bottom--] = *(jewels+index);
 			}
 			num_emptys[j] = num_empty;
 		}
@@ -153,9 +154,10 @@ void makeElimination(elim_area_p areas, int num_areas)
 				makeExplosion(type,col,row);
 			}
 			*(jewels+area.indices[j]) = 0;
+			*(jewels+area.orgin) = 0;
 		}
 
-		if(area.num_horiz > 4 || area.num_verti > 4)//diamen
+		if(area.num_horiz > 4 || area.num_verti > 4)//diamond
 		{
 			*(jewels+area.orgin) &= JEWEL_DIAMOND;
 		}
@@ -282,9 +284,9 @@ bool checkLocalElimination(const int index, elim_area* area)
 		}
 	}
 	left++;
-	if( index - left > 1)
+	if( index - left > 0)
 	{
-		printf("left > 1\n");
+		printf("left > 0\n");
 		for(int j=index-1;j>=left;j--)
 		{
 			in_horiz_flag[j%NUM_ROWS] = true;
@@ -307,9 +309,9 @@ bool checkLocalElimination(const int index, elim_area* area)
 		}
 	}
 	right--;
-	if( right - index > 1)
+	if( right - index > 0)
 	{
-		printf("right > 1\n");
+		printf("right > 0\n");
 		for(int j=index+1;j<=right;j++)
 		{
 			in_horiz_flag[j/NUM_COLS] = true;
@@ -332,9 +334,10 @@ bool checkLocalElimination(const int index, elim_area* area)
 		}
 	}
 	up+=NUM_COLS;
-	if( (index - up) / 8 > 1)
+	printf("(index - up) / 8:%d\n",(index - up) / 8);
+	if( (index - up) / 8 > 0)
 	{
-		printf("up > 1\n");
+		printf("up > 0\n");
 		for(int j=index-8;j>=up;j-=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
@@ -357,9 +360,10 @@ bool checkLocalElimination(const int index, elim_area* area)
 		}
 	}
 	down -= NUM_COLS;
-	if(( down - index) / 8 > 1)
+	printf("( down - index) / 8:%d\n",( down - index) / 8);
+	if(( down - index) / 8 > 0)
 	{
-		printf("down > 1\n");
+		printf("down > 0\n");
 		for(int j=index+8;j<=down;j+=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
@@ -392,7 +396,7 @@ bool trySwitch(int source,int target)
 		{
 			printf("makeElimination start\n");
 			int num_areas = 1;
-			// makeElimination(&src_area,num_areas);
+			makeElimination(&src_area,num_areas);
 		}
 	}
 	if(checkLocalElimination(target,&tgt_area))
@@ -402,7 +406,7 @@ bool trySwitch(int source,int target)
 		{
 			printf("makeElimination start\n");
 			int num_areas = 1;
-			// makeElimination(&tgt_area,num_areas);
+			makeElimination(&tgt_area,num_areas);
 		}
 	}
 	printf("trySwitch end--------------------\n");
@@ -431,14 +435,21 @@ void update(int eclipse)
 		if(offsetYs[i] == 0) continue;
 		else
 		{
-			offsetYs[i] -= eclipse * 0.5;
+			printf("offsetYs[i]:%f\n",offsetYs[i]);
+			printf("eclipse * 0.5:%f\n",eclipse * 0.5);
+			offsetYs[i] -= eclipse * 0.1;
+			printf("offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
+				printf("offsetYs[i] < 0\n");
 				offsetYs[i] = 0;
 				elim_area area;
 				int num_area = 1;
-				checkLocalElimination(i,&area);
-				makeElimination(&area,num_area);
+				printf("checkLocalElimination,i:%d\n",i);
+				if(checkLocalElimination(i,&area))
+				{
+					makeElimination(&area,num_area);
+				}
 			}
 			ready = false;
 		}

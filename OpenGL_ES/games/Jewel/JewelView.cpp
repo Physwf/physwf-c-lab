@@ -177,7 +177,7 @@ void post()
 		float paddingY = 2.0;
 		int type = *(jewels+i);
 		float ltx = col * GRID_SIZE + dragX+paddingX;
-		float lty = row * GRID_SIZE + offsetY + dragY + paddingY;
+		float lty = row * GRID_SIZE - offsetY + dragY + paddingY;
 		// printf("%d\n",i);
 		int r = log2((float)type);
 		// printf("r:%d,type:%d\n",r,type);
