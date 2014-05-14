@@ -435,10 +435,10 @@ void update(int eclipse)
 		if(offsetYs[i] == 0) continue;
 		else
 		{
-			printf("offsetYs[i]:%f\n",offsetYs[i]);
-			printf("eclipse * 0.5:%f\n",eclipse * 0.5);
-			offsetYs[i] -= eclipse * 0.1;
-			printf("offsetYs[i]:%f\n",offsetYs[i]);
+			//printf("offsetYs[i]:%f\n",offsetYs[i]);
+			//printf("eclipse * 0.5:%f\n",eclipse * 0.5);
+			offsetYs[i] -= eclipse * 0.01;
+			//printf("offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
 				printf("offsetYs[i] < 0\n");
