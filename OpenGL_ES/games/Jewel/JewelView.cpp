@@ -269,9 +269,15 @@ void onMouseUp(float x,float y)
 {
 	printf("switchPositive:%d,switchPassive:%d\n",switchPositive,switchPassive);
 	if( switchPositive == switchPassive) return;
+	int temp = jewels[switchPositive];
+	jewels[switchPositive] = jewels[switchPassive];
+	jewels[switchPassive] = temp;
 	if(!trySwitch(switchPositive,switchPassive))
 	{
-		memset(dragXs,0,num_jewels * sizeof(float));
-		memset(dragYs,0,num_jewels * sizeof(float));
+		jewels[switchPassive] = jewels[switchPositive];
+		jewels[switchPositive] = temp;
 	}
+	memset(dragXs,0,num_jewels * sizeof(float));
+	memset(dragYs,0,num_jewels * sizeof(float));
+	
 }

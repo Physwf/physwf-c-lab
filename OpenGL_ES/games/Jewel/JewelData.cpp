@@ -60,7 +60,7 @@ void initData()
 	offsetYs = (float*)malloc(num_jewels*sizeof(float));
 	memset(offsetYs,0,num_jewels*sizeof(float));
 	
-	srand(time(NULL));
+	// srand(time(NULL));
 	for(int i=0;i<num_jewels;i++)
 	{
 		int* jewel = jewels+i;
@@ -250,7 +250,7 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 	return num_areas > 0;
 }
 
-bool checkLocalElimination(int index, elim_area* area)
+bool checkLocalElimination(const int index, elim_area* area)
 {
 	printf("checkLocalElimination start\n");
 	bool in_horiz_flag[NUM_COLS];
@@ -269,22 +269,27 @@ bool checkLocalElimination(int index, elim_area* area)
 	printf("index:%d\n",index);
 	printf("left\n");
 	int left = index;
-	while(left-- / 8 == row)
+	
+	while((left--) / 8 == row)
 	{
 		printf("left:%d\n",left);
-		if(!in_horiz_flag[left])
+		printf("left/8:%d\n",left/8);
+		
+		if(!in_horiz_flag[left%NUM_ROWS])
 		{
 			if( *(jewels+left) == *(jewels+index)) continue;
 			else break;
 		}
 	}
-	if( index - left > 2)
+	left++;
+	if( index - left > 1)
 	{
-		printf("left > 2\n");
-		for(int j=index;j>left;j--)
+		printf("left > 1\n");
+		for(int j=index-1;j>=left;j--)
 		{
 			in_horiz_flag[j%NUM_ROWS] = true;
 			area->num_horiz ++;
+			printf("num_horiz:%d\n",area->num_horiz);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
@@ -292,7 +297,7 @@ bool checkLocalElimination(int index, elim_area* area)
 	//right
 	printf("right\n");
 	int right = index;
-	while(right++ / 8 == row)
+	while((right++) / 8 == row)
 	{
 		printf("right:%d\n",right);
 		if(!in_horiz_flag[right%NUM_ROWS])
@@ -301,13 +306,15 @@ bool checkLocalElimination(int index, elim_area* area)
 			else break;
 		}
 	}
-	if( right - index > 2)
+	right--;
+	if( right - index > 1)
 	{
-		printf("right > 2\n");
-		for(int j=index;j<right;j++)
+		printf("right > 1\n");
+		for(int j=index+1;j<=right;j++)
 		{
 			in_horiz_flag[j/NUM_COLS] = true;
 			area->num_horiz ++;
+			printf("num_horiz:%d\n",area->num_horiz);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
@@ -318,19 +325,21 @@ bool checkLocalElimination(int index, elim_area* area)
 	while((up -= NUM_COLS) % 8 == col && up > 0)
 	{
 		printf("up:%d\n",up);
-		if(!in_verti_flag[up])
+		if(!in_verti_flag[up/NUM_COLS])
 		{
 			if( *(jewels+up) == *(jewels+index)) continue;
 			else break;
 		}
 	}
-	if( (index - up) / 8 > 2)
+	up+=NUM_COLS;
+	if( (index - up) / 8 > 1)
 	{
-		printf("up > 2\n");
-		for(int j=index;j>up;j-=8)
+		printf("up > 1\n");
+		for(int j=index-8;j>=up;j-=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
 			area->num_verti ++;
+			printf("num_verti:%d\n",area->num_verti);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
@@ -347,19 +356,22 @@ bool checkLocalElimination(int index, elim_area* area)
 			else break;
 		}
 	}
-	if(( down - index) / 8 > 2)
+	down -= NUM_COLS;
+	if(( down - index) / 8 > 1)
 	{
-		printf("down > 2\n");
-		for(int j=index;j<down;j+=8)
+		printf("down > 1\n");
+		for(int j=index+8;j<=down;j+=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
 			area->num_verti ++;
+			printf("num_verti:%d\n",area->num_verti);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
+	printf("num_horiz:%d,num_verti:%d\n",area->num_horiz,area->num_verti);
 	printf("checkLocalElimination end\n");
-	return area->num_indices > 0;
+	return area->num_horiz > 2 || area->num_verti > 2;
 }
 
 bool canSwitch(int source,int target)
@@ -394,12 +406,7 @@ bool trySwitch(int source,int target)
 		}
 	}
 	printf("trySwitch end--------------------\n");
-	if(src_area.num_indices > 0 || tgt_area.num_indices > 0)
-	{
-		//fillEmpty();
-		return true;
-	}
-	return false;
+	return src_area.num_horiz > 2 || src_area.num_verti > 2 || tgt_area.num_horiz > 2 || tgt_area.num_verti > 2;
 }
 
 void rematch(int swap_times)
