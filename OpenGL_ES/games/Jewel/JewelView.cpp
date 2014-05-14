@@ -13,13 +13,14 @@ GLushort *indices;
 enum VBO_IDs {vertex,index,numVBOs};
 enum Attr_IDs {a_postion,a_texCoord};
 enum Tex_IDs {s_popo,numTexs};
-const float coords_unit = GRID_SIZE/256.0;
+const float coords_unit_x = GRID_SIZE/468.0;
+const float coords_unit_y = GRID_SIZE/234.0;
 float tex_coords[NUM_TYPES][4][2] = { 
-		{ {0,0},{coords_unit,0},{0,coords_unit},{coords_unit,coords_unit} },
-		{ {coords_unit+0,0},{coords_unit+coords_unit,0},{coords_unit+0,coords_unit},{coords_unit+coords_unit,coords_unit} },
-		{ {2*coords_unit+0,0},{2*coords_unit+coords_unit,0},{2*coords_unit+0,coords_unit},{2*coords_unit+coords_unit,coords_unit} },
-		{ {0,coords_unit+0},{coords_unit,coords_unit+0},{0,coords_unit+coords_unit},{coords_unit,coords_unit+coords_unit} },
-		{ {0,2*coords_unit+0},{coords_unit,2*coords_unit+0},{0,2*coords_unit+coords_unit},{coords_unit,2*coords_unit+coords_unit} },
+		{ {coords_unit_x,0},{coords_unit_x+coords_unit_x,0},{coords_unit_x,coords_unit_y},{coords_unit_x+coords_unit_x,coords_unit_y} },//cyan
+		{ {2*coords_unit_x,0},{2*coords_unit_x+coords_unit_x,0},{2*coords_unit_x,coords_unit_y},{2*coords_unit_x+coords_unit_x,coords_unit_y} },//red
+		{ {3*coords_unit_x,0},{3*coords_unit_x+coords_unit_x,0},{3*coords_unit_x,coords_unit_y},{3*coords_unit_x+coords_unit_x,coords_unit_y} },//purple
+		{ {0,coords_unit_y+0},{coords_unit_x,coords_unit_y+0},{0,coords_unit_y+coords_unit_y},{coords_unit_x,coords_unit_y+coords_unit_y} },//yellow
+		{ {5*coords_unit_x+0,coords_unit_y+0},{5*coords_unit_x+coords_unit_x,coords_unit_y+0},{5*coords_unit_x+0,coords_unit_y+coords_unit_y},{5*coords_unit_x+coords_unit_x,coords_unit_y+coords_unit_y} },//yellow
 	};
 
 float *dragXs;
@@ -133,7 +134,7 @@ void initView()
 	glBindTexture(GL_TEXTURE_2D,textures[s_popo]);
 	
 	png_data_t png_data;
-	if(!png_read("./Data/Jewel.png",&png_data))
+	if(!png_read("./Data/Jewels.png",&png_data))
 	{
 		glTexImage2D(GL_TEXTURE_2D,0,
 					GL_RGBA,
@@ -172,9 +173,11 @@ void post()
 		float offsetY = *(offsetYs+i);
 		float dragX = *(dragXs+i);
 		float dragY = *(dragYs+i);
+		float paddingX = 2.0;
+		float paddingY = 2.0;
 		int type = *(jewels+i);
-		float ltx = col * GRID_SIZE + dragX;
-		float lty = row * GRID_SIZE + offsetY + dragY;
+		float ltx = col * GRID_SIZE + dragX+paddingX;
+		float lty = row * GRID_SIZE + offsetY + dragY + paddingY;
 		// printf("%d\n",i);
 		int r = log2((float)type);
 		// printf("r:%d,type:%d\n",r,type);
