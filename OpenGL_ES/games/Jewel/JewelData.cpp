@@ -19,6 +19,8 @@ float *offsetYs;
 
 bool updatable;
 
+FILE* flog;
+
 int getStableType(int index)
 {
 	//left
@@ -69,6 +71,8 @@ void initData()
 		*jewel = (int)pow((double)2,(double)exp);
 	}
 	// updatable = false;
+	
+	flog = fopen("jewel.log","w");
 }
 
 void fillEmpty()
@@ -254,7 +258,7 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 
 bool checkLocalElimination(const int index, elim_area* area)
 {
-	printf("checkLocalElimination start\n");
+	fprintf(flog,"checkLocalElimination start\n");
 	bool in_horiz_flag[NUM_COLS];
 	bool in_verti_flag[NUM_ROWS];
 	memset(in_horiz_flag,false,sizeof(in_horiz_flag));
@@ -268,14 +272,14 @@ bool checkLocalElimination(const int index, elim_area* area)
 	area->num_horiz = 1;
 	area->num_verti = 1;
 	//left
-	printf("index:%d\n",index);
-	printf("left\n");
+	fprintf(flog,"index:%d\n",index);
+	fprintf(flog,"left\n");
 	int left = index;
 	
-	while((left--) / 8 == row)
+	while((--left) / 8 == row)
 	{
-		printf("left:%d\n",left);
-		printf("left/8:%d\n",left/8);
+		fprintf(flog,"left:%d\n",left);
+		fprintf(flog,"left/8:%d\n",left/8);
 		
 		if(!in_horiz_flag[left%NUM_ROWS])
 		{
@@ -286,22 +290,23 @@ bool checkLocalElimination(const int index, elim_area* area)
 	left++;
 	if( index - left > 0)
 	{
-		printf("left > 0\n");
+		fprintf(flog,"left > 0\n");
 		for(int j=index-1;j>=left;j--)
 		{
 			in_horiz_flag[j%NUM_ROWS] = true;
 			area->num_horiz ++;
-			printf("num_horiz:%d\n",area->num_horiz);
+			fprintf(flog,"num_horiz:%d\n",area->num_horiz);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
 	//right
-	printf("right\n");
+	fprintf(flog,"right\n");
 	int right = index;
-	while((right++) / 8 == row)
+	fprintf(flog,"row:%d\n",row);
+	while((++right) / 8 == row)
 	{
-		printf("right:%d\n",right);
+		fprintf(flog,"right:%d\n",right);
 		if(!in_horiz_flag[right%NUM_ROWS])
 		{
 			if( *(jewels+right) == *(jewels+index)) continue;
@@ -311,22 +316,22 @@ bool checkLocalElimination(const int index, elim_area* area)
 	right--;
 	if( right - index > 0)
 	{
-		printf("right > 0\n");
+		fprintf(flog,"right > 0\n");
 		for(int j=index+1;j<=right;j++)
 		{
 			in_horiz_flag[j/NUM_COLS] = true;
 			area->num_horiz ++;
-			printf("num_horiz:%d\n",area->num_horiz);
+			fprintf(flog,"num_horiz:%d\n",area->num_horiz);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
 	//up
-	printf("up\n");
+	fprintf(flog,"up\n");
 	int up = index;
 	while((up -= NUM_COLS) % 8 == col && up > 0)
 	{
-		printf("up:%d\n",up);
+		fprintf(flog,"up:%d\n",up);
 		if(!in_verti_flag[up/NUM_COLS])
 		{
 			if( *(jewels+up) == *(jewels+index)) continue;
@@ -334,25 +339,25 @@ bool checkLocalElimination(const int index, elim_area* area)
 		}
 	}
 	up+=NUM_COLS;
-	printf("(index - up) / 8:%d\n",(index - up) / 8);
+	fprintf(flog,"(index - up) / 8:%d\n",(index - up) / 8);
 	if( (index - up) / 8 > 0)
 	{
-		printf("up > 0\n");
+		fprintf(flog,"up > 0\n");
 		for(int j=index-8;j>=up;j-=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
 			area->num_verti ++;
-			printf("num_verti:%d\n",area->num_verti);
+			fprintf(flog,"num_verti:%d\n",area->num_verti);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
 	//down
-	printf("down\n");
+	fprintf(flog,"down\n");
 	int down = index;
 	while( (down+=NUM_COLS) % 8 == col && down < num_jewels)
 	{
-		printf("down:%d\n",down);
+		fprintf(flog,"down:%d\n",down);
 		if(!in_verti_flag[down/NUM_COLS])
 		{
 			if( *(jewels+down) == *(jewels+index)) continue;
@@ -360,21 +365,21 @@ bool checkLocalElimination(const int index, elim_area* area)
 		}
 	}
 	down -= NUM_COLS;
-	printf("( down - index) / 8:%d\n",( down - index) / 8);
+	fprintf(flog,"( down - index) / 8:%d\n",( down - index) / 8);
 	if(( down - index) / 8 > 0)
 	{
-		printf("down > 0\n");
+		fprintf(flog,"down > 0\n");
 		for(int j=index+8;j<=down;j+=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
 			area->num_verti ++;
-			printf("num_verti:%d\n",area->num_verti);
+			fprintf(flog,"num_verti:%d\n",area->num_verti);
 			area->indices[area->num_indices] = j;
 			area->num_indices ++;
 		}
 	}
-	printf("num_horiz:%d,num_verti:%d\n",area->num_horiz,area->num_verti);
-	printf("checkLocalElimination end\n");
+	fprintf(flog,"num_horiz:%d,num_verti:%d\n",area->num_horiz,area->num_verti);
+	fprintf(flog,"checkLocalElimination end\n");
 	return area->num_horiz > 2 || area->num_verti > 2;
 }
 
@@ -388,28 +393,28 @@ bool trySwitch(int source,int target)
 {
 	elim_area src_area = {0,0,0,0,{0},0};
 	elim_area tgt_area = {0,0,0,0,{0},0};
-	printf("trySwitch start--------------------\n");
+	fprintf(flog,"trySwitch start--------------------\n");
 	if(checkLocalElimination(source,&src_area))
 	{
-		printf("checkLocalElimination source\n");
+		fprintf(flog,"checkLocalElimination source\n");
 		if(src_area.num_indices > 0)
 		{
-			printf("makeElimination start\n");
+			fprintf(flog,"makeElimination start\n");
 			int num_areas = 1;
 			makeElimination(&src_area,num_areas);
 		}
 	}
 	if(checkLocalElimination(target,&tgt_area))
 	{
-		printf("checkLocalElimination target\n");
+		fprintf(flog,"checkLocalElimination target\n");
 		if(tgt_area.num_indices > 0)
 		{
-			printf("makeElimination start\n");
+			fprintf(flog,"makeElimination start\n");
 			int num_areas = 1;
 			makeElimination(&tgt_area,num_areas);
 		}
 	}
-	printf("trySwitch end--------------------\n");
+	fprintf(flog,"trySwitch end--------------------\n");
 	return src_area.num_horiz > 2 || src_area.num_verti > 2 || tgt_area.num_horiz > 2 || tgt_area.num_verti > 2;
 }
 
@@ -430,22 +435,23 @@ void rematch(int swap_times)
 void update(int eclipse)
 {
 	bool ready = true;
+	
 	for(int i=0;i<num_jewels;i++)
 	{
 		if(offsetYs[i] == 0) continue;
 		else
 		{
-			//printf("offsetYs[i]:%f\n",offsetYs[i]);
-			//printf("eclipse * 0.5:%f\n",eclipse * 0.5);
+			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
+			//fprintf(flog,"eclipse * 0.5:%f\n",eclipse * 0.5);
 			offsetYs[i] -= eclipse * 0.01;
-			//printf("offsetYs[i]:%f\n",offsetYs[i]);
+			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
-				printf("offsetYs[i] < 0\n");
+				fprintf(flog,"offsetYs[i] < 0\n");
 				offsetYs[i] = 0;
 				elim_area area;
 				int num_area = 1;
-				printf("checkLocalElimination,i:%d\n",i);
+				fprintf(flog,"checkLocalElimination,i:%d\n",i);
 				if(checkLocalElimination(i,&area))
 				{
 					makeElimination(&area,num_area);
@@ -454,6 +460,7 @@ void update(int eclipse)
 			ready = false;
 		}
 	}
+
 	if(ready)
 	{
 		// check match
