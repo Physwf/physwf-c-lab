@@ -102,7 +102,7 @@ void fillEmpty()
 		{
 			int index = i + j * NUM_COLS;
 			*(jewels+index) = (j<num_empty) ? (int)pow((double)2,(double)rand_by_range(0,JEWEL_COLOR_NUM)) :jewels_col[j];
-			*(offsetYs + index) = num_emptys[j] * GRID_SIZE;
+			*(offsetYs + index) = num_emptys[j] * GRID_SIZE + *(offsetYs + index);
 		}
 	}
 }
@@ -443,7 +443,7 @@ void update(int eclipse)
 		{
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			//fprintf(flog,"eclipse * 0.5:%f\n",eclipse * 0.5);
-			offsetYs[i] -= eclipse * 0.01;
+			offsetYs[i] -= eclipse * 0.1;
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
