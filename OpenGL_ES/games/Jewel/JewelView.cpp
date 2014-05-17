@@ -16,25 +16,25 @@ enum Tex_IDs {s_popo,numTexs};
 const float coords_unit_x = GRID_SIZE/1482.0;
 const float coords_unit_y = GRID_SIZE/78.0;
 float tex_coords[NUM_TYPES][4][2] = { 
-		{ {0*coords_unit_x,0},{coords_unit_x,0},{coords_unit_x,coords_unit_y},{coords_unit_x+coords_unit_x,coords_unit_y} },//yellow
-		{ {1*coords_unit_x,0},{2*coords_unit_x,0},{2*coords_unit_x,coords_unit_y},{2*coords_unit_x+coords_unit_x,coords_unit_y} },//red
-		{ {2*coords_unit_x,0},{3*coords_unit_x,0},{3*coords_unit_x,coords_unit_y},{3*coords_unit_x+coords_unit_x,coords_unit_y} },//purple
-		{ {3*coords_unit_x,0},{4*coords_unit_x,0},{4*coords_unit_x,coords_unit_y},{4*coords_unit_x+coords_unit_x,coords_unit_y} },//green
-		{ {4*coords_unit_x,0},{5*coords_unit_x,0},{5*coords_unit_x,coords_unit_y},{5*coords_unit_x+coords_unit_x,coords_unit_y} },//cyan
+		{ {0*coords_unit_x,0},{coords_unit_x,0},{0,coords_unit_y},{coords_unit_x,coords_unit_y} },//yellow
+		{ {1*coords_unit_x,0},{2*coords_unit_x,0},{1*coords_unit_x,coords_unit_y},{2*coords_unit_x,coords_unit_y} },//red
+		{ {2*coords_unit_x,0},{3*coords_unit_x,0},{2*coords_unit_x,coords_unit_y},{3*coords_unit_x,coords_unit_y} },//purple
+		{ {3*coords_unit_x,0},{4*coords_unit_x,0},{3*coords_unit_x,coords_unit_y},{4*coords_unit_x,coords_unit_y} },//green
+		{ {4*coords_unit_x,0},{5*coords_unit_x,0},{4*coords_unit_x,coords_unit_y},{5*coords_unit_x,coords_unit_y} },//cyan
 		
-		{ {5*coords_unit_x,0},{6*coords_unit_x,0},{6*coords_unit_x,coords_unit_y},{6*coords_unit_x+coords_unit_x,coords_unit_y} },//yellow
-		{ {6*coords_unit_x,0},{7*coords_unit_x,0},{7*coords_unit_x,coords_unit_y},{7*coords_unit_x+coords_unit_x,coords_unit_y} },//red
-		{ {7*coords_unit_x,0},{8*coords_unit_x,0},{8*coords_unit_x,coords_unit_y},{8*coords_unit_x+coords_unit_x,coords_unit_y} },//purple
-		{ {8*coords_unit_x,0},{9*coords_unit_x,0},{9*coords_unit_x,coords_unit_y},{9*coords_unit_x+coords_unit_x,coords_unit_y} },//green
-		{ {9*coords_unit_x,0},{10*coords_unit_x,0},{10*coords_unit_x,coords_unit_y},{10*coords_unit_x+coords_unit_x,coords_unit_y} },//cyan
+		{ {5*coords_unit_x,0},{6*coords_unit_x,0},{5*coords_unit_x,coords_unit_y},{6*coords_unit_x,coords_unit_y} },//yellow
+		{ {6*coords_unit_x,0},{7*coords_unit_x,0},{6*coords_unit_x,coords_unit_y},{7*coords_unit_x,coords_unit_y} },//red
+		{ {7*coords_unit_x,0},{8*coords_unit_x,0},{7*coords_unit_x,coords_unit_y},{8*coords_unit_x,coords_unit_y} },//purple
+		{ {8*coords_unit_x,0},{9*coords_unit_x,0},{8*coords_unit_x,coords_unit_y},{9*coords_unit_x,coords_unit_y} },//green
+		{ {9*coords_unit_x,0},{10*coords_unit_x,0},{9*coords_unit_x,coords_unit_y},{10*coords_unit_x,coords_unit_y} },//cyan
 		
-		{ {10*coords_unit_x,0},{11*coords_unit_x,0},{7*coords_unit_x,coords_unit_y},{7*coords_unit_x+coords_unit_x,coords_unit_y} },//yellow
+		{ {10*coords_unit_x,0},{11*coords_unit_x,0},{10*coords_unit_x,coords_unit_y},{11*coords_unit_x,coords_unit_y} },//yellow
 		
-		{ {11*coords_unit_x,0},{12*coords_unit_x,0},{12*coords_unit_x,coords_unit_y},{12*coords_unit_x+coords_unit_x,coords_unit_y} },//yellow
-		{ {12*coords_unit_x,0},{13*coords_unit_x,0},{13*coords_unit_x,coords_unit_y},{13*coords_unit_x+coords_unit_x,coords_unit_y} },//red
-		{ {13*coords_unit_x,0},{14*coords_unit_x,0},{14*coords_unit_x,coords_unit_y},{14*coords_unit_x+coords_unit_x,coords_unit_y} },//purple
-		{ {14*coords_unit_x,0},{15*coords_unit_x,0},{15*coords_unit_x,coords_unit_y},{15*coords_unit_x+coords_unit_x,coords_unit_y} },//green
-		{ {15*coords_unit_x,0},{16*coords_unit_x,0},{16*coords_unit_x,coords_unit_y},{16*coords_unit_x+coords_unit_x,coords_unit_y} },//cyan
+		{ {11*coords_unit_x,0},{12*coords_unit_x,0},{11*coords_unit_x,coords_unit_y},{12*coords_unit_x,coords_unit_y} },//yellow
+		{ {12*coords_unit_x,0},{13*coords_unit_x,0},{12*coords_unit_x,coords_unit_y},{13*coords_unit_x,coords_unit_y} },//red
+		{ {13*coords_unit_x,0},{14*coords_unit_x,0},{13*coords_unit_x,coords_unit_y},{14*coords_unit_x,coords_unit_y} },//purple
+		{ {14*coords_unit_x,0},{15*coords_unit_x,0},{14*coords_unit_x,coords_unit_y},{15*coords_unit_x,coords_unit_y} },//green
+		{ {15*coords_unit_x,0},{16*coords_unit_x,0},{15*coords_unit_x,coords_unit_y},{16*coords_unit_x,coords_unit_y} },//cyan
 	};
 
 float *dragXs;
