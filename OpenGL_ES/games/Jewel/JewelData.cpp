@@ -305,6 +305,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		
 		if(!in_horiz_flag[left%NUM_ROWS])
 		{
+			if(*(offsetYs+left) != 0) break;
 			if( *(jewels+left) == *(jewels+index)) continue;
 			else break;
 		}
@@ -329,6 +330,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		fprintf(flog,"right:%d\n",right);
 		if(!in_horiz_flag[right%NUM_ROWS])
 		{
+			if(*(offsetYs+right) != 0) break;
 			if( *(jewels+right) == *(jewels+index)) continue;
 			else break;
 		}
@@ -352,6 +354,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		fprintf(flog,"up:%d\n",up);
 		if(!in_verti_flag[up/NUM_COLS])
 		{
+			if(*(offsetYs+up) != 0) break;
 			if( *(jewels+up) == *(jewels+index)) continue;
 			else break;
 		}
@@ -376,6 +379,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		fprintf(flog,"down:%d\n",down);
 		if(!in_verti_flag[down/NUM_COLS])
 		{
+			if(*(offsetYs+down) != 0) break;
 			if( *(jewels+down) == *(jewels+index)) continue;
 			else break;
 		}
