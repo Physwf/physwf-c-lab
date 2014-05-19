@@ -29,5 +29,5 @@ extern float *offsetYs;
 void initData();
 void update(int eclipse);
 
-bool canSwitch(int source,int target);
+bool canSwitch(int positive,int passive);
 bool trySwitch(int source,int target);

@@ -259,6 +259,7 @@ void onMouseMove(float x,float y)
 			switchPassive = switchPositive + 1;
 		else
 			switchPassive = switchPositive - 1;
+		if(!canSwitch(switchPositive,switchPassive)) return;
 		if(switchPassive / NUM_COLS == switchPositive / NUM_COLS)
 		{
 			dragXs[switchPositive] = (abs(offsetX) > GRID_SIZE) ? GRID_SIZE*(offsetX/abs(offsetX)) : offsetX;
@@ -271,6 +272,7 @@ void onMouseMove(float x,float y)
 			switchPassive = switchPositive + NUM_COLS;
 		else
 			switchPassive = switchPositive - NUM_COLS;
+		if(!canSwitch(switchPositive,switchPassive)) return;
 		if(switchPassive % NUM_COLS == switchPositive % NUM_COLS)
 		{
 			dragYs[switchPositive] = (abs(offsetY) > GRID_SIZE) ? GRID_SIZE *(offsetY/abs(offsetY)): offsetY;
@@ -283,6 +285,7 @@ void onMouseUp(float x,float y)
 {
 	printf("switchPositive:%d,switchPassive:%d\n",switchPositive,switchPassive);
 	if( switchPositive == switchPassive) return;
+	if(!canSwitch(switchPositive,switchPassive)) return;
 	int temp = jewels[switchPositive];
 	jewels[switchPositive] = jewels[switchPassive];
 	jewels[switchPassive] = temp;

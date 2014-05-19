@@ -401,9 +401,23 @@ bool checkLocalElimination(const int index, elim_area* area)
 	return area->num_horiz > 2 || area->num_verti > 2;
 }
 
-bool canSwitch(int source,int target)
+bool canSwitch(int positive,int passive)
 {
-	if(offsetYs[source] != 0 || offsetYs[target] != 0) return false;
+	fprintf(flog,"canSwtich\n");
+	fprintf(flog,"offsetYs[positive]:%f\n",offsetYs[positive]);
+	fprintf(flog,"positive:%d\n",positive);
+	fprintf(flog,"positive col:%d\n",positive % NUM_COLS);
+	fprintf(flog,"positive offsetYs[col]:%f\n",offsetYs[positive % NUM_COLS]);
+	fprintf(flog,"passive:%d\n",passive);
+	fprintf(flog,"passive col:%d\n",passive % NUM_COLS);
+	fprintf(flog,"offsetYs[passive]:%f\n",offsetYs[passive]);
+	fprintf(flog,"passive offsetYs[col]:%f\n",offsetYs[passive % NUM_COLS]);
+	if(offsetYs[positive] != 0) return false;
+	int col = positive % NUM_COLS;
+	if(offsetYs[col] != 0) return false;
+	if(offsetYs[passive] != 0) return false;
+	col = passive % NUM_COLS;
+	if(offsetYs[col] != 0) return false;
 	return true;
 }
 
@@ -461,7 +475,7 @@ void update(int eclipse)
 		{
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			//fprintf(flog,"eclipse * 0.5:%f\n",eclipse * 0.5);
-			offsetYs[i] -= eclipse * 0.1;
+			offsetYs[i] -= eclipse * 0.3;
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
