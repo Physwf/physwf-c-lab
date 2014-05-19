@@ -9,8 +9,8 @@ typedef struct elimination_area_t {
 	int orgin;
 	int num_horiz;
 	int num_verti;
-	int indices[100];
-	int num_indices;
+	int horiz_indices[8];
+	int verti_indices[8];
 } elim_area, *elim_area_p;
 
 int* jewels;
@@ -77,11 +77,13 @@ void initData()
 
 void fillEmpty()
 {
+	fprintf(flog,"fillEmpty\n");
 	for(int i=0;i<NUM_COLS;i++)
 	{
 		int num_empty = 0;
 		int stack_bottom = NUM_ROWS-1;
 		int jewels_col[NUM_ROWS] = {0};
+		int row_col[NUM_ROWS] = {0};
 		int num_emptys[NUM_ROWS] = {0};
 		
 		for(int j=NUM_ROWS-1;j>=0;j--)
@@ -93,6 +95,7 @@ void fillEmpty()
 			}
 			else
 			{
+				row_col[stack_bottom] = j;
 				jewels_col[stack_bottom--] = *(jewels+index);
 			}
 			num_emptys[j] = num_empty;
@@ -101,8 +104,13 @@ void fillEmpty()
 		for(int j=NUM_ROWS-1;j>=0;j--)
 		{
 			int index = i + j * NUM_COLS;
+			// fprintf(flog,"fillEmpty index:%d\n",index);
 			*(jewels+index) = (j<num_empty) ? (int)pow((double)2,(double)rand_by_range(0,JEWEL_COLOR_NUM)) :jewels_col[j];
-			*(offsetYs + index) = num_emptys[j] * GRID_SIZE + *(offsetYs + index);
+			*(offsetYs + index) = j>stack_bottom ? (float)(j-row_col[j]) * GRID_SIZE:(num_empty)*GRID_SIZE;
+			if(num_empty)
+				fprintf(flog,"fillEmpty offsetY:%f\n",*(offsetYs + index));
+			if(j>stack_bottom)
+				fprintf(flog,"fillEmpty j>stack_bottom\n");
 		}
 	}
 }
@@ -143,27 +151,46 @@ void makeExplosion(int type, int col, int row)
 	}
 }
 
+void checkExplosion(int *indices, int num_indices)
+{
+	fprintf(flog,"checkExplosion start\n");
+	if(num_indices>2)
+	{
+		for(int i=1;i<num_indices;++i)
+		{
+			int type = *(jewels+indices[i]);
+			if(type & JEWEL_BOMB)
+			{
+				int col = indices[i] % 8;
+				int row = indices[i] / 8;
+				makeExplosion(type,col,row);
+			}
+			else
+			{
+				*(jewels+indices[i]) = 0;
+			}
+			fprintf(flog,"index:%d\n",indices[i]);
+		}
+	}
+}
+
 void makeElimination(elim_area_p areas, int num_areas)
 {
+	fprintf(flog,"makeElimination start\n");
 	for(int i=0;i<num_areas;i++)
 	{
 		elim_area area = areas[i];
-		for(int j=0;j<area.num_indices;j++)
-		{
-			int type = *(jewels+area.indices[j]);
-			if(type & JEWEL_BOMB)
-			{
-				int col = area.indices[j] % 8;
-				int row = area.indices[j] / 8;
-				makeExplosion(type,col,row);
-			}
-			*(jewels+area.indices[j]) = 0;
-			*(jewels+area.orgin) = 0;
-		}
-
+		checkExplosion(area.horiz_indices,area.num_horiz);
+		checkExplosion(area.verti_indices,area.num_verti);
+		*(jewels+area.orgin) = 0;
 		if(area.num_horiz > 4 || area.num_verti > 4)//diamond
 		{
-			*(jewels+area.orgin) &= JEWEL_DIAMOND;
+			*(jewels+area.orgin) &= JEWEL_DIAMOND;	
+		}
+		else if(area.num_horiz > 2 && area.num_verti > 2)
+		{
+			*(jewels+area.orgin) &= JEWEL_BOMB;
+			*(jewels+area.orgin) &= JEWEL_DIR_NONE;
 		}
 		else if(area.num_horiz > 3)
 		{
@@ -175,14 +202,9 @@ void makeElimination(elim_area_p areas, int num_areas)
 			*(jewels+area.orgin) &= JEWEL_BOMB;
 			*(jewels+area.orgin) &= JEWEL_DIR_HERIZ;
 		}
-		else if(area.num_horiz > 2 && area.num_verti > 2)
-		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_NONE;
-		}
 		else
 		{
-			// do noting;
+			*(jewels+area.orgin) = 0;
 		}
 	}
 	fillEmpty();
@@ -204,6 +226,8 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 		elim_area area = areas[num_areas];
 		area.type = *(jewels+i);
 		area.orgin = i;
+		area.horiz_indices[0] = area.orgin;
+		area.verti_indices[0] = area.orgin;
 		area.num_horiz = 1;
 		area.num_verti = 1;
 		//right
@@ -221,9 +245,7 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 			for(int j=i;j<right;j++)
 			{
 				in_horiz_flag[j] = true;
-				area.num_horiz ++;
-				area.indices[area.num_indices] = j;
-				area.num_indices ++;
+				area.horiz_indices[area.num_horiz++] = j;
 			}
 		}
 		//down
@@ -242,9 +264,7 @@ bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
 			for(int j=i;j<down;j+=8)
 			{
 				in_verti_flag[j] = true;
-				area.num_verti ++;
-				area.indices[area.num_indices] = j;
-				area.num_indices ++;
+				area.verti_indices[area.num_verti++] = j;
 			}
 		}
 		
@@ -269,6 +289,8 @@ bool checkLocalElimination(const int index, elim_area* area)
 	int col = index % 8;
 	area->type = *(jewels+index);
 	area->orgin = index;
+	area->horiz_indices[0] = area->orgin;
+	area->verti_indices[0] = area->orgin;
 	area->num_horiz = 1;
 	area->num_verti = 1;
 	//left
@@ -283,6 +305,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		
 		if(!in_horiz_flag[left%NUM_ROWS])
 		{
+			if(*(offsetYs+left) != 0) break;
 			if( *(jewels+left) == *(jewels+index)) continue;
 			else break;
 		}
@@ -294,10 +317,8 @@ bool checkLocalElimination(const int index, elim_area* area)
 		for(int j=index-1;j>=left;j--)
 		{
 			in_horiz_flag[j%NUM_ROWS] = true;
-			area->num_horiz ++;
+			area->horiz_indices[area->num_horiz++] = j;
 			fprintf(flog,"num_horiz:%d\n",area->num_horiz);
-			area->indices[area->num_indices] = j;
-			area->num_indices ++;
 		}
 	}
 	//right
@@ -309,6 +330,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		fprintf(flog,"right:%d\n",right);
 		if(!in_horiz_flag[right%NUM_ROWS])
 		{
+			if(*(offsetYs+right) != 0) break;
 			if( *(jewels+right) == *(jewels+index)) continue;
 			else break;
 		}
@@ -320,10 +342,8 @@ bool checkLocalElimination(const int index, elim_area* area)
 		for(int j=index+1;j<=right;j++)
 		{
 			in_horiz_flag[j/NUM_COLS] = true;
-			area->num_horiz ++;
+			area->horiz_indices[area->num_horiz++] = j;
 			fprintf(flog,"num_horiz:%d\n",area->num_horiz);
-			area->indices[area->num_indices] = j;
-			area->num_indices ++;
 		}
 	}
 	//up
@@ -334,6 +354,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		fprintf(flog,"up:%d\n",up);
 		if(!in_verti_flag[up/NUM_COLS])
 		{
+			if(*(offsetYs+up) != 0) break;
 			if( *(jewels+up) == *(jewels+index)) continue;
 			else break;
 		}
@@ -346,10 +367,8 @@ bool checkLocalElimination(const int index, elim_area* area)
 		for(int j=index-8;j>=up;j-=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
-			area->num_verti ++;
+			area->verti_indices[area->num_verti++] = j;
 			fprintf(flog,"num_verti:%d\n",area->num_verti);
-			area->indices[area->num_indices] = j;
-			area->num_indices ++;
 		}
 	}
 	//down
@@ -360,6 +379,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		fprintf(flog,"down:%d\n",down);
 		if(!in_verti_flag[down/NUM_COLS])
 		{
+			if(*(offsetYs+down) != 0) break;
 			if( *(jewels+down) == *(jewels+index)) continue;
 			else break;
 		}
@@ -372,10 +392,8 @@ bool checkLocalElimination(const int index, elim_area* area)
 		for(int j=index+8;j<=down;j+=8)
 		{
 			in_verti_flag[j/NUM_COLS] = true;
-			area->num_verti ++;
+			area->verti_indices[area->num_verti++] = j;
 			fprintf(flog,"num_verti:%d\n",area->num_verti);
-			area->indices[area->num_indices] = j;
-			area->num_indices ++;
 		}
 	}
 	fprintf(flog,"num_horiz:%d,num_verti:%d\n",area->num_horiz,area->num_verti);
@@ -391,13 +409,13 @@ bool canSwitch(int source,int target)
 
 bool trySwitch(int source,int target)
 {
-	elim_area src_area = {0,0,0,0,{0},0};
-	elim_area tgt_area = {0,0,0,0,{0},0};
+	elim_area src_area = {0,0,0,0,{0},{0}};
+	elim_area tgt_area = {0,0,0,0,{0},{0}};
 	fprintf(flog,"trySwitch start--------------------\n");
 	if(checkLocalElimination(source,&src_area))
 	{
 		fprintf(flog,"checkLocalElimination source\n");
-		if(src_area.num_indices > 0)
+		if(src_area.num_horiz > 2 || src_area.num_verti > 2)
 		{
 			fprintf(flog,"makeElimination start\n");
 			int num_areas = 1;
@@ -407,7 +425,7 @@ bool trySwitch(int source,int target)
 	if(checkLocalElimination(target,&tgt_area))
 	{
 		fprintf(flog,"checkLocalElimination target\n");
-		if(tgt_area.num_indices > 0)
+		if(tgt_area.num_horiz > 2 || tgt_area.num_verti > 2)
 		{
 			fprintf(flog,"makeElimination start\n");
 			int num_areas = 1;
