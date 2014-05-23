@@ -1,0 +1,13 @@
+spades.holder.play.sub.rect=116,0,58,78
+spades.holder.pass.sub.rect=174,0,58,78
+spades.holder.bid.sub.rect=232,0,58,78
+spades.holder.cardhilite.sub.rect=0,0,58,78
+
+spades.card.sfac.rect=0,71,31,53
+spades.card.hfac.rect=0,124,31,53
+spades.card.dfac.rect=0,177,31,53
+spades.card.cfac.rect=0,230,31,53
+spades.card.bval.rect=0,0,20,26
+spades.card.rval.rect=0,26,20,26
+spades.card.suit.rect=0,52,18,19
+spades.card.pip.rect=72,52,9,11
