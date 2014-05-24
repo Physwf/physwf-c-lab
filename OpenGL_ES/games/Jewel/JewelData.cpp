@@ -207,7 +207,7 @@ void makeElimination(elim_area_p areas, int num_areas)
 			*(jewels+area.orgin) = 0;
 		}
 	}
-	fillEmpty();
+	//fillEmpty();
 }
 
 bool checkGlobalElimination(elim_area_p areas, int* num_areas_out)
@@ -446,6 +446,7 @@ bool trySwitch(int source,int target)
 			makeElimination(&tgt_area,num_areas);
 		}
 	}
+	fillEmpty();
 	fprintf(flog,"trySwitch end--------------------\n");
 	return src_area.num_horiz > 2 || src_area.num_verti > 2 || tgt_area.num_horiz > 2 || tgt_area.num_verti > 2;
 }
@@ -467,7 +468,7 @@ void rematch(int swap_times)
 void update(int eclipse)
 {
 	bool ready = true;
-	
+	bool hasElimination = false;
 	for(int i=0;i<num_jewels;i++)
 	{
 		if(offsetYs[i] == 0) continue;
@@ -475,7 +476,7 @@ void update(int eclipse)
 		{
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			//fprintf(flog,"eclipse * 0.5:%f\n",eclipse * 0.5);
-			offsetYs[i] -= eclipse * 0.3;
+			offsetYs[i] -= eclipse * 0.1;
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
@@ -487,12 +488,17 @@ void update(int eclipse)
 				if(checkLocalElimination(i,&area))
 				{
 					makeElimination(&area,num_area);
+					hasElimination = true;
 				}
 			}
 			ready = false;
 		}
 	}
-
+	if(hasElimination)
+	{
+		fillEmpty();
+	}
+	
 	if(ready)
 	{
 		// check match

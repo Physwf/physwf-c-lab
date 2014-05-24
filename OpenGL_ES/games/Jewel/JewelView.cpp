@@ -190,10 +190,13 @@ void post()
 		float paddingX = 2.0;
 		float paddingY = 2.0;
 		int type = *(jewels+i);
+		int color = type & 126;//126 == 1111110
+		int dir = type & 896;
+		int bomb = type & 3072;
 		float ltx = col * GRID_SIZE + dragX+paddingX;
 		float lty = row * GRID_SIZE - offsetY + dragY + paddingY;
 		// printf("%d\n",i);
-		int r = log2((float)type);
+		int r = log2((float)color);
 		// printf("r:%d,type:%d\n",r,type);
 		for(int j=0;j<4;j++)
 		{
@@ -211,12 +214,6 @@ void post()
 		*(indices+6*i+3) = 4 * i + 3;
 		*(indices+6*i+4) = 4 * i + 2;
 		*(indices+6*i+5) = 4 * i + 0;
-		// printf("%d\n",*(indices+6*i+0));
-		// printf("%d\n",*(indices+6*i+1));
-		// printf("%d\n",*(indices+6*i+2));
-		// printf("%d\n",*(indices+6*i+3));
-		// printf("%d\n",*(indices+6*i+4));
-		// printf("%d\n",*(indices+6*i+5));
 	}
 	glBufferData(GL_ARRAY_BUFFER,num_jewels*4*4*sizeof(GLfloat),vertices,GL_DYNAMIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,num_jewels*6*sizeof(GLushort),indices,GL_DYNAMIC_DRAW);
