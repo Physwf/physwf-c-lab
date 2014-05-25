@@ -39,11 +39,12 @@ int getStableType(int index)
 	{
 		top_type = (*(jewels+top_index) == *(jewels+top_top_index)) ? *(jewels+top_index) : -3;
 	}
-	int color = rand_by_range(0,JEWEL_COLOR_NUM);
+	int color = rand_by_range(1,JEWEL_COLOR_NUM);
+	fprintf(flog,"color:%d\n",color);
 	int type = (int)pow((double)2,color);
 	while(type == left_type || type == top_type)
 	{
-		color = rand_by_range(0,JEWEL_COLOR_NUM);
+		color = rand_by_range(1,JEWEL_COLOR_NUM);
 		type = (int)pow((double)2,color);
 	}
 	printf("index:%d,type:%d,top_type:%d,left_type:%d\n",index,type,top_type,left_type);
@@ -52,6 +53,8 @@ int getStableType(int index)
 
 void initData()
 {
+	flog = fopen("jewel.log","w");
+	
 	int num_columns = 8;
 	int num_rows = 8;
 	num_jewels = num_columns * num_rows;
@@ -72,7 +75,7 @@ void initData()
 	}
 	// updatable = false;
 	
-	flog = fopen("jewel.log","w");
+	
 }
 
 void fillEmpty()
@@ -105,18 +108,19 @@ void fillEmpty()
 		{
 			int index = i + j * NUM_COLS;
 			// fprintf(flog,"fillEmpty index:%d\n",index);
-			*(jewels+index) = (j<num_empty) ? (int)pow((double)2,(double)rand_by_range(0,JEWEL_COLOR_NUM)) :jewels_col[j];
+			*(jewels+index) = (j<num_empty) ? (int)pow((double)2,(double)rand_by_range(1,JEWEL_COLOR_NUM)) :jewels_col[j];
 			*(offsetYs + index) = j>stack_bottom ? (float)(j-row_col[j]) * GRID_SIZE:(num_empty)*GRID_SIZE;
-			if(num_empty)
-				fprintf(flog,"fillEmpty offsetY:%f\n",*(offsetYs + index));
-			if(j>stack_bottom)
-				fprintf(flog,"fillEmpty j>stack_bottom\n");
+			// if(num_empty)
+				// fprintf(flog,"fillEmpty offsetY:%f\n",*(offsetYs + index));
+			// if(j>stack_bottom)
+				// fprintf(flog,"fillEmpty j>stack_bottom\n");
 		}
 	}
 }
 
 void makeExplosion(int type, int col, int row)
 {
+	fprintf(flog,"makeExplosion\n");
 	if(type & JEWEL_DIR_NONE)
 	{
 		for(int i=-1;i<=1;i++)
@@ -143,9 +147,10 @@ void makeExplosion(int type, int col, int row)
 	}
 	else if(type & JEWEL_DIR_VERTI)
 	{
+		fprintf(flog,"verti Explosion\n");
 		for(int i=0;i<NUM_COLS;++i)
 		{
-			int index = col * NUM_COLS * i;
+			int index = col + NUM_COLS * i;
 			*(jewels+index) = 0;
 		}
 	}
@@ -154,8 +159,15 @@ void makeExplosion(int type, int col, int row)
 void checkExplosion(int *indices, int num_indices)
 {
 	fprintf(flog,"checkExplosion start\n");
+	int origin = *(jewels+indices[0]);
 	if(num_indices>2)
 	{
+		if(origin & JEWEL_BOMB)
+		{
+			int col = indices[0] % 8;
+			int row = indices[0] / 8;
+			makeExplosion(origin,col,row);
+		}
 		for(int i=1;i<num_indices;++i)
 		{
 			int type = *(jewels+indices[i]);
@@ -182,30 +194,35 @@ void makeElimination(elim_area_p areas, int num_areas)
 		elim_area area = areas[i];
 		checkExplosion(area.horiz_indices,area.num_horiz);
 		checkExplosion(area.verti_indices,area.num_verti);
-		*(jewels+area.orgin) = 0;
+		fprintf(flog,"area.num_horiz:%d\n",area.num_horiz);
+		fprintf(flog,"area.num_verti:%d\n",area.num_verti);
+		// *(jewels+area.orgin) = 0;
 		if(area.num_horiz > 4 || area.num_verti > 4)//diamond
 		{
-			*(jewels+area.orgin) &= JEWEL_DIAMOND;	
+			*(jewels+area.orgin) &= JEWEL_DIAMOND;
 		}
 		else if(area.num_horiz > 2 && area.num_verti > 2)
 		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_NONE;
+			*(jewels+area.orgin) |= JEWEL_BOMB;
+			*(jewels+area.orgin) |= JEWEL_DIR_NONE;
 		}
 		else if(area.num_horiz > 3)
 		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_VERTI;
+			*(jewels+area.orgin) |= JEWEL_BOMB;
+			*(jewels+area.orgin) |= JEWEL_DIR_VERTI;
+			fprintf(flog,"JEWEL_DIR_VERTI\n");
 		}
 		else if(area.num_verti > 3)
 		{
-			*(jewels+area.orgin) &= JEWEL_BOMB;
-			*(jewels+area.orgin) &= JEWEL_DIR_HERIZ;
+			*(jewels+area.orgin) |= JEWEL_BOMB;
+			*(jewels+area.orgin) |= JEWEL_DIR_HERIZ;
+			fprintf(flog,"JEWEL_DIR_HERIZ\n");
 		}
 		else
 		{
 			*(jewels+area.orgin) = 0;
 		}
+		fprintf(flog,"area.orgin:%d\n",area.orgin);
 	}
 	//fillEmpty();
 }
@@ -287,6 +304,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 	memset(area,0,sizeof(elim_area));
 	int row = index / 8;
 	int col = index % 8;
+	int color = *(jewels+index) & COLOR_BITS;
 	area->type = *(jewels+index);
 	area->orgin = index;
 	area->horiz_indices[0] = area->orgin;
@@ -306,7 +324,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		if(!in_horiz_flag[left%NUM_ROWS])
 		{
 			if(*(offsetYs+left) != 0) break;
-			if( *(jewels+left) == *(jewels+index)) continue;
+			if( *(jewels+left) & color) continue;
 			else break;
 		}
 	}
@@ -331,7 +349,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		if(!in_horiz_flag[right%NUM_ROWS])
 		{
 			if(*(offsetYs+right) != 0) break;
-			if( *(jewels+right) == *(jewels+index)) continue;
+			if( *(jewels+right) & color) continue;
 			else break;
 		}
 	}
@@ -355,7 +373,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		if(!in_verti_flag[up/NUM_COLS])
 		{
 			if(*(offsetYs+up) != 0) break;
-			if( *(jewels+up) == *(jewels+index)) continue;
+			if( *(jewels+up) & color) continue;
 			else break;
 		}
 	}
@@ -380,7 +398,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 		if(!in_verti_flag[down/NUM_COLS])
 		{
 			if(*(offsetYs+down) != 0) break;
-			if( *(jewels+down) == *(jewels+index)) continue;
+			if( *(jewels+down) & color) continue;
 			else break;
 		}
 	}
@@ -403,15 +421,15 @@ bool checkLocalElimination(const int index, elim_area* area)
 
 bool canSwitch(int positive,int passive)
 {
-	fprintf(flog,"canSwtich\n");
-	fprintf(flog,"offsetYs[positive]:%f\n",offsetYs[positive]);
-	fprintf(flog,"positive:%d\n",positive);
-	fprintf(flog,"positive col:%d\n",positive % NUM_COLS);
-	fprintf(flog,"positive offsetYs[col]:%f\n",offsetYs[positive % NUM_COLS]);
-	fprintf(flog,"passive:%d\n",passive);
-	fprintf(flog,"passive col:%d\n",passive % NUM_COLS);
-	fprintf(flog,"offsetYs[passive]:%f\n",offsetYs[passive]);
-	fprintf(flog,"passive offsetYs[col]:%f\n",offsetYs[passive % NUM_COLS]);
+	// fprintf(flog,"canSwtich\n");
+	// fprintf(flog,"offsetYs[positive]:%f\n",offsetYs[positive]);
+	// fprintf(flog,"positive:%d\n",positive);
+	// fprintf(flog,"positive col:%d\n",positive % NUM_COLS);
+	// fprintf(flog,"positive offsetYs[col]:%f\n",offsetYs[positive % NUM_COLS]);
+	// fprintf(flog,"passive:%d\n",passive);
+	// fprintf(flog,"passive col:%d\n",passive % NUM_COLS);
+	// fprintf(flog,"offsetYs[passive]:%f\n",offsetYs[passive]);
+	// fprintf(flog,"passive offsetYs[col]:%f\n",offsetYs[passive % NUM_COLS]);
 	if(offsetYs[positive] != 0) return false;
 	int col = positive % NUM_COLS;
 	if(offsetYs[col] != 0) return false;
@@ -455,8 +473,8 @@ void rematch(int swap_times)
 {
 	for(int i=0;i<swap_times;i++)
 	{
-		int swapA = rand_by_range(0,num_jewels);
-		int swapB = rand_by_range(0,num_jewels);
+		int swapA = rand_by_range(1,num_jewels);
+		int swapB = rand_by_range(1,num_jewels);
 		//never mind the (swapA == swapB) situation
 		int temp = *(jewels+swapA);
 		*(jewels+swapA) = *(jewels+swapB);
@@ -480,11 +498,11 @@ void update(int eclipse)
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
-				fprintf(flog,"offsetYs[i] < 0\n");
+				// fprintf(flog,"offsetYs[i] < 0\n");
 				offsetYs[i] = 0;
 				elim_area area;
 				int num_area = 1;
-				fprintf(flog,"checkLocalElimination,i:%d\n",i);
+				// fprintf(flog,"checkLocalElimination,i:%d\n",i);
 				if(checkLocalElimination(i,&area))
 				{
 					makeElimination(&area,num_area);

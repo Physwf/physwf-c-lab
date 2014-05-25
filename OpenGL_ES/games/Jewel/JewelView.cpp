@@ -16,18 +16,19 @@ enum Tex_IDs {s_popo,numTexs};
 const float coords_unit_x = GRID_SIZE/1482.0;
 const float coords_unit_y = GRID_SIZE/78.0;
 float tex_coords[NUM_TYPES][4][2] = { 
+		{ {0,0},{0,0},{0,0},{0,0} },//yellow
 		{ {0*coords_unit_x,0},{coords_unit_x,0},{0,coords_unit_y},{coords_unit_x,coords_unit_y} },//yellow
 		{ {1*coords_unit_x,0},{2*coords_unit_x,0},{1*coords_unit_x,coords_unit_y},{2*coords_unit_x,coords_unit_y} },//red
 		{ {2*coords_unit_x,0},{3*coords_unit_x,0},{2*coords_unit_x,coords_unit_y},{3*coords_unit_x,coords_unit_y} },//purple
 		{ {3*coords_unit_x,0},{4*coords_unit_x,0},{3*coords_unit_x,coords_unit_y},{4*coords_unit_x,coords_unit_y} },//green
 		{ {4*coords_unit_x,0},{5*coords_unit_x,0},{4*coords_unit_x,coords_unit_y},{5*coords_unit_x,coords_unit_y} },//cyan
-		
+		//dir
 		{ {5*coords_unit_x,0},{6*coords_unit_x,0},{5*coords_unit_x,coords_unit_y},{6*coords_unit_x,coords_unit_y} },//yellow
 		{ {6*coords_unit_x,0},{7*coords_unit_x,0},{6*coords_unit_x,coords_unit_y},{7*coords_unit_x,coords_unit_y} },//red
 		{ {7*coords_unit_x,0},{8*coords_unit_x,0},{7*coords_unit_x,coords_unit_y},{8*coords_unit_x,coords_unit_y} },//purple
 		{ {8*coords_unit_x,0},{9*coords_unit_x,0},{8*coords_unit_x,coords_unit_y},{9*coords_unit_x,coords_unit_y} },//green
 		{ {9*coords_unit_x,0},{10*coords_unit_x,0},{9*coords_unit_x,coords_unit_y},{10*coords_unit_x,coords_unit_y} },//cyan
-		
+		//diamond
 		{ {10*coords_unit_x,0},{11*coords_unit_x,0},{10*coords_unit_x,coords_unit_y},{11*coords_unit_x,coords_unit_y} },//yellow
 		
 		{ {11*coords_unit_x,0},{12*coords_unit_x,0},{11*coords_unit_x,coords_unit_y},{12*coords_unit_x,coords_unit_y} },//yellow
@@ -177,6 +178,14 @@ void initView()
 	|  |
 	2--3
 **/
+int rotateIndex(int index)
+{
+	if(index == 0) return 2;
+	if(index == 1) return 0;
+	if(index == 2) return 3;
+	if(index == 3) return 1;
+	return -1;
+}
 void post()
 {
 	//calculate offsetY
@@ -190,23 +199,61 @@ void post()
 		float paddingX = 2.0;
 		float paddingY = 2.0;
 		int type = *(jewels+i);
-		int color = type & 126;//126 == 1111110
-		int dir = type & 896;
-		int bomb = type & 3072;
+		// fprintf(flog,"type:%d\n",type);
+		int color = type & COLOR_BITS;//126 == 1111110
+		int dir = type & DIR_BITS;
+		int bomb = type & BOMB_BITS;
+		if(dir)
+		{
+			fprintf(flog,"dir:%d\n",dir);
+		}
+		if(bomb)
+		{
+			fprintf(flog,"bomb:%d\n",bomb);
+		}
 		float ltx = col * GRID_SIZE + dragX+paddingX;
 		float lty = row * GRID_SIZE - offsetY + dragY + paddingY;
 		// printf("%d\n",i);
 		int r = log2((float)color);
+		int o = 0;
 		// printf("r:%d,type:%d\n",r,type);
+		if(bomb & JEWEL_BOMB)
+		{
+			if(dir & JEWEL_DIR_NONE)
+			{
+				r += 12;
+			}
+			else if(dir & JEWEL_DIR_HERIZ)
+			{
+				r += 6;
+				fprintf(flog,"r += 5\n");
+			}
+			else if(dir & JEWEL_DIR_VERTI)
+			{
+				r += 6;
+				o = 1;
+				fprintf(flog,"r += 5,o = 1\n");
+			}
+		}
+		else if(bomb & JEWEL_DIAMOND)
+		{
+			r = 10;
+		}
+		
 		for(int j=0;j<4;j++)
 		{
 			*(vertices+i*16+0+j*4) = (ltx + j%2*GRID_SIZE);//x
 			*(vertices+i*16+1+j*4) = (lty + j/2*GRID_SIZE);//y
-			
-			*(vertices+i*16+2+j*4) = tex_coords[r][j][0];//u
-			*(vertices+i*16+3+j*4) = tex_coords[r][j][1];//v
-			
-			
+			float u = tex_coords[r][j][0];
+			float v = tex_coords[r][j][1];
+			if(o)
+			{
+				
+				u = tex_coords[r][rotateIndex(j)][0];
+				v = tex_coords[r][rotateIndex(j)][1];
+			}
+			*(vertices+i*16+2+j*4) = u;//u
+			*(vertices+i*16+3+j*4) = v;//v
 		}
 		*(indices+6*i+0) = 4 * i + 0;
 		*(indices+6*i+1) = 4 * i + 1;
