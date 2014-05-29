@@ -4,7 +4,7 @@
 int rand_by_range(int min,int max)
 {
 	assert(min<max);
-	return rand() % (max - min);
+	return rand() % (max - min) + min;
 }
 
 float random()
