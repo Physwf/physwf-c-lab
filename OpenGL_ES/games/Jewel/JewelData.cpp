@@ -17,6 +17,7 @@ int* jewels;
 int num_jewels;
 float *offsetYs;
 float *speeds;
+int *times;
 bool updatable;
 
 
@@ -69,6 +70,10 @@ void initData()
 	
 	speeds = (float*)malloc(num_jewels*sizeof(float));
 	memset(speeds,0,num_jewels*sizeof(float));
+	
+	times = (int*)malloc(num_jewels*sizeof(int));
+	memset(times,0,num_jewels*sizeof(int));
+	
 	for(int i=0;i<num_jewels;i++)
 	{
 		speeds[i] = 0.2;
@@ -144,6 +149,8 @@ void makeExplosion(int type, int col, int row)
 						*(jewels+index) = 0;
 					else if(*(jewels+index) & JEWEL_BOMB)
 						makeExplosion(*(jewels+index),neighbor_col,neighbor_row);
+					else
+						*(jewels+index) = 0;
 				}
 			}
 		}
@@ -532,7 +539,8 @@ void update(int eclipse)
 			//fprintf(flog,"eclipse * 0.5:%f\n",eclipse * 0.5);
 			// offsetYs[i] -= eclipse * 0.2;
 			offsetYs[i] -= speeds[i];
-			speeds[i] +=0.5*offsetYs[i] / 100;
+			times[i]++;
+			speeds[i] +=0.5*offsetYs[i] / 100.0;
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{

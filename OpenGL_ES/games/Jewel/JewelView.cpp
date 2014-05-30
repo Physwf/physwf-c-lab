@@ -31,13 +31,14 @@ float tex_coords[NUM_TYPES][4][2] = {
 		{ {10*coords_unit_x,0},{11*coords_unit_x,0},{10*coords_unit_x,coords_unit_y},{11*coords_unit_x,coords_unit_y} },//cyan
 		{ {11*coords_unit_x,0},{12*coords_unit_x,0},{11*coords_unit_x,coords_unit_y},{12*coords_unit_x,coords_unit_y} },//blue
 		//diamond
-		{ {12*coords_unit_x,0},{13*coords_unit_x,0},{12*coords_unit_x,coords_unit_y},{13*coords_unit_x,coords_unit_y} },//red
+		{ {12*coords_unit_x,0},{13*coords_unit_x,0},{12*coords_unit_x,coords_unit_y},{13*coords_unit_x,coords_unit_y} },
 		//bomb
 		{ {13*coords_unit_x,0},{14*coords_unit_x,0},{13*coords_unit_x,coords_unit_y},{14*coords_unit_x,coords_unit_y} },//yellow
-		{ {14*coords_unit_x,0},{15*coords_unit_x,0},{14*coords_unit_x,coords_unit_y},{15*coords_unit_x,coords_unit_y} },//purple
+		{ {14*coords_unit_x,0},{15*coords_unit_x,0},{14*coords_unit_x,coords_unit_y},{15*coords_unit_x,coords_unit_y} },//red
 		{ {15*coords_unit_x,0},{16*coords_unit_x,0},{15*coords_unit_x,coords_unit_y},{16*coords_unit_x,coords_unit_y} },//green
 		{ {16*coords_unit_x,0},{17*coords_unit_x,0},{16*coords_unit_x,coords_unit_y},{17*coords_unit_x,coords_unit_y} },//cyan
 		{ {17*coords_unit_x,0},{18*coords_unit_x,0},{17*coords_unit_x,coords_unit_y},{18*coords_unit_x,coords_unit_y} },//blue
+		{ {18*coords_unit_x,0},{19*coords_unit_x,0},{18*coords_unit_x,coords_unit_y},{19*coords_unit_x,coords_unit_y} },//blue
 	};
 
 float *dragXs;
