@@ -456,6 +456,25 @@ bool canSwitch(int positive,int passive)
 	return true;
 }
 
+bool checkBombSwitch(int source,int target)
+{
+	if( (source & JEWEL_DIAMOND) && (target & JEWEL_DIAMOND) )
+	{
+		
+		return true;
+	}
+	else if( (source & JEWEL_DIAMOND) || (target & JEWEL_DIAMOND) )
+	{
+		return true;
+	}
+	else if(source & JEWEL_BOMB && target & JEWEL_BOMB )
+	{
+		
+		return true;
+	}
+	
+}
+
 bool trySwitch(int source,int target)
 {
 	elim_area src_area = {0,0,0,0,{0},{0}};
