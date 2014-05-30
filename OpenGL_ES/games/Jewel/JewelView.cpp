@@ -223,7 +223,7 @@ void post()
 		{
 			if(dir & JEWEL_DIR_NONE)
 			{
-				r += 12;
+				r += 13;
 			}
 			else if(dir & JEWEL_DIR_HERIZ)
 			{
