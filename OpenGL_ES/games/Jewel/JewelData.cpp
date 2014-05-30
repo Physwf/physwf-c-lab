@@ -199,7 +199,7 @@ void makeElimination(elim_area_p areas, int num_areas)
 		// *(jewels+area.orgin) = 0;
 		if(area.num_horiz > 4 || area.num_verti > 4)//diamond
 		{
-			*(jewels+area.orgin) &= JEWEL_DIAMOND;
+			*(jewels+area.orgin) |= JEWEL_DIAMOND;
 		}
 		else if(area.num_horiz > 2 && area.num_verti > 2)
 		{
