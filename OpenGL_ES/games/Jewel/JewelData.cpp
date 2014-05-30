@@ -16,7 +16,7 @@ typedef struct elimination_area_t {
 int* jewels;
 int num_jewels;
 float *offsetYs;
-
+float *speeds;
 bool updatable;
 
 
@@ -67,6 +67,12 @@ void initData()
 	offsetYs = (float*)malloc(num_jewels*sizeof(float));
 	memset(offsetYs,0,num_jewels*sizeof(float));
 	
+	speeds = (float*)malloc(num_jewels*sizeof(float));
+	memset(speeds,0,num_jewels*sizeof(float));
+	for(int i=0;i<num_jewels;i++)
+	{
+		speeds[i] = 0.2;
+	}
 	// srand(time(NULL));
 	for(int i=0;i<num_jewels;i++)
 	{
@@ -130,11 +136,14 @@ void makeExplosion(int type, int col, int row)
 			for(int j=-1;j<=1;j++)
 			{
 				int neighbor_col = col + i;
-				int neighbor_row = row + i;
+				int neighbor_row = row + j;
 				if( (neighbor_col >=0 && neighbor_col< NUM_COLS) && (neighbor_row >=0 && neighbor_row < NUM_ROWS) )
 				{
 					int index = neighbor_row * NUM_COLS + neighbor_col;
-					*(jewels+index) = 0;
+					if(neighbor_row == row && neighbor_col == col) 
+						*(jewels+index) = 0;
+					else if(*(jewels+index) & JEWEL_BOMB)
+						makeExplosion(*(jewels+index),neighbor_col,neighbor_row);
 				}
 			}
 		}
@@ -144,7 +153,10 @@ void makeExplosion(int type, int col, int row)
 		for(int i=0;i<NUM_COLS;++i)
 		{
 			int index = row * NUM_COLS + i;
-			*(jewels+index) = 0;
+			if( (*(jewels+index) & JEWEL_BOMB) && i != col)
+				makeExplosion(*(jewels+index),i,row);
+			else
+				*(jewels+index) = 0;
 		}
 	}
 	else if(type & JEWEL_DIR_VERTI)
@@ -153,7 +165,10 @@ void makeExplosion(int type, int col, int row)
 		for(int i=0;i<NUM_COLS;++i)
 		{
 			int index = col + NUM_COLS * i;
-			*(jewels+index) = 0;
+			if((*(jewels+index) & JEWEL_BOMB) && i != row)
+				makeExplosion(*(jewels+index),col,i);
+			else
+				*(jewels+index) = 0;
 		}
 	}
 }
@@ -496,12 +511,15 @@ void update(int eclipse)
 		{
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			//fprintf(flog,"eclipse * 0.5:%f\n",eclipse * 0.5);
-			offsetYs[i] -= eclipse * 0.1;
+			// offsetYs[i] -= eclipse * 0.2;
+			offsetYs[i] -= speeds[i];
+			speeds[i] +=0.5*offsetYs[i] / 100;
 			//fprintf(flog,"offsetYs[i]:%f\n",offsetYs[i]);
 			if(offsetYs[i] < 0) 
 			{
 				// fprintf(flog,"offsetYs[i] < 0\n");
 				offsetYs[i] = 0;
+				speeds[i] = 0.1;
 				elim_area area;
 				int num_area = 1;
 				// fprintf(flog,"checkLocalElimination,i:%d\n",i);
