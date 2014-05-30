@@ -22,20 +22,22 @@ float tex_coords[NUM_TYPES][4][2] = {
 		{ {2*coords_unit_x,0},{3*coords_unit_x,0},{2*coords_unit_x,coords_unit_y},{3*coords_unit_x,coords_unit_y} },//purple
 		{ {3*coords_unit_x,0},{4*coords_unit_x,0},{3*coords_unit_x,coords_unit_y},{4*coords_unit_x,coords_unit_y} },//green
 		{ {4*coords_unit_x,0},{5*coords_unit_x,0},{4*coords_unit_x,coords_unit_y},{5*coords_unit_x,coords_unit_y} },//cyan
+		{ {5*coords_unit_x,0},{6*coords_unit_x,0},{5*coords_unit_x,coords_unit_y},{6*coords_unit_x,coords_unit_y} },//blue
 		//dir
-		{ {5*coords_unit_x,0},{6*coords_unit_x,0},{5*coords_unit_x,coords_unit_y},{6*coords_unit_x,coords_unit_y} },//yellow
-		{ {6*coords_unit_x,0},{7*coords_unit_x,0},{6*coords_unit_x,coords_unit_y},{7*coords_unit_x,coords_unit_y} },//red
-		{ {7*coords_unit_x,0},{8*coords_unit_x,0},{7*coords_unit_x,coords_unit_y},{8*coords_unit_x,coords_unit_y} },//purple
-		{ {8*coords_unit_x,0},{9*coords_unit_x,0},{8*coords_unit_x,coords_unit_y},{9*coords_unit_x,coords_unit_y} },//green
-		{ {9*coords_unit_x,0},{10*coords_unit_x,0},{9*coords_unit_x,coords_unit_y},{10*coords_unit_x,coords_unit_y} },//cyan
+		{ {6*coords_unit_x,0},{7*coords_unit_x,0},{6*coords_unit_x,coords_unit_y},{7*coords_unit_x,coords_unit_y} },//yellow
+		{ {7*coords_unit_x,0},{8*coords_unit_x,0},{7*coords_unit_x,coords_unit_y},{8*coords_unit_x,coords_unit_y} },//red
+		{ {8*coords_unit_x,0},{9*coords_unit_x,0},{8*coords_unit_x,coords_unit_y},{9*coords_unit_x,coords_unit_y} },//purple
+		{ {9*coords_unit_x,0},{10*coords_unit_x,0},{9*coords_unit_x,coords_unit_y},{10*coords_unit_x,coords_unit_y} },//green
+		{ {10*coords_unit_x,0},{11*coords_unit_x,0},{10*coords_unit_x,coords_unit_y},{11*coords_unit_x,coords_unit_y} },//cyan
+		{ {11*coords_unit_x,0},{12*coords_unit_x,0},{11*coords_unit_x,coords_unit_y},{12*coords_unit_x,coords_unit_y} },//blue
 		//diamond
-		{ {10*coords_unit_x,0},{11*coords_unit_x,0},{10*coords_unit_x,coords_unit_y},{11*coords_unit_x,coords_unit_y} },//yellow
-		
-		{ {11*coords_unit_x,0},{12*coords_unit_x,0},{11*coords_unit_x,coords_unit_y},{12*coords_unit_x,coords_unit_y} },//yellow
 		{ {12*coords_unit_x,0},{13*coords_unit_x,0},{12*coords_unit_x,coords_unit_y},{13*coords_unit_x,coords_unit_y} },//red
-		{ {13*coords_unit_x,0},{14*coords_unit_x,0},{13*coords_unit_x,coords_unit_y},{14*coords_unit_x,coords_unit_y} },//purple
-		{ {14*coords_unit_x,0},{15*coords_unit_x,0},{14*coords_unit_x,coords_unit_y},{15*coords_unit_x,coords_unit_y} },//green
-		{ {15*coords_unit_x,0},{16*coords_unit_x,0},{15*coords_unit_x,coords_unit_y},{16*coords_unit_x,coords_unit_y} },//cyan
+		//bomb
+		{ {13*coords_unit_x,0},{14*coords_unit_x,0},{13*coords_unit_x,coords_unit_y},{14*coords_unit_x,coords_unit_y} },//yellow
+		{ {14*coords_unit_x,0},{15*coords_unit_x,0},{14*coords_unit_x,coords_unit_y},{15*coords_unit_x,coords_unit_y} },//purple
+		{ {15*coords_unit_x,0},{16*coords_unit_x,0},{15*coords_unit_x,coords_unit_y},{16*coords_unit_x,coords_unit_y} },//green
+		{ {16*coords_unit_x,0},{17*coords_unit_x,0},{16*coords_unit_x,coords_unit_y},{17*coords_unit_x,coords_unit_y} },//cyan
+		{ {17*coords_unit_x,0},{18*coords_unit_x,0},{17*coords_unit_x,coords_unit_y},{18*coords_unit_x,coords_unit_y} },//blue
 	};
 
 float *dragXs;
@@ -237,7 +239,7 @@ void post()
 		}
 		else if(bomb & JEWEL_DIAMOND)
 		{
-			r = 10;
+			r = 13;
 		}
 		
 		for(int j=0;j<4;j++)
