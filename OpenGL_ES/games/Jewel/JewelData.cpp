@@ -19,6 +19,8 @@ float *offsetYs;
 
 bool updatable;
 
+
+
 FILE* flog;
 
 int getStableType(int index)
@@ -109,7 +111,7 @@ void fillEmpty()
 			int index = i + j * NUM_COLS;
 			// fprintf(flog,"fillEmpty index:%d\n",index);
 			*(jewels+index) = (j<num_empty) ? (int)pow((double)2,(double)rand_by_range(1,JEWEL_COLOR_NUM)) :jewels_col[j];
-			*(offsetYs + index) = j>stack_bottom ? (float)(j-row_col[j]) * GRID_SIZE:(num_empty)*GRID_SIZE;
+			*(offsetYs + index) += j>stack_bottom ? (float)(j-row_col[j]) * GRID_SIZE:(num_empty)*GRID_SIZE;
 			// if(num_empty)
 				// fprintf(flog,"fillEmpty offsetY:%f\n",*(offsetYs + index));
 			// if(j>stack_bottom)
