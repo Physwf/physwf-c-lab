@@ -463,30 +463,74 @@ bool canSwitch(int positive,int passive)
 	return true;
 }
 
-bool checkBombSwitch(int source,int target)
+bool checkBombSwitch(const int src_index,const int tgt_index)
 {
+	fprintf(flog,"checkBombSwitch\n");
+	int source = *(jewels+src_index);
+	int target = *(jewels+tgt_index);
 	if( (source & JEWEL_DIAMOND) && (target & JEWEL_DIAMOND) )
 	{
-		
+		for(int i=0;i<num_jewels;i++)
+		{
+			*(jewels+i) = 0;
+		}
 		return true;
 	}
-	else if( (source & JEWEL_DIAMOND) || (target & JEWEL_DIAMOND) )
+	else if(source & JEWEL_DIAMOND)
 	{
+		fprintf(flog,"source is diamond\n");
+		if(target & JEWEL_BOMB)
+		{
+		}
+		else
+		{
+			*(jewels+src_index) = 0;
+			*(jewels+tgt_index) = 0;
+			for(int i=0;i<num_jewels;i++)
+			{
+				int color = *(jewels+i) & COLOR_BITS;
+				int target_color = target & COLOR_BITS; 
+				fprintf(flog,"target color:%d,color:%d\n",target_color,color);
+				if(target_color == color) *(jewels+i) = 0;
+			}
+		}
 		return true;
 	}
-	else if(source & JEWEL_BOMB && target & JEWEL_BOMB )
+	else if(target & JEWEL_DIAMOND)
 	{
-		
+		fprintf(flog,"target is diamond\n");
+		if(source & JEWEL_BOMB)
+		{
+		}
+		else
+		{
+			*(jewels+src_index) = 0;
+			*(jewels+tgt_index) = 0;
+			for(int i=0;i<num_jewels;i++)
+			{
+				int color = *(jewels+i) & COLOR_BITS;
+				int source_color = source & COLOR_BITS; 
+				fprintf(flog,"source color:%d,color:%d\n",source_color,color);
+				if(source_color == color) *(jewels+i) = 0;
+			}
+		}
 		return true;
 	}
-	
+	return false;
 }
 
 bool trySwitch(int source,int target)
 {
 	elim_area src_area = {0,0,0,0,{0},{0}};
 	elim_area tgt_area = {0,0,0,0,{0},{0}};
-	fprintf(flog,"trySwitch start--------------------\n");
+	fprintf(flog,"trySwitch start,source:%d,target:%d \n",source,target);
+	
+	if(checkBombSwitch(source,target))
+	{
+		fillEmpty();
+		return true;
+	}
+	
 	if(checkLocalElimination(source,&src_area))
 	{
 		fprintf(flog,"checkLocalElimination source\n");
