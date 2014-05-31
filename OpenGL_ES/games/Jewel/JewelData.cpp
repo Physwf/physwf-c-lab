@@ -391,7 +391,7 @@ bool checkLocalElimination(const int index, elim_area* area)
 	//up
 	fprintf(flog,"up\n");
 	int up = index;
-	while((up -= NUM_COLS) % 8 == col && up > 0)
+	while((up -= NUM_COLS) % 8 == col && up >= 0)
 	{
 		fprintf(flog,"up:%d\n",up);
 		if(!in_verti_flag[up/NUM_COLS])
