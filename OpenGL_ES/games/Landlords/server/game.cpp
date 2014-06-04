@@ -1,17 +1,19 @@
-#include "tabble.h"
+#include "game.h"
+#include "rules.h"
 #include <random.h>
 
 int pool[NUM_CARDS];
-int turn_counters[NUM_PLAERS];
-int cur_player = 0;
+int turn;
+player_t players[NUM_PLAYERS];
 
 void init()
 {
+	const int suit[4] = SUIT;
 	for(int i=0;i<4;i++)
 	{
 		for(int j=0;j<13;j++)
 		{
-			pool[i*13+j] = j+1;
+			pool[i*13+j] = j+1 | suit[i];
 		}
 	}
 	pool[52] = JOKER_BLACK;
@@ -29,3 +31,9 @@ void shuffle(int times)
 		pool[index2] = temp;
 	}
 }
+
+void start()
+{
+	memset(players,0,sizeof(players));
+}
+
