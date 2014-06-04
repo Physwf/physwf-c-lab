@@ -37,3 +37,16 @@ void start()
 	memset(players,0,sizeof(players));
 }
 
+void run()
+{
+	while(true)
+	{
+		step();
+		//game over?
+	}
+}
+
+void step()
+{
+	
+}
