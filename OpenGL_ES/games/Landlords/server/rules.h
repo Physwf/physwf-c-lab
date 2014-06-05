@@ -1,15 +1,23 @@
+#define JOKER_BLACK_RANK 14
+#define JOKER_RED_RANK 15
 
+#define NUM_CARDS 54
+#define NUM_PLAYERS 3
 
-#define SPADE_BIT 16 //10000
-#define HEART_BIT 32 //100000
-#define CLUB_BIT 64 //1000000
-#define DIAMOND_BIT 128 //10000000
+typedef enum {
+	SPADE,
+	HEART,
+	CLUB,
+	DIAMOND
+} Suit;
 
-#define SUIT ([SPADE_BIT,HEART_BIT,CLUB_BIT,DIAMOND_BIT])
-#define VALUE_BITS 15
+typedef struct card_t {
+	int rank,
+	Suit suit;
+} Card, *PCard;
 
 typedef struct hand_t {
-	int cards;
+	Card cards[20];
 	int num_cards;
 } Hand, *PHand;
 
@@ -26,4 +34,14 @@ typedef enum {
 	TRIPLE_SEQUENCE,
 	TRIPLE_SEQUENCE_PLUS_SINGLE,
 	TRIPLE_SEQUENCE_PLUS_PAIR,
+	ILLEGAL
 } HandType;
+
+typedef struct player_t {
+	Card cards[20];
+	int num_cards;
+	int turn;
+	bool isLord;
+	bool isAI;
+} Player,*PPlayer;
+
