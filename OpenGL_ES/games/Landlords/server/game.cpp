@@ -4,7 +4,7 @@
 
 int pool[NUM_CARDS];
 int turn;
-player_t players[NUM_PLAYERS];
+Player players[NUM_PLAYERS];
 
 void init()
 {

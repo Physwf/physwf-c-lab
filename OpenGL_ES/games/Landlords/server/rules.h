@@ -8,3 +8,22 @@
 #define SUIT ([SPADE_BIT,HEART_BIT,CLUB_BIT,DIAMOND_BIT])
 #define VALUE_BITS 15
 
+typedef struct hand_t {
+	int cards;
+	int num_cards;
+} Hand, *PHand;
+
+typedef enum {
+	SINGLE,
+	PAIR,
+	TRIPLE,
+	BOMB,
+	TRIPLE_PLUS_SINGLE,
+	TRIPLE_PLUS_PAIR,
+	ROCKET,
+	SINGLE_SEQUENCE,
+	PAIR_SEQUENCE,
+	TRIPLE_SEQUENCE,
+	TRIPLE_SEQUENCE_PLUS_SINGLE,
+	TRIPLE_SEQUENCE_PLUS_PAIR,
+} HandType;

@@ -1,5 +1,6 @@
 #include "rules.h"
 
+bool 
 bool greater_single(int card1,int card2)
 {
 	int value1 = card1 & VALUE_BITS;
