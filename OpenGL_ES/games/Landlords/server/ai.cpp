@@ -1,12 +1,24 @@
 #include "rules.h"
 
-void sort_cards(PCard cards)
-{
-}
-
-PHand get_greater_hand(PHand input)
+void q_sort(PCard cards, int low, int high)
 {
 	
+}
+
+void sort_cards(PCard cards, int num_cards)
+{
+	
+}
+
+void sort_player_cards(PPlayer player)
+{
+	sort_cards(player->cards,player->num_cards);
+}
+
+PHand get_greater_hand(PPlayer player, PHand input)
+{
+	PCard own_cards = player->cards;
+	PCard input_cards = input->cards;
 }
 
 HandType get_hand_type(PHand hand)

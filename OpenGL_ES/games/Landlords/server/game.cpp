@@ -34,6 +34,18 @@ void shuffle(int times)
 	}
 }
 
+void deal_cards()
+{
+	for(int i=0;i<NUM_CARDS;i++)
+	{
+		for(int j=0;j<NUM_PLAYERS;j++)
+		{
+			PPlayer player = &players[j];
+			player->cards[player->num_cards++] = pool[i];
+		}
+	}
+}
+
 void start()
 {
 	memset(players,0,sizeof(players));

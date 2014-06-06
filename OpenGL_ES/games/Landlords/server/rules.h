@@ -12,7 +12,7 @@ typedef enum {
 } Suit;
 
 typedef struct card_t {
-	int rank,
+	int rank;
 	Suit suit;
 } Card, *PCard;
 
@@ -40,6 +40,14 @@ typedef enum {
 typedef struct player_t {
 	Card cards[20];
 	int num_cards;
+	int singles[20];
+	int num_singles;
+	int pairs[20];
+	int num_pairs;
+	int triples[20];
+	int num_triples;
+	int bombs[20];
+	int num_bombs;
 	int turn;
 	bool isLord;
 	bool isAI;

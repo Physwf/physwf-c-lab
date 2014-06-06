@@ -7,13 +7,13 @@ bool equal_single(PCard left, PCard right)
 
 bool greater_single(PCard card1,PCard card2)
 {
-	int value1 = card1 & VALUE_BITS;
-	int value2 = card2 & VALUE_BITS;
-	if(value1 < 3) value1 += 13;
-	if(value2 < 3) value2 += 13;
-	if(value1 > 13) value1 += 2;
-	if(value2 > 13) value2 += 2;
-	return value1 > value2;
+	int rank1 = card1->rank;
+	int rank2 = card2->rank;
+	if(rank1 < 3) rank1 += 13;
+	if(rank2 < 3) rank2 += 13;
+	if(rank1 > 13) rank1 += 2;
+	if(rank2 > 13) rank2 += 2;
+	return rank1 > rank2;
 }
 
 bool greater_multiple(PCard cards1,PCard cards2)
