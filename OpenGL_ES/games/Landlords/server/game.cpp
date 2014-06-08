@@ -3,6 +3,7 @@
 #include <random.h>
 
 Card pool[NUM_CARDS];
+int loot_turn;
 int turn;
 Player players[NUM_PLAYERS];
 
@@ -46,9 +47,30 @@ void deal_cards()
 	}
 }
 
+void wait_for_loot()
+{
+	int scores[3];
+	for(int i=0;i<NUM_PLAYERS;i++)
+	{
+		if(players[i].isAI)
+		{
+			scores[i] = calculate_loot_score(&players[i]);
+			//send message
+		}
+		else
+		{
+			//send message
+		}
+	}
+}
+
 void start()
 {
 	memset(players,0,sizeof(players));
+	shuffle();
+	deal_cards();
+	//wait for loot
+	wait_for_loot();
 }
 
 void run()

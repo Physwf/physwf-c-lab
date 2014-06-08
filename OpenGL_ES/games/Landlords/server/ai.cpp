@@ -1,13 +1,9 @@
 #include "rules.h"
-
-void q_sort(PCard cards, int low, int high)
-{
-	
-}
+#include "sort.h"
 
 void sort_cards(PCard cards, int num_cards)
 {
-	
+	q_sort(cards,0,num_cards-1);
 }
 
 void sort_player_cards(PPlayer player)
@@ -52,4 +48,9 @@ bool is_hand_legal(PHand hand)
 {
 	sort_cards(hand->cards);
 	return get_hand_type(hand) != ILLEGAL;
+}
+
+int calculate_loot_score(PPlayer player)
+{
+	
 }
