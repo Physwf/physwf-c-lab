@@ -61,6 +61,11 @@ void net_accept()
 {
 	FD_ZERO(&rset);
 	FD_SET(server,&rset);
+	if( select(0, &rset, NULL, NULL, NULL) == SOCKET_ERROR)
+	{
+		printf("server socket:select return error!\n");
+		return;
+	}
 	if(FD_ISSET(server,&rset))
 	{
 		if( (client_temp = accept(server,NULL,NULL) ) != INVALID_SOCKET )
@@ -83,10 +88,27 @@ void net_accept()
 
 void net_read_and_write_client()
 {
+	FD_ZERO(&rset);
+	FD_ZERO(&wset);
+	
 	for(int i=0;i<MAX_CONN;i++)
 	{
 		if(flags[i] == FLAG_HOLD)
 		{
+			FD_SET(clients[i],&rset);
+			FD_SET(clients[i],&wset);
+			if( select(0,&rset. &wset, NULL, NULL) == SOCKET_ERROR )
+			{
+				printf("client socket:select return error!\n");
+				return;
+			}
+			if(FD_ISSET(clients[i],&rset))
+			{
+				
+			}
+			if(FD_ISSET(clients[i],&wset))
+			{
+			}
 		}
 	}
 }
@@ -95,5 +117,5 @@ void net_run()
 {
 	if(num_clinets < MAX_CONN0)
 		net_accept();
-	
+	net_read_and_write_client();
 }
