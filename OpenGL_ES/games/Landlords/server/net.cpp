@@ -4,8 +4,7 @@
 
 
 SOCKET server;
-int flags[MAX_CONN];// 0 free, 1 hold, 
-SOCKET clients[MAX_CONN];
+Connection clients[MAX_CONN];
 
 int num_clients;
 
@@ -19,7 +18,7 @@ int get_free_index()
 {
 	for(int i=0;i<MAX_CONN;i++)
 	{
-		if(flags[i] == 0) return i;
+		if(clients[i].state == STATE_FREE) return i;
 	}
 	return -1;
 }
@@ -27,7 +26,7 @@ int get_free_index()
 void net_init()
 {
 	WSADATA wsa;
-	if(WSAStartup(MAKEWORD(2,2),$wsa) != 0)
+	if(WSAStartup(MAKEWORD(2,2),&wsa) != 0)
 	{
 		printf("Socket init failed!\n");
 		exit(-1);
@@ -70,8 +69,8 @@ void net_accept()
 	{
 		if( (client_temp = accept(server,NULL,NULL) ) != INVALID_SOCKET )
 		{
-			int non_block = 1;
-			if( ioctlsocket(client_temp,FIONBIO, &nonblock) == SOCKET_ERROR )
+			unsigned long non_block = 1;
+			if( ioctlsocket(client_temp,FIONBIO, &non_block) == SOCKET_ERROR )
 			{
 				printf("ioctlsocket() failed with error %d\n",WSAGetLastError());
 				return;
@@ -79,7 +78,9 @@ void net_accept()
 			int i = get_free_index();
 			if(i>0)
 			{
-				clients[i] = clinent_temp;
+				clients[i].socket = client_temp;
+				clients[i].state = STATE_HOLD;
+				num_clients++;
 				//onAccepted, notify business layer
 			}
 		}
@@ -93,29 +94,73 @@ void net_read_and_write_client()
 	
 	for(int i=0;i<MAX_CONN;i++)
 	{
-		if(flags[i] == FLAG_HOLD)
+		if(clients[i].state == STATE_HOLD)
 		{
-			FD_SET(clients[i],&rset);
-			FD_SET(clients[i],&wset);
-			if( select(0,&rset. &wset, NULL, NULL) == SOCKET_ERROR )
+			FD_SET(clients[i].socket,&rset);
+			FD_SET(clients[i].socket,&wset);
+			if( select(0,&rset, &wset, NULL, NULL) == SOCKET_ERROR )
 			{
 				printf("client socket:select return error!\n");
 				return;
 			}
-			if(FD_ISSET(clients[i],&rset))
+			if(FD_ISSET(clients[i].socket,&rset))
 			{
-				
+				int len = READ_BUFFER_SIZE - clients[i].readBufAvaliable;
+				char* avaliableBuffer = clients[i].readBuffer+clients[i].readBufAvaliable;
+				if(len > 0)
+				{
+					int rc = recv(clients[i].socket,avaliableBuffer,len,0);
+					if(rc > 0)
+					{
+						clients[i].readBufAvaliable += rc;
+					}
+					else if(rc == 0)
+					{
+						clients[i].state = STATE_CLOSED;
+					}
+					else
+					{
+						printf("recv error:%d!\n",WSAGetLastError());
+					}
+				}
 			}
-			if(FD_ISSET(clients[i],&wset))
+			if(FD_ISSET(clients[i].socket,&wset))
 			{
+				int len = clients[i].writeBufAvaliable;
+				char* sendBuffer = clients[i].writeBuffer;
+				if(len > 0)
+				{
+					int rc = send(clients[i].socket,sendBuffer,len,0);
+					if(rc > 0)
+					{
+						int left = len - rc;
+						if(left > 0)
+							memcpy(clients[i].writeBuffer,clients[i].writeBuffer+rc,left);
+						clients[i].writeBufAvaliable -= rc;
+					}
+				}
 			}
+		}
+	}
+}
+
+void net_clean()
+{
+	for(int i=0;i<MAX_CONN;i++)
+	{
+		if(clients[i].state != STATE_FREE && clients[i].state != STATE_HOLD)
+		{
+			clients[i].readBufAvaliable = 0;
+			clients[i].writeBufAvaliable = 0;
+			clients[i].state = STATE_FREE;
 		}
 	}
 }
 
 void net_run()
 {
-	if(num_clinets < MAX_CONN0)
+	if(num_clients < MAX_CONN)
 		net_accept();
 	net_read_and_write_client();
+	net_clean();
 }

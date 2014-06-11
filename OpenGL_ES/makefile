@@ -19,12 +19,30 @@ DIR_GMAES=./games
 DIR_DATA=/Data
 DIR_BUBBLE=/Bubble
 DIR_JEWEL=/Jewel
+DIR_LANDLORDS_SERVER=/Landlords/server
 
 DIR_EFFECTS=./effects
 DIR_GRAY=/gray
 DIR_BLUR=/blur
 DIR_COLORMATRIX=/ColorMatrix
 
+#Landlords
+
+LL:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj 
+	
+LLnet.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
+LLservices.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/services.cpp $(CLOUT)$(BIN)/LLservices.obj $(INCLUDE) $(OPTION)
+LLsort.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/sort.cpp $(CLOUT)$(BIN)/LLsort.obj $(INCLUDE) $(OPTION)
+LLai.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/ai.cpp $(CLOUT)$(BIN)/LLai.obj $(INCLUDE) $(OPTION)
+LLrules.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/ai.cpp $(CLOUT)$(BIN)/LLai.obj $(INCLUDE) $(OPTION)
+LLgame.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/game.cpp $(CLOUT)$(BIN)/LLgame.obj $(INCLUDE) $(OPTION)
+	
 #Jewel
 jewel:JewelMain.obj JewelView.obj JewelData.obj utils.obj random.obj 
 	$(LINK) $(BIN)/JewelMain.obj $(BIN)/JewelView.obj $(BIN)/JewelData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe

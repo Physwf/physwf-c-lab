@@ -1,5 +1,7 @@
 #include "game.h"
 #include "rules.h"
+#include "services.h"
+
 #include <random.h>
 
 Card pool[NUM_CARDS];
@@ -19,6 +21,7 @@ void init()
 	}
 	pool[52].rank = JOKER_BLACK_RANK;
 	pool[53].rank = JOKER_RED_RANK;
+	init_service();
 }
 
 void shuffle(int times)
