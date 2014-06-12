@@ -91,6 +91,10 @@ void net_accept()
 				//onAccepted, notify business layer
 			}
 		}
+		else
+		{
+			printf("accept error!\n");
+		}
 	}
 }
 
