@@ -1,5 +1,6 @@
-#include "rules.h"
 #include "sort.h"
+#include "ai.h"
+#include <stdio.h>
 
 void sort_cards(PCard cards, int num_cards)
 {
@@ -15,6 +16,7 @@ PHand get_greater_hand(PPlayer player, PHand input)
 {
 	PCard own_cards = player->cards;
 	PCard input_cards = input->cards;
+	return NULL;
 }
 
 HandType get_hand_type(PHand hand)
@@ -46,11 +48,11 @@ HandType get_hand_type(PHand hand)
 
 bool is_hand_legal(PHand hand)
 {
-	sort_cards(hand->cards);
+	sort_cards(hand->cards,hand->num_cards);
 	return get_hand_type(hand) != ILLEGAL;
 }
 
 int calculate_loot_score(PPlayer player)
 {
-	
+	return 0;
 }

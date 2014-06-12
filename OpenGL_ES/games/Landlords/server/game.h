@@ -1,4 +1,7 @@
-#include <rules.h>
+#ifndef _GAME_H
+#define _GAME_H
+
+#include "rules.h"
 
 typedef struct player_t {
 	int playerID;
@@ -16,3 +19,7 @@ typedef struct player_t {
 	bool isLord;
 	bool isAI;
 } Player,*PPlayer;
+
+void init();
+
+#endif

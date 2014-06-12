@@ -1,6 +1,7 @@
 #include "net.h"
 #include "services.h"
 #include <Windows.h>
+#include <stdio.h>
 
 char buffer[WRITE_BUFFER_SIZE];
 HANDLE hNetThread;
@@ -13,9 +14,11 @@ DWORD WINAPI net_thread(PVOID pParam)
 
 void init_service()
 {
+	printf("init services!\n");
 	net_init();
 	//create net thread
 	hNetThread = CreateThread(NULL,0,net_thread,NULL,0,NULL);
+	WaitForSingleObject(hNetThread,INFINITE);
 }
 
 void send_data(int pid)

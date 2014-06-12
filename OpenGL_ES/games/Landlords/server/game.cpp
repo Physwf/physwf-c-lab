@@ -1,8 +1,9 @@
 #include "game.h"
-#include "rules.h"
 #include "services.h"
-
+#include "ai.h"
 #include <random.h>
+#include <string.h>
+#include <stdio.h>
 
 Card pool[NUM_CARDS];
 int loot_turn;
@@ -11,12 +12,13 @@ Player players[NUM_PLAYERS];
 
 void init()
 {
-	for(Suit i=SPADE;i<DIAMOND;i++)
+	printf("init game!\n");
+	for(int i=(int)SPADE;i<(int)DIAMOND;i++)
 	{
 		for(int j=0;j<13;j++)
 		{
 			pool[i*13+j].rank = j;
-			pool[i*13+j].suit = i;
+			pool[i*13+j].suit = (Suit)i;
 		}
 	}
 	pool[52].rank = JOKER_BLACK_RANK;
@@ -70,10 +72,15 @@ void wait_for_loot()
 void start()
 {
 	memset(players,0,sizeof(players));
-	shuffle();
+	shuffle(10);
 	deal_cards();
 	//wait for loot
 	wait_for_loot();
+}
+
+void step()
+{
+	
 }
 
 void run()
@@ -83,9 +90,4 @@ void run()
 		step();
 		//game over?
 	}
-}
-
-void step()
-{
-	
 }

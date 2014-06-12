@@ -28,8 +28,8 @@ DIR_COLORMATRIX=/ColorMatrix
 
 #Landlords
 
-LL:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj 
-	
+LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLmain.obj
+	$(LINK) $(BIN)/LLnet.obj $(BIN)/LLMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
 LLservices.obj:
@@ -39,9 +39,11 @@ LLsort.obj:
 LLai.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/ai.cpp $(CLOUT)$(BIN)/LLai.obj $(INCLUDE) $(OPTION)
 LLrules.obj:
-	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/ai.cpp $(CLOUT)$(BIN)/LLai.obj $(INCLUDE) $(OPTION)
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/rules.cpp $(CLOUT)$(BIN)/LLrules.obj $(INCLUDE) $(OPTION)
 LLgame.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/game.cpp $(CLOUT)$(BIN)/LLgame.obj $(INCLUDE) $(OPTION)
+LLmain.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/main.cpp $(CLOUT)$(BIN)/LLmain.obj $(INCLUDE) $(OPTION)
 	
 #Jewel
 jewel:JewelMain.obj JewelView.obj JewelData.obj utils.obj random.obj 

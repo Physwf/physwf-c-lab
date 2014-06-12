@@ -18,17 +18,17 @@ bool greater_single(PCard card1,PCard card2)
 
 bool greater_multiple(PCard cards1,PCard cards2)
 {
-	int card1 = cards1[0];
-	int card2 = cards2[0];
-	return greater_single(card1,card2);
+	Card card1 = cards1[0];
+	Card card2 = cards2[0];
+	return greater_single(&card1,&card2);
 }
 
 bool greater_sequence(PCard cards1,PCard cards2)
 {
-	
+	return false;
 }
 
 int get_rank(PCard card)
 {
-	
+	return 0;
 }

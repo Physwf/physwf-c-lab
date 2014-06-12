@@ -25,6 +25,7 @@ int get_free_index()
 
 void net_init()
 {
+	printf("init net\n");
 	WSADATA wsa;
 	if(WSAStartup(MAKEWORD(2,2),&wsa) != 0)
 	{
@@ -52,6 +53,12 @@ void net_init()
 	if(listen(server,SOMAXCONN) == SOCKET_ERROR)
 	{
 		printf("Listen error!\n");
+		exit(-1);
+	}
+	unsigned long non_block = 1;
+	if( ioctlsocket(server, FIONBIO, &non_block) == SOCKET_ERROR)
+	{
+		printf("ioctlsocket() failed with error %d\n");
 		exit(-1);
 	}
 }

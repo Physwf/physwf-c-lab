@@ -1,5 +1,4 @@
 #include "sort.h"
-#include "rules.h"
 
 void swap(PCard card1, PCard card2)
 {
@@ -8,7 +7,7 @@ void swap(PCard card1, PCard card2)
 	*card2 = temp;
 }
 
-void partion(PCard cards, int low, int high)
+int partion(PCard cards, int low, int high)
 {
 	Card p = cards[high-1];
 	int i = low;
@@ -17,12 +16,12 @@ void partion(PCard cards, int low, int high)
 		if(greater_single(&cards[j],&p))
 		{
 			i++;
-			swap(cards[i],cards[j]);
+			swap(&cards[i],&cards[j]);
 			// Card temp = cards[i];
 			// cards[i] = cards[j];
 			// cards[j] = temp;
 		}
-	swap(cards[i],cards[high-1]);
+	swap(&cards[i],&cards[high-1]);
 	return i;
 }
 

@@ -1,3 +1,6 @@
+#ifndef _RULES_H
+#define _RULES_H
+
 #define JOKER_BLACK_RANK 14
 #define JOKER_RED_RANK 15
 
@@ -37,5 +40,9 @@ typedef enum {
 	ILLEGAL
 } HandType;
 
+bool equal_single(PCard left, PCard right);
+bool greater_single(PCard card1,PCard card2);
+bool greater_multiple(PCard cards1,PCard cards2);
+bool greater_sequence(PCard cards1,PCard cards2);
 
-
+#endif
