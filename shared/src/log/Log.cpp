@@ -17,7 +17,7 @@ void Log::info(const char* format, ...)
 {
 	if(mStream) {
 		va_list args;
-		va_start(args, mStream);
+		va_start(args, format);
 		vfprintf(mStream, format, args);
 		vfprintf(mStream, "\n", args);
 		va_end(args);

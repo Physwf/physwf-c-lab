@@ -88,8 +88,7 @@ void net_accept()
 			{
 				clients[i].socket = client_temp;
 				clients[i].state = STATE_HOLD;
-				Log::info("client accepted, Total:%d!",num_clients);
-				num_clients++;
+				++num_clients;
 				Log::info("client accepted, Total:%d!",num_clients);
 				//onAccepted, notify business layer
 			}
