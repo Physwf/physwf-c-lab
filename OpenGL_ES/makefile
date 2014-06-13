@@ -30,13 +30,13 @@ DIR_COLORMATRIX=/ColorMatrix
 #Landlords
 LL:LLclient LLserver
 
-LLclient:LLSimpleClient.obj
-	$(LINK) $(BIN)/LLSimpleClient.obj $(LINKOUT)$(BIN)/$@.exe
+LLclient:LLSimpleClient.obj Log.obj
+	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
 LLSimpleClient.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/main.cpp $(CLOUT)$(BIN)/LLSimpleClient.obj $(INCLUDE) $(OPTION)
 	
-LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj
-	$(LINK) $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj Log.obj
+	$(LINK) $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
 LLservices.obj:
@@ -131,7 +131,8 @@ kinematics.obj:$(DIR_SHARED)/src/kinematics.cpp
 	$(CL) $(DIR_SHARED)/src/kinematics.cpp $(CLOUT)$(BIN)/kinematics.obj $(INCLUDE) $(OPTION)
 color_matrix.obj:$(DIR_SHARED)/src/color_matrix.cpp
 	$(CL) $(DIR_SHARED)/src/color_matrix.cpp $(CLOUT)$(BIN)/color_matrix.obj $(INCLUDE) $(OPTION)
-
+Log.obj:
+	$(CL) $(DIR_SHARED)/src/log/log.cpp $(CLOUT)$(BIN)/Log.obj $(INCLUDE) $(OPTION)
 	
 gt:geom_test.obj affine.obj matrix.obj vector2d.obj kinematics.obj
 	$(LINK) $(BIN)/geom_test.obj $(BIN)/affine.obj $(BIN)/matrix.obj $(BIN)/vector2d.obj $(BIN)/kinematics.obj $(LIB_PNG) $(LINKOUT)$(BIN)/geom_test.exe 

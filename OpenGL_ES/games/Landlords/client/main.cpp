@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <log/Log.h>
 #include <winsock2.h>
+
 
 #pragma comment(lib,"ws2_32.lib")
 
 SOCKET conn;
+FILE* Log::mStream = NULL;
 
 void init()
 {
+	Log::init("LLclient.log");
 	WSADATA wsa;
 	if( WSAStartup(MAKEWORD(2,2), &wsa) != 0)
 	{

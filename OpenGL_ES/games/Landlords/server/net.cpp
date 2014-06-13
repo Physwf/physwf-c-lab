@@ -1,12 +1,12 @@
 #include "net.h"
 #include <stdio.h>
 #include <windows.h>
-
+#include <log/Log.h>
 
 SOCKET server;
 Connection clients[MAX_CONN];
 
-int num_clients;
+int num_clients = 0;
 
 FD_SET rset;
 FD_SET wset;
@@ -25,16 +25,16 @@ int get_free_index()
 
 void net_init()
 {
-	printf("init net\n");
+	Log::info("init net!");
 	WSADATA wsa;
 	if(WSAStartup(MAKEWORD(2,2),&wsa) != 0)
 	{
-		printf("Socket init failed!\n");
+		Log::info("Socket init failed!");
 		exit(-1);
 	}
 	if( (server = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)) == INVALID_SOCKET)
 	{
-		printf("Create Socket failed!\n");
+		Log::info("Create Socket failed!");
 		exit(-1);
 	}
 	
@@ -46,19 +46,19 @@ void net_init()
 	
 	if(bind(server, (sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR)
 	{
-		printf("Bind socket error!\n");
+		Log::info("Bind socket error!");
 		exit(-1);
 	}
 	
 	if(listen(server,SOMAXCONN) == SOCKET_ERROR)
 	{
-		printf("Listen error!\n");
+		Log::info("Listen error!");
 		exit(-1);
 	}
 	unsigned long non_block = 1;
 	if( ioctlsocket(server, FIONBIO, &non_block) == SOCKET_ERROR)
 	{
-		printf("ioctlsocket() failed with error %d\n");
+		Log::info("ioctlsocket() failed with error %d!");
 		exit(-1);
 	}
 }
@@ -67,9 +67,10 @@ void net_accept()
 {
 	FD_ZERO(&rset);
 	FD_SET(server,&rset);
+	
 	if( select(0, &rset, NULL, NULL, NULL) == SOCKET_ERROR)
 	{
-		printf("server socket:select return error!\n");
+		Log::info("server socket:select return error!");
 		return;
 	}
 	if(FD_ISSET(server,&rset))
@@ -79,21 +80,23 @@ void net_accept()
 			unsigned long non_block = 1;
 			if( ioctlsocket(client_temp,FIONBIO, &non_block) == SOCKET_ERROR )
 			{
-				printf("ioctlsocket() failed with error %d\n",WSAGetLastError());
+				Log::info("ioctlsocket() failed with error %d!",WSAGetLastError());
 				return;
 			}
 			int i = get_free_index();
-			if(i>0)
+			if(i>=0)
 			{
 				clients[i].socket = client_temp;
 				clients[i].state = STATE_HOLD;
+				Log::info("client accepted, Total:%d!",num_clients);
 				num_clients++;
+				Log::info("client accepted, Total:%d!",num_clients);
 				//onAccepted, notify business layer
 			}
 		}
 		else
 		{
-			printf("accept error!\n");
+			Log::info("accept error!");
 		}
 	}
 }
@@ -111,7 +114,7 @@ void net_read_and_write_client()
 			FD_SET(clients[i].socket,&wset);
 			if( select(0,&rset, &wset, NULL, NULL) == SOCKET_ERROR )
 			{
-				printf("client socket:select return error!\n");
+				Log::info("client socket:select return error!");
 				return;
 			}
 			if(FD_ISSET(clients[i].socket,&rset))
@@ -131,7 +134,7 @@ void net_read_and_write_client()
 					}
 					else
 					{
-						printf("recv error:%d!\n",WSAGetLastError());
+						Log::info("recv error:%d!",WSAGetLastError());
 					}
 				}
 			}
@@ -170,8 +173,11 @@ void net_clean()
 
 void net_run()
 {
-	if(num_clients < MAX_CONN)
-		net_accept();
-	net_read_and_write_client();
-	net_clean();
+	while(true)
+	{
+		if(num_clients < MAX_CONN)
+			net_accept();
+		net_read_and_write_client();
+		net_clean();
+	}
 }

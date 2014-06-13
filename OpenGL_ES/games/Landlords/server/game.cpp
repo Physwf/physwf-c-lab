@@ -4,6 +4,7 @@
 #include <random.h>
 #include <string.h>
 #include <stdio.h>
+#include <log/Log.h>
 
 Card pool[NUM_CARDS];
 int loot_turn;
@@ -12,7 +13,7 @@ Player players[NUM_PLAYERS];
 
 void init()
 {
-	printf("init game!\n");
+	Log::info("init game!");
 	for(int i=(int)SPADE;i<(int)DIAMOND;i++)
 	{
 		for(int j=0;j<13;j++)

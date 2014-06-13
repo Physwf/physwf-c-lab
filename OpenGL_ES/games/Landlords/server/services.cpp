@@ -2,6 +2,7 @@
 #include "services.h"
 #include <Windows.h>
 #include <stdio.h>
+#include <log/Log.h>
 
 char buffer[WRITE_BUFFER_SIZE];
 HANDLE hNetThread;
@@ -14,7 +15,7 @@ DWORD WINAPI net_thread(PVOID pParam)
 
 void init_service()
 {
-	printf("init services!\n");
+	Log::info("init services!");
 	net_init();
 	//create net thread
 	hNetThread = CreateThread(NULL,0,net_thread,NULL,0,NULL);
