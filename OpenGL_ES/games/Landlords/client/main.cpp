@@ -35,6 +35,8 @@ void init()
 		printf("connect failed!\n");
 		exit(-1);
 	}
+	
+	// closesocket(conn);
 }
 
 int main()

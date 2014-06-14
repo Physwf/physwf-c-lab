@@ -20,6 +20,7 @@ void Log::info(const char* format, ...)
 		va_start(args, format);
 		vfprintf(mStream, format, args);
 		vfprintf(mStream, "\n", args);
+		fflush(mStream);
 		va_end(args);
 	}
 };

@@ -63,16 +63,28 @@ void net_init()
 	}
 }
 
-void net_accept()
+void net_select()
 {
 	FD_ZERO(&rset);
+	FD_ZERO(&wset);
+	
 	FD_SET(server,&rset);
 	
-	if( select(0, &rset, NULL, NULL, NULL) == SOCKET_ERROR)
+	for(int i=0;i<MAX_CONN;i++)
+	{
+		if(clients[i].state == STATE_HOLD)
+		{
+			FD_SET(clients[i].socket,&rset);
+			FD_SET(clients[i].socket,&wset);
+		}
+	}
+	
+	if( select(0, &rset, &wset, NULL, NULL) == SOCKET_ERROR)
 	{
 		Log::info("server socket:select return error!");
 		return;
 	}
+
 	if(FD_ISSET(server,&rset))
 	{
 		if( (client_temp = accept(server,NULL,NULL) ) != INVALID_SOCKET )
@@ -92,30 +104,17 @@ void net_accept()
 				Log::info("client accepted, Total:%d!",num_clients);
 				//onAccepted, notify business layer
 			}
-		}
-		else
-		{
-			Log::info("accept error!");
+			else
+			{
+				Log::info("no free space to accept!");
+			}
 		}
 	}
-}
-
-void net_read_and_write_client()
-{
-	FD_ZERO(&rset);
-	FD_ZERO(&wset);
 	
 	for(int i=0;i<MAX_CONN;i++)
 	{
 		if(clients[i].state == STATE_HOLD)
 		{
-			FD_SET(clients[i].socket,&rset);
-			FD_SET(clients[i].socket,&wset);
-			if( select(0,&rset, &wset, NULL, NULL) == SOCKET_ERROR )
-			{
-				Log::info("client socket:select return error!");
-				return;
-			}
 			if(FD_ISSET(clients[i].socket,&rset))
 			{
 				int len = READ_BUFFER_SIZE - clients[i].readBufAvaliable;
@@ -130,10 +129,12 @@ void net_read_and_write_client()
 					else if(rc == 0)
 					{
 						clients[i].state = STATE_CLOSED;
+						Log::info("client closed!");
 					}
 					else
 					{
 						Log::info("recv error:%d!",WSAGetLastError());
+						clients[i].state = STATE_CLOSED;
 					}
 				}
 			}
@@ -166,6 +167,7 @@ void net_clean()
 			clients[i].readBufAvaliable = 0;
 			clients[i].writeBufAvaliable = 0;
 			clients[i].state = STATE_FREE;
+			Log::info("client cleaned!");
 		}
 	}
 }
@@ -174,9 +176,9 @@ void net_run()
 {
 	while(true)
 	{
-		if(num_clients < MAX_CONN)
-			net_accept();
-		net_read_and_write_client();
+		Log::info("loop");
+		net_select();
 		net_clean();
+		Sleep(10);
 	}
 }
