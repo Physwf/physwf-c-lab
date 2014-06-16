@@ -1,4 +1,5 @@
 #include <winsock2.h>
+#include "../shared/common.h"
 
 #pragma comment(lib,"ws2_32.lib")
 

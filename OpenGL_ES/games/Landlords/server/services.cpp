@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <log/Log.h>
+#include "game.h"
 
 char buffer[WRITE_BUFFER_SIZE];
 HANDLE hNetThread;
@@ -35,5 +36,11 @@ void broadcast_loot_score(int who,int score)
 void send_wait_for_loot(int who)
 {
 }
+
+void send_deal_result(PDealResult result)
+{
+	
+}
+
 
 

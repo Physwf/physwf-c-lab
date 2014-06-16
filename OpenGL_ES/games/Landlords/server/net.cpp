@@ -1,6 +1,5 @@
 #include "net.h"
 #include <stdio.h>
-#include <windows.h>
 #include <log/Log.h>
 
 SOCKET server;
@@ -121,6 +120,7 @@ void net_select()
 				char* avaliableBuffer = clients[i].readBuffer+clients[i].readBufAvaliable;
 				if(len > 0)
 				{
+					EnterCriticalSection(&CS);//enter critical section
 					int rc = recv(clients[i].socket,avaliableBuffer,len,0);
 					if(rc > 0)
 					{
@@ -136,14 +136,17 @@ void net_select()
 						Log::info("recv error:%d!",WSAGetLastError());
 						clients[i].state = STATE_CLOSED;
 					}
+					LeaveCriticalSection(&CS);//leave critical section
 				}
 			}
 			if(FD_ISSET(clients[i].socket,&wset))
 			{
 				int len = clients[i].writeBufAvaliable;
 				char* sendBuffer = clients[i].writeBuffer;
+				
 				if(len > 0)
 				{
+					EnterCriticalSection(&CS);//enter critical section
 					int rc = send(clients[i].socket,sendBuffer,len,0);
 					if(rc > 0)
 					{
@@ -152,6 +155,7 @@ void net_select()
 							memcpy(clients[i].writeBuffer,clients[i].writeBuffer+rc,left);
 						clients[i].writeBufAvaliable -= rc;
 					}
+					LeaveCriticalSection(&CS);//leave critical section
 				}
 			}
 		}

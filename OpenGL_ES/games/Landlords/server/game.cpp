@@ -6,10 +6,7 @@
 #include <stdio.h>
 #include <log/Log.h>
 
-Card pool[NUM_CARDS];
-int loot_turn;
-int turn;
-Player players[NUM_PLAYERS];
+Game game;
 
 void init()
 {
@@ -18,12 +15,12 @@ void init()
 	{
 		for(int j=0;j<13;j++)
 		{
-			pool[i*13+j].rank = j;
-			pool[i*13+j].suit = (Suit)i;
+			game.pool[i*13+j].rank = j;
+			game.pool[i*13+j].suit = (Suit)i;
 		}
 	}
-	pool[52].rank = JOKER_BLACK_RANK;
-	pool[53].rank = JOKER_RED_RANK;
+	game.pool[52].rank = JOKER_BLACK_RANK;
+	game.pool[53].rank = JOKER_RED_RANK;
 	init_service();
 }
 
@@ -33,23 +30,40 @@ void shuffle(int times)
 	{
 		int index1 = rand_by_range(0,NUM_CARDS-1);
 		int index2 = rand_by_range(0,NUM_CARDS-1);
-		PCard temp = pool+index1;
-		pool[index1].rank = pool[index2].rank;
-		pool[index1].suit = pool[index2].suit;
-		pool[index2].rank = temp->rank;
-		pool[index2].suit = temp->suit;
+		PCard temp = game.pool+index1;
+		game.pool[index1].rank = game.pool[index2].rank;
+		game.pool[index1].suit = game.pool[index2].suit;
+		game.pool[index2].rank = temp->rank;
+		game.pool[index2].suit = temp->suit;
 	}
 }
 
 void deal_cards()
 {
-	for(int i=0;i<NUM_CARDS;i++)
+	int cards_left = NUM_CARDS;
+	while(cards_left>3)
 	{
 		for(int j=0;j<NUM_PLAYERS;j++)
 		{
-			PPlayer player = &players[j];
-			player->cards[player->num_cards++] = pool[i];
+			PPlayer player = &game.players[j];
+			player->cards[player->num_cards++] = game.pool[cards_left-1];
+			cards_left--;
 		}
+	}
+	PDealResult result = &game.dresult;
+	for(int j=0;j<NUM_PLAYERS;j++)
+	{
+		PPlayer player = &game.players[j];
+		result->playerIds[j] = player->id;
+		for(int i=0;i<player->num_cards;i++)
+		{
+			result->cards[i] = player->cards[i];
+		}
+	}
+	for(int j=0;j<3;j++)
+	{
+		result->loot[j] = game.pool[cards_left+j];
+		cards_left --;
 	}
 }
 
@@ -58,10 +72,10 @@ void wait_for_loot()
 	int scores[3];
 	for(int i=0;i<NUM_PLAYERS;i++)
 	{
-		if(players[i].isAI)
+		if(game.players[i].isAI)
 		{
-			scores[i] = calculate_loot_score(&players[i]);
-			//send message
+			scores[i] = calculate_loot_score(&game.players[i]);
+			broadcast_loot_score(game.players[i].id,scores[i]);
 		}
 		else
 		{
@@ -72,10 +86,11 @@ void wait_for_loot()
 
 void start()
 {
-	memset(players,0,sizeof(players));
+	// memset(players,0,sizeof(players));
 	shuffle(10);
 	deal_cards();
-	//wait for loot
+	send_deal_result(&game.dresult);
+	
 	wait_for_loot();
 }
 
