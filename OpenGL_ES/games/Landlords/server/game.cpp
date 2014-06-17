@@ -94,16 +94,18 @@ void start()
 	wait_for_loot();
 }
 
-void step()
+void turn()
 {
+	int next = game.landlord + (game.turn % NUM_PLAYERS);
 	
+	game.turn++;
 }
 
 void run()
 {
 	while(true)
 	{
-		step();
+		turn();
 		//game over?
 	}
 }

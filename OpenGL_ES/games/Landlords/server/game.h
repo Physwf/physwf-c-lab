@@ -33,6 +33,7 @@ typedef struct game_t {
 	int turn;
 	int loot_turn;
 	DealResult dresult;
+	int landlord;//players index
 } Game, *PGame;
 
 void init();
