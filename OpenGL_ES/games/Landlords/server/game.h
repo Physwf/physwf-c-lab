@@ -30,6 +30,8 @@ typedef struct deal_result_t {
 typedef struct game_t {
 	Card pool[NUM_CARDS];
 	Player players[NUM_PLAYERS];
+	int loot_turn;
+	int loot_scores[NUM_PLAYERS];
 	int turn;
 	int loot_turn;
 	DealResult dresult;

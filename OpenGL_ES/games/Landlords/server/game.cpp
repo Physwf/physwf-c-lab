@@ -69,19 +69,23 @@ void deal_cards()
 
 void wait_for_loot()
 {
-	int scores[3];
-	for(int i=0;i<NUM_PLAYERS;i++)
+	int loot_turn = game.loot_turn;
+	if(loot_turn >= NUM_PLAYERS)
 	{
-		if(game.players[i].isAI)
-		{
-			scores[i] = calculate_loot_score(&game.players[i]);
-			broadcast_loot_score(game.players[i].id,scores[i]);
-		}
-		else
-		{
-			//send message
-		}
+		
+		return;
 	}
+	if(game.players[loot_turn].isAI)
+	{
+		scores[loot_turn] = calculate_loot_score(&game.players[loot_turn]);
+		broadcast_loot_score(game.players[loot_turn].id,scores[loot_turn]);
+	}
+	else
+	{
+		//send message
+		//add listener
+	}
+	game.loot_turn++;
 }
 
 void start()
