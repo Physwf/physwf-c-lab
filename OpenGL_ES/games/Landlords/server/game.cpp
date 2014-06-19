@@ -84,6 +84,7 @@ void wait_for_loot()
 	{
 		//send message
 		//add listener
+		SuspendThread(mainThread);
 	}
 	game.loot_turn++;
 }

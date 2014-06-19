@@ -1,4 +1,5 @@
 #include "game.h"
+#include "common.h"
 
 void init_service();
 
