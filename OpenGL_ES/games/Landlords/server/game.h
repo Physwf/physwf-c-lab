@@ -33,7 +33,6 @@ typedef struct game_t {
 	int loot_turn;
 	int loot_scores[NUM_PLAYERS];
 	int turn;
-	int loot_turn;
 	DealResult dresult;
 	int landlord;//players index
 } Game, *PGame;

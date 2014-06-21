@@ -28,6 +28,11 @@ void send_data(int pid)
 	
 }
 
+void send_deal_result(PDealResult result)
+{
+	
+}
+
 void broadcast_loot_score(int who,int score)
 {
 	
@@ -37,9 +42,8 @@ void send_wait_for_loot(int who)
 {
 }
 
-void send_deal_result(PDealResult result)
+void send_play_start()
 {
-	
 }
 
 

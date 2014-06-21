@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <log/Log.h>
+#include "listener.h"
 
 Game game;
 
@@ -72,22 +73,42 @@ void wait_for_loot()
 	int loot_turn = game.loot_turn;
 	if(loot_turn >= NUM_PLAYERS)
 	{
-		
+		//send msg play start
+		send_play_start();
 		return;
 	}
+	
 	if(game.players[loot_turn].isAI)
 	{
-		scores[loot_turn] = calculate_loot_score(&game.players[loot_turn]);
-		broadcast_loot_score(game.players[loot_turn].id,scores[loot_turn]);
+		game.loot_scores[loot_turn] = calculate_loot_score(&game.players[loot_turn]);
+		broadcast_loot_score(game.players[loot_turn].id,game.loot_scores[loot_turn]);
+		if(game.loot_scores[loot_turn] >= 3)
+		{
+			//send msg play start
+			send_play_start();
+		}
 	}
 	else
 	{
-		//send message
+		//send msg wait for loot
+		send_wait_for_loot(loot_turn);
 		//add listener
-		SuspendThread(mainThread);
+		
 	}
 	game.loot_turn++;
 }
+
+void onClinetLoot(MsgBase* msg)
+{
+	
+}
+
+void addListeners()
+{
+	addMsgListener(MSG_SRV_WAIT_LOOT_1000,onClinetLoot);
+	
+}
+
 
 void start()
 {
@@ -110,7 +131,7 @@ void run()
 {
 	while(true)
 	{
-		turn();
-		//game over?
+		listener_loop();
+		Sleep(10);
 	}
 }

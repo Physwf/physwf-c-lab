@@ -10,7 +10,7 @@ LIB_GLES2=./lib/2.0/libEGL.lib ./lib/2.0/libGLESv2.lib
 LIB_PNG=$(DIR_SHARED)/lib/libpng.lib $(DIR_SHARED)/lib/zlib.lib
 LIB_DUI=$(DIR_SHARED)/lib/DuiLib.lib
 LIB_DUI_D=$(DIR_SHARED)/lib/DuiLib_d.lib
-OPTION=/MD
+OPTION=/MD /EHsc
 DEBUG=
 
 BIN=./bin
@@ -35,8 +35,8 @@ LLclient:LLSimpleClient.obj Log.obj
 LLSimpleClient.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/main.cpp $(CLOUT)$(BIN)/LLSimpleClient.obj $(INCLUDE) $(OPTION)
 	
-LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj Log.obj
-	$(LINK) $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj Log.obj LLmessage.obj LLlistener.obj serialization.obj 
+	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLmessage.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(BIN)/serialization.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
 LLservices.obj:
@@ -49,9 +49,13 @@ LLrules.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/rules.cpp $(CLOUT)$(BIN)/LLrules.obj $(INCLUDE) $(OPTION)
 LLgame.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/game.cpp $(CLOUT)$(BIN)/LLgame.obj $(INCLUDE) $(OPTION)
+LLmessage.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/message.cpp $(CLOUT)$(BIN)/LLmessage.obj $(INCLUDE) $(OPTION)
+LLlistener.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/listener.cpp $(CLOUT)$(BIN)/LLlistener.obj $(INCLUDE) $(OPTION)
 LLServerMain.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/main.cpp $(CLOUT)$(BIN)/LLServerMain.obj $(INCLUDE) $(OPTION)
-	
+
 #Jewel
 jewel:JewelMain.obj JewelView.obj JewelData.obj utils.obj random.obj 
 	$(LINK) $(BIN)/JewelMain.obj $(BIN)/JewelView.obj $(BIN)/JewelData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
@@ -131,6 +135,8 @@ kinematics.obj:$(DIR_SHARED)/src/kinematics.cpp
 	$(CL) $(DIR_SHARED)/src/kinematics.cpp $(CLOUT)$(BIN)/kinematics.obj $(INCLUDE) $(OPTION)
 color_matrix.obj:$(DIR_SHARED)/src/color_matrix.cpp
 	$(CL) $(DIR_SHARED)/src/color_matrix.cpp $(CLOUT)$(BIN)/color_matrix.obj $(INCLUDE) $(OPTION)
+serialization.obj:
+	$(CL) $(DIR_SHARED)/src/serialization.cpp $(CLOUT)$(BIN)/serialization.obj $(INCLUDE) $(OPTION)
 Log.obj:
 	$(CL) $(DIR_SHARED)/src/log/log.cpp $(CLOUT)$(BIN)/Log.obj $(INCLUDE) $(OPTION)
 	
