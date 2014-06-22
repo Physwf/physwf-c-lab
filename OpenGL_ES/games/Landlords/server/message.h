@@ -64,4 +64,3 @@ class MSG_CLNT_LOOT_SCORE:public MsgBase
 		void writeBody(Bytes* output);
 		void readBody(Bytes* input);	
 };
-

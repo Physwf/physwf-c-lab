@@ -66,10 +66,14 @@ void deal_cards()
 		result->loot[j] = game.pool[cards_left+j];
 		cards_left --;
 	}
+	//send deal result
+	Log::info("send deal result");
+	broadcast_deal_result(result);
 }
 
 void wait_for_loot()
 {
+	Log::info("wait_for_loot");
 	int loot_turn = game.loot_turn;
 	if(loot_turn >= NUM_PLAYERS)
 	{
@@ -91,6 +95,7 @@ void wait_for_loot()
 	else
 	{
 		//send msg wait for loot
+		Log::info("wait_for_loot");
 		send_wait_for_loot(loot_turn);
 		//add listener
 		
@@ -113,6 +118,7 @@ void addListeners()
 void start()
 {
 	// memset(players,0,sizeof(players));
+	Log::info("start");
 	shuffle(10);
 	deal_cards();
 	broadcast_deal_result(&game.dresult);

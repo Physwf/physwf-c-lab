@@ -185,7 +185,6 @@ void net_run()
 {
 	while(true)
 	{
-		Log::info("loop");
 		net_select();
 		net_clean();
 		Sleep(10);
