@@ -98,14 +98,14 @@ void wait_for_loot()
 	game.loot_turn++;
 }
 
-void onClinetLoot(MsgBase* msg)
+void onClinetLoot(char* msg)
 {
 	
 }
 
 void addListeners()
 {
-	addMsgListener(MSG_SRV_WAIT_LOOT_1000,onClinetLoot);
+	addMsgListener(MSG_SRV_WAIT_LOOT_1001,onClinetLoot);
 	
 }
 
@@ -115,7 +115,7 @@ void start()
 	// memset(players,0,sizeof(players));
 	shuffle(10);
 	deal_cards();
-	send_deal_result(&game.dresult);
+	broadcast_deal_result(&game.dresult);
 	
 	wait_for_loot();
 }

@@ -35,8 +35,8 @@ LLclient:LLSimpleClient.obj Log.obj
 LLSimpleClient.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/main.cpp $(CLOUT)$(BIN)/LLSimpleClient.obj $(INCLUDE) $(OPTION)
 	
-LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj Log.obj LLmessage.obj LLlistener.obj serialization.obj 
-	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLmessage.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(BIN)/serialization.obj $(LINKOUT)$(BIN)/$@.exe
+LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj serialization.obj 
+	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(BIN)/serialization.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
 LLservices.obj:
@@ -49,8 +49,6 @@ LLrules.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/rules.cpp $(CLOUT)$(BIN)/LLrules.obj $(INCLUDE) $(OPTION)
 LLgame.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/game.cpp $(CLOUT)$(BIN)/LLgame.obj $(INCLUDE) $(OPTION)
-LLmessage.obj:
-	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/message.cpp $(CLOUT)$(BIN)/LLmessage.obj $(INCLUDE) $(OPTION)
 LLlistener.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/listener.cpp $(CLOUT)$(BIN)/LLlistener.obj $(INCLUDE) $(OPTION)
 LLServerMain.obj:

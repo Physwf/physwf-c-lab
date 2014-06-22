@@ -38,5 +38,6 @@ typedef struct game_t {
 } Game, *PGame;
 
 void init();
+void start();
 
 #endif

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <log/Log.h>
 #include "game.h"
+#include "msg.h"
 
 char buffer[WRITE_BUFFER_SIZE];
 HANDLE hNetThread;
@@ -23,14 +24,39 @@ void init_service()
 	WaitForSingleObject(hNetThread,INFINITE);
 }
 
-void send_data(int pid)
+void send_data(int pid, unsigned short mid, char* data, int len)
 {
-	
+	MsgHead head;
+	head.msgid = mid;
+	head.length = len;
+	if(pid < NUM_PLAYERS)
+	{
+		if(clients[pid].state == STATE_HOLD)
+		{
+			send(clients[pid].socket,(char*)&head,len,0);
+			send(clients[pid].socket,data,len,0);
+		}
+	}
 }
 
-void send_deal_result(PDealResult result)
+void broadcast_data(unsigned short mid, char* data,int len)
 {
-	
+	MsgHead head;
+	head.msgid = mid;
+	head.length = len;
+	for(int i=0;i<NUM_PLAYERS;i++)
+	{
+		if(clients[i].state == STATE_HOLD)
+		{
+			send(clients[i].socket,(char*)&head, HEAD_LENGTH,0);
+			send(clients[i].socket,data,len,0);
+		}
+	}
+}
+
+void broadcast_deal_result(PDealResult result)
+{
+	broadcast_data((int)MSG_BRDCST_DEAL_RESULT_1000,(char*)result,sizeof(DealResult));
 }
 
 void broadcast_loot_score(int who,int score)

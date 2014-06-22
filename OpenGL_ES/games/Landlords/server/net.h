@@ -21,5 +21,6 @@ typedef struct connection_t {
 	int state;
 } Connection,*PConnection;
 
+extern Connection clients[MAX_CONN];
 void net_init();
 void net_run();

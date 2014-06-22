@@ -1,6 +1,7 @@
 #include "net.h"
 #include <stdio.h>
 #include <log/Log.h>
+#include "listener.h"
 
 SOCKET server;
 Connection clients[MAX_CONN];
@@ -100,6 +101,7 @@ void net_select()
 				clients[i].socket = client_temp;
 				clients[i].state = STATE_HOLD;
 				++num_clients;
+				onPlayerJoin(num_clients,i);
 				Log::info("client accepted, Total:%d!",num_clients);
 				//onAccepted, notify business layer
 			}
@@ -139,6 +141,8 @@ void net_select()
 					LeaveCriticalSection(&CS);//leave critical section
 				}
 			}
+			return;
+			/*
 			if(FD_ISSET(clients[i].socket,&wset))
 			{
 				int len = clients[i].writeBufAvaliable;
@@ -158,6 +162,7 @@ void net_select()
 					LeaveCriticalSection(&CS);//leave critical section
 				}
 			}
+			*/
 		}
 	}
 }
