@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <log/Log.h>
 #include <winsock2.h>
-
+#include <windows.h>
 
 #pragma comment(lib,"ws2_32.lib")
 
 SOCKET conn;
 FILE* Log::mStream = NULL;
+
+FD_SET rset;
 
 void init()
 {
@@ -39,8 +41,30 @@ void init()
 	// closesocket(conn);
 }
 
+void net_read()
+{
+	FD_ZERO(&rset);
+	
+	FD_SET(conn,&rset);
+	
+	if( select(0, &rset, NULL, NULL, NULL) == SOCKET_ERROR)
+	{
+		Log::info("select return error!");
+	}
+	
+	if(FD_ISSET(conn,&rset))
+	{
+		
+	}
+}
+
 int main()
 {
 	init();
+	while(true)
+	{
+		net_read();
+		Sleep(10);
+	}
 	return 0;
 }
