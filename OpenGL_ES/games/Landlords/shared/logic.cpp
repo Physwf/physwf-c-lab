@@ -1,4 +1,4 @@
-#include "rules.h"
+#include "logic.h"
 
 bool equal_single(PCard left, PCard right)
 {
