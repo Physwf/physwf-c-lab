@@ -42,12 +42,12 @@ void broadcast_data(unsigned short mid, char* data,int len)
 {
 	MsgHead head;
 	head.msgid = mid;
-	head.length = len;
+	head.length = len + HEAD_LENGTH;
 	for(int i=0;i<NUM_PLAYERS;i++)
 	{
 		if(clients[i].state == STATE_HOLD)
 		{
-			send(clients[i].socket,(char*)&head, HEAD_LENGTH,0);
+			send(clients[i].socket, (char*)&head, HEAD_LENGTH, 0);
 			send(clients[i].socket,data,len,0);
 		}
 	}

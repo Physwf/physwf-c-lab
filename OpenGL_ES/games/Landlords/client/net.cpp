@@ -48,7 +48,8 @@ void net_init()
 	}
 	
 	hNetThread = CreateThread(NULL,0,net_thread,NULL,0,NULL);
-	WaitForSingleObject(hNetThread, INFINITE);
+	// WaitForSingleObject(hNetThread, INFINITE);
+	Log::info("log after wait");
 }
 
 void net_read()
@@ -69,21 +70,24 @@ void net_read()
 		
 		if(len > 0)
 		{
-			EnterCriticalSection(&CS);
+			
 			int rc = recv(conn.socket, avaliableBuf, len, 0);
 			if(rc > 0)
 			{
+				EnterCriticalSection(&CS);
 				conn.readBufAvaliable += rc;
-				Log::info("data recv!");
+				Log::info("data recv!len:%d",rc);
+				LeaveCriticalSection(&CS);
 			}
 			else if(rc == 0)
 			{
+				
 			}
 			else
 			{
 				
 			}
-			LeaveCriticalSection(&CS);
+			
 		}
 	}
 }

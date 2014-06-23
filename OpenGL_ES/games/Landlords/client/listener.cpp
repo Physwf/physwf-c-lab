@@ -28,10 +28,12 @@ void dispatchMsg(unsigned short mid, char* msg)
 
 void listener_loop()
 {
+	Log::info("conn.readBufAvaliable:%d",conn.readBufAvaliable);
 	if(conn.readBufAvaliable > HEAD_LENGTH)
 	{
 		EnterCriticalSection(&CS);
 		memcpy(&head,conn.readBuffer,HEAD_LENGTH);
+		Log::info("head.length:%d",head.length);
 		if(conn.readBufAvaliable > head.length)
 		{
 			memcpy(buffer,conn.readBuffer,head.length);

@@ -22,20 +22,21 @@ void onDealResult(char* data)
 void init()
 {
 	Log::init("LLclient.log");
-	if(!InitializeCriticalSectionAndSpinCount(&CS,0x00000400) )
-		return;
 	net_init();
 	addMsgListener(MSG_NOTI_DEAL_RESULT_1000,onDealResult);
-	DeleteCriticalSection(&CS);
 }
 
 int main()
 {
+	if(!InitializeCriticalSectionAndSpinCount(&CS,0x00000400) ) return -1;
+		
 	init();
 	while(true)
 	{
 		listener_loop();
 		Sleep(10);
 	}
+	DeleteCriticalSection(&CS);
 	return 0;
+	
 }
