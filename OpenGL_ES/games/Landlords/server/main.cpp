@@ -13,6 +13,7 @@ int main()
 	Log::init("LLserver.log");
 	mainThread = GetCurrentThread();
 	init();
+	run();
 	DeleteCriticalSection(&CS);
 	return 0;
 }

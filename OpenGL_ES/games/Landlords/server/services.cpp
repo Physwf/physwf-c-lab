@@ -20,7 +20,7 @@ void init_service()
 	net_init();
 	//create net thread
 	hNetThread = CreateThread(NULL,0,net_thread,NULL,0,NULL);
-	WaitForSingleObject(hNetThread,INFINITE);
+	// WaitForSingleObject(hNetThread,INFINITE);
 }
 
 void send_data(int pid, unsigned short mid, char* data, int len)

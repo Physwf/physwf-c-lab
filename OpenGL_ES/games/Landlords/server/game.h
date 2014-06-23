@@ -5,5 +5,6 @@
 
 void init();
 void start();
+void run();
 
 #endif
