@@ -21,6 +21,7 @@ DIR_BUBBLE=/Bubble
 DIR_JEWEL=/Jewel
 DIR_LANDLORDS_SERVER=/Landlords/server
 DIR_LANDLORDS_CLIENT=/Landlords/client
+DIR_LANDLORDS_SHREAD=/Landlords/shared
 
 DIR_EFFECTS=./effects
 DIR_GRAY=/gray
@@ -30,23 +31,21 @@ DIR_COLORMATRIX=/ColorMatrix
 #Landlords
 LL:LLclient LLserver
 
-LLclient:LLSimpleClient.obj Log.obj
-	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
+LLclient:LLSimpleClient.obj Log.obj LLshared LLClistener.obj LLCnet.obj
+	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/LLCnet.obj $(BIN)/LLClistener.obj $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
 LLSimpleClient.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/main.cpp $(CLOUT)$(BIN)/LLSimpleClient.obj $(INCLUDE) $(OPTION)
+LLClistener.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/listener.cpp $(CLOUT)$(BIN)/LLClistener.obj $(INCLUDE) $(OPTION)
+LLCnet.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/net.cpp $(CLOUT)$(BIN)/LLCnet.obj $(INCLUDE) $(OPTION)
 	
-LLserver:LLnet.obj LLservices.obj LLsort.obj LLai.obj LLrules.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj serialization.obj 
-	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLrules.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(BIN)/serialization.obj $(LINKOUT)$(BIN)/$@.exe
+LLserver:LLnet.obj LLservices.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj LLshared
+	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLlogic.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
 LLservices.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/services.cpp $(CLOUT)$(BIN)/LLservices.obj $(INCLUDE) $(OPTION)
-LLsort.obj:
-	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/sort.cpp $(CLOUT)$(BIN)/LLsort.obj $(INCLUDE) $(OPTION)
-LLai.obj:
-	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/ai.cpp $(CLOUT)$(BIN)/LLai.obj $(INCLUDE) $(OPTION)
-LLrules.obj:
-	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/rules.cpp $(CLOUT)$(BIN)/LLrules.obj $(INCLUDE) $(OPTION)
 LLgame.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/game.cpp $(CLOUT)$(BIN)/LLgame.obj $(INCLUDE) $(OPTION)
 LLlistener.obj:
@@ -54,6 +53,15 @@ LLlistener.obj:
 LLServerMain.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/main.cpp $(CLOUT)$(BIN)/LLServerMain.obj $(INCLUDE) $(OPTION)
 
+LLshared:LLsort.obj LLai.obj LLlogic.obj
+	
+LLlogic.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SHREAD)/logic.cpp $(CLOUT)$(BIN)/LLlogic.obj $(INCLUDE) $(OPTION)
+LLsort.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SHREAD)/sort.cpp $(CLOUT)$(BIN)/LLsort.obj $(INCLUDE) $(OPTION)
+LLai.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SHREAD)/ai.cpp $(CLOUT)$(BIN)/LLai.obj $(INCLUDE) $(OPTION)
+	
 #Jewel
 jewel:JewelMain.obj JewelView.obj JewelData.obj utils.obj random.obj 
 	$(LINK) $(BIN)/JewelMain.obj $(BIN)/JewelView.obj $(BIN)/JewelData.obj $(LIB_GLES2) $(LIB_PNG) $(BIN)/utils.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
