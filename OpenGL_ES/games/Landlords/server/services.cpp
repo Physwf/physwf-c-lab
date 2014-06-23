@@ -43,6 +43,7 @@ void broadcast_data(unsigned short mid, char* data,int len)
 	MsgHead head;
 	head.msgid = mid;
 	head.length = len + HEAD_LENGTH;
+	Log::info("mid:%d,length:%d",mid,head.length);
 	for(int i=0;i<NUM_PLAYERS;i++)
 	{
 		if(clients[i].state == STATE_HOLD)
