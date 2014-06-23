@@ -2,7 +2,7 @@
 #include "net.h"
 #include "game.h"
 
-char msg_cache[1024];
+char buffer[1024];
 std::map<int,MsgListener> listeners;
 
 MsgHead head;
@@ -38,10 +38,10 @@ void listener_loop()
 				memcpy(&head,clients[i].readBuffer,HEAD_LENGTH);
 				if(clients[i].readBufAvaliable > head.length)
 				{
-					memcpy(msg_cache,clients[i].readBuffer,head.length);
+					memcpy(buffer,clients[i].readBuffer,head.length);
 					clients[i].readBufAvaliable -= head.length;
 					memcpy(clients[i].readBuffer,clients[i].readBuffer+head.length,clients[i].readBufAvaliable);
-					dispatchMsg(head.msgid,msg_cache);
+					dispatchMsg(head.msgid,buffer);
 				}
 			}
 		}

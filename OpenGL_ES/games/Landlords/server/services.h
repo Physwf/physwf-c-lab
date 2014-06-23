@@ -1,4 +1,4 @@
-#include "game.h"
+#include "../shared/logic.h"
 #include "../shared/common.h"
 
 void init_service();

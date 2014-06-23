@@ -1,7 +1,7 @@
-#ifndef _MSG_H
-#define _MSG_H
+#ifndef _LISTENER_H
+#define _LISTENER_H
 
-#include "msg.h"
+#include "../shared/msg.h"
 #include <queue>
 #include <map>
 

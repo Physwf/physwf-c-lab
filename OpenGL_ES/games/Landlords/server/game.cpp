@@ -1,10 +1,13 @@
+#include <stdio.h>
+#include <string.h>
+
+#include <random.h>
+#include <log/Log.h>
+
+#include "../shared/ai.h"
+
 #include "game.h"
 #include "services.h"
-#include "ai.h"
-#include <random.h>
-#include <string.h>
-#include <stdio.h>
-#include <log/Log.h>
 #include "listener.h"
 
 Game game;
@@ -110,7 +113,7 @@ void onClinetLoot(char* msg)
 
 void addListeners()
 {
-	addMsgListener(MSG_SRV_WAIT_LOOT_1001,onClinetLoot);
+	addMsgListener(MSG_NOTI_WAIT_LOOT_1001,onClinetLoot);
 	
 }
 

@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include <log/Log.h>
 #include "game.h"
-#include "msg.h"
+#include "../shared/msg.h"
 
-char buffer[WRITE_BUFFER_SIZE];
 HANDLE hNetThread;
 
 DWORD WINAPI net_thread(PVOID pParam)
@@ -56,7 +55,7 @@ void broadcast_data(unsigned short mid, char* data,int len)
 
 void broadcast_deal_result(PDealResult result)
 {
-	broadcast_data((int)MSG_BRDCST_DEAL_RESULT_1000,(char*)result,sizeof(DealResult));
+	broadcast_data((int)MSG_NOTI_DEAL_RESULT_1000,(char*)result,sizeof(DealResult));
 }
 
 void broadcast_loot_score(int who,int score)
