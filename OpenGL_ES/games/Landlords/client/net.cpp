@@ -14,7 +14,10 @@ void net_read();
 
 DWORD WINAPI net_thread(LPVOID pParam)
 {
-	net_read();
+	while(true)
+	{
+		net_read();
+	}
 	return 0;
 }
 
@@ -71,6 +74,7 @@ void net_read()
 			if(rc > 0)
 			{
 				conn.readBufAvaliable += rc;
+				Log::info("data recv!");
 			}
 			else if(rc == 0)
 			{

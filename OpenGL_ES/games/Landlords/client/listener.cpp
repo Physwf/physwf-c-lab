@@ -1,6 +1,8 @@
 #include <string.h>
 #include <map>
 
+#include <log/Log.h>
+
 #include "listener.h"
 #include "../shared/common.h"
 #include "../shared/msg.h"
@@ -36,6 +38,7 @@ void listener_loop()
 			conn.readBufAvaliable -= head.length;
 			memcpy(conn.readBuffer,conn.readBuffer+head.length,conn.readBufAvaliable);
 			dispatchMsg(head.msgid,buffer);
+			Log::info("msg recv");
 		}
 		LeaveCriticalSection(&CS);
 	}
