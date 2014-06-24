@@ -31,17 +31,19 @@ DIR_COLORMATRIX=/ColorMatrix
 #Landlords
 LL:LLclient LLserver
 
-LLclient:LLSimpleClient.obj Log.obj LLshared LLClistener.obj LLCnet.obj
-	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/LLCnet.obj $(BIN)/LLClistener.obj $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
+LLclient:LLSimpleClient.obj Log.obj LLshared LLClistener.obj LLCnet.obj LLCgame.obj
+	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/LLCnet.obj $(BIN)/LLClistener.obj $(BIN)/LLCgame.obj $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
 LLSimpleClient.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/main.cpp $(CLOUT)$(BIN)/LLSimpleClient.obj $(INCLUDE) $(OPTION)
+LLCgame.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/game.cpp $(CLOUT)$(BIN)/LLCgame.obj $(INCLUDE) $(OPTION)
 LLClistener.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/listener.cpp $(CLOUT)$(BIN)/LLClistener.obj $(INCLUDE) $(OPTION)
 LLCnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/net.cpp $(CLOUT)$(BIN)/LLCnet.obj $(INCLUDE) $(OPTION)
 	
-LLserver:LLnet.obj LLservices.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj LLshared
-	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj  $(BIN)/LLai.obj $(BIN)/LLlogic.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
+LLserver:LLnet.obj LLservices.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj LLshared LLLog.obj
+	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj $(BIN)/LLLog.obj $(BIN)/LLai.obj $(BIN)/LLlogic.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
 LLservices.obj:
@@ -52,7 +54,9 @@ LLlistener.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/listener.cpp $(CLOUT)$(BIN)/LLlistener.obj $(INCLUDE) $(OPTION)
 LLServerMain.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/main.cpp $(CLOUT)$(BIN)/LLServerMain.obj $(INCLUDE) $(OPTION)
-
+LLLog.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/LLLog.cpp $(CLOUT)$(BIN)/LLLog.obj $(INCLUDE) $(OPTION)
+	
 LLshared:LLsort.obj LLai.obj LLlogic.obj
 	
 LLlogic.obj:
