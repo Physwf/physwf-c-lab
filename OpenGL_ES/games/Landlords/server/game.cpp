@@ -9,22 +9,24 @@
 #include "game.h"
 #include "services.h"
 #include "listener.h"
+#include "LLLog.h"
 
 Game game;
 
 void init()
 {
 	Log::info("init game!");
-	for(int i=(int)SPADE;i<(int)DIAMOND;i++)
+	for(int i=(int)SPADE;i<=(int)DIAMOND;i++)
 	{
 		for(int j=0;j<13;j++)
 		{
-			game.pool[i*13+j].rank = j;
+			game.pool[i*13+j].rank = j+1;
 			game.pool[i*13+j].suit = (Suit)i;
 		}
 	}
 	game.pool[52].rank = JOKER_BLACK_RANK;
 	game.pool[53].rank = JOKER_RED_RANK;
+	LL_log_pool();
 	init_service();
 }
 
@@ -40,6 +42,7 @@ void shuffle(int times)
 		game.pool[index2].rank = temp->rank;
 		game.pool[index2].suit = temp->suit;
 	}
+	LL_log_pool();
 }
 
 void deal_cards()
@@ -54,6 +57,8 @@ void deal_cards()
 			cards_left--;
 		}
 	}
+	LL_log_player_cards();
+	
 	PDealResult results = game.dresults;
 	for(int j=0;j<NUM_PLAYERS;j++)
 	{
@@ -66,11 +71,12 @@ void deal_cards()
 	const int odd_num = 3;
 	for(int j=0;j<odd_num;j++)
 	{
-		results[0].odd[j] = game.pool[cards_left+j];
-		results[1].odd[j] = game.pool[cards_left+j];
-		results[2].odd[j] = game.pool[cards_left+j];
+		results[0].odd[j] = game.pool[cards_left-1];
+		results[1].odd[j] = game.pool[cards_left-1];
+		results[2].odd[j] = game.pool[cards_left-1];
 		cards_left --;
 	}
+	LL_log_deal_result();
 	//send deal result
 	Log::info("send deal result");
 	for(int j=0;j<NUM_PLAYERS;j++)

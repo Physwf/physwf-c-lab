@@ -3,6 +3,8 @@
 
 #include "../shared/logic.h"
 
+extern Game game;
+
 void init();
 void start();
 void run();
