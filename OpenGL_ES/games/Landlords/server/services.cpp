@@ -54,9 +54,9 @@ void broadcast_data(unsigned short mid, char* data,int len)
 	}
 }
 
-void broadcast_deal_result(PDealResult result)
+void send_deal_result(int who, PDealResult result)
 {
-	broadcast_data((int)MSG_NOTI_DEAL_RESULT_1000,(char*)result,sizeof(DealResult));
+	send_data(who,(int)MSG_NOTI_DEAL_RESULT_1000, (char*)result, sizeof(DealResult));
 }
 
 void broadcast_loot_score(int who,int score)

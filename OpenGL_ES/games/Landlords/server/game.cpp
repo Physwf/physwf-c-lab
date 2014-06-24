@@ -54,24 +54,29 @@ void deal_cards()
 			cards_left--;
 		}
 	}
-	PDealResult result = &game.dresult;
+	PDealResult results = game.dresults;
 	for(int j=0;j<NUM_PLAYERS;j++)
 	{
 		PPlayer player = &game.players[j];
-		result->playerIds[j] = player->id;
 		for(int i=0;i<player->num_cards;i++)
 		{
-			result->cards[i] = player->cards[i];
+			results[j].cards[i] = player->cards[i];
 		}
 	}
-	for(int j=0;j<3;j++)
+	const int odd_num = 3;
+	for(int j=0;j<odd_num;j++)
 	{
-		result->loot[j] = game.pool[cards_left+j];
+		results[0].odd[j] = game.pool[cards_left+j];
+		results[1].odd[j] = game.pool[cards_left+j];
+		results[2].odd[j] = game.pool[cards_left+j];
 		cards_left --;
 	}
 	//send deal result
 	Log::info("send deal result");
-	broadcast_deal_result(result);
+	for(int j=0;j<NUM_PLAYERS;j++)
+	{
+		send_deal_result(j,&results[j]);
+	}
 }
 
 void wait_for_loot()
@@ -124,7 +129,6 @@ void start()
 	Log::info("start");
 	shuffle(10);
 	deal_cards();
-	broadcast_deal_result(&game.dresult);
 	
 	wait_for_loot();
 }

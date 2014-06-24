@@ -15,7 +15,7 @@ typedef enum {
 } Suit;
 
 typedef struct card_t {
-	int rank;
+	unsigned short rank;
 	Suit suit;
 } Card, *PCard;
 
@@ -63,9 +63,8 @@ typedef struct player_t {
 } Player,*PPlayer;
 
 typedef struct deal_result_t {
-	int playerIds[3];
-	Card cards[20];
-	Card loot[3];
+	Card cards[17];
+	Card odd[3];
 } DealResult, *PDealResult;
 
 typedef struct game_t {
@@ -74,7 +73,7 @@ typedef struct game_t {
 	int loot_turn;
 	int loot_scores[NUM_PLAYERS];
 	int turn;
-	DealResult dresult;
+	DealResult dresults[NUM_PLAYERS];
 	int landlord;//players index
 } Game, *PGame;
 
