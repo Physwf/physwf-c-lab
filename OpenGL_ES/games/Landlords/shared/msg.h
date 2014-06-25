@@ -3,7 +3,7 @@
 
 #include "logic.h"
 
-#define HEAD_LENGTH  (sizeof(short) + sizeof(int))
+#define HEAD_LENGTH  8
 
 enum
 {

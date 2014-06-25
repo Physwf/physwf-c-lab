@@ -36,11 +36,11 @@ void shuffle(int times)
 	{
 		int index1 = rand_by_range(0,NUM_CARDS-1);
 		int index2 = rand_by_range(0,NUM_CARDS-1);
-		PCard temp = game.pool+index1;
+		Card temp = game.pool[index1];
 		game.pool[index1].rank = game.pool[index2].rank;
 		game.pool[index1].suit = game.pool[index2].suit;
-		game.pool[index2].rank = temp->rank;
-		game.pool[index2].suit = temp->suit;
+		game.pool[index2].rank = temp.rank;
+		game.pool[index2].suit = temp.suit;
 	}
 	LL_log_pool();
 }

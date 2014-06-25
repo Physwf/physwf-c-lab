@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 #include <log/Log.h>
 
 #include "game.h"
@@ -30,7 +30,10 @@ void onDealResult(char* data)
 
 void init()
 {
-	Log::init("LLclient.log");
+	char fname[30];
+	sprintf(fname,"LLclient%8d.log",(int)time(NULL));
+	
+	Log::init(fname);
 	net_init();
 	addMsgListener(MSG_NOTI_DEAL_RESULT_1000,onDealResult);
 }
