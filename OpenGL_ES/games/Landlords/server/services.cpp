@@ -27,7 +27,7 @@ void send_data(int pid, unsigned short mid, char* data, int len)
 {
 	MsgHead head;
 	head.msgid = mid;
-	head.length = len;
+	head.length = len+HEAD_LENGTH;
 	Log::info("mid:%d,length:%d",mid,head.length);
 	if(pid < NUM_PLAYERS)
 	{

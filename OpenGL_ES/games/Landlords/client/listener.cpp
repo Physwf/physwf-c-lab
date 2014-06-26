@@ -39,7 +39,7 @@ void listener_loop()
 		Log::info("head.length:%d",head.length);
 		if(conn.readBufAvaliable >= head.length)
 		{
-			memcpy(buffer,conn.readBuffer,head.length);
+			memcpy(buffer,conn.readBuffer+HEAD_LENGTH,head.length-HEAD_LENGTH);
 			conn.readBufAvaliable -= head.length;
 			memcpy(conn.readBuffer,conn.readBuffer+head.length,conn.readBufAvaliable);
 			dispatchMsg(head.msgid,buffer);
