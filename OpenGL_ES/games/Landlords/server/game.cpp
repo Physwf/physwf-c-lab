@@ -117,50 +117,6 @@ void wait_for_loot()
 	game.loot_turn++;
 }
 
-void onPlayerJoin(int total,int pid, PConnection connection)
-{
-	game.player[pid].connection = connection;
-	game.player[pid].isAI = false;
-	if(total == 0)
-	{
-		game.player[pid].isHost = true;
-		//send wait for players
-	}
-	else if(total < NUM_PLAYERS)
-	{
-		//send host is waiting for players
-	}
-	else if(total == NUM_PLAYERS)
-	{
-		start();
-	}
-}
-
-void onPlayerLeft(int total,int pid)
-{
-	// game.player[pid].isHost = false;
-	// for()
-	// {
-	// }
-}
-
-void onHostStartGame(char* msg)
-{
-	start();
-}
-
-void onClinetLoot(char* msg)
-{
-	
-}
-
-void addListeners()
-{
-	addMsgListener(MSG_SUBM_START_GAME_1002,onHostStartGame);
-		// addMsgListener(MSG_SUBM_LOOT_SCORE_1005,onClinetLoot);
-}
-
-
 void start()
 {
 	// memset(players,0,sizeof(players));
@@ -186,3 +142,55 @@ void run()
 		Sleep(10);
 	}
 }
+
+void onPlayerJoin(int total,int pid, PConnection connection)
+{
+	game.players[pid].connection = connection;
+	game.players[pid].isAI = false;
+	if(total == 0)
+	{
+		game.players[pid].isHost = true;
+		//send wait for players
+		send_ask_wait_more(pid);
+	}
+	else if(total < NUM_PLAYERS)
+	{
+		//send host is waiting for players
+		send_host_waiting_players(pid);
+	}
+	else if(total == NUM_PLAYERS)
+	{
+		start();
+	}
+	
+	for(int i=0;i<NUM_PLAYERS;i++)
+	{
+		if(i != pid) send_player_joined(i,pid);
+	}
+}
+
+void onPlayerLeft(int total,int pid)
+{
+	// game.player[pid].isHost = false;
+	// for()
+	// {
+	// }
+}
+
+void onHostStartGame(char* msg)
+{
+	start();
+}
+
+void onClinetLoot(char* msg)
+{
+	
+}
+
+void addListeners()
+{
+	addMsgListener(MSG_SUBM_LOOT_SCORE_1006,onHostStartGame);
+		// addMsgListener(MSG_SUBM_LOOT_SCORE_1005,onClinetLoot);
+}
+
+

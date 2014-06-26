@@ -55,9 +55,30 @@ void broadcast_data(unsigned short mid, char* data,int len)
 	}
 }
 
+void send_ask_wait_more(int pid)
+{
+	MSG_ASK_WAIT_MORE msg;
+	send_data(pid,MSG_NOTI_ASK_WAIT_MORE_1000, (char*)&msg,sizeof(MSG_ASK_WAIT_MORE));
+}
+
+void send_player_joined(int pid,int who)
+{
+	MSG_NOTI_PLAYER_JOIN msg;
+	msg.playerId = who;
+	send_data(pid,MSG_NOTI_PLAYER_JOIN_1001, (char*)&msg,sizeof(MSG_NOTI_PLAYER_JOIN));
+}
+
+void send_host_waiting_players(int pid)
+{
+	MSG_NOTI_HOST_WAIT_PLAYERS msg;
+	send_data(pid,MSG_NOTI_HOST_WAIT_PLAYERS_1002, (char*)&msg,sizeof(MSG_NOTI_HOST_WAIT_PLAYERS));
+}
+
 void send_deal_result(int who, PDealResult result)
 {
-	send_data(who,(int)MSG_NOTI_DEAL_RESULT_1000, (char*)result, sizeof(DealResult));
+	MSG_NOTI_DEAL_RESULT msg;
+	memcpy(&msg.result,result,sizeof(DealResult));
+	send_data(who,(int)MSG_NOTI_DEAL_RESULT_1004, (char*)&msg, sizeof(MSG_NOTI_DEAL_RESULT));
 }
 
 void broadcast_loot_score(int who,int score)
