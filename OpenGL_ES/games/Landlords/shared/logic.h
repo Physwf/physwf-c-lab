@@ -1,6 +1,8 @@
 #ifndef _LOGIC_H
 #define _LOGIC_H
 
+#include "connection.h"
+
 #define JOKER_BLACK_RANK 14
 #define JOKER_RED_RANK 15
 
@@ -47,6 +49,7 @@ bool greater_sequence(PCard cards1,PCard cards2);
 
 typedef struct player_t {
 	int id;
+	PConnection connection;
 	Card cards[20];
 	int num_cards;
 	int singles[20];
@@ -60,6 +63,7 @@ typedef struct player_t {
 	int turn;
 	bool isLord;
 	bool isAI;
+	bool isHost;
 } Player,*PPlayer;
 
 typedef struct deal_result_t {

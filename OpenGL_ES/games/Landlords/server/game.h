@@ -6,7 +6,7 @@
 extern Game game;
 
 void init();
-void start();
+void onPlayerJoin(int total,int pid, PConnection connection)
 void run();
 
 #endif

@@ -117,6 +117,38 @@ void wait_for_loot()
 	game.loot_turn++;
 }
 
+void onPlayerJoin(int total,int pid, PConnection connection)
+{
+	game.player[pid].connection = connection;
+	game.player[pid].isAI = false;
+	if(total == 0)
+	{
+		game.player[pid].isHost = true;
+		//send wait for players
+	}
+	else if(total < NUM_PLAYERS)
+	{
+		//send host is waiting for players
+	}
+	else if(total == NUM_PLAYERS)
+	{
+		start();
+	}
+}
+
+void onPlayerLeft(int total,int pid)
+{
+	// game.player[pid].isHost = false;
+	// for()
+	// {
+	// }
+}
+
+void onHostStartGame(char* msg)
+{
+	start();
+}
+
 void onClinetLoot(char* msg)
 {
 	
@@ -124,8 +156,8 @@ void onClinetLoot(char* msg)
 
 void addListeners()
 {
-	addMsgListener(MSG_NOTI_WAIT_LOOT_1001,onClinetLoot);
-	
+	addMsgListener(MSG_SUBM_START_GAME_1002,onHostStartGame);
+		// addMsgListener(MSG_SUBM_LOOT_SCORE_1005,onClinetLoot);
 }
 
 

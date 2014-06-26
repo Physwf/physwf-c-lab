@@ -21,10 +21,10 @@ void dispatchMsg(unsigned short mid, char* msg)
 	}
 }
 
-void onPlayerJoin(int total,int pid)
+void onClientAccept(int total,int pid)
 {
-	if(total == NUM_PLAYERS)
-		start();
+	if(total <= NUM_PLAYERS)
+		onPlayerJoin(total, pid, &clients[pid]);
 }
 
 void listener_loop()

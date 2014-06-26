@@ -9,6 +9,6 @@ typedef void (*MsgListener)(char*);
 
 void addMsgListener(int msgid, MsgListener listener);
 void listener_loop();
-void onPlayerJoin(int total,int pid);
+void onClientAccept(int total,int pid);
 
 #endif

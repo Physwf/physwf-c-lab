@@ -101,7 +101,7 @@ void net_select()
 				clients[i].socket = client_temp;
 				clients[i].state = STATE_HOLD;
 				++num_clients;
-				onPlayerJoin(num_clients,i);
+				onClientAccept(num_clients,i);
 				Log::info("client accepted, Total:%d!",num_clients);
 				//onAccepted, notify business layer
 			}
