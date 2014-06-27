@@ -79,6 +79,7 @@ typedef struct game_t {
 	int turn;
 	DealResult dresults[NUM_PLAYERS];
 	int landlord;//players index
+	int phase;
 } Game, *PGame;
 
 #endif

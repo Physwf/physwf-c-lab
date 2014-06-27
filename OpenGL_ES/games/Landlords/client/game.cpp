@@ -8,11 +8,16 @@
 #include "net.h"
 #include "listener.h"
 #include "../shared/msg.h"
+#include "input.h"
+
+Game game;
 
 void onAskWaitMore(char* data)
 {
 	printf("Wait for Player(s):\n");
 	printf("You can wait for more players, or start the game immediately!\n");
+	game.phase = GAME_PHASE_WAIT_FOR_PLAYERS;
+	wait_for_input();
 }
 
 void onPlayerJoin(char* data)
@@ -51,6 +56,7 @@ void init()
 	
 	Log::init(fname);
 	net_init();
+	init_input();
 	
 	addMsgListener(MSG_NOTI_ASK_WAIT_MORE_1000,onAskWaitMore);
 	addMsgListener(MSG_NOTI_PLAYER_JOIN_1001,onPlayerJoin);

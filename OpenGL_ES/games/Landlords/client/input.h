@@ -1,5 +1,5 @@
 
+void init_input();
 void wait_for_input();
-
-void stop_wait();
+void suspend_input();
 
