@@ -147,7 +147,13 @@ void onPlayerJoin(int total,int pid, PConnection connection)
 {
 	game.players[pid].connection = connection;
 	game.players[pid].isAI = false;
-	if(total == 0)
+	
+	for(int i=0;i<NUM_PLAYERS;i++)
+	{
+		if(i != pid) send_player_joined(i,pid);
+	}
+	
+	if(total == 1)
 	{
 		game.players[pid].isHost = true;
 		//send wait for players
@@ -161,11 +167,6 @@ void onPlayerJoin(int total,int pid, PConnection connection)
 	else if(total == NUM_PLAYERS)
 	{
 		start();
-	}
-	
-	for(int i=0;i<NUM_PLAYERS;i++)
-	{
-		if(i != pid) send_player_joined(i,pid);
 	}
 }
 
