@@ -31,8 +31,8 @@ DIR_COLORMATRIX=/ColorMatrix
 #Landlords
 LL:LLclient LLserver
 
-LLclient:LLSimpleClient.obj Log.obj LLshared LLClistener.obj LLCnet.obj LLCgame.obj
-	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/LLCnet.obj $(BIN)/LLClistener.obj $(BIN)/LLCgame.obj $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
+LLclient:LLSimpleClient.obj Log.obj LLshared LLClistener.obj LLCnet.obj LLCgame.obj LLCinput.obj LLCservices.obj
+	$(LINK) $(BIN)/LLSimpleClient.obj $(BIN)/LLCnet.obj $(BIN)/LLClistener.obj $(BIN)/LLCgame.obj $(BIN)/LLCinput.obj $(BIN)/LLCservices.obj  $(BIN)/Log.obj $(LINKOUT)$(BIN)/$@.exe
 LLSimpleClient.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/main.cpp $(CLOUT)$(BIN)/LLSimpleClient.obj $(INCLUDE) $(OPTION)
 LLCgame.obj:
@@ -41,6 +41,10 @@ LLClistener.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/listener.cpp $(CLOUT)$(BIN)/LLClistener.obj $(INCLUDE) $(OPTION)
 LLCnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/net.cpp $(CLOUT)$(BIN)/LLCnet.obj $(INCLUDE) $(OPTION)
+LLCinput.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/input.cpp $(CLOUT)$(BIN)/LLCinput.obj $(INCLUDE) $(OPTION)
+LLCservices.obj:
+	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/services.cpp $(CLOUT)$(BIN)/LLCservices.obj $(INCLUDE) $(OPTION)
 	
 LLserver:LLnet.obj LLservices.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj LLshared LLLog.obj
 	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj $(BIN)/LLLog.obj $(BIN)/LLai.obj $(BIN)/LLlogic.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
