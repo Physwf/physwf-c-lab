@@ -32,6 +32,7 @@ void onHostWaitMorePlayers(char* data)
 
 void onDealResult(char* data)
 {
+	// suspend_input();
 	MSG_NOTI_DEAL_RESULT msg;
 	memcpy(&msg,data,sizeof(MSG_NOTI_DEAL_RESULT));
 	Log::info("onDealResult");
@@ -49,6 +50,13 @@ void onDealResult(char* data)
 	printf("\n");
 }
 
+void onWaitLoot(char* data)
+{
+	printf("Please input a loot score:\n");
+	printf("0 for not loot,\n");
+	printf("1-3 for loot.\n");
+}
+
 void init()
 {
 	char fname[30];
@@ -62,6 +70,7 @@ void init()
 	addMsgListener(MSG_NOTI_PLAYER_JOIN_1001,onPlayerJoin);
 	addMsgListener(MSG_NOTI_HOST_WAIT_PLAYERS_1002,onHostWaitMorePlayers);
 	addMsgListener(MSG_NOTI_DEAL_RESULT_1004,onDealResult);
+	addMsgListener(MSG_NOTI_WAIT_LOOT_1005,onWaitLoot);
 }
 
 void run()

@@ -14,6 +14,8 @@ HANDLE inputThread;
 
 char readBuffer[MAX_INPUT];
 
+bool input_suspend;
+
 void parseInput(char *str)
 {
 	switch(game.phase)
@@ -25,6 +27,7 @@ void parseInput(char *str)
 			}
 			break;
 	}
+	printf(str);
 }
 
 DWORD WINAPI console_input(LPVOID pParam)
@@ -40,15 +43,20 @@ void init_input()
 {
 	inputThread = CreateThread(NULL, 0, console_input, NULL, 0, NULL);
 	SuspendThread(inputThread);
+	input_suspend = true;
 }
 
 void wait_for_input()
 {
+	if(!input_suspend) return;
 	ResumeThread(inputThread);
+	input_suspend = false;
 }
 
 void suspend_input()
 {
+	if(input_suspend) return;
 	SuspendThread(inputThread);
+	input_suspend = true;
 }
 

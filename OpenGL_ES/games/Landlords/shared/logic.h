@@ -21,11 +21,6 @@ typedef struct card_t {
 	Suit suit;
 } Card, *PCard;
 
-typedef struct hand_t {
-	Card cards[20];
-	int num_cards;
-} Hand, *PHand;
-
 typedef enum {
 	SINGLE,
 	PAIR,
@@ -41,6 +36,12 @@ typedef enum {
 	TRIPLE_SEQUENCE_PLUS_PAIR,
 	ILLEGAL
 } HandType;
+
+typedef struct hand_t {
+	Card cards[20];
+	int num_cards;
+	HandType type;
+} Hand, *PHand;
 
 bool equal_single(PCard left, PCard right);
 bool greater_single(PCard card1,PCard card2);
@@ -74,12 +75,14 @@ typedef struct deal_result_t {
 typedef struct game_t {
 	Card pool[NUM_CARDS];
 	Player players[NUM_PLAYERS];
+	int num_players;
 	int loot_turn;
 	int loot_scores[NUM_PLAYERS];
 	int turn;
 	DealResult dresults[NUM_PLAYERS];
 	int landlord;//players index
 	int phase;
+	Hand curHand;
 } Game, *PGame;
 
 #endif

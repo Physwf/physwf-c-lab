@@ -83,16 +83,35 @@ void send_deal_result(int who, PDealResult result)
 
 void broadcast_loot_score(int who,int score)
 {
+	MSG_NOTI_LOOT_SCORE msg;
+	msg.score = score;
+	msg.who = who;
+	for(int i=0;i<NUM_PLAYERS;i++)
+	{
+		if(clients[i].state == STATE_HOLD)
+			send_data(i,MSG_NOTI_LOOT_SCORE_1007, (char*)&msg,sizeof(MSG_NOTI_LOOT_SCORE));
+	}
 	
 }
 
-void send_wait_for_loot(int who)
+void send_wait_for_loot(int pid)
 {
+	MSG_NOTI_WAIT_LOOT msg;
+	send_data(pid,MSG_NOTI_WAIT_LOOT_1005, (char*)&msg,sizeof(MSG_NOTI_WAIT_LOOT));
 }
 
-void send_play_start()
+void send_wait_cards()
 {
+	 int turn = game.turn;
+	 unsigned int pid = turn % NUM_PLAYERS;
+	 MSG_NOTI_WAIT_CARDS msg;
+	 msg.hand = game.curHand;
+	send_data(pid,MSG_NOTI_WAIT_CARDS_1008, (char*)&msg,sizeof(MSG_NOTI_WAIT_CARDS));
 }
 
+void broadcast_play_cards(int who)
+{
+	
+}
 
 

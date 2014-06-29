@@ -9,4 +9,5 @@ void send_host_waiting_players(int pid);
 void send_deal_result(int who, PDealResult result);
 void send_wait_for_loot(int who);
 void broadcast_loot_score(int who,int score);
-void send_play_start();
+void send_wait_cards();
+

@@ -30,6 +30,17 @@ void init()
 	init_service();
 }
 
+void check_players()
+{
+	for(int i=0;i<NUM_PLAYERS;i++)
+	{
+		if(i>game.num_players-1)
+		{
+			game.players[i].isAI = true;
+		}
+	}
+}
+
 void shuffle(int times)
 {
 	for(int i=0;i<times;i++)
@@ -92,7 +103,7 @@ void wait_for_loot()
 	if(loot_turn >= NUM_PLAYERS)
 	{
 		//send msg play start
-		send_play_start();
+		send_wait_cards();
 		return;
 	}
 	
@@ -103,7 +114,7 @@ void wait_for_loot()
 		if(game.loot_scores[loot_turn] >= 3)
 		{
 			//send msg play start
-			send_play_start();
+			send_wait_cards();
 		}
 	}
 	else
@@ -121,6 +132,7 @@ void start()
 {
 	// memset(players,0,sizeof(players));
 	Log::info("start");
+	check_players();
 	shuffle(10);
 	deal_cards();
 	
@@ -147,6 +159,7 @@ void onPlayerJoin(int total,int pid, PConnection connection)
 {
 	game.players[pid].connection = connection;
 	game.players[pid].isAI = false;
+	game.num_players++;
 	
 	for(int i=0;i<NUM_PLAYERS;i++)
 	{
@@ -188,10 +201,20 @@ void onClinetLoot(char* msg)
 	
 }
 
+void onPlayCards(char* msg)
+{
+	//verify cards
+	game.turn++;
+	
+	//broadcast cards
+	send_wait_cards();
+}
+
 void addListeners()
 {
-	addMsgListener(MSG_SUBM_LOOT_SCORE_1006,onHostStartGame);
-		// addMsgListener(MSG_SUBM_LOOT_SCORE_1005,onClinetLoot);
+	addMsgListener(MSG_SUBM_START_GAME_1003,onHostStartGame);
+	addMsgListener(MSG_SUBM_LOOT_SCORE_1006,onClinetLoot);
+	addMsgListener(MSG_SUBM_PLAY_CARDS_1009,onPlayCards);
 }
 
 

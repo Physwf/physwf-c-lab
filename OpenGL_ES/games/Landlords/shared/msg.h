@@ -13,7 +13,12 @@ enum
 	MSG_SUBM_START_GAME_1003,
 	MSG_NOTI_DEAL_RESULT_1004,
 	MSG_NOTI_WAIT_LOOT_1005,
-	MSG_SUBM_LOOT_SCORE_1006
+	MSG_SUBM_LOOT_SCORE_1006,
+	MSG_NOTI_LOOT_SCORE_1007,
+	MSG_NOTI_WAIT_CARDS_1008,
+	MSG_SUBM_PLAY_CARDS_1009,
+	MSG_NOTI_PLAY_CARDS_1010,
+	MSG_NOTI_GAME_OVER_1011
 };
 
 typedef struct msg_head_t
@@ -64,4 +69,29 @@ typedef struct msg_subm_loot_score_t
 }
 MSG_SUBM_LOOT_SCORE,*PMSG_SUBM_LOOT_SCORE;
 
+typedef struct msg_noti_loot_score_t
+{
+	unsigned int who;
+	unsigned short score;
+}
+MSG_NOTI_LOOT_SCORE,*PMSG_NOTI_LOOT_SCORE;
+
+typedef struct msg_noti_wait_cards_t
+{
+	Hand hand;
+}
+MSG_NOTI_WAIT_CARDS,*PMSG_NOTI_WAIT_CARDS;
+
+typedef struct msg_subm_play_cards_t
+{
+	Hand hand;
+}
+MSG_SUBM_PLAY_CARDS,*PMSG_SUBM_PLAY_CARDS;
+
+typedef struct msg_noti_play_cards_t
+{
+	unsigned int playerid;
+	Hand hand;
+}
+MSG_NOTI_PLAY_CARDS,*PMSG_NOTI_PLAY_CARDS;
 #endif
