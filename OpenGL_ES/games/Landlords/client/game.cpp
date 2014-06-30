@@ -55,6 +55,28 @@ void onWaitLoot(char* data)
 	printf("Please input a loot score:\n");
 	printf("0 for not loot,\n");
 	printf("1-3 for loot.\n");
+	game.phase = GAME_PHASE_WAIT_FOR_LOOT;
+}
+
+void onLootScore(char* data)
+{
+	MSG_NOTI_LOOT_SCORE msg;
+	memcpy(&msg,data,sizeof(MSG_NOTI_LOOT_SCORE));
+	printf("Player %d loot,score:%d\n",msg.who,msg.score);
+}
+
+void onWaitCards(char* data)
+{
+	game.phase = GAME_PHASE_WAIT_FOR_LOOT;
+}
+
+void onPlayCards(char* data)
+{
+	game.phase = GAME_PHASE_WAIT_FOR_CARDS;
+	MSG_NOTI_PLAY_CARDS msg;
+	memcpy(&msg,data,sizeof(MSG_NOTI_PLAY_CARDS));
+	printf("Player %d play cards:\n");
+	
 }
 
 void init()
@@ -71,6 +93,9 @@ void init()
 	addMsgListener(MSG_NOTI_HOST_WAIT_PLAYERS_1002,onHostWaitMorePlayers);
 	addMsgListener(MSG_NOTI_DEAL_RESULT_1004,onDealResult);
 	addMsgListener(MSG_NOTI_WAIT_LOOT_1005,onWaitLoot);
+	addMsgListener(MSG_NOTI_LOOT_SCORE_1007,onLootScore);
+	addMsgListener(MSG_NOTI_WAIT_CARDS_1008,onWaitCards);
+	addMsgListener(MSG_NOTI_PLAY_CARDS_1010,onPlayCards);
 }
 
 void run()

@@ -198,15 +198,22 @@ void onHostStartGame(char* msg)
 
 void onClinetLoot(char* msg)
 {
-	
+	wait_for_loot();
 }
 
 void onPlayCards(char* msg)
 {
-	//verify cards
+	//to do verify cards
+	MSG_SUBM_PLAY_CARDS msg;
+	
+	game.cur_hand = 
+	//broadcast cards
+	
+	broadcast_play_cards();
 	game.turn++;
 	
-	//broadcast cards
+	
+	
 	send_wait_cards();
 }
 

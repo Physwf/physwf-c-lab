@@ -111,6 +111,9 @@ void send_wait_cards()
 
 void broadcast_play_cards(int who)
 {
+	MSG_NOTI_PLAY_CARDS msg;
+	int turn = game.turn%3;
+	msg.playerid = turn;
 	
 }
 
