@@ -142,7 +142,7 @@ void net_select()
 					LeaveCriticalSection(&CS);//leave critical section
 				}
 			}
-			return;
+			// return;
 			/*
 			if(FD_ISSET(clients[i].socket,&wset))
 			{

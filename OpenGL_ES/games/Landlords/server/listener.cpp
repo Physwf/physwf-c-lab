@@ -1,6 +1,8 @@
+#include <log/Log.h>
 #include "listener.h"
 #include "net.h"
 #include "game.h"
+#include "../shared/common.h"
 
 char buffer[1024];
 std::map<int,MsgListener> listeners;
@@ -35,14 +37,19 @@ void listener_loop()
 		{
 			if(clients[i].readBufAvaliable > HEAD_LENGTH)
 			{
+				EnterCriticalSection(&CS);
 				memcpy(&head,clients[i].readBuffer,HEAD_LENGTH);
-				if(clients[i].readBufAvaliable > head.length)
+				if(clients[i].readBufAvaliable >= head.length+HEAD_LENGTH)
 				{
+					clients[i].readBufAvaliable -= HEAD_LENGTH;
+					memcpy(clients[i].readBuffer,clients[i].readBuffer+HEAD_LENGTH,clients[i].readBufAvaliable);
 					memcpy(buffer,clients[i].readBuffer,head.length);
 					clients[i].readBufAvaliable -= head.length;
 					memcpy(clients[i].readBuffer,clients[i].readBuffer+head.length,clients[i].readBufAvaliable);
+					Log::info("msg recv,mid:%d,len:%d",head.msgid,head.length);
 					dispatchMsg(head.msgid,buffer);
 				}
+				LeaveCriticalSection(&CS);
 			}
 		}
 	}
