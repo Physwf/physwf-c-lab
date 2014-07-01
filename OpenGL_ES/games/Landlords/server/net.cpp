@@ -127,6 +127,7 @@ void net_select()
 					if(rc > 0)
 					{
 						clients[i].readBufAvaliable += rc;
+						Log::info("recv success,len:%d",rc);
 					}
 					else if(rc == 0)
 					{

@@ -17,7 +17,6 @@ void onAskWaitMore(char* data)
 	printf("Wait for Player(s):\n");
 	printf("You can wait for more players, or start the game immediately!\n");
 	game.phase = GAME_PHASE_WAIT_FOR_PLAYERS;
-	wait_for_input();
 }
 
 void onPlayerJoin(char* data)
@@ -32,7 +31,7 @@ void onHostWaitMorePlayers(char* data)
 
 void onDealResult(char* data)
 {
-	// suspend_input();
+	// conn();
 	MSG_NOTI_DEAL_RESULT msg;
 	memcpy(&msg,data,sizeof(MSG_NOTI_DEAL_RESULT));
 	Log::info("onDealResult");

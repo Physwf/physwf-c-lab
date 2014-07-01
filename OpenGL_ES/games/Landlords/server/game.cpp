@@ -11,6 +11,8 @@
 #include "listener.h"
 #include "LLLog.h"
 
+void addListeners();
+
 Game game;
 
 void init()
@@ -110,22 +112,25 @@ void wait_for_loot()
 	if(game.players[loot_turn].isAI)
 	{
 		game.loot_scores[loot_turn] = calculate_loot_score(&game.players[loot_turn]);
-		broadcast_loot_score(game.players[loot_turn].id,game.loot_scores[loot_turn]);
+		broadcast_loot_score(loot_turn, game.loot_scores[loot_turn]);
 		if(game.loot_scores[loot_turn] >= 3)
 		{
 			//send msg play start
 			send_wait_cards();
 		}
+		else
+		{
+			game.loot_turn++;
+			wait_for_loot();
+		}
 	}
 	else
 	{
 		//send msg wait for loot
-		Log::info("wait_for_loot");
+		Log::info("send_wait_for_loot(%d)",loot_turn);
 		send_wait_for_loot(loot_turn);
 		//add listener
-		
 	}
-	game.loot_turn++;
 }
 
 void start()
@@ -137,6 +142,7 @@ void start()
 	deal_cards();
 	
 	wait_for_loot();
+	addListeners();
 }
 
 void turn()
@@ -191,29 +197,34 @@ void onPlayerLeft(int total,int pid)
 	// }
 }
 
-void onHostStartGame(char* msg)
+void onHostStartGame(char* data)
 {
 	start();
 }
 
-void onClinetLoot(char* msg)
+void onClinetLoot(char* data)
 {
+	Log::info("onClinetLoot");
+	MSG_SUBM_LOOT_SCORE msg;
+	memcpy(&msg,data,sizeof(MSG_SUBM_LOOT_SCORE));
+	int loot_turn = game.loot_turn;
+	game.loot_scores[loot_turn] = msg.score;
+	Log::info("loot score:%d",msg.score);
+	broadcast_loot_score(loot_turn, msg.score);
+	game.loot_turn++;
 	wait_for_loot();
 }
 
-void onPlayCards(char* msg)
+void onPlayCards(char* data)
 {
 	//to do verify cards
 	MSG_SUBM_PLAY_CARDS msg;
-	
-	game.cur_hand = 
+	memcpy(&msg, data, sizeof(MSG_SUBM_PLAY_CARDS));
+	game.cur_hand = msg.hand;
 	//broadcast cards
 	
 	broadcast_play_cards();
 	game.turn++;
-	
-	
-	
 	send_wait_cards();
 }
 

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <log/Log.h>
+
 #include "input.h"
 #include "game.h"
 #include "services.h"
@@ -45,6 +47,7 @@ void parseInput(char *str)
 				if(score < 0) score = 0;
 				if(score > 3) score = 3;
 				send_loot_score(score);
+				Log::info("send_loot_score:%d",score);
 			}
 			break;
 		case GAME_PHASE_WAIT_FOR_CARDS:
@@ -74,21 +77,5 @@ DWORD WINAPI console_input(LPVOID pParam)
 void init_input()
 {
 	inputThread = CreateThread(NULL, 0, console_input, NULL, 0, NULL);
-	SuspendThread(inputThread);
-	input_suspend = true;
-}
-
-void wait_for_input()
-{
-	if(!input_suspend) return;
-	ResumeThread(inputThread);
-	input_suspend = false;
-}
-
-void suspend_input()
-{
-	if(input_suspend) return;
-	SuspendThread(inputThread);
-	input_suspend = true;
 }
 

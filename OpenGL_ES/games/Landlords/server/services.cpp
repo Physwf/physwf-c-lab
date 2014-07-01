@@ -28,13 +28,21 @@ void send_data(int pid, unsigned short mid, char* data, int len)
 	MsgHead head;
 	head.msgid = mid;
 	head.length = len+HEAD_LENGTH;
-	Log::info("mid:%d,length:%d",mid,head.length);
+	Log::info("mid:%d,length:%d,pid:%d",mid,head.length,pid);
 	if(pid < NUM_PLAYERS)
 	{
 		if(clients[pid].state == STATE_HOLD)
 		{
-			send(clients[pid].socket,(char*)&head,HEAD_LENGTH,0);
-			send(clients[pid].socket,data,len,0);
+			int rc = send(clients[pid].socket,(char*)&head,HEAD_LENGTH,0);
+			if(rc == SOCKET_ERROR)
+			{
+				Log::info("send head error!");
+			}
+			rc = send(clients[pid].socket,data,len,0);
+			if(rc == SOCKET_ERROR)
+			{
+				Log::info("send data error!");
+			}
 		}
 	}
 }
@@ -88,6 +96,7 @@ void broadcast_loot_score(int who,int score)
 	msg.who = who;
 	for(int i=0;i<NUM_PLAYERS;i++)
 	{
+		if(i == who) continue;
 		if(clients[i].state == STATE_HOLD)
 			send_data(i,MSG_NOTI_LOOT_SCORE_1007, (char*)&msg,sizeof(MSG_NOTI_LOOT_SCORE));
 	}
@@ -105,16 +114,15 @@ void send_wait_cards()
 	 int turn = game.turn;
 	 unsigned int pid = turn % NUM_PLAYERS;
 	 MSG_NOTI_WAIT_CARDS msg;
-	 msg.hand = game.curHand;
+	 msg.hand = game.cur_hand;
 	send_data(pid,MSG_NOTI_WAIT_CARDS_1008, (char*)&msg,sizeof(MSG_NOTI_WAIT_CARDS));
 }
 
-void broadcast_play_cards(int who)
+void broadcast_play_cards()
 {
 	MSG_NOTI_PLAY_CARDS msg;
 	int turn = game.turn%3;
 	msg.playerid = turn;
-	
 }
 
 
