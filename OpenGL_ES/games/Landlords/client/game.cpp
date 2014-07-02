@@ -66,7 +66,8 @@ void onLootScore(char* data)
 
 void onWaitCards(char* data)
 {
-	game.phase = GAME_PHASE_WAIT_FOR_LOOT;
+	game.phase = GAME_PHASE_WAIT_FOR_CARDS;
+	printf("Wait for your cards:\n");
 }
 
 void onPlayCards(char* data)

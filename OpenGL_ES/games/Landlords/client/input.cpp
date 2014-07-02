@@ -28,6 +28,7 @@ void parseCards(char *str, int* ranks, int* num_cards)
 		int rank = atoi(token);
 		if(rank == 0) continue;
 		ranks[(*num_cards)++] = rank;
+		token = strtok(NULL," ");
 	}
 }
 

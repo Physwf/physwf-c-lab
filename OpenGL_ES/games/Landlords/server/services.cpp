@@ -111,10 +111,11 @@ void send_wait_for_loot(int pid)
 
 void send_wait_cards()
 {
-	 int turn = game.turn;
-	 unsigned int pid = turn % NUM_PLAYERS;
-	 MSG_NOTI_WAIT_CARDS msg;
-	 msg.hand = game.cur_hand;
+	int turn = game.turn;
+	unsigned int pid = turn % NUM_PLAYERS;
+	MSG_NOTI_WAIT_CARDS msg;
+	msg.hand = game.cur_hand;
+	Log::info("send_wait_cards,turn:%d,pid:%d",game.turn,pid);
 	send_data(pid,MSG_NOTI_WAIT_CARDS_1008, (char*)&msg,sizeof(MSG_NOTI_WAIT_CARDS));
 }
 
