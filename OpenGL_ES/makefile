@@ -46,7 +46,7 @@ LLCinput.obj:
 LLCservices.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_CLIENT)/services.cpp $(CLOUT)$(BIN)/LLCservices.obj $(INCLUDE) $(OPTION)
 	
-LLserver:LLnet.obj LLservices.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj LLshared LLLog.obj
+LLserver:LLnet.obj LLservices.obj LLgame.obj LLServerMain.obj Log.obj LLlistener.obj LLshared LLLog.obj random.obj
 	$(LINK) $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLServerMain.obj $(BIN)/LLservices.obj $(BIN)/LLsort.obj $(BIN)/LLLog.obj $(BIN)/LLai.obj $(BIN)/LLlogic.obj $(BIN)/LLgame.obj $(BIN)/Log.obj $(BIN)/random.obj $(LINKOUT)$(BIN)/$@.exe
 LLnet.obj:
 	$(CL) $(DIR_GMAES)$(DIR_LANDLORDS_SERVER)/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
