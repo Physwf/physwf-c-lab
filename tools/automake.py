@@ -9,11 +9,14 @@ def scan(dir,srcfiles,clstr):
 	list = os.listdir(dir)
 	for entry in list:
 		path = os.path.join(dir,entry)
-		if("platform" in entry): continue
+		
 		if("proj" in entry): continue
 		if os.path.isdir(path):
 			scan(path,srcfiles,clstr)
-		elif (os.path and (os.path.splitext(entry)[1] != ".h")):
+		elif (os.path and (os.path.splitext(entry)[1] == ".c" or os.path.splitext(entry)[1] == ".cpp")  ):
+			if("platform" in path and "win32" not in path and dir[-8:] != "platform"):
+				print dir[-8]
+				continue
 			filename = os.path.splitext(entry)[0]
 			srcfiles.append(filename)
 			clstr[0] += filename+'.obj:\n'
