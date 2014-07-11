@@ -7,13 +7,13 @@ drive=''
 if len(sys.argv) == 1 :
 	drive = 'E'
 else:
-	drive = sys.argv[2]
+	drive = sys.argv[1]
 print drive	
 if drive.lower() in "cdef":
 	drive += ":/"
 	print drive
-sourceroot = 'cocos2d-x-2.2.4/'
-targetroot = 'physwf-c-lab/'
+sourceroot = 'cocos2d-x-2.2.4/cocos2dx/'
+targetroot = 'physwf-c-lab/cocos2dx/'
 
 if(not os.path.exists(drive+sourceroot)):
 	print "you may type a wrong driver!"
