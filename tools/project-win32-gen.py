@@ -42,5 +42,7 @@ open('./'+project_name+'/win32/main.cpp','wb').write(open(main_cpp,'rb').read())
 handle_mkfile = open('./makefile','w+')
 
 handle_mkfile.write('\n')
-#write DIR_project_name=./project_name
-handle_mkfile.write("DIR_" + project_name.upper() + '=' + project_name+"/"+'\n')
+handle_mkfile.write('#'+project_name)
+#write DIR macro
+DIR_MACRO = "DIR_" + project_name.upper()
+handle_mkfile.write(DIR_MACRO + '=' + project_name+"/"+'\n')
