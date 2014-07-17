@@ -55,7 +55,7 @@ bool LandLord::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    CCLabelTTF* pLabel = CCLabelTTF::create("Hello World", "Arial", 24);
+    CCLabelTTF* pLabel = CCLabelTTF::create("LandLord", "Arial", 24);
     
     // position the label on the center of the screen
     pLabel->setPosition(ccp(origin.x + visibleSize.width/2,
@@ -65,7 +65,7 @@ bool LandLord::init()
     this->addChild(pLabel, 1);
 
     // add "LandLord" splash screen"
-    CCSprite* pSprite = CCSprite::create("LandLord.png");
+    CCSprite* pSprite = CCSprite::create("desk.png");
 
     // position the sprite on the center of the screen
     pSprite->setPosition(ccp(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
