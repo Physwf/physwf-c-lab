@@ -17,5 +17,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     CCEGLView* eglView = CCEGLView::sharedOpenGLView();
     eglView->setViewName("HelloCpp");
     eglView->setFrameSize(960, 640);
+
     return CCApplication::sharedApplication()->run();
 }
