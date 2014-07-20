@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
+#import <MAMapKit/MAMapKit.h>
 
-@interface ViewController : UIViewController
-
+@interface ViewController : UIViewController<MAMapViewDelegate>
+{
+}
+@property (nonatomic, strong) MAMapView *mapView;
 @end
+/*
+@interface BaseMapViewController:UIViewController<MAMapViewDelegate>
+@property (nonatomic, strong) MAMapView *mapView;
+@end
+*/

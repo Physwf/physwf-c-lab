@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>00207548-E69E-4677-BD73-750A4A5E461A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>LF</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>3406D58F-BEB6-4CFD-B5EC-F18EA295B98C</key>
+		<string>https://github.com/Physwf/physwf-c-lab.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>iOS-Lab/LF/LF.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>3406D58F-BEB6-4CFD-B5EC-F18EA295B98C</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/Physwf/physwf-c-lab.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>3406D58F-BEB6-4CFD-B5EC-F18EA295B98C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>3406D58F-BEB6-4CFD-B5EC-F18EA295B98C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>physwf-c-lab</string>
+		</dict>
+	</array>
+</dict>
+</plist>
