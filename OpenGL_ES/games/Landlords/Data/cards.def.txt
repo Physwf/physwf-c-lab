@@ -11,3 +11,119 @@ spades.card.bval.rect=0,0,20,26
 spades.card.rval.rect=0,26,20,26
 spades.card.suit.rect=0,52,18,19
 spades.card.pip.rect=72,52,9,11
+
+# sub rects for background
+spades.card.bgd.rects=back,high
+spades.card.back.rect=0,0,58,78
+spades.card.high.rect=290,0,58,78
+
+spades.card.spread=19
+
+spades.card.imgs=pcs,bgd
+
+# sub rects from pcs
+spades.card.pcs.rects=sfac,hfac,dfac,cfac,bval,rval,suit,pip
+spades.card.sfac.rect=0,71,31,53
+spades.card.hfac.rect=0,124,31,53
+spades.card.dfac.rect=0,177,31,53
+spades.card.cfac.rect=0,230,31,53
+spades.card.bval.rect=0,0,20,26
+spades.card.rval.rect=0,26,20,26
+spades.card.suit.rect=0,52,18,19
+spades.card.pip.rect=72,52,9,11
+
+# sub rects for background
+spades.card.bgd.rects=back,high
+spades.card.back.rect=0,0,58,78
+spades.card.high.rect=290,0,58,78
+
+# points for target image
+spades.card.pts=org,face,val,suit,pip1,pip2,pip3,pip4,pip5,pip6,pip7,pip8,pip9,pip10,pip11,pip12,pip13
+spades.card.org.pt=0,0
+spades.card.face.pt=25,12
+spades.card.val.pt=1,7
+spades.card.suit.pt=2,33
+spades.card.pip1.pt=36,25
+spades.card.pip2.pt=36,47
+spades.card.pip3.pt=36,36
+spades.card.pip4.pt=27,15
+spades.card.pip5.pt=45,15
+spades.card.pip6.pt=27,29
+spades.card.pip7.pt=45,29
+spades.card.pip8.pt=27,43
+spades.card.pip9.pt=45,43
+spades.card.pip10.pt=27,57
+spades.card.pip11.pt=45,57
+spades.card.pip12.pt=36,15
+spades.card.pip13.pt=36,57
+
+# dimensions
+spades.card.rect=0,0,58,78
+
+# the cards
+spades.card.cards=s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12,s13,h1,h2,h3,h4,h5,h6,h7,h8,h9,h10,h11,h12,h13,d1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,back,high2s,high2h,high2d,high2c
+spades.card.disabledCards=
+
+# card constructions
+spades.card.s1 =back:org, suit[3]:suit,	bval[0]:val,	sfac[3]:face
+spades.card.s2 =back:org, suit[3]:suit,	bval[1]:val,	pip[3]:pip12:pip13
+spades.card.s3 =back:org, suit[3]:suit,	bval[2]:val,	pip[3]:pip12:pip13:pip3
+spades.card.s4 =back:org, suit[3]:suit,	bval[3]:val,	pip[3]:pip4:pip5:pip10:pip11
+spades.card.s5 =back:org, suit[3]:suit,	bval[4]:val,	pip[3]:pip4:pip5:pip10:pip11:pip3
+spades.card.s6 =back:org, suit[3]:suit,	bval[5]:val,	pip[3]:pip4:pip5:pip10:pip11:pip1:pip2
+spades.card.s7 =back:org, suit[3]:suit,	bval[6]:val,	pip[3]:pip4:pip5:pip10:pip11:pip1:pip8:pip9
+spades.card.s8 =back:org, suit[3]:suit,	bval[7]:val,	pip[3]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7
+spades.card.s9 =back:org, suit[3]:suit,	bval[8]:val,	pip[3]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip3
+spades.card.s10=back:org, suit[3]:suit,	bval[9]:val,	pip[3]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip2:pip3
+spades.card.s11=back:org, suit[3]:suit,	bval[10]:val,	sfac[2]:face
+spades.card.s12=back:org, suit[3]:suit,	bval[11]:val,	sfac[1]:face
+spades.card.s13=back:org, suit[3]:suit,	bval[12]:val,	sfac[0]:face
+
+spades.card.h1 =back:org, suit[2]:suit,	rval[0]:val,	hfac[3]:face
+spades.card.h2 =back:org, suit[2]:suit,	rval[1]:val,	pip[2]:pip12:pip13
+spades.card.h3 =back:org, suit[2]:suit,	rval[2]:val,	pip[2]:pip12:pip13:pip3
+spades.card.h4 =back:org, suit[2]:suit,	rval[3]:val,	pip[2]:pip4:pip5:pip10:pip11
+spades.card.h5 =back:org, suit[2]:suit,	rval[4]:val,	pip[2]:pip4:pip5:pip10:pip11:pip3
+spades.card.h6 =back:org, suit[2]:suit,	rval[5]:val,	pip[2]:pip4:pip5:pip10:pip11:pip1:pip2
+spades.card.h7 =back:org, suit[2]:suit,	rval[6]:val,	pip[2]:pip4:pip5:pip10:pip11:pip1:pip8:pip9
+spades.card.h8 =back:org, suit[2]:suit,	rval[7]:val,	pip[2]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7
+spades.card.h9 =back:org, suit[2]:suit,	rval[8]:val,	pip[2]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip3
+spades.card.h10=back:org, suit[2]:suit,	rval[9]:val,	pip[2]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip2:pip3
+spades.card.h11=back:org, suit[2]:suit,	rval[10]:val,	hfac[2]:face
+spades.card.h12=back:org, suit[2]:suit,	rval[11]:val,	hfac[1]:face
+spades.card.h13=back:org, suit[2]:suit,	rval[12]:val,	hfac[0]:face
+
+spades.card.c1 =back:org, suit[0]:suit,	bval[0]:val,	cfac[3]:face
+spades.card.c2 =back:org, suit[0]:suit,	bval[1]:val,	pip[0]:pip12:pip13
+spades.card.c3 =back:org, suit[0]:suit,	bval[2]:val,	pip[0]:pip12:pip13:pip3
+spades.card.c4 =back:org, suit[0]:suit,	bval[3]:val,	pip[0]:pip4:pip5:pip10:pip11
+spades.card.c5 =back:org, suit[0]:suit,	bval[4]:val,	pip[0]:pip4:pip5:pip10:pip11:pip3
+spades.card.c6 =back:org, suit[0]:suit,	bval[5]:val,	pip[0]:pip4:pip5:pip10:pip11:pip1:pip2
+spades.card.c7 =back:org, suit[0]:suit,	bval[6]:val,	pip[0]:pip4:pip5:pip10:pip11:pip1:pip8:pip9
+spades.card.c8 =back:org, suit[0]:suit,	bval[7]:val,	pip[0]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7
+spades.card.c9 =back:org, suit[0]:suit,	bval[8]:val,	pip[0]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip3
+spades.card.c10=back:org, suit[0]:suit,	bval[9]:val,	pip[0]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip2:pip3
+spades.card.c11=back:org, suit[0]:suit,	bval[10]:val,	cfac[2]:face
+spades.card.c12=back:org, suit[0]:suit,	bval[11]:val,	cfac[1]:face
+spades.card.c13=back:org, suit[0]:suit,	bval[12]:val,	cfac[0]:face
+
+spades.card.d1 =back:org, suit[1]:suit,	rval[0]:val,	dfac[3]:face
+spades.card.d2 =back:org, suit[1]:suit,	rval[1]:val,	pip[1]:pip12:pip13
+spades.card.d3 =back:org, suit[1]:suit,	rval[2]:val,	pip[1]:pip12:pip13:pip3
+spades.card.d4 =back:org, suit[1]:suit,	rval[3]:val,	pip[1]:pip4:pip5:pip10:pip11
+spades.card.d5 =back:org, suit[1]:suit,	rval[4]:val,	pip[1]:pip4:pip5:pip10:pip11:pip3
+spades.card.d6 =back:org, suit[1]:suit,	rval[5]:val,	pip[1]:pip4:pip5:pip10:pip11:pip1:pip2
+spades.card.d7 =back:org, suit[1]:suit,	rval[6]:val,	pip[1]:pip4:pip5:pip10:pip11:pip1:pip8:pip9
+spades.card.d8 =back:org, suit[1]:suit,	rval[7]:val,	pip[1]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7
+spades.card.d9 =back:org, suit[1]:suit,	rval[8]:val,	pip[1]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip3
+spades.card.d10=back:org, suit[1]:suit,	rval[9]:val,	pip[1]:pip4:pip5:pip10:pip11:pip8:pip9:pip6:pip7:pip2:pip3
+spades.card.d11=back:org, suit[1]:suit,	rval[10]:val,	dfac[2]:face
+spades.card.d12=back:org, suit[1]:suit,	rval[11]:val,	dfac[1]:face
+spades.card.d13=back:org, suit[1]:suit,	rval[12]:val,	dfac[0]:face
+
+spades.card.back=back[3]:org
+
+spades.card.high2s =high:org, suit[3]:suit,	bval[1]:val
+spades.card.high2h =high:org, suit[2]:suit,	rval[1]:val
+spades.card.high2c =high:org, suit[0]:suit,	bval[1]:val
+spades.card.high2d =high:org, suit[1]:suit,	rval[1]:val
