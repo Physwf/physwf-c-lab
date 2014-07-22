@@ -63,7 +63,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <IncludePath>D:\physwf-c-lab\shared\include;D:\physwf-c-lab\OpenGL_ES\games\Landlords\shared;$(IncludePath)</IncludePath>
+    <IncludePath>D:\physwf-c-lab\shared\include;D:\physwf-c-lab\cocos2dx-app\LandLord\Game;D:\physwf-c-lab\OpenGL_ES\games\Landlords\shared;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
@@ -135,6 +135,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\LandLordScene.cpp" />
+    <ClCompile Include="..\Classes\PokerCardSprite.cpp" />
     <ClCompile Include="..\Game\game.cpp" />
     <ClCompile Include="..\Game\input.cpp" />
     <ClCompile Include="..\Game\listener.cpp" />
@@ -146,12 +147,14 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\LandLordScene.h" />
+    <ClInclude Include="..\Classes\PokerCardSprite.h" />
     <ClInclude Include="..\Game\game.h" />
     <ClInclude Include="..\Game\input.h" />
     <ClInclude Include="..\Game\listener.h" />
     <ClInclude Include="..\Game\net.h" />
     <ClInclude Include="..\Game\services.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Properties.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\cocos2dx\proj.win32\cocos2d.vcxproj">
