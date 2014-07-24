@@ -13,11 +13,15 @@ public:
 	cocos2d::CCRect* getRect(const char* key);
 
 private:
+	int splitKeyValue(const char* pair, char* key, char* value);
+	int splitPoint(const char* point, cocos2d::CCPoint* object);
+	int splitRect(const char* rect, cocos2d::CCRect* object);
+private:
 	Hash* mHashTable;
 	unsigned long mTableSize;
 	char** mRawData;
 	void** mDataCache;
 	char* mDataBlock;
 
-	int splitKeyValue(const char* pair, char* key, char* value);
+	
 };

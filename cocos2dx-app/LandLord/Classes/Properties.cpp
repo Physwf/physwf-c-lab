@@ -54,8 +54,8 @@ int Properties::readFile(const char* filename)
 			{
 				Hash* entry = get_hash_entry(mHashTable, key);
 				memcpy(block, value, valueLen*sizeof(char));
+				mRawData[entry->index] = block;
 				block += valueLen;
-
 				numProperites++;
 			}
 		}
@@ -70,14 +70,57 @@ cocos2d::CCPoint* Properties::getPoint(const char* key)
 	{
 		return (cocos2d::CCPoint*)mDataCache[entry->index];
 	}
+	char* data = mRawData[entry->index];
+	if (data)
+	{
+
+	}
 	return NULL;
 
 };
 
-int splitKeyValue(const char* pair, char* key, char* value)
+int Properties::splitKeyValue(const char* pair, char* key, char* value)
 {
 	key = strtok((char*)pair, "=");
 	if (key == NULL) return 0;
 	value = strtok(NULL, "=");
 	return strlen(value);
+};
+
+int Properties::splitPoint(const char* point, cocos2d::CCPoint* object)
+{
+	char* coord = strtok((char*)point, ",");
+	int coords[2];
+	int i = 0;
+	while (coord != NULL)
+	{
+		coords[i++] = atoi(coord);
+		if (i > 2)
+		{
+			// warning
+			break;
+		}
+	}
+	object->x = coords[0];
+	object->y = coords[1];
+};
+
+int Properties::splitRect(const char* rect, cocos2d::CCRect* object)
+{
+	char* coord = strtok((char*)rect, ",");
+	int coords[4];
+	int i = 0;
+	while (coord != NULL)
+	{
+		coords[i++] = atoi(coord);
+		if (i > 4)
+		{
+			// warning
+			break;
+		}
+	}
+	object->origin.x = coords[0];
+	object->origin.y = coords[1];
+	object->size.width = coords[2];
+	object->size.height = coords[3];
 };

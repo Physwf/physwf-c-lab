@@ -136,6 +136,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\LandLordScene.cpp" />
     <ClCompile Include="..\Classes\PokerCardSprite.cpp" />
+    <ClCompile Include="..\Classes\Properties.cpp" />
     <ClCompile Include="..\Game\game.cpp" />
     <ClCompile Include="..\Game\input.cpp" />
     <ClCompile Include="..\Game\listener.cpp" />
@@ -148,13 +149,13 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\LandLordScene.h" />
     <ClInclude Include="..\Classes\PokerCardSprite.h" />
+    <ClInclude Include="..\Classes\Properties.h" />
     <ClInclude Include="..\Game\game.h" />
     <ClInclude Include="..\Game\input.h" />
     <ClInclude Include="..\Game\listener.h" />
     <ClInclude Include="..\Game\net.h" />
     <ClInclude Include="..\Game\services.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="Properties.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\cocos2dx\proj.win32\cocos2d.vcxproj">
