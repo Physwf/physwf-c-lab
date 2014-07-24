@@ -63,7 +63,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <IncludePath>D:\physwf-c-lab\shared\include;D:\physwf-c-lab\cocos2dx-app\LandLord\Game;D:\physwf-c-lab\OpenGL_ES\games\Landlords\shared;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\..\shared\include;..\..\..\cocos2dx-app\LandLord\Game;..\..\..\OpenGL_ES\games\Landlords\shared;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\lib;$(LibraryPath)</LibraryPath>
