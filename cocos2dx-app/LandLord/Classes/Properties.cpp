@@ -103,6 +103,7 @@ int Properties::splitPoint(const char* point, cocos2d::CCPoint* object)
 	}
 	object->x = coords[0];
 	object->y = coords[1];
+	return 0;
 };
 
 int Properties::splitRect(const char* rect, cocos2d::CCRect* object)
@@ -123,4 +124,5 @@ int Properties::splitRect(const char* rect, cocos2d::CCRect* object)
 	object->origin.y = coords[1];
 	object->size.width = coords[2];
 	object->size.height = coords[3];
+	return 0;
 };

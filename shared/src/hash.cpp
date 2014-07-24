@@ -1,5 +1,6 @@
 #include "hash.h"
 #include <ctype.h>
+#include <stdio.h>
 
 #define HASH_BUFFER_SIZE 0x500
 static unsigned long hash_buffer[HASH_BUFFER_SIZE];
@@ -14,7 +15,7 @@ int init_hash_buffer()
 
     // Initialize the decryption buffer.
     // Do nothing if already done.
-    if(hash_buffer_created == FALSE)
+    if(hash_buffer_created == false)
     {
         for(index1 = 0; index1 < 0x100; index1++)
         {
@@ -31,7 +32,7 @@ int init_hash_buffer()
                 hash_buffer[index2] = (temp1 | temp2);
             }
         }
-        hash_buffer_created = TRUE;
+        hash_buffer_created = false;
     }
     return 0;
 }
@@ -103,7 +104,7 @@ unsigned long hash_keyA(const char* key)
   return dwSeed1;
 }
 
-unsigned long hash_keyB(const char* ket)
+unsigned long hash_keyB(const char* key)
 {
   unsigned char* ukey = (unsigned char*) key;
   unsigned long dwSeed1 = 0x7FED7FED;

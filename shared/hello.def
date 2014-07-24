@@ -1,4 +1,0 @@
-LIBRARY hello
-
-EXPORTS
-say @1
