@@ -35,3 +35,4 @@ void Log::log(const char* format, ...)
 
 };
 
+FILE* Log::mStream = NULL;

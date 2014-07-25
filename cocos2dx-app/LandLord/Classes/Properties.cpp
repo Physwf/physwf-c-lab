@@ -1,4 +1,5 @@
 #include "Properties.h"
+#include "log/Log.h"
 
 Properties::Properties()
 {
@@ -39,12 +40,13 @@ int Properties::readFile(const char* filename)
 	char* block = mDataBlock;
 	int numProperites = 0;
 	int len = 0;
-	do{
-		char c = fgetc(pFile);
+	char c;
+	while ((c = fgetc(pFile)) != EOF) {
 		len++;
+		Log::info("%c", c);
 		if (c == '\n')
 		{
-			fseek(pFile, len*-1, SEEK_CUR);
+			fseek(pFile, -len, SEEK_CUR);
 			fgets(data, len, pFile);
 			data[len - 1] = '\0';
 			len=0;
@@ -52,20 +54,20 @@ int Properties::readFile(const char* filename)
 			int valueLen;
 			if (valueLen = splitKeyValue(data, key, value))
 			{
-				Hash* entry = get_hash_entry(mHashTable, key);
+				Hash* entry = get_hash_entry(mHashTable, key, mTableSize);
 				memcpy(block, value, valueLen*sizeof(char));
 				mRawData[entry->index] = block;
 				block += valueLen;
 				numProperites++;
 			}
 		}
-	} while (fgetc(pFile) != EOF);
+	};
 	return 0;
 };
 
 cocos2d::CCPoint* Properties::getPoint(const char* key)
 {
-	Hash* entry = get_hash_entry(mHashTable, key);
+	Hash* entry = get_hash_entry(mHashTable, key, mTableSize);
 	if (entry != NULL && mDataCache[entry->index])
 	{
 		return (cocos2d::CCPoint*)mDataCache[entry->index];

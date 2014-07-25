@@ -1,4 +1,6 @@
 #include "LandLordScene.h"
+#include "PokerCardSprite.h"
+#include "logic.h"
 
 USING_NS_CC;
 
@@ -73,6 +75,7 @@ bool LandLord::init()
     // add the sprite as a child to this layer
     this->addChild(pSprite, 0);
     
+	new PokerCardSprite(1,SPADE);
     return true;
 }
 

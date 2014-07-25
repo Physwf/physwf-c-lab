@@ -1,5 +1,6 @@
 #include "cocos2d.h"
 #include "../shared/logic.h"
+#include "Properties.h"
 
 class PokerCardSprite :public cocos2d::CCSprite
 {
@@ -15,4 +16,6 @@ private:
 	cocos2d::CCSprite mRankSprite;
 	cocos2d::CCSprite mSmallSuitSprite;
 	cocos2d::CCSprite mBigSuitSprite;
+
+	Properties* mProperties;
 };

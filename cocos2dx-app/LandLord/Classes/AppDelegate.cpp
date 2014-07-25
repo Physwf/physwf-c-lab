@@ -7,7 +7,6 @@
 USING_NS_CC;
 //global critical section
 CRITICAL_SECTION CS;
-FILE* Log::mStream = NULL;
 
 AppDelegate::AppDelegate() {
 
@@ -33,14 +32,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
+	//init game
+	init();
+
     // create a scene. it's an autorelease object
     CCScene *pScene = LandLord::scene();
 
     // run
     pDirector->runWithScene(pScene);
 
-	//init game
-	init();
     return true;
 }
 

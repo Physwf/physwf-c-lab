@@ -83,6 +83,7 @@ unsigned long hash_index(unsigned long table_size, const char* key)
 
   while(ukey !=0 )
   {
+    ch = toupper(*key++);
     dwSeed1 = hash_buffer[0x000 + ch] ^ (dwSeed1 + dwSeed2);
     dwSeed2 = ch + dwSeed1 + dwSeed2 + (dwSeed2 << 5) + 3;
   }
@@ -98,6 +99,7 @@ unsigned long hash_keyA(const char* key)
 
   while(ukey !=0 )
   {
+    ch = toupper(*key++);
     dwSeed1 = hash_buffer[0x100 + ch] ^ (dwSeed1 + dwSeed2);
     dwSeed2 = ch + dwSeed1 + dwSeed2 + (dwSeed2 << 5) + 3;
   }
@@ -113,6 +115,7 @@ unsigned long hash_keyB(const char* key)
 
   while(ukey !=0 )
   {
+    ch = toupper(*key++);
     dwSeed1 = hash_buffer[0x200 + ch] ^ (dwSeed1 + dwSeed2);
     dwSeed2 = ch + dwSeed1 + dwSeed2 + (dwSeed2 << 5) + 3;
   }
