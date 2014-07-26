@@ -74,6 +74,47 @@ Hash* get_hash_entry(Hash* table, const char* key, unsigned long table_size)
   return NULL;
 }
 
+Hash* find_free_hash_entry(Hash* hTable, Block* bTable, const char* key, unsigned long table_size)
+{
+	Hash* hashEnd = hTable + table_size;
+	Hash* hash0;
+	Hash* hash;
+
+	unsigned long index = hash_index(table_size, key);
+	unsigned long keyA = hash_keyA(key);
+	unsigned long keyB = hash_keyB(key);
+	unsigned long blockIndex = 0xFFFFFFFF;
+
+	hash = hash0 = hTable + index;
+
+	while (hash->blockIndex < HASH_ENTRY_DELETED)
+	{
+		if (++hash >= hashEnd)
+			hash = hTable;
+		if (hash == hash0)
+			return NULL;
+	}
+
+	hash->keyA = keyA;
+	hash->keyB = keyB;
+
+	for (index = 0; index < table_size; index++)
+	{
+		Block * block = bTable + index;
+
+		if ((block->flags & FLAG_BLOCK_EXSIT) == 0)
+		{
+			blockIndex = index;
+			break;
+		}
+	}
+
+	if (blockIndex == 0xFFFFFFFF)
+		blockIndex = table_size;
+	hash->blockIndex = blockIndex;
+	return hash;
+}
+
 unsigned long hash_index(unsigned long table_size, const char* key)
 {
   unsigned char* ukey = (unsigned char*) key;
@@ -81,9 +122,9 @@ unsigned long hash_index(unsigned long table_size, const char* key)
   unsigned long dwSeed2 = 0xEEEEEEEE;
   unsigned long ch;
 
-  while(ukey !=0 )
+  while(*ukey != 0)
   {
-    ch = toupper(*key++);
+	ch = toupper(*ukey++);
     dwSeed1 = hash_buffer[0x000 + ch] ^ (dwSeed1 + dwSeed2);
     dwSeed2 = ch + dwSeed1 + dwSeed2 + (dwSeed2 << 5) + 3;
   }
@@ -97,9 +138,9 @@ unsigned long hash_keyA(const char* key)
   unsigned long dwSeed2 = 0xEEEEEEEE;
   unsigned long ch;
 
-  while(ukey !=0 )
+  while (*ukey != 0)
   {
-    ch = toupper(*key++);
+	ch = toupper(*ukey++);
     dwSeed1 = hash_buffer[0x100 + ch] ^ (dwSeed1 + dwSeed2);
     dwSeed2 = ch + dwSeed1 + dwSeed2 + (dwSeed2 << 5) + 3;
   }
@@ -113,9 +154,9 @@ unsigned long hash_keyB(const char* key)
   unsigned long dwSeed2 = 0xEEEEEEEE;
   unsigned long ch;
 
-  while(ukey !=0 )
+  while (*ukey != 0)
   {
-    ch = toupper(*key++);
+	ch = toupper(*ukey++);
     dwSeed1 = hash_buffer[0x200 + ch] ^ (dwSeed1 + dwSeed2);
     dwSeed2 = ch + dwSeed1 + dwSeed2 + (dwSeed2 << 5) + 3;
   }

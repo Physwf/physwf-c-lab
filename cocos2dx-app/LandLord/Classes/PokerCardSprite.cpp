@@ -2,8 +2,9 @@
 
 PokerCardSprite::PokerCardSprite(int rank, Suit suit)
 {
-	mProperties = new Properties(50);
+	mProperties = new Properties(300);
 	mProperties->readFile("./data/cards.properties");
+	cocos2d::CCRect* rect = mProperties->getRect("spades.holder.play.sub.rect");
 }
 
 PokerCardSprite::~PokerCardSprite()

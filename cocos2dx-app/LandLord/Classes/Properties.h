@@ -18,10 +18,7 @@ private:
 	int splitRect(const char* rect, cocos2d::CCRect* object);
 private:
 	Hash* mHashTable;
+	Block* mBlockTable;
 	unsigned long mTableSize;
-	char** mRawData;
-	void** mDataCache;
 	char* mDataBlock;
-
-	
 };

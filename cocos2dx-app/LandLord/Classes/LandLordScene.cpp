@@ -67,7 +67,7 @@ bool LandLord::init()
     this->addChild(pLabel, 1);
 
     // add "LandLord" splash screen"
-    CCSprite* pSprite = CCSprite::create("desk.png");
+    CCSprite* pSprite = CCSprite::create("./data/desk.png");
 
     // position the sprite on the center of the screen
     pSprite->setPosition(ccp(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
