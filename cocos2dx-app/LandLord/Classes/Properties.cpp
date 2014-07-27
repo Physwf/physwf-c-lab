@@ -129,11 +129,12 @@ int Properties::splitPoint(const char* point, cocos2d::CCPoint* object)
 	while (coord != NULL)
 	{
 		coords[i++] = atoi(coord);
-		if (i > 2)
+		if (i >= 2)
 		{
 			// warning
 			break;
 		}
+		coord = strtok(NULL, ",");
 	}
 	object->x = coords[0];
 	object->y = coords[1];
@@ -148,7 +149,7 @@ int Properties::splitRect(const char* rect, cocos2d::CCRect* object)
 	while (coord != NULL)
 	{
 		coords[i++] = atoi(coord);
-		if (i > 4)
+		if (i >= 4)
 		{
 			// warning
 			break;

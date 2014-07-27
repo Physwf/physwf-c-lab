@@ -11,11 +11,11 @@ public:
 	static PokerCardSprite* create(int rank, Suit suit);
 
 private:
-	cocos2d::CCSprite mFrontBg;
-	cocos2d::CCSprite mBackBg;
-	cocos2d::CCSprite mRankSprite;
-	cocos2d::CCSprite mSmallSuitSprite;
-	cocos2d::CCSprite mBigSuitSprite;
+	cocos2d::CCSprite *mFrontBg;
+	cocos2d::CCSprite *mBackBg;
+	cocos2d::CCSprite *mRankSprite;
+	cocos2d::CCSprite *mSmallSuitSprite;
+	cocos2d::CCSprite *mBigSuitSprite;
 
 	Properties* mProperties;
 };

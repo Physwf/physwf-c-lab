@@ -73,9 +73,10 @@ bool LandLord::init()
     pSprite->setPosition(ccp(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 
     // add the sprite as a child to this layer
-    this->addChild(pSprite, 0);
-    
-	new PokerCardSprite(1,SPADE);
+	this->addChild(pSprite, 0);
+	PokerCardSprite *cardSprite = PokerCardSprite::create(1, SPADE);
+	cardSprite->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	this->addChild(cardSprite);
     return true;
 }
 
