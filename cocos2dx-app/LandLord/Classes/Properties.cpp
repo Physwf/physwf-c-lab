@@ -74,11 +74,11 @@ int Properties::readFile(const char* filename)
 				Block * pBlockEnd = mBlockTable + mTableSize;
 				unsigned long pos = db - mDataBlock;
 
-				memcpy(db, value, strlen(value));
-				db += strlen(value);
+				memcpy(db, value, strlen(value)+1);
+				db += strlen(value)+1;
 				block = mBlockTable + entry->blockIndex;
 				block->position = pos;
-				block->size = strlen(value);
+				block->size = strlen(value)+1;
 				block->flags |= FLAG_BLOCK_EXSIT;
 			}			
 			numProperites++;
@@ -110,6 +110,14 @@ cocos2d::CCRect* Properties::getRect(const char* key)
 	splitRect(value, rect);
 	return rect;
 }
+
+int Properties::getProperty(const char* key, char* value)
+{
+	Hash* entry = get_hash_entry(mHashTable, key, mTableSize);
+	Block* block = mBlockTable + entry->blockIndex;
+	value = mDataBlock + block->position;
+	return block->size;
+};
 
 int Properties::splitKeyValue(const char* pair, char* key, char* value)
 {

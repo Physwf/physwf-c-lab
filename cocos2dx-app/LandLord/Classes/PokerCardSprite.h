@@ -14,8 +14,8 @@ private:
 	cocos2d::CCSprite *mFrontBg;
 	cocos2d::CCSprite *mBackBg;
 	cocos2d::CCSprite *mRankSprite;
-	cocos2d::CCSprite *mSmallSuitSprite;
-	cocos2d::CCSprite *mBigSuitSprite;
+	cocos2d::CCSprite *mSideSuitSprite;
+	cocos2d::CCSprite *mCenterSuitSprite;
 
 	Properties* mProperties;
 };

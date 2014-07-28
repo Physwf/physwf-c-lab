@@ -11,6 +11,7 @@ public:
 	int readFile(const char* filename);
 	cocos2d::CCPoint* getPoint(const char* key);
 	cocos2d::CCRect* getRect(const char* key);
+	int getProperty(const char* key, char* value);
 
 private:
 	int splitKeyValue(const char* pair, char* key, char* value);

@@ -33,6 +33,16 @@ PokerCardSprite* PokerCardSprite::create(int rank, Suit suit)
 		pSprite->addChild(pSprite->mRankSprite);
 		cocos2d::CCPoint* rPos = pSprite->mProperties->getPoint("spades.card.val.pt");
 		pSprite->mRankSprite->setPosition(ccp(rPos->x + vRect->size.width /2 - bRect->size.width / 2, rPos->y + bRect->size.height / 2 - vRect->size.height));
+		//side suit rect
+		cocos2d::CCRect* sRect;
+		sRect = pSprite->mProperties->getRect("spades.card.suit.rect");
+		sRect->origin.x = sRect->size.width * (3-(int)suit);
+		pSprite->mSideSuitSprite = cocos2d::CCSprite::create("./data/card-pieces.png",*sRect);
+		pSprite->mSideSuitSprite->setAnchorPoint(ccp(0,0));
+		cocos2d::CCPoint* sPos;
+		sPos = pSprite->mProperties->getPoint("spades.card.suit.pt");
+		pSprite->mSideSuitSprite->setPosition(ccp(sPos->x - bRect->size.width / 2, sPos->y - bRect->size.height/2));
+		pSprite->addChild(pSprite->mSideSuitSprite);
 		return pSprite;
 	}
 	return NULL;
