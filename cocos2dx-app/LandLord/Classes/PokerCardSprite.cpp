@@ -45,15 +45,15 @@ PokerCardSprite* PokerCardSprite::create(int rank, Suit suit)
 		pSprite->mSideSuitSprite->setPosition(ccp(sPos->x - bRect->size.width / 2, sPos->y - bRect->size.height/2));
 		pSprite->addChild(pSprite->mSideSuitSprite);
 
-		char value[512];
+		char value[512] = { 0 };
 		int len = pSprite->mProperties->getProperty("spades.card.s1 ", value);
 		char* parts[4];
 		int listlen = jpsplit(value, ",", parts);
-		jptrim(parts[3]);
-		char* subkeys[20];
+		parts[3] = jptrim(parts[3]);
+		char* subkeys[20] = {0};
 		int list2len = jpsplit(parts[3], ":", subkeys);
 		char* rectkey = subkeys[0];
-		int index = atoi(&rectkey[strlen(rectkey) - 1]);
+		int index = atoi(&rectkey[strlen(rectkey) - 2]);
 		return pSprite;
 	}
 	return NULL;
