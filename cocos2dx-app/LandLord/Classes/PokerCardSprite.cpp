@@ -1,4 +1,5 @@
 #include "PokerCardSprite.h"
+#include "jpstring.h"
 
 PokerCardSprite::PokerCardSprite(int rank, Suit suit)
 {
@@ -43,6 +44,16 @@ PokerCardSprite* PokerCardSprite::create(int rank, Suit suit)
 		sPos = pSprite->mProperties->getPoint("spades.card.suit.pt");
 		pSprite->mSideSuitSprite->setPosition(ccp(sPos->x - bRect->size.width / 2, sPos->y - bRect->size.height/2));
 		pSprite->addChild(pSprite->mSideSuitSprite);
+
+		char value[512];
+		int len = pSprite->mProperties->getProperty("spades.card.s1 ", value);
+		char* parts[4];
+		int listlen = jpsplit(value, ",", parts);
+		jptrim(parts[3]);
+		char* subkeys[20];
+		int list2len = jpsplit(parts[3], ":", subkeys);
+		char* rectkey = subkeys[0];
+		int index = atoi(&rectkey[strlen(rectkey) - 1]);
 		return pSprite;
 	}
 	return NULL;

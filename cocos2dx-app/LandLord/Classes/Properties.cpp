@@ -115,7 +115,7 @@ int Properties::getProperty(const char* key, char* value)
 {
 	Hash* entry = get_hash_entry(mHashTable, key, mTableSize);
 	Block* block = mBlockTable + entry->blockIndex;
-	value = mDataBlock + block->position;
+	strcpy(value,mDataBlock + block->position);
 	return block->size;
 };
 
