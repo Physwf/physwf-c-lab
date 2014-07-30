@@ -11,8 +11,8 @@ COCO_BIN=../cocos2dx/bin
 LIB_PUBLIC= $(COCO_BIN)/glew32.lib $(COCO_BIN)/libcurl_imp.lib $(COCO_BIN)/libiconv.lib $(COCO_BIN)/libjpeg.lib $(COCO_BIN)/libpng.lib $(COCO_BIN)/libtiff.lib $(COCO_BIN)/libwebp.lib $(COCO_BIN)/libzlib.lib $(COCO_BIN)/pthreadVCE2.lib $(COCO_BIN)/libcocos2dx.lib
 #LandLord
 DIR_LL=./LandLord
-LLclient:LLAppDelegate.obj LandLordScene.obj LLmain.obj LLgame.obj LLlistener.obj LLnet.obj LLservices.obj LLinput.obj Log.obj LLPokerCardSprite.obj LLProperties.obj hash.obj jpstring.obj
-	$(LINK) $(BIN)/LLAppDelegate.obj $(BIN)/LandLordScene.obj $(BIN)/LLmain.obj $(BIN)/LLgame.obj $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLservices.obj $(BIN)/LLinput.obj $(BIN)/Log.obj $(BIN)/hash.obj $(BIN)/jpstring.obj $(BIN)/LLPokerCardSprite.obj $(BIN)/LLProperties.obj $(LIB_PUBLIC) $(LINKOUT)$(BIN)/$@.exe
+LLclient:LLAppDelegate.obj LandLordScene.obj LLmain.obj LLgame.obj LLlistener.obj LLnet.obj LLservices.obj LLinput.obj Log.obj LLPokerCardSprite.obj LLProperties.obj hash.obj jpstring.obj LLConfig.obj
+	$(LINK) $(BIN)/LLAppDelegate.obj $(BIN)/LandLordScene.obj $(BIN)/LLmain.obj $(BIN)/LLgame.obj $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLservices.obj $(BIN)/LLinput.obj $(BIN)/Log.obj $(BIN)/hash.obj $(BIN)/jpstring.obj $(BIN)/LLPokerCardSprite.obj $(BIN)/LLProperties.obj $(BIN)/LLConfig.obj $(LIB_PUBLIC) $(LINKOUT)$(BIN)/$@.exe
 LLAppDelegate.obj:
 	$(CL) $(DIR_LL)/Classes/AppDelegate.cpp $(CLOUT)$(BIN)/LLAppDelegate.obj $(INCLUDE) $(OPTION)
 LandLordScene.obj:
@@ -33,8 +33,8 @@ LLPokerCardSprite.obj:
 	$(CL) $(DIR_LL)/Classes/PokerCardSprite.cpp $(CLOUT)$(BIN)/LLPokerCardSprite.obj $(INCLUDE) $(OPTION)
 LLProperties.obj:
 	$(CL) $(DIR_LL)/Classes/Properties.cpp $(CLOUT)$(BIN)/LLProperties.obj $(INCLUDE) $(OPTION)
-	
-	
+LLConfig.obj:
+	$(CL) $(DIR_LL)/Classes/Config.cpp $(CLOUT)$(BIN)/LLConfig.obj $(INCLUDE) $(OPTION)
 	
 	
 hash.obj:

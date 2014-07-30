@@ -1,3 +1,5 @@
+#ifndef _HASH_H
+#define _HASH_H
 #define HASH_ENTRY_DELETED       0xFFFFFFFE // Block index for deleted hash entry
 #define HASH_ENTRY_FREE          0xFFFFFFFF // Block index for free hash entry
 
@@ -25,3 +27,5 @@ unsigned long hash_keyA(const char* key);
 unsigned long hash_keyB(const char* key);
 Hash* get_hash_entry(Hash* table,const char* key,unsigned long table_size);
 Hash* find_free_hash_entry(Hash* hTable, Block* bTable, const char* key, unsigned long table_size);
+
+#endif

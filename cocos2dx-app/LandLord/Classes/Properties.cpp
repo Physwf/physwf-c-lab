@@ -1,5 +1,6 @@
 #include "Properties.h"
 #include "log/Log.h"
+#include "jpstring.h"
 
 Properties::Properties()
 {
@@ -92,7 +93,8 @@ cocos2d::CCPoint* Properties::getPoint(const char* key)
 {
 	Hash* entry = get_hash_entry(mHashTable, key, mTableSize);
 	Block* block = mBlockTable + entry->blockIndex;
-	char* value = mDataBlock + block->position;
+	char value[512] = { 0 };
+	memcpy(value, mDataBlock + block->position, block->size);
 	Log::log("getPoint:%s", value);
 	cocos2d::CCPoint* point = new cocos2d::CCPoint();
 	splitPoint(value, point);
@@ -121,18 +123,16 @@ int Properties::getProperty(const char* key, char* value)
 
 int Properties::splitKeyValue(const char* pair, char* key, char* value)
 {
-	strcpy(key, strtok((char*)pair,"="));
-	//key = strtok((char*)pair, "=");
+	strcpy(key, jptrim(strtok((char*)pair, "=")));
 	if (key == NULL) return 0;
 	strcpy(value, strtok(NULL, "="));
-	//value = strtok(NULL, "=");
 	return strlen(value);
 };
 
 int Properties::splitPoint(const char* point, cocos2d::CCPoint* object)
 {
 	char* coord = strtok((char*)point, ",");
-	int coords[2];
+	int coords[2] = {0};
 	int i = 0;
 	while (coord != NULL)
 	{

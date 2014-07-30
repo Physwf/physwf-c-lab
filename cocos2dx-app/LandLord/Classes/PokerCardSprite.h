@@ -7,7 +7,9 @@ class PokerCardSprite :public cocos2d::CCSprite
 public:
 	PokerCardSprite(int rank, Suit suit);
 	~PokerCardSprite();
-
+	void reverse();
+	void obverse();
+	void rotate(float angle);
 	static PokerCardSprite* create(int rank, Suit suit);
 
 private:

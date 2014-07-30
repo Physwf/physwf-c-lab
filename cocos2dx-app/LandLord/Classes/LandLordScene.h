@@ -17,6 +17,8 @@ public:
     
     // implement the "static node()" method manually
     CREATE_FUNC(LandLord);
+
+	void beginDealAnimation();
 };
 
 #endif // __LANDLORD_SCENE_H__

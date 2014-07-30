@@ -12,9 +12,9 @@ char* jptrim(char* input)
   while(isspace(*input)) input++;
   if(*input == 0) return input;
 
-  end = input + strlen(input);
+  end = input + strlen(input)-1;
   while(end > input && isspace(*end)) end --;
-  *(end-1) = 0;
+  *(end+1) = 0;
   return input;
 }
 

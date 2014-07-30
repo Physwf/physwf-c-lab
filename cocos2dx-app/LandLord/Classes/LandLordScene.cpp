@@ -74,9 +74,16 @@ bool LandLord::init()
 
     // add the sprite as a child to this layer
 	this->addChild(pSprite, 0);
-	PokerCardSprite *cardSprite = PokerCardSprite::create(1, SPADE);
-	cardSprite->setPosition(ccp(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-	this->addChild(cardSprite);
+	cocos2d::CCDirector * pDirector = cocos2d::CCDirector::sharedDirector();
+	PokerCardSprite *cardSprite;
+	for (int i = 1; i < 14; i++)
+	{
+		cardSprite = PokerCardSprite::create(i, SPADE);
+		cardSprite->setPosition(pDirector->convertToGL(ccp(200 + i * 20, 500)));
+		cardSprite->reverse();
+		cardSprite->rotate(90);
+		this->addChild(cardSprite);
+	}
     return true;
 }
 
@@ -92,3 +99,5 @@ void LandLord::menuCloseCallback(CCObject* pSender)
 #endif
 #endif
 }
+
+
