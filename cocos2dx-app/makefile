@@ -43,3 +43,6 @@ Log.obj:
 	$(CL) ../shared/src/log/Log.cpp $(CLOUT)$(BIN)/Log.obj $(INCLUDE) $(OPTION)
 jpstring.obj:
 	$(CL) ../shared/src/jpstring.cpp $(CLOUT)$(BIN)/jpstring.obj $(INCLUDE) $(OPTION)
+
+%.cpp.%obj:
+	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN) -Fo$(BIN)

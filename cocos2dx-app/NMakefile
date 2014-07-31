@@ -10,55 +10,11 @@ CPPFLAGS=-I "../cocos2dx" -I"../cocos2dx/include" /I"../cocos2dx/platform/win32"
 
 LINK=link /MANIFEST  /NXCOMPAT /PDB:"./bin/LandLord.pdb" /DYNAMICBASE "opengl32.lib" "glew32.lib" "libzlib.lib" "libpng.lib" "libjpeg.lib" "libtiff.lib" "libwebp.lib" "libiconv.lib" "pthreadVCE2.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /DEBUG /MACHINE:X86 /SAFESEH /INCREMENTAL /LIBPATH:"../cocos2dx/bin/" /SUBSYSTEM:WINDOWS",5.01" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /ERRORREPORT:PROMPT /NOLOGO /TLBID:1
 
-CLASSES_OBJ = ./LandLord/Classes/
-CLASSES_SRC = ./LandLord/Classes/
-
-GAME_OBJ = ./LandLord/game/
-GAME_SRC = ./LandLord/game/
-
-WIN32_OBJ = ./LandLord/win32/
-WIN32_SRC= ./LandLord/win32/
-
-SHARED_OBJ = ../shared/src/
-SHARED_SRC = ../shared/src/
-
-LOG_OBJ= ../shared/src/log/
-LOG_SRC= ../shared/src/log/
 
 OBJDIR=LandLord/
 
-Objs=$(CLASSES_OBJ)AppDelegate.obj \
-	$(CLASSES_OBJ)LandLordScene.obj \
-	$(CLASSES_OBJ)PokerCardSprite.obj \
-	$(CLASSES_OBJ)Config.obj \
-	$(CLASSES_OBJ)Properties.obj \
-	$(GAME_OBJ)game.obj\
-	$(GAME_OBJ)listener.obj\
-	$(GAME_OBJ)net.obj\
-	$(GAME_OBJ)services.obj\
-	$(GAME_OBJ)input.obj\
-	$(WIN32_OBJ)main.obj\
-	$(SHARED_OBJ)hash.obj\
-	$(SHARED_OBJ)jpstring.obj\
-	$(LOG_OBJ)Log.obj
 
-LLclient : $(Objs) 
-	$(LINK) $(BIN)$(OBJDIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)$@.exe
-	
-{$(CLASSES_SRC)}.cpp{$(CLASSES_OBJ)}.obj::
-	$(CC) $(CPPFLAGS) -Fd$(BIN) -Fo$(BIN)$(OBJDIR) -c $< 
-{$(GAME_SRC)}.cpp{$(GAME_OBJ)}.obj::
-	$(CC) $(CPPFLAGS) -Fd$(BIN) -Fo$(BIN)$(OBJDIR) -c $< 
-{$(WIN32_SRC)}.cpp{$(WIN32_OBJ)}.obj::
-	$(CC) $(CPPFLAGS) -Fd$(BIN) -Fo$(BIN)$(OBJDIR) -c $< 
-{$(SHARED_SRC)}.cpp{$(SHARED_OBJ)}.obj::
-	$(CC) $(CPPFLAGS) -Fd$(BIN) -Fo$(BIN)$(OBJDIR) -c $< 
-{$(LOG_SRC)}.cpp{$(LOG_OBJ)}.obj::
-	$(CC) $(CPPFLAGS) -Fd$(BIN) -Fo$(BIN)$(OBJDIR) -c $< 
-	
-$(Objs):
-
-Objs2=./LandLord/Classes/AppDelegate.obj \
+Objs=./LandLord/Classes/AppDelegate.obj \
 	./LandLord/Classes/LandLordScene.obj \
 	./LandLord/Classes/PokerCardSprite.obj \
 	./LandLord/Classes/Config.obj \
@@ -76,7 +32,7 @@ Objs2=./LandLord/Classes/AppDelegate.obj \
 .cpp.obj::
 	$(CC) $(CPPFLAGS) -Fd$(BIN) -Fo$(BIN)$(OBJDIR) -c $< 
 	
-LLclient2 : $(Objs2) 
+LLclient : $(Objs) 
 	$(LINK) $(BIN)$(OBJDIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)$@.exe
 
-$(Objs2):
+$(Objs):
