@@ -69,7 +69,7 @@ typedef struct player_t {
 
 typedef struct deal_result_t {
 	Card cards[17];
-	Card odd[3];
+	Card odd[3];//deprecated
 } DealResult, *PDealResult;
 
 typedef struct game_t {

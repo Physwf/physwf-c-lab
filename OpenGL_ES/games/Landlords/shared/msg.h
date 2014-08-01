@@ -27,6 +27,19 @@ typedef struct msg_head_t
 	unsigned int length;
 } MsgHead, *PMsgHead;
 
+typedef struct msg_req_join_game_t
+{
+
+}
+MSG_REQ_JOIN_GAME;
+
+typedef struct msg_res_join_game_t
+{
+	int playerid;
+} 
+MSG_RES_JOIN_GAME;
+
+//deprecated
 typedef struct msg_ask_wait_more_t
 {
 	//empty
@@ -39,16 +52,23 @@ typedef struct msg_noti_player_join_t
 }
 MSG_NOTI_PLAYER_JOIN,*PMSG_NOTI_PLAYER_JOIN;
 
+//deprecated
 typedef struct msg_noti_host_wait_players_t
 {
 }
 MSG_NOTI_HOST_WAIT_PLAYERS,*PMSG_NOTI_HOST_WAIT_PLAYERS;
-
+//deprecated
 typedef struct msg_subm_start_game_t
 {
 	//empty
 }
 MSG_SUBM_START_GAME,*PMSG_SUBM_START_GAME;
+
+typedef struct msg_noti_game_start_t
+{
+
+}
+MSG_NOTI_GAME_START;
 
 typedef struct msg_noti_deal_result_t
 {
