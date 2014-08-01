@@ -44,5 +44,24 @@ Log.obj:
 jpstring.obj:
 	$(CL) ../shared/src/jpstring.cpp $(CLOUT)$(BIN)/jpstring.obj $(INCLUDE) $(OPTION)
 
-%.cpp.%obj:
-	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN) -Fo$(BIN)
+Objs=	$(DIR_LL)/Classes/AppDelegate.obj\
+		$(DIR_LL)/Classes/LandLordScene.obj\
+		$(DIR_LL)/Classes/PokerCardSprite.obj\
+		$(DIR_LL)/Classes/Properties.obj\
+		$(DIR_LL)/Classes/Config.obj\
+		$(DIR_LL)/Game/game.obj\
+		$(DIR_LL)/Game/listener.obj\
+		$(DIR_LL)/Game/net.obj\
+		$(DIR_LL)/Game/services.obj\
+		$(DIR_LL)/Game/input.obj\
+		$(DIR_LL)/win32/main.obj\
+		../shared/src/hash.obj\
+		../shared/src/log/Log.obj\
+		../shared/src/jpstring.obj
+OBJDIR=LandLord/
+all:$(Objs)
+	$(LINK) $(BIN)/$(OBJDIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)/$@.exe
+
+%.obj : %.cpp
+	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(OBJDIR)
+$(Objs):
