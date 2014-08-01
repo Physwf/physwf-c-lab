@@ -137,6 +137,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Config.cpp" />
     <ClCompile Include="..\Classes\LandLordScene.cpp" />
+    <ClCompile Include="..\Classes\LLSceneController.cpp" />
     <ClCompile Include="..\Classes\PokerCardSprite.cpp" />
     <ClCompile Include="..\Classes\Properties.cpp" />
     <ClCompile Include="..\Game\game.cpp" />
@@ -151,6 +152,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\Config.h" />
     <ClInclude Include="..\Classes\LandLordScene.h" />
+    <ClInclude Include="..\Classes\LLSceneController.h" />
     <ClInclude Include="..\Classes\PokerCardSprite.h" />
     <ClInclude Include="..\Classes\Properties.h" />
     <ClInclude Include="..\Game\game.h" />

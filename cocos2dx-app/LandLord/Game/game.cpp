@@ -10,19 +10,24 @@
 #include "../shared/msg.h"
 #include "input.h"
 
+
 Game game;
 HANDLE hNetThread;
+
+LLSceneController* scene;
 
 void onAskWaitMore(char* data)
 {
 	printf("Wait for Player(s):\n");
 	printf("You can wait for more players, or start the game immediately!\n");
 	game.phase = GAME_PHASE_WAIT_FOR_PLAYERS;
+	scene->showWaitForMorePlayers();
 }
 
 void onPlayerJoin(char* data)
 {
 	printf("Player joined!\n");
+	scene->showPlayerJoin();
 }
 
 void onHostWaitMorePlayers(char* data)
@@ -48,6 +53,7 @@ void onDealResult(char* data)
 		printf("%d,",msg.result.odd[i].rank);
 	}
 	printf("\n");
+	scene->showDealResult();
 }
 
 void onWaitLoot(char* data)
@@ -63,6 +69,7 @@ void onLootScore(char* data)
 	MSG_NOTI_LOOT_SCORE msg;
 	memcpy(&msg,data,sizeof(MSG_NOTI_LOOT_SCORE));
 	printf("Player %d loot,score:%d\n",msg.who,msg.score);
+	scene->showLootScore();
 }
 
 void onWaitCards(char* data)
@@ -77,7 +84,7 @@ void onPlayCards(char* data)
 	MSG_NOTI_PLAY_CARDS msg;
 	memcpy(&msg,data,sizeof(MSG_NOTI_PLAY_CARDS));
 	printf("Player %d play cards:\n");
-	
+	scene->showPlayCards();
 }
 
 DWORD WINAPI net_thread(LPVOID pParam)
@@ -91,7 +98,7 @@ DWORD WINAPI net_thread(LPVOID pParam)
 	return 0;
 }
 
-void init()
+void init(LLSceneController* s)
 {
 	char fname[30];
 	sprintf(fname,"LLclient%8d.log",(int)time(NULL));
@@ -100,6 +107,7 @@ void init()
 	net_init();
 	init_input();
 	
+	scene = s;
 	addMsgListener(MSG_NOTI_ASK_WAIT_MORE_1000,onAskWaitMore);
 	addMsgListener(MSG_NOTI_PLAYER_JOIN_1001,onPlayerJoin);
 	addMsgListener(MSG_NOTI_HOST_WAIT_PLAYERS_1002,onHostWaitMorePlayers);

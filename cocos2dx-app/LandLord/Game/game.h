@@ -1,4 +1,9 @@
+
+#ifndef _GAME_H
+#define _GAME_H
+
 #include "../shared/logic.h"
+#include "LLSceneController.h"
 
 #define GAME_PHASE_WAIT_FOR_OTHERS 	0
 #define GAME_PHASE_WAIT_FOR_PLAYERS 1
@@ -7,5 +12,7 @@
 
 extern Game game;
 
-void init();
+void init(LLSceneController* scene);
 void run();
+
+#endif

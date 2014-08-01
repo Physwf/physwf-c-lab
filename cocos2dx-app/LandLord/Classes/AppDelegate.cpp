@@ -32,12 +32,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
-	//init game
-	init();
+	
 
     // create a scene. it's an autorelease object
     CCScene *pScene = LandLord::scene();
 
+	//controller
+	controller = new LLSceneController();
+
+	//init game
+	init(controller);
     // run
     pDirector->runWithScene(pScene);
 

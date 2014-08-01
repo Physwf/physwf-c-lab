@@ -1,3 +1,6 @@
+#ifndef POKERCARDSPRITE_H
+#define POKERCARDSPRITE_H
+
 #include "cocos2d.h"
 #include "../shared/logic.h"
 #include "Properties.h"
@@ -21,3 +24,4 @@ private:
 
 	Properties* mProperties;
 };
+#endif

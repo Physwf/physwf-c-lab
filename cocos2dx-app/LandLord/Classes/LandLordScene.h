@@ -19,6 +19,7 @@ public:
     CREATE_FUNC(LandLord);
 
 	void beginDealAnimation();
+
 };
 
 #endif // __LANDLORD_SCENE_H__

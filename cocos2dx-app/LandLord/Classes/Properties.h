@@ -1,5 +1,6 @@
 #ifndef _PROPERTIES_H
 #define _PROPERTIES_H
+
 #include "hash.h"
 #include "cocos2d.h"
 
