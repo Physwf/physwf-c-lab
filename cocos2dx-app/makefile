@@ -11,44 +11,13 @@ COCO_BIN=../cocos2dx/bin
 LIB_PUBLIC= $(COCO_BIN)/glew32.lib $(COCO_BIN)/libcurl_imp.lib $(COCO_BIN)/libiconv.lib $(COCO_BIN)/libjpeg.lib $(COCO_BIN)/libpng.lib $(COCO_BIN)/libtiff.lib $(COCO_BIN)/libwebp.lib $(COCO_BIN)/libzlib.lib $(COCO_BIN)/pthreadVCE2.lib $(COCO_BIN)/libcocos2dx.lib
 #LandLord
 DIR_LL=./LandLord
-LLclient:LLAppDelegate.obj LandLordScene.obj LLmain.obj LLgame.obj LLlistener.obj LLnet.obj LLservices.obj LLinput.obj Log.obj LLPokerCardSprite.obj LLProperties.obj hash.obj jpstring.obj LLConfig.obj
-	$(LINK) $(BIN)/LLAppDelegate.obj $(BIN)/LandLordScene.obj $(BIN)/LLmain.obj $(BIN)/LLgame.obj $(BIN)/LLlistener.obj $(BIN)/LLnet.obj $(BIN)/LLservices.obj $(BIN)/LLinput.obj $(BIN)/Log.obj $(BIN)/hash.obj $(BIN)/jpstring.obj $(BIN)/LLPokerCardSprite.obj $(BIN)/LLProperties.obj $(BIN)/LLConfig.obj $(LIB_PUBLIC) $(LINKOUT)$(BIN)/$@.exe
-LLAppDelegate.obj:
-	$(CL) $(DIR_LL)/Classes/AppDelegate.cpp $(CLOUT)$(BIN)/LLAppDelegate.obj $(INCLUDE) $(OPTION)
-LandLordScene.obj:
-	$(CL) $(DIR_LL)/Classes/LandLordScene.cpp $(CLOUT)$(BIN)/LandLordScene.obj $(INCLUDE) $(OPTION)
-LLmain.obj:
-	$(CL) $(DIR_LL)/win32/main.cpp $(CLOUT)$(BIN)/LLmain.obj $(INCLUDE) $(OPTION)
-LLgame.obj:$(DIR_LL)/Game/game.cpp
-	$(CL) $(DIR_LL)/Game/game.cpp $(CLOUT)$(BIN)/LLgame.obj $(INCLUDE) $(OPTION)
-LLlistener.obj:$(DIR_LL)/Game/listener.cpp
-	$(CL) $(DIR_LL)/Game/listener.cpp $(CLOUT)$(BIN)/LLlistener.obj $(INCLUDE) $(OPTION)
-LLnet.obj:
-	$(CL) $(DIR_LL)/Game/net.cpp $(CLOUT)$(BIN)/LLnet.obj $(INCLUDE) $(OPTION)
-LLservices.obj:
-	$(CL) $(DIR_LL)/Game/services.cpp $(CLOUT)$(BIN)/LLservices.obj $(INCLUDE) $(OPTION)
-LLinput.obj:
-	$(CL) $(DIR_LL)/Game/input.cpp $(CLOUT)$(BIN)/LLinput.obj $(INCLUDE) $(OPTION)
-LLPokerCardSprite.obj:
-	$(CL) $(DIR_LL)/Classes/PokerCardSprite.cpp $(CLOUT)$(BIN)/LLPokerCardSprite.obj $(INCLUDE) $(OPTION)
-LLProperties.obj:
-	$(CL) $(DIR_LL)/Classes/Properties.cpp $(CLOUT)$(BIN)/LLProperties.obj $(INCLUDE) $(OPTION)
-LLConfig.obj:
-	$(CL) $(DIR_LL)/Classes/Config.cpp $(CLOUT)$(BIN)/LLConfig.obj $(INCLUDE) $(OPTION)
-	
-	
-hash.obj:
-	$(CL) ../shared/src/hash.cpp $(CLOUT)$(BIN)/hash.obj $(INCLUDE) $(OPTION)
-Log.obj:
-	$(CL) ../shared/src/log/Log.cpp $(CLOUT)$(BIN)/Log.obj $(INCLUDE) $(OPTION)
-jpstring.obj:
-	$(CL) ../shared/src/jpstring.cpp $(CLOUT)$(BIN)/jpstring.obj $(INCLUDE) $(OPTION)
 
 Objs=	$(DIR_LL)/Classes/AppDelegate.obj\
 		$(DIR_LL)/Classes/LandLordScene.obj\
 		$(DIR_LL)/Classes/PokerCardSprite.obj\
 		$(DIR_LL)/Classes/Properties.obj\
 		$(DIR_LL)/Classes/Config.obj\
+		$(DIR_LL)/Classes/LLSceneController.obj \
 		$(DIR_LL)/Game/game.obj\
 		$(DIR_LL)/Game/listener.obj\
 		$(DIR_LL)/Game/net.obj\
@@ -59,7 +28,7 @@ Objs=	$(DIR_LL)/Classes/AppDelegate.obj\
 		../shared/src/log/Log.obj\
 		../shared/src/jpstring.obj
 OBJDIR=LandLord/
-all:$(Objs)
+LLclient:$(Objs)
 	$(LINK) $(BIN)/$(OBJDIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)/$@.exe
 
 %.obj : %.cpp
