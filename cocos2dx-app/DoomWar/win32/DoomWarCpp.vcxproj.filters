@@ -10,6 +10,9 @@
     <Filter Include="Components">
       <UniqueIdentifier>{4991830c-0b62-4504-8765-82b7abf60eee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{6781319a-3339-40fc-b461-da11c9d1fbaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
