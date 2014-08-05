@@ -64,6 +64,8 @@ target_AppDele = proj_name_short+"AppDelegate.obj"
 target_Scene = proj_name+"Scene.obj"
 target_main = proj_name_short+"main.obj"
 
+exit(0);
+
 handle_mkfile = open('./makefile','w+')
 
 handle_mkfile.write('\n')										#empty line

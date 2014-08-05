@@ -34,3 +34,18 @@ LLclient:$(Objs)
 %.obj : %.cpp
 	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(OBJDIR)
 $(Objs):
+
+#DoomWar
+DIR_DW=./DoomWar
+
+DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
+		$(DIR_DW)/Classes/DoomWarScene.obj\
+		$(DIR_DW)/win32/main.obj
+DWOBJ_DIR=DoomWar/
+
+DWclient:$(DWObjs)
+	$(LINK) $(BIN)/$(DWOBJ_DIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)/$@.exe
+
+%.obj : %.cpp
+	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR)
+$(DWObjs):	
