@@ -24,6 +24,12 @@
     <ClCompile Include="..\Classes\DoomWarScene.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
+    <ClCompile Include="..\System\Battle.h">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Battle.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -34,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\DoomWarScene.h">
       <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Unit.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
