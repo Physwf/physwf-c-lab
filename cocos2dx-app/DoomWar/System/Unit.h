@@ -1,8 +1,19 @@
 #ifndef _UNIT_H
 #define _UNIT_H
 
-#define MAX_HEROS_IN_A_BATTLE 10
-#define MAX_ENYMYS_IN_A_BATTLE 10
+#define MAX_ATTACK_GRIDS 20
+
+typedef struct position_t
+{
+	int x;
+	int y;
+} Position;
+
+typedef struct range_t
+{
+	int offsets[MAX_ATTACK_GRIDS];
+	int numGrids;
+} Range;
 
 typedef struct skill_t
 {
@@ -20,6 +31,9 @@ typedef struct unit_t
 	unsigned int exp;
 	int health;
 	Skill skill;
+	Position positon;
+	Range attackRange;
+	Range view;
 } Unit;
 
 #endif
