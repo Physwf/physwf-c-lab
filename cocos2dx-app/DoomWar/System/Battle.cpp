@@ -87,6 +87,8 @@ bool PVEBattle::checkEncounter()
 
 void PVEBattle::calculateRoundResult()
 {
+	//step 1, move enemys if hero(s) be seen (in enemys view)
+	//step 2, heros round, attack enemys in aligity order.
 	MaxHeap heros = MaxHeap(mNumHeros);
 	for (int i = 0; i < mNumHeros; i++)
 	{
@@ -99,4 +101,8 @@ void PVEBattle::calculateRoundResult()
 		Unit* hero = wraper->unit();
 		Range aRange = hero->attackRange;
 	}
+
+	//step 3, enemys round, attack heros in aligity order
+
+	//send battle result
 }
