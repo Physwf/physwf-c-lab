@@ -3,7 +3,8 @@
 
 class IPriority
 {
-	int virtual getValue()const = 0;
+public:
+	int virtual value() const = 0;
 };
 
 class MaxHeap
@@ -12,12 +13,12 @@ public:
 	MaxHeap(unsigned int capacity);
 	void Enqueue(IPriority* item);
 	IPriority* Dequeue();
-	unsigned int size();
+	unsigned int size() const;
 	bool hasItem(IPriority* item);
 	IPriority* getMax()const;
 private:
 	unsigned int mSize;
-	IPriority* mHeap;
+	IPriority** mHeap;
 };
 
 #endif

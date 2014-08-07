@@ -30,6 +30,24 @@
     <ClCompile Include="..\System\Battle.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\System\System.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Map.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\Heap.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\EventDispatcher.h">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\EventDispatcher.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Unit.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -42,6 +60,18 @@
       <Filter>Classes</Filter>
     </ClInclude>
     <ClInclude Include="..\System\Unit.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Map.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\System.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Heap.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Event.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>

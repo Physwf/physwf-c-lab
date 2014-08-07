@@ -1,8 +1,8 @@
 #ifndef _BATTLE_H
 #define _BATTLE_H
 
-#include "Unit.h"
 #include "Map.h"
+#include "EventDispatcher.h"
 
 #define MAX_SCREEN_HEROS 10
 #define MAX_SCREEN_ENYMYS 20
@@ -11,7 +11,7 @@
 
 #define MAX_STAR_LEVEL 3
 
-class PVEBattle
+class PVEBattle :public EventDispather
 {
 public:
 	PVEBattle();
@@ -25,7 +25,11 @@ public:
 	void update(unsigned int eclipse);
 private:
 	void updateStarLevel();
-	void checkEncounter();
+	bool checkEncounter();
+	void calculateRoundResult();
+public:
+	static const EType BATTLE_STEP_CLEAR;
+	static const EType BATTLE_ATTACK_RESULT;
 private:
 	Unit mHeros[MAX_SCREEN_HEROS];
 	int mNumHeros;
@@ -47,6 +51,7 @@ class PVPBattle
 {
 
 };
+
 
 class BattleSystem
 {

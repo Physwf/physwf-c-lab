@@ -64,7 +64,15 @@ void PVEBattle::step()
 	numAdd = mMap->getEnemysByRow(mNumEnemys, mEnemys + mNumEnemys);
 	mNumEnemys += numAdd;
 
-	checkEncounter();
+	if (checkEncounter())
+	{
+		calculateRoundResult();
+	}
+	else
+	{
+		Event e = { BATTLE_STEP_CLEAR, NULL};
+		dispatchEvent(&e);
+	}
 }
 
 void PVEBattle::update(unsigned int eclipse)
@@ -72,7 +80,23 @@ void PVEBattle::update(unsigned int eclipse)
 
 }
 
-void PVEBattle::checkEncounter()
+bool PVEBattle::checkEncounter()
 {
 
+}
+
+void PVEBattle::calculateRoundResult()
+{
+	MaxHeap heros = MaxHeap(mNumHeros);
+	for (int i = 0; i < mNumHeros; i++)
+	{
+		UnitWraper wraper = UnitWraper(&mHeros[i]);
+		heros.Enqueue(&wraper);
+	}
+	while (heros.size())
+	{
+		UnitWraper *wraper = (UnitWraper*)heros.Dequeue();
+		Unit* hero = wraper->unit();
+		Range aRange = hero->attackRange;
+	}
 }
