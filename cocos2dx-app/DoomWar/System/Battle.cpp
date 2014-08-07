@@ -87,8 +87,10 @@ bool PVEBattle::checkEncounter()
 
 void PVEBattle::calculateRoundResult()
 {
-	//step 1, move enemys if hero(s) be seen (in enemys view)
-	//step 2, heros round, attack enemys in aligity order.
+	//step 1, check blood recover, buff/debuff status 
+	//step 2, check props in occupied grids
+	//step 3, check active enemys and move them if hero(s) be seen (in enemys view)
+	//step 4, heros round, attack enemys in aligity order.
 	MaxHeap heros = MaxHeap(mNumHeros);
 	for (int i = 0; i < mNumHeros; i++)
 	{
@@ -102,7 +104,23 @@ void PVEBattle::calculateRoundResult()
 		Range aRange = hero->attackRange;
 	}
 
-	//step 3, enemys round, attack heros in aligity order
+	//step 5, enemys round, attack heros in aligity order
 
 	//send battle result
 }
+
+bool PVEBattle::isInAttackRange(Unit* attacker, Unit* victim)
+{
+	//first, check if in attack grids
+	bool in = false;
+	for (int i = 0; i < attacker->attackRange.numGrids; i++)
+	{
+		if (attacker->attackRange.offsets[i].x + attacker->positon.x == victim->positon.x &&
+			attacker->attackRange.offsets[i].y + attacker->positon.y == victim->positon.y)
+			in = true;
+	}
+	if (!in) return false;
+
+	//second, check if be blocked
+}
+

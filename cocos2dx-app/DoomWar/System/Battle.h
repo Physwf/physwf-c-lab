@@ -27,6 +27,7 @@ private:
 	void updateStarLevel();
 	bool checkEncounter();
 	void calculateRoundResult();
+	bool isInAttackRange(Unit* attacker, Unit* victim);
 public:
 	static const EType BATTLE_STEP_CLEAR;
 	static const EType BATTLE_ATTACK_RESULT;

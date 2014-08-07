@@ -13,7 +13,7 @@ typedef struct position_t
 
 typedef struct range_t
 {
-	int offsets[MAX_ATTACK_GRIDS];
+	Position offsets[MAX_ATTACK_GRIDS];
 	int numGrids;
 } Range;
 
