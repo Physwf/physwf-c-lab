@@ -22,6 +22,9 @@ PVEBattle::~PVEBattle()
 
 }
 
+EType const PVEBattle::BATTLE_STEP_CLEAR = "battle_step_clear";
+EType const PVEBattle::BATTLE_ATTACK_RESULT = "battle_attack_result";
+
 void PVEBattle::initialize(Unit* heros, int numHeros, PVEMap* map)
 {
 	memcpy(mHeros, heros, numHeros*sizeof(Unit));
@@ -97,19 +100,116 @@ void PVEBattle::calculateRoundResult()
 		UnitWraper wraper = UnitWraper(&mHeros[i]);
 		heros.Enqueue(&wraper);
 	}
+	AttackResult results[MAX_SCREEN_HEROS+MAX_SCREEN_ENYMYS] = { 0 };
+	int count = 0;
 	while (heros.size())
 	{
 		UnitWraper *wraper = (UnitWraper*)heros.Dequeue();
 		Unit* hero = wraper->unit();
-		Range aRange = hero->attackRange;
+		if (calculateHeroAttackResult(hero, &results[count])) count++;
 	}
 
 	//step 5, enemys round, attack heros in aligity order
-
+	MaxHeap enemys = MaxHeap(mNumEnemys);
+	for (int i = 0; i < mNumEnemys; i++)
+	{
+		UnitWraper wraper = UnitWraper(&mEnemys[i]);
+		enemys.Enqueue(&wraper);
+	}
+	while (enemys.size())
+	{
+		UnitWraper *wraper = (UnitWraper*)enemys.Dequeue();
+		Unit* enemy = wraper->unit();
+		if (calculateEnemyAttackResult(enemy, &results[count])) count++;
+	}
+	Event e = { BATTLE_ATTACK_RESULT, (char*)results };
+	dispatchEvent(&e);
 	//send battle result
 }
+bool PVEBattle::calculateHeroBuffResult(Unit* hero, BuffResult* result)
+{
+	for (int i = 0; i < mNumHeros; i++)
+	{
+		// to do, implement multi-buff in one turn
+		if (calculateBuffResult(hero, &mHeros[i], result)) return true;
+	}
+	return false;
+}
 
-bool PVEBattle::isInAttackRange(Unit* attacker, Unit* victim)
+bool PVEBattle::calculateEnemyBuffResult(Unit* enemy, BuffResult* result)
+{
+	for (int i = 0; i < mNumEnemys; i++)
+	{
+		// to do
+	}
+}
+
+bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* result)
+{
+	if (isInRange(giver, recipient))
+	{
+		result->giver = giver->id;
+		result->recipient = recipient->id;
+		switch (giver->skill.type)
+		{
+		case SKILL_TYPE_BUFF_HEALTH:
+			{
+				recipient->health += giver->skill.value;
+				recipient->health = recipient->health > recipient->maxHealth ? recipient->maxHealth : recipient->health;
+			}
+		default:
+			break;
+		}
+	}
+}
+
+bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
+{
+	for (int i = 0; i < mNumEnemys; i++)
+	{
+		// to do, implement multi-attack in one turn
+		if (calculateAttackResult(hero, &mEnemys[i], result)) return true;
+	}
+	return false;
+}
+
+
+bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
+{
+	for (int i = 0; i < mNumHeros; i++)
+	{
+		// to do, implement multi-attack in on turn
+		if (calculateAttackResult(enemy, &mHeros[i], result)) return true;
+	}
+}
+
+bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result)
+{
+	if (isInRange(attacker, victim))
+	{
+		result->attacker = attacker->id;
+		result->victim = victim->id;
+		switch (attacker->skill.type){
+			case SKILL_TYPE_HARM_PHYSICAL:
+			{
+				result->type = ATTACK_TYPE_PHYSICAL;
+				result->value = attacker->skill.value;//to be detailed
+				return true;
+			}
+			break;
+			case SKILL_TYPE_HARM_MAGICAL:
+			{
+				result->type = ATTACK_TYPE_PHYSICAL;
+				result->value = attacker->skill.value;//to be detailed
+				return true;
+			}
+			break;
+		}
+	}
+	return false;
+}
+
+bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 {
 	//first, check if in attack grids
 	bool in = false;
@@ -121,6 +221,6 @@ bool PVEBattle::isInAttackRange(Unit* attacker, Unit* victim)
 	}
 	if (!in) return false;
 
-	//second, check if be blocked
+	//second, check if be blocked, to do
 }
 

@@ -11,6 +11,24 @@
 
 #define MAX_STAR_LEVEL 3
 
+typedef struct buff_result_t
+{
+	unsigned int giver;
+	unsigned int recipient;
+	unsigned int type;
+	int value;
+} BuffResult;
+
+#define ATTACK_TYPE_PHYSICAL	1L
+#define ATTACK_TYPE_MAGICAL		2L
+typedef struct attack_result_t
+{
+	unsigned int attacker;
+	unsigned int victim;
+	unsigned int type;//physical or magical or what
+	int value;
+} AttackResult;
+
 class PVEBattle :public EventDispather
 {
 public:
@@ -27,7 +45,14 @@ private:
 	void updateStarLevel();
 	bool checkEncounter();
 	void calculateRoundResult();
-	bool isInAttackRange(Unit* attacker, Unit* victim);
+	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);
+	bool calculateEnemyBuffResult(Unit* enemy, BuffResult* result);
+	bool calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* result);
+	bool calculateHeroAttackResult(Unit* hero,AttackResult* result);
+	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
+	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
+	bool isInRange(Unit* attacker, Unit* victim);
+	void calculateSkillResult(Skill* skill, Unit* victim, AttackResult* result);
 public:
 	static const EType BATTLE_STEP_CLEAR;
 	static const EType BATTLE_ATTACK_RESULT;

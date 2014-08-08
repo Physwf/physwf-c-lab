@@ -17,11 +17,15 @@ typedef struct range_t
 	int numGrids;
 } Range;
 
+#define SKILL_TYPE_HARM_PHYSICAL	1L
+#define SKILL_TYPE_HARM_MAGICAL		2L
+#define SKILL_TYPE_BUFF_HEALTH		3L
 typedef struct skill_t
 {
 	char* name;
-	unsigned short id;
-	unsigned int damage;
+	unsigned int id;
+	unsigned int type;
+	int value;
 } Skill;
 
 typedef struct unit_t
@@ -29,6 +33,7 @@ typedef struct unit_t
 	unsigned int id;
 	char* name;
 	unsigned int exp;
+	unsigned int maxHealth;
 	int health;
 	Skill skill;
 	unsigned int agility;
