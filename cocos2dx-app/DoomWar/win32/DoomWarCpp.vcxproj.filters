@@ -13,6 +13,9 @@
     <Filter Include="System">
       <UniqueIdentifier>{6781319a-3339-40fc-b461-da11c9d1fbaa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{dd41decc-ad55-4a0a-9c2c-e830f50858f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="..\System\Event.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Actor.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
