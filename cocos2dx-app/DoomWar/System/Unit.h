@@ -23,14 +23,15 @@ typedef struct range_t
 typedef struct skill_t
 {
 	char* name;
-	unsigned int id;
+	unsigned int cid;
 	unsigned int type;
 	int value;
 } Skill;
 
 typedef struct unit_t
 {
-	unsigned int id;
+	unsigned int iid;//instance id
+	unsigned int cid;//config id
 	char* name;
 	unsigned int exp;
 	unsigned int maxHealth;

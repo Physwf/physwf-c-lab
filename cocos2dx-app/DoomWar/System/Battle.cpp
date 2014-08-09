@@ -148,8 +148,8 @@ bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* re
 {
 	if (isInRange(giver, recipient))
 	{
-		result->giver = giver->id;
-		result->recipient = recipient->id;
+		result->giver = giver->iid;
+		result->recipient = recipient->iid;
 		switch (giver->skill.type)
 		{
 		case SKILL_TYPE_BUFF_HEALTH:
@@ -187,8 +187,8 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 {
 	if (isInRange(attacker, victim))
 	{
-		result->attacker = attacker->id;
-		result->victim = victim->id;
+		result->attacker = attacker->iid;
+		result->victim = victim->iid;
 		switch (attacker->skill.type){
 			case SKILL_TYPE_HARM_PHYSICAL:
 			{

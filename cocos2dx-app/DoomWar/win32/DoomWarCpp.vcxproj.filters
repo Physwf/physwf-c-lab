@@ -16,6 +16,9 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{dd41decc-ad55-4a0a-9c2c-e830f50858f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{d7cfc136-0ea2-4d4c-a4d9-dc599792dccc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,6 +54,15 @@
     <ClCompile Include="..\System\Unit.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Engine\ActorSprite.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\ResourceManager.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\MapSprite.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -77,7 +89,13 @@
     <ClInclude Include="..\System\Event.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\Engine\Actor.h">
+    <ClInclude Include="..\Engine\ActorSprite.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\ResourceManager.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\MapSprite.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
