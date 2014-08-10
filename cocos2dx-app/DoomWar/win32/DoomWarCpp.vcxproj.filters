@@ -63,6 +63,12 @@
     <ClCompile Include="..\Engine\MapSprite.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\Engine\PVEBattleScene.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Game\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -96,6 +102,15 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Engine\MapSprite.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Game\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\PVEBattleScene.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\DWLoadingScene.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

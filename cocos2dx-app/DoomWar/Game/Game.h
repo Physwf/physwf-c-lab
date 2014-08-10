@@ -9,7 +9,9 @@ public:
 	Game();
 	~Game();
 
-	void init();
+	void setup();
+	//void enterPVEBattle();
+
 
 private:
 	PVEBattleScene* mPVEScene;

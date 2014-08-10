@@ -3,6 +3,10 @@
 
 USING_NS_CC;
 
+#include "Game.h"
+
+Game game;
+
 AppDelegate::AppDelegate() {
 
 }
@@ -23,6 +27,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
+
+	game.setup();
 
     // create a scene. it's an autorelease object
     CCScene *pScene = DoomWar::scene();
