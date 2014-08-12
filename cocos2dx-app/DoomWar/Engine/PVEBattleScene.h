@@ -6,8 +6,11 @@ using namespace cocos2d;
 
 class PVEBattleScene : public CCLayer
 {
+public:
 	virtual bool init();
 	static CCScene* scene();
 	static PVEBattleScene* create();
+private:
+	CCSprite* mTempMap;
 };
 #endif

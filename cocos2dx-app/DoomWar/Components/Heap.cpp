@@ -11,8 +11,8 @@ MaxHeap::MaxHeap(unsigned int capacity)
 void MaxHeap::Enqueue(IPriority* item)
 {
 	mHeap[mSize] = item;
-	int lastIndex  = mSize;//最后一个元素的索引
-	int parentIndex = (lastIndex - 1) * .5;//最后一个元素的父亲的索引
+	unsigned int lastIndex = mSize;//最后一个元素的索引
+	unsigned int parentIndex = (lastIndex - 1) * .5;//最后一个元素的父亲的索引
 	mSize++;
 
 	if (lastIndex == 0) return;
@@ -35,8 +35,8 @@ IPriority* MaxHeap::Dequeue()
 	mSize--;
 	mHeap[0] = mHeap[mSize];
 
-	int parentIndex = 0;
-	int childIndex = 2 * parentIndex + 1;
+	unsigned int parentIndex = 0;
+	unsigned int childIndex = 2 * parentIndex + 1;
 	IPriority* temp = mHeap[parentIndex];
 
 	while (childIndex<mSize)

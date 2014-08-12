@@ -2,18 +2,32 @@
 #define _GAME_H
 
 #include "PVEBattleScene.h"
+#include <cocoa\CCObject.h>
 
-class Game
+class Game : public CCObject
 {
 public:
+	static Game* instance();
+
+	void pause();
+	void resume();
+
+	void setup();
+	
+	//void enterPVEBattle();
+
+private:
 	Game();
 	~Game();
 
-	void setup();
-	//void enterPVEBattle();
-
+	void onUnitSpriteComplete(CCObject* tex);
+	void onMapSpriteComplete(CCObject* tex);
+	void onAllComplete();
 
 private:
-	PVEBattleScene* mPVEScene;
+	CCScene* mLoading;
+	CCScene* mPVEScene;
+
+	static Game* mInstance;
 };
 #endif

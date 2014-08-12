@@ -15,8 +15,23 @@ bool PVEBattleScene::init()
 		return false;
 	}
 	
+	mTempMap = CCSprite::create("./Data/map.png");
+	this->addChild(mTempMap);
+	//CCTMXTiledMap::create();
+	return true;
 }
 
+
+PVEBattleScene* PVEBattleScene::create()
+{
+	PVEBattleScene* pBattle = new PVEBattleScene();
+	if (pBattle && pBattle->init())
+	{
+		pBattle->autorelease();
+		return pBattle;
+	}
+	return NULL;
+}
 
 
 

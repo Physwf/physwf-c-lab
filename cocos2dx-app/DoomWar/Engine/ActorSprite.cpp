@@ -35,7 +35,9 @@ ActorSprite* ActorSprite::create(unsigned int cid)
 
 		//blood bar
 		//armor
+		return pActor;
 	}
+	return NULL;
 }
 
 

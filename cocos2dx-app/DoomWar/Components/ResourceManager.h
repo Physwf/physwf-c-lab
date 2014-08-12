@@ -2,6 +2,7 @@
 #define _RESOURCEMANAGER_H
 
 #include "cocos2d.h"
+#include <cocoa\CCObject.h>
 
 using namespace cocos2d;
 
@@ -13,7 +14,8 @@ public:
 	CCSpriteFrame* getSpriteFrame(const char* name);
 	CCAnimationFrame* getAnimationFrame(const char* name);
 
-	void addSpriteFramePack(const char* plist, const char* file);
+	void load(const char* pszFile, CCObject* target, SEL_CallFuncO selector);
+	void addSpriteFramePack(const char* plist, CCTexture2D *pobTexture);
 
 private:
 	ResourceManager();

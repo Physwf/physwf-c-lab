@@ -2,7 +2,9 @@ CL=cl /c
 LINK=link /MANIFEST  /NXCOMPAT /PDB:"./bin/LandLord.pdb" /DYNAMICBASE "opengl32.lib" "glew32.lib" "libzlib.lib" "libpng.lib" "libjpeg.lib" "libtiff.lib" "libwebp.lib" "libiconv.lib" "pthreadVCE2.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" /DEBUG /MACHINE:X86 /SAFESEH /INCREMENTAL /LIBPATH:"../cocos2dx/bin/" /SUBSYSTEM:WINDOWS",5.01" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /ERRORREPORT:PROMPT /NOLOGO /TLBID:1
 CLOUT=/Fo
 LINKOUT=/OUT:
-INCLUDE=/I../cocos2dx/ /I../cocos2dx/include /I"../cocos2dx/platform/win32" /I"../cocos2dx/platform/third_party/win32/iconv" /I"../cocos2dx/platform/third_party/win32/zlib" /I"../cocos2dx/platform/third_party/win32/libpng" /I"../cocos2dx/platform/third_party/win32/libjpeg" /I"../cocos2dx/platform/third_party/win32/libtiff" /I"../cocos2dx/platform/third_party/win32/libwebp" /I"../cocos2dx/platform/third_party/win32/pthread" /I"../cocos2dx/platform/third_party/win32/OGLES" /I"../include" /I"../cocos2dx/kazmath/include" /I"./LandLord/Classes" /I"./LandLord/Game" /I"../shared/include" /I "../OpenGL_ES/games/Landlords/shared"
+INCLUDE=/I../cocos2dx/ /I../cocos2dx/include /I"../cocos2dx/platform/win32" /I"../cocos2dx/platform/third_party/win32/iconv" /I"../cocos2dx/platform/third_party/win32/zlib" /I"../cocos2dx/platform/third_party/win32/libpng" /I"../cocos2dx/platform/third_party/win32/libjpeg" /I"../cocos2dx/platform/third_party/win32/libtiff" /I"../cocos2dx/platform/third_party/win32/libwebp" /I"../cocos2dx/platform/third_party/win32/pthread" /I"../cocos2dx/platform/third_party/win32/OGLES" /I"../include" /I"../cocos2dx/kazmath/include"  /I"../shared/include"
+
+
 OPTION=/D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "COCOS2DXWIN32_EXPORTS" /D "GL_GLEXT_PROTOTYPES" /D "COCOS2D_DEBUG=1" /D "_CRT_SECURE_NO_WARNINGS" /D "_SCL_SECURE_NO_WARNINGS" /D "_USING_V110_SDK71_" /D "_WINDLL" /D "_UNICODE" /D "UNICODE" /GS /analyze- /W3 /wd"4267" /wd"4251" /wd"4244" /Zc:wchar_t /ZI /Gm /Od /errorReport:prompt /WX- /Zc:forScope /RTC1 /Gd /Oy- /MDd /EHsc /nologo /Fd"./bin/LandLord.pdb"
 DEBUG=
 
@@ -34,12 +36,26 @@ LLclient:$(Objs)
 %.obj : %.cpp
 	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(OBJDIR)
 $(Objs):
+ifeq ($@,LLclient)
+INCLUDE+=/I"./LandLord/Classes" /I"./LandLord/Game"  /I "../OpenGL_ES/games/Landlords/shared"
+endif
 
 #DoomWar
 DIR_DW=./DoomWar
 
 DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
-		$(DIR_DW)/Classes/DoomWarScene.obj\
+		$(DIR_DW)/Components/EventDispather.obj\
+		$(DIR_DW)/Components/Heap.obj\
+		$(DIR_DW)/Components/ResourceManager.obj\
+		$(DIR_DW)/Engine/ActorSprite.obj\
+		$(DIR_DW)/Engine/MapSprite.obj\
+		$(DIR_DW)/Engine/DWLoadingScene.obj\
+		$(DIR_DW)/Engine/PVEBattleScene.obj\
+		$(DIR_DW)/Game/Game.obj\
+		$(DIR_DW)/System/Battle.obj\
+		$(DIR_DW)/System/Map.obj\
+		$(DIR_DW)/System/System.obj\
+		$(DIR_DW)/System/Unit.obj\
 		$(DIR_DW)/win32/main.obj
 DWOBJ_DIR=DoomWar/
 
@@ -48,4 +64,5 @@ DWclient:$(DWObjs)
 
 %.obj : %.cpp
 	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR)
-$(DWObjs):	
+$(DWObjs):
+INCLUDE+=/I"./DoomWar/Classes" /I"./DoomWar/Game" /I"./DoomWar/Components" /I"./DoomWar/Engine" /I"./DoomWar/System" /I"./DoomWar/System"

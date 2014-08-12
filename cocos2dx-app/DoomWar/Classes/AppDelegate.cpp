@@ -5,8 +5,6 @@ USING_NS_CC;
 
 #include "Game.h"
 
-Game game;
-
 AppDelegate::AppDelegate() {
 
 }
@@ -28,20 +26,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
-	game.setup();
-
-    // create a scene. it's an autorelease object
-    CCScene *pScene = DoomWar::scene();
-
-    // run
-    pDirector->runWithScene(pScene);
+	Game::instance()->setup();
 
     return true;
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground() {
-    CCDirector::sharedDirector()->stopAnimation();
+	Game::instance()->pause();
 
     // if you use SimpleAudioEngine, it must be pause
     // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
@@ -49,7 +41,7 @@ void AppDelegate::applicationDidEnterBackground() {
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-    CCDirector::sharedDirector()->startAnimation();
+	Game::instance()->resume();
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
