@@ -158,7 +158,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Engine\MapSprite.h" />
     <ClInclude Include="..\Engine\PVEBattleScene.h" />
     <ClInclude Include="..\Game\Game.h" />
-    <ClInclude Include="..\System\Event.h" />
     <ClInclude Include="..\System\Map.h" />
     <ClInclude Include="..\System\System.h" />
     <ClInclude Include="..\System\Unit.h" />

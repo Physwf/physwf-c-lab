@@ -44,7 +44,7 @@ endif
 DIR_DW=./DoomWar
 
 DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
-		$(DIR_DW)/Components/EventDispather.obj\
+		$(DIR_DW)/Components/EventDispatcher.obj\
 		$(DIR_DW)/Components/Heap.obj\
 		$(DIR_DW)/Components/ResourceManager.obj\
 		$(DIR_DW)/Engine/ActorSprite.obj\

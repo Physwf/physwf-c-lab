@@ -26,7 +26,7 @@ EventDispather::~EventDispather()
 
 }
 
-void EventDispather::addEventListener(EType type, EventListener listener, int priority = 0)
+void EventDispather::addEventListener(EType type, EventListener listener, int priority)
 {
 	std::vector<ListenerWraper*>* list = mListeners[type];
 	if (list == NULL)

@@ -92,9 +92,6 @@
     <ClInclude Include="..\Components\Heap.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\System\Event.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Engine\ActorSprite.h">
       <Filter>Engine</Filter>
     </ClInclude>

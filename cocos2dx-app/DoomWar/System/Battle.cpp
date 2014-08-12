@@ -85,7 +85,7 @@ void PVEBattle::update(unsigned int eclipse)
 
 bool PVEBattle::checkEncounter()
 {
-
+	return false;
 }
 
 void PVEBattle::calculateRoundResult()
@@ -142,6 +142,7 @@ bool PVEBattle::calculateEnemyBuffResult(Unit* enemy, BuffResult* result)
 	{
 		// to do
 	}
+	return false;
 }
 
 bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* result)
@@ -161,6 +162,7 @@ bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* re
 			break;
 		}
 	}
+	return false;
 }
 
 bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
@@ -181,6 +183,7 @@ bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
 		// to do, implement multi-attack in on turn
 		if (calculateAttackResult(enemy, &mHeros[i], result)) return true;
 	}
+	return false;
 }
 
 bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result)
@@ -222,5 +225,6 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 	if (!in) return false;
 
 	//second, check if be blocked, to do
+	return false;
 }
 

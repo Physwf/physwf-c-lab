@@ -14,15 +14,15 @@ PVEMap::~PVEMap()
 
 int PVEMap::getGridsByRow(int row, char* girds)
 {
-
+	return 0;
 }
 
 int PVEMap::getBarriersByRow(int row, Unit* barriers)
 {
-
+	return 0;
 }
 
 int PVEMap::getEnemysByRow(int row, Unit* enemys)
 {
-
+	return 0;
 }
