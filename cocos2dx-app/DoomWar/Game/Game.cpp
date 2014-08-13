@@ -35,13 +35,13 @@ void Game::setup()
 {
 	mLoading = DWLoadingScene::scene();
 	CCDirector::sharedDirector()->runWithScene(mLoading);
-	ResourceManager::instance()->load("units.png", this, callfuncO_selector(Game::onUnitSpriteComplete));
+	ResourceManager::instance()->load("./Data/units.png", this, callfuncO_selector(Game::onUnitSpriteComplete));
 }
 
 void Game::onUnitSpriteComplete(CCObject* tex)
 {
 	CCTexture2D* texUnits = (CCTexture2D*)tex;
-	ResourceManager::instance()->addSpriteFramePack("units.plist", texUnits);
+	ResourceManager::instance()->addSpriteFramePack("./Data/units.plist", texUnits);
 	//ResourceManager::instance()->load("map.png", this, callfuncO_selector(onMapSpriteComplete));
 	onMapSpriteComplete(NULL);
 }
@@ -54,9 +54,9 @@ void Game::onMapSpriteComplete(CCObject* tex)
 void Game::onAllComplete()
 {
 	//temp 
-	mLoading->release();
+	//mLoading->release();
 
 	mPVEScene = PVEBattleScene::scene();
-	CCDirector::sharedDirector()->runWithScene(mPVEScene);
-	
+	CCDirector::sharedDirector()->replaceScene(mPVEScene);
+	//CCDirector::sharedDirector()->runWithScene(mPVEScene);
 }

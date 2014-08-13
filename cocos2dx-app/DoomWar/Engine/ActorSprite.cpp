@@ -21,6 +21,11 @@ void ActorSprite::stepBackword()
 
 }
 
+void ActorSprite::update(float delta)
+{
+
+}
+
 ActorSprite* ActorSprite::create(unsigned int cid)
 {
 	ActorSprite* pActor = new ActorSprite(cid);

@@ -228,3 +228,21 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 	return false;
 }
 
+/*
+BattleSystem
+*/
+
+BattleSystem::BattleSystem()
+{
+
+}
+
+BattleSystem::~BattleSystem()
+{
+
+}
+
+void BattleSystem::startPVE(unsigned int mapid)
+{
+
+}

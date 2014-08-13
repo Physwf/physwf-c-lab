@@ -138,6 +138,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Components\Heap.cpp" />
     <ClCompile Include="..\Components\ResourceManager.cpp" />
     <ClCompile Include="..\Engine\ActorSprite.cpp" />
+    <ClCompile Include="..\Engine\DWLoadingScene.cpp" />
     <ClCompile Include="..\Engine\MapSprite.cpp" />
     <ClCompile Include="..\Engine\PVEBattleScene.cpp" />
     <ClCompile Include="..\Game\Game.cpp" />

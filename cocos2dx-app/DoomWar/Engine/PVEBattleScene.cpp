@@ -16,6 +16,7 @@ bool PVEBattleScene::init()
 	}
 	
 	mTempMap = CCSprite::create("./Data/map.png");
+	mTempMap->setAnchorPoint(ccp(0, 0));
 	this->addChild(mTempMap);
 	//CCTMXTiledMap::create();
 	return true;
