@@ -31,15 +31,7 @@ public:
 	
 	static ActorSprite* create(unsigned int cid);
 
-	void stepForword();
-	void stepBackword();
-	void stepLeft();
-	void stepRight();
-	void moveTo(CCPoint &pos);
-
-	void attack();
-
-	unsigned int iid() const;
+	
 
 	virtual void update(float delta);
 

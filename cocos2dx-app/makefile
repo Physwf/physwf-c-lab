@@ -47,10 +47,10 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/EventDispatcher.obj\
 		$(DIR_DW)/Components/Heap.obj\
 		$(DIR_DW)/Components/ResourceManager.obj\
-		$(DIR_DW)/Engine/ActorSprite.obj\
-		$(DIR_DW)/Engine/MapSprite.obj\
-		$(DIR_DW)/Engine/DWLoadingScene.obj\
-		$(DIR_DW)/Engine/PVEBattleScene.obj\
+		$(DIR_DW)/Components/ActorSprite.obj\
+		$(DIR_DW)/Components/MapSprite.obj\
+		$(DIR_DW)/Components/DWLoadingScene.obj\
+		$(DIR_DW)/Components/PVEBattleScene.obj\
 		$(DIR_DW)/Game/Game.obj\
 		$(DIR_DW)/System/Battle.obj\
 		$(DIR_DW)/System/Map.obj\

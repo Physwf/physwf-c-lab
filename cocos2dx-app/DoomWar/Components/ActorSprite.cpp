@@ -11,16 +11,6 @@ ActorSprite::~ActorSprite()
 
 }
 
-void ActorSprite::stepForword()
-{
-
-}
-
-void ActorSprite::stepBackword()
-{
-
-}
-
 void ActorSprite::update(float delta)
 {
 
