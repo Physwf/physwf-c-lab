@@ -133,14 +133,15 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\DoomWarScene.cpp" />
+    <ClCompile Include="..\Components\ActorSprite.cpp" />
+    <ClCompile Include="..\Components\DWLoadingScene.cpp" />
     <ClCompile Include="..\Components\EventDispatcher.cpp" />
     <ClCompile Include="..\Components\EventDispatcher.h" />
     <ClCompile Include="..\Components\Heap.cpp" />
+    <ClCompile Include="..\Components\MapSprite.cpp" />
+    <ClCompile Include="..\Components\PVEBattleScene.cpp" />
     <ClCompile Include="..\Components\ResourceManager.cpp" />
-    <ClCompile Include="..\Engine\ActorSprite.cpp" />
-    <ClCompile Include="..\Engine\DWLoadingScene.cpp" />
-    <ClCompile Include="..\Engine\MapSprite.cpp" />
-    <ClCompile Include="..\Engine\PVEBattleScene.cpp" />
+    <ClCompile Include="..\Engine\Actor.cpp" />
     <ClCompile Include="..\Game\Game.cpp" />
     <ClCompile Include="..\System\Battle.cpp" />
     <ClCompile Include="..\System\Battle.h" />
@@ -152,12 +153,15 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\DoomWarScene.h" />
+    <ClInclude Include="..\Components\ActorSprite.h" />
+    <ClInclude Include="..\Components\DWLoadingScene.h" />
     <ClInclude Include="..\Components\Heap.h" />
+    <ClInclude Include="..\Components\MapSprite.h" />
+    <ClInclude Include="..\Components\PVEBattleScene.h" />
     <ClInclude Include="..\Components\ResourceManager.h" />
-    <ClInclude Include="..\Engine\ActorSprite.h" />
-    <ClInclude Include="..\Engine\DWLoadingScene.h" />
-    <ClInclude Include="..\Engine\MapSprite.h" />
-    <ClInclude Include="..\Engine\PVEBattleScene.h" />
+    <ClInclude Include="..\Engine\Actor.h" />
+    <ClInclude Include="..\Engine\Engine.h" />
+    <ClInclude Include="..\Engine\Map.h" />
     <ClInclude Include="..\Game\Game.h" />
     <ClInclude Include="..\System\Map.h" />
     <ClInclude Include="..\System\System.h" />

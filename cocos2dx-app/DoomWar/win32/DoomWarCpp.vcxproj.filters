@@ -54,22 +54,25 @@
     <ClCompile Include="..\System\Unit.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\Engine\ActorSprite.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="..\Components\ResourceManager.cpp">
       <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\MapSprite.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\PVEBattleScene.cpp">
-      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\Game\Game.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\Engine\DWLoadingScene.cpp">
+    <ClCompile Include="..\Components\ActorSprite.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\DWLoadingScene.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\MapSprite.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PVEBattleScene.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Actor.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,22 +98,31 @@
     <ClInclude Include="..\Components\Heap.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\Engine\ActorSprite.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\Components\ResourceManager.h">
       <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\MapSprite.h">
-      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\Game\Game.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\Engine\PVEBattleScene.h">
+    <ClInclude Include="..\Engine\Engine.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\Engine\DWLoadingScene.h">
+    <ClInclude Include="..\Components\ActorSprite.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\DWLoadingScene.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\MapSprite.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PVEBattleScene.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Actor.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Map.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
