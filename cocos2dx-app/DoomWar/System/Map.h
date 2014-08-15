@@ -14,7 +14,7 @@ public:
 	PVEMap();
 	//PVEMap(config)
 	~PVEMap();
-	//void init(config);
+	void init(const char* configFile);
 	int getGridsByRow(int row, char* girds);
 	int getBarriersByRow(int row, Unit* barriers);
 	int getEnemysByRow(int row, Unit* enemys);

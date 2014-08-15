@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "ResourceManager.h"
-#include "DWLoadingScene.h"
+#include "Engine.h"
 
 Game::Game()
 {
@@ -33,8 +33,7 @@ void Game::resume()
 
 void Game::setup()
 {
-	mLoading = DWLoadingScene::scene();
-	CCDirector::sharedDirector()->runWithScene(mLoading);
+	Engine::scene->showLoading();
 	ResourceManager::instance()->load("./Data/units.png", this, callfuncO_selector(Game::onUnitSpriteComplete));
 }
 
@@ -54,9 +53,6 @@ void Game::onMapSpriteComplete(CCObject* tex)
 void Game::onAllComplete()
 {
 	//temp 
-	//mLoading->release();
-
-	mPVEScene = PVEBattleScene::scene();
-	CCDirector::sharedDirector()->replaceScene(mPVEScene);
-	//CCDirector::sharedDirector()->runWithScene(mPVEScene);
+	Engine::scene->initialize();
+	Engine::scene->enterPVEMap(0);
 }

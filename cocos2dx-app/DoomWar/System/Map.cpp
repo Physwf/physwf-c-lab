@@ -12,6 +12,11 @@ PVEMap::~PVEMap()
 
 }
 
+void PVEMap::init(const char* configFile)
+{
+
+}
+
 int PVEMap::getGridsByRow(int row, char* girds)
 {
 	return 0;

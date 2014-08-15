@@ -25,8 +25,7 @@ private:
 	void onAllComplete();
 
 private:
-	CCScene* mLoading;
-	CCScene* mPVEScene;
+	
 
 	static Game* mInstance;
 };

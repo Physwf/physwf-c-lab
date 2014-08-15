@@ -51,6 +51,9 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/MapSprite.obj\
 		$(DIR_DW)/Components/DWLoadingScene.obj\
 		$(DIR_DW)/Components/PVEBattleScene.obj\
+		$(DIR_DW)/Engine/Engine.obj\
+		$(DIR_DW)/Engine/Scene.obj\
+		$(DIR_DW)/Engine/Actor.obj\
 		$(DIR_DW)/Game/Game.obj\
 		$(DIR_DW)/System/Battle.obj\
 		$(DIR_DW)/System/Map.obj\
