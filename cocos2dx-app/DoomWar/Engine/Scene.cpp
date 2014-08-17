@@ -2,10 +2,10 @@
 #include <string.h>
 #include "DWLoadingScene.h"
 #include "PVEBattleScene.h"
+#include "System.h"
 
 Scene::Scene() :mLoading(NULL), mPVEScene(NULL)
 {
-
 }
 
 Scene::~Scene()
@@ -15,35 +15,38 @@ Scene::~Scene()
 
 void Scene::initialize()
 {
-	memset(mActors, 0, sizeof(mActors));
-	numActors = 0;
+	System::pve->initialize();
 }
 
-void Scene::showLoading()
+void Scene::enterPVEMap(ID mapid, Unit* heros, int numHeros)
 {
-	if (mLoading == NULL)
-	{
-		mLoading = DWLoadingScene::create();
-	}
-	//to do, if this method been invoked more than once, should use replaceScene() instead
-	CCScene* s = CCScene::create();
-	s->addChild(mLoading);
-	CCDirector::sharedDirector()->runWithScene(s);
+	System::pve->addEventListener(PVEBattle::BATTLE_ENTER_MAP, this, EventListener(&Scene::onEnterPVEBattle));
+	System::pve->enter(mapid, heros, numHeros);
 }
 
-void Scene::enterPVEMap(unsigned int mapid)
+void Scene::onEnterPVEBattle(Event* event)
 {
-	if (mPVEScene == NULL)
+	//to do add enemys and barriers
+	mPVEScene = PVEBattleScene::create();
+	//to do load map
+
+	mActors = new std::map<ID, Actor*>();
+	std::map<ID,Unit*>* heros = System::pve->heros();
+	for (std::map<ID,Unit*>::iterator it=heros->begin(); it != heros->end(); it++)
 	{
-		mPVEScene = PVEBattleScene::create();
+		Actor* actor = new Actor(mPVEScene);
+		actor->setData(it->second);
+		(*mActors)[actor->iid()] = actor;
 	}
-	CCScene* s = CCScene::create();
-	s->addChild(mPVEScene);
-	//CCDirector::sharedDirector()->runWithScene(s);
-	CCDirector::sharedDirector()->replaceScene(s);
+
+	CCDirector::sharedDirector()->replaceScene(mPVEScene->scene());
+
+	System::pve->start();
 }
 
 void Scene::leavePVEMap()
 {
 
 }
+
+

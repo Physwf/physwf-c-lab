@@ -19,6 +19,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{d7cfc136-0ea2-4d4c-a4d9-dc599792dccc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{ee0097f4-24bb-4aba-a183-65a6c8c6e01f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,6 +84,12 @@
     <ClCompile Include="..\Engine\Engine.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\System\HeroPub.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Config\Config.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -130,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="..\Engine\Scene.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\HeroPub.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Config\Config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\dwtype.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

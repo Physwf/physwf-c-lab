@@ -51,11 +51,13 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/MapSprite.obj\
 		$(DIR_DW)/Components/DWLoadingScene.obj\
 		$(DIR_DW)/Components/PVEBattleScene.obj\
+		$(DIR_DW)/Config/Config.obj\
 		$(DIR_DW)/Engine/Engine.obj\
 		$(DIR_DW)/Engine/Scene.obj\
 		$(DIR_DW)/Engine/Actor.obj\
 		$(DIR_DW)/Game/Game.obj\
 		$(DIR_DW)/System/Battle.obj\
+		$(DIR_DW)/System/HeroPub.obj\
 		$(DIR_DW)/System/Map.obj\
 		$(DIR_DW)/System/System.obj\
 		$(DIR_DW)/System/Unit.obj\
@@ -66,6 +68,6 @@ DWclient:$(DWObjs)
 	$(LINK) $(BIN)/$(DWOBJ_DIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)/$@.exe
 
 %.obj : %.cpp
-	$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR)
+	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR)
 $(DWObjs):
-INCLUDE+=/I"./DoomWar/Classes" /I"./DoomWar/Game" /I"./DoomWar/Components" /I"./DoomWar/Engine" /I"./DoomWar/System" /I"./DoomWar/System"
+INCLUDE+=/I"./DoomWar/Classes" /I"./DoomWar/Game" /I"./DoomWar/Components" /I"./DoomWar/Engine" /I"./DoomWar/System" /I"./DoomWar/Config"

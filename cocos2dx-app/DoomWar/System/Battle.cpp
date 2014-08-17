@@ -1,20 +1,13 @@
 #include "Battle.h"
 #include <string.h>
+#include "dwtype.h"
 
 PVEBattle::PVEBattle()
 {
-	memset(mHeros, 0, sizeof(mHeros));
-	mNumHeros = 0;
-	memset(mEnemys, 0, sizeof(mEnemys));
-	mNumEnemys = 0;
-	memset(mBarriers, 0, sizeof(mBarriers));
-	mNumBarries = 0;
-	memset(mGrids, 0, sizeof(mGrids));
-
-	mRound = 0;
-	mStarLevel = MAX_STAR_LEVEL;
-	mGolds = 0;
-	mFrontRow = 0;
+	mMap = new PVEMap();
+	mHeros = new std::map<ID, Unit*>();
+	mEnemys = new std::map<ID, Unit*>();
+	mBarriers = new std::map<ID, Unit*>();
 }
 
 PVEBattle::~PVEBattle()
@@ -22,21 +15,46 @@ PVEBattle::~PVEBattle()
 
 }
 
+EType const PVEBattle::BATTLE_ENTER_MAP = "battle_enter_map";
 EType const PVEBattle::BATTLE_STEP_CLEAR = "battle_step_clear";
 EType const PVEBattle::BATTLE_ATTACK_RESULT = "battle_attack_result";
 
-void PVEBattle::initialize(Unit* heros, int numHeros, PVEMap* map)
+void PVEBattle::initialize()
 {
-	memcpy(mHeros, heros, numHeros*sizeof(Unit));
-	mNumHeros = numHeros;
+	/*memset(mHeros, 0, sizeof(mHeros));
+	mNumHeros = 0;
+	memset(mEnemys, 0, sizeof(mEnemys));
+	mNumEnemys = 0;
+	memset(mBarriers, 0, sizeof(mBarriers));
+	mNumBarries = 0;*/
+	memset(mGrids, 0, sizeof(mGrids));
 
-	mMap = map;
+	mHeros->clear();
+	mEnemys->clear();
+	mBarriers->clear();
+
+	mRound = 0;
+	mStarLevel = MAX_STAR_LEVEL;
+	mGolds = 0;
 	mFrontRow = MAX_SCREEN_GRID / NUM_GRIDS_ROW;
+}
+
+void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
+{
+	mMap->init("");
+
+	for (int i = 0; i < numHeros; i++)
+	{
+		Unit* hero = heros + i;
+		(*mHeros)[hero->cid] = hero;
+	}
+	Event e = { BATTLE_ENTER_MAP, NULL };
+	dispatchEvent(&e);
 }
 
 void PVEBattle::start()
 {
-
+	//to do, count time
 }
 
 void PVEBattle::pause()
@@ -61,11 +79,9 @@ void PVEBattle::step()
 	memcpy(mGrids + NUM_GRIDS_ROW, mGrids, MAX_SCREEN_GRID*sizeof(char));
 	mMap->getGridsByRow(mFrontRow, mGrids);
 	//barriers
-	int numAdd = mMap->getBarriersByRow(mFrontRow,mBarriers + mNumBarries);
-	mNumBarries += numAdd;
+	int numAdd = mMap->getBarriersByRow(mFrontRow,mBarriers);
 	//enemys
-	numAdd = mMap->getEnemysByRow(mNumEnemys, mEnemys + mNumEnemys);
-	mNumEnemys += numAdd;
+	numAdd = mMap->getEnemysByRow(mFrontRow, mEnemys);
 
 	if (checkEncounter())
 	{
@@ -78,7 +94,7 @@ void PVEBattle::step()
 	}
 }
 
-void PVEBattle::update(unsigned int eclipse)
+void PVEBattle::update(ID eclipse)
 {
 
 }
@@ -94,10 +110,11 @@ void PVEBattle::calculateRoundResult()
 	//step 2, check props in occupied grids
 	//step 3, check active enemys and move them if hero(s) be seen (in enemys view)
 	//step 4, heros round, attack enemys in aligity order.
-	MaxHeap heros = MaxHeap(mNumHeros);
-	for (int i = 0; i < mNumHeros; i++)
+	MaxHeap heros = MaxHeap(mHeros->size());
+	std::map<ID, Unit*>::iterator it = mHeros->begin();
+	for (it; it!=mHeros->end(); it++)
 	{
-		UnitWraper wraper = UnitWraper(&mHeros[i]);
+		UnitWraper wraper = UnitWraper(it->second);
 		heros.Enqueue(&wraper);
 	}
 	AttackResult results[MAX_SCREEN_HEROS+MAX_SCREEN_ENYMYS] = { 0 };
@@ -110,10 +127,11 @@ void PVEBattle::calculateRoundResult()
 	}
 
 	//step 5, enemys round, attack heros in aligity order
-	MaxHeap enemys = MaxHeap(mNumEnemys);
-	for (int i = 0; i < mNumEnemys; i++)
+	MaxHeap enemys = MaxHeap(mEnemys->size());
+	it = mEnemys->begin();
+	for (it; it != mEnemys->end(); it++)
 	{
-		UnitWraper wraper = UnitWraper(&mEnemys[i]);
+		UnitWraper wraper = UnitWraper(it->second);
 		enemys.Enqueue(&wraper);
 	}
 	while (enemys.size())
@@ -128,17 +146,17 @@ void PVEBattle::calculateRoundResult()
 }
 bool PVEBattle::calculateHeroBuffResult(Unit* hero, BuffResult* result)
 {
-	for (int i = 0; i < mNumHeros; i++)
+	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
 	{
 		// to do, implement multi-buff in one turn
-		if (calculateBuffResult(hero, &mHeros[i], result)) return true;
+		if (calculateBuffResult(hero, it->second, result)) return true;
 	}
 	return false;
 }
 
 bool PVEBattle::calculateEnemyBuffResult(Unit* enemy, BuffResult* result)
 {
-	for (int i = 0; i < mNumEnemys; i++)
+	for (std::map<ID, Unit*>::iterator it = mEnemys->begin(); it != mEnemys->end(); it++)
 	{
 		// to do
 	}
@@ -167,10 +185,10 @@ bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* re
 
 bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
 {
-	for (int i = 0; i < mNumEnemys; i++)
+	for (std::map<ID, Unit*>::iterator it = mEnemys->begin(); it != mEnemys->end(); it++)
 	{
 		// to do, implement multi-attack in one turn
-		if (calculateAttackResult(hero, &mEnemys[i], result)) return true;
+		if (calculateAttackResult(hero, it->second, result)) return true;
 	}
 	return false;
 }
@@ -178,10 +196,10 @@ bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
 
 bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
 {
-	for (int i = 0; i < mNumHeros; i++)
+	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
 	{
 		// to do, implement multi-attack in on turn
-		if (calculateAttackResult(enemy, &mHeros[i], result)) return true;
+		if (calculateAttackResult(enemy, it->second, result)) return true;
 	}
 	return false;
 }
@@ -228,21 +246,27 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 	return false;
 }
 
-/*
-BattleSystem
-*/
-
-BattleSystem::BattleSystem()
+std::map<ID, Unit*>* PVEBattle::heros() const
 {
-
+	return mHeros;
 }
 
-BattleSystem::~BattleSystem()
+std::map<ID, Unit*>* PVEBattle::enemys() const
 {
-
+	return mEnemys;
 }
 
-void BattleSystem::startPVE(unsigned int mapid)
+std::map<ID, Unit*>* PVEBattle::barriers() const
 {
-
+	return mBarriers;
 }
+
+ID PVEBattle::mapid() const
+{
+	return mMap->cid();
+}
+
+
+
+
+

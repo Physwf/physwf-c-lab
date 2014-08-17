@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "ResourceManager.h"
+#include "System.h"
 #include "Engine.h"
 
 Game::Game()
@@ -33,7 +34,8 @@ void Game::resume()
 
 void Game::setup()
 {
-	Engine::scene->showLoading();
+	mLoading = DWLoadingScene::create();
+	CCDirector::sharedDirector()->runWithScene(mLoading->scene());
 	ResourceManager::instance()->load("./Data/units.png", this, callfuncO_selector(Game::onUnitSpriteComplete));
 }
 
@@ -52,7 +54,11 @@ void Game::onMapSpriteComplete(CCObject* tex)
 
 void Game::onAllComplete()
 {
-	//temp 
+	System::pub->initialize();
 	Engine::scene->initialize();
-	Engine::scene->enterPVEMap(0);
+	//temp 
+	
+	Unit* hero = System::pub->getHero(1);
+	
+	Engine::scene->enterPVEMap(0, hero, 1);
 }

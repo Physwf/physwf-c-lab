@@ -1,11 +1,15 @@
-#ifndef _MAP_H
-#define _MAP_H
+#ifndef _SCENE_H
+#define _SCENE_H
 
 #include "Actor.h"
 #include "DWLoadingScene.h"
 #include "PVEBattleScene.h"
+#include "dwtype.h"
+#include "EventDispatcher.h"
 
-class Scene
+#include <map>
+
+class Scene : public DWObject
 {
 public:
 	Scene();
@@ -13,16 +17,15 @@ public:
 
 	void initialize();
 
-	void showLoading();
-
-	void enterPVEMap(unsigned int mapid);
+	void enterPVEMap(ID mapid, Unit* heros, int numHeros);
 	void leavePVEMap();
 
-	void enterPVPMap(unsigned int mapid);
+	void enterPVPMap(ID mapid);
 	void leavePVPMap();
 private:
-	Actor* mActors[MAX_ACTORS_IN_MAP];
-	int numActors;
+	void onEnterPVEBattle(Event* event);
+private:
+	std::map<ID, Actor*> *mActors;
 
 	DWLoadingScene* mLoading;
 	PVEBattleScene* mPVEScene;

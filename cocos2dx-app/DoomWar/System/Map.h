@@ -2,6 +2,8 @@
 #define _MAP_H
 
 #include "Unit.h"
+#include "dwtype.h"
+#include <map>
 
 #define NUM_GRIDS_ROW 6
 #define MAX_MAP_GRID 500
@@ -16,11 +18,14 @@ public:
 	~PVEMap();
 	void init(const char* configFile);
 	int getGridsByRow(int row, char* girds);
-	int getBarriersByRow(int row, Unit* barriers);
-	int getEnemysByRow(int row, Unit* enemys);
+	int getBarriersByRow(int row, std::map<ID, Unit*>*);
+	int getEnemysByRow(int row, std::map<ID, Unit*>*);
+
+	ID cid() const;
 private:
 	char mGrids[MAX_MAP_GRID];
-	Unit mBrriers[MAX_MAP_BARRIERS];
-	Unit mEnemys[MAX_MAP_ENEMYS];
+	Unit* mBrriers[MAX_MAP_BARRIERS];
+	Unit* mEnemys[MAX_MAP_ENEMYS];
+	ID mCID;
 };
 #endif

@@ -2,6 +2,7 @@
 #define _DW_ACTOR_H
 
 #include "cocos2d.h"
+#include "dwtype.h"
 
 using namespace cocos2d;
 
@@ -26,18 +27,18 @@ private:
 class ActorSprite : public CCSprite
 {
 public:
-	ActorSprite(unsigned int cid);
+	ActorSprite(ID cid);
 	~ActorSprite();
 	
-	static ActorSprite* create(unsigned int cid);
+	static ActorSprite* create(ID cid);
 
 	
 
 	virtual void update(float delta);
 
 private:
-	unsigned int mIID;
-	unsigned int mCID;
+	ID mIID;
+	ID mCID;
 
 	CCSprite* mBody;
 	CCSprite* mDeadBody;

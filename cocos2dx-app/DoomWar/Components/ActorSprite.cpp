@@ -1,7 +1,7 @@
 #include "ActorSprite.h"
 #include "ResourceManager.h"
 
-ActorSprite::ActorSprite(unsigned int cid)
+ActorSprite::ActorSprite(ID cid)
 {
 
 }
@@ -16,15 +16,15 @@ void ActorSprite::update(float delta)
 
 }
 
-ActorSprite* ActorSprite::create(unsigned int cid)
+ActorSprite* ActorSprite::create(ID cid)
 {
 	ActorSprite* pActor = new ActorSprite(cid);
 	if (pActor && pActor->init())
 	{
 		pActor->autorelease();
 		char strcid[10];
-		sprintf(strcid, "%s", cid);
-		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(strcid);
+		sprintf(strcid, "%d", cid);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame("archer.png");
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
 

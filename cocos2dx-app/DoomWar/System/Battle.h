@@ -3,6 +3,8 @@
 
 #include "Map.h"
 #include "EventDispatcher.h"
+#include <map>
+#include "dwtype.h"
 
 #define MAX_SCREEN_HEROS 10
 #define MAX_SCREEN_ENYMYS 20
@@ -13,9 +15,9 @@
 
 typedef struct buff_result_t
 {
-	unsigned int giver;
-	unsigned int recipient;
-	unsigned int type;
+	ID giver;
+	ID recipient;
+	ID type;
 	int value;
 } BuffResult;
 
@@ -23,9 +25,9 @@ typedef struct buff_result_t
 #define ATTACK_TYPE_MAGICAL		2L
 typedef struct attack_result_t
 {
-	unsigned int attacker;
-	unsigned int victim;
-	unsigned int type;//physical or magical or what
+	ID attacker;
+	ID victim;
+	ID type;//physical or magical or what
 	int value;
 } AttackResult;
 
@@ -34,13 +36,19 @@ class PVEBattle :public EventDispather
 public:
 	PVEBattle();
 	~PVEBattle();
-	void initialize(Unit* heros, int numHeros, PVEMap* map);
+	void initialize();
+	void enter(ID mapid, Unit* heros, int numHeros);
 	void start();
 	void pause();
 	void refresh();
 	void end();
 	void step();
-	void update(unsigned int eclipse);
+	void update(ID eclipse);
+
+	std::map<ID, Unit*>* heros() const;
+	std::map<ID, Unit*>* enemys() const;
+	std::map<ID, Unit*>* barriers() const;
+	ID mapid() const;
 private:
 	void updateStarLevel();
 	bool checkEncounter();
@@ -53,18 +61,25 @@ private:
 	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
 	bool isInRange(Unit* attacker, Unit* victim);
 	void calculateSkillResult(Skill* skill, Unit* victim, AttackResult* result);
+
+
 public:
+	static const EType BATTLE_ENTER_MAP;
 	static const EType BATTLE_STEP_CLEAR;
 	static const EType BATTLE_ATTACK_RESULT;
 private:
-	Unit mHeros[MAX_SCREEN_HEROS];
-	int mNumHeros;
-	Unit mEnemys[MAX_SCREEN_ENYMYS];
-	int mNumEnemys;
-	Unit mBarriers[MAX_SCREEN_BARRIERS];
-	int mNumBarries;
+	//Unit mHeros[MAX_SCREEN_HEROS];
+	//int mNumHeros;
+	//Unit mEnemys[MAX_SCREEN_ENYMYS];
+	//int mNumEnemys;
+	//Unit mBarriers[MAX_SCREEN_BARRIERS];
+	//int mNumBarries;
 	char mGrids[MAX_SCREEN_GRID];
 	
+	std::map<ID, Unit*>* mHeros;
+	std::map<ID, Unit*>* mEnemys;
+	std::map<ID, Unit*>* mBarriers;
+
 	PVEMap* mMap;
 
 	int mRound;//»ØºÏ
@@ -79,15 +94,4 @@ class PVPBattle
 };
 
 
-class BattleSystem
-{
-public:
-	BattleSystem();
-	~BattleSystem();
-
-	void startPVE(unsigned int mapid);
-private:
-	PVEBattle* pve;
-	PVPBattle* pvp;
-};
 #endif

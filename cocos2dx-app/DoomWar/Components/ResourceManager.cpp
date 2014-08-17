@@ -28,5 +28,5 @@ void ResourceManager::addSpriteFramePack(const char* plist, CCTexture2D *pobText
 
 CCSpriteFrame* ResourceManager::getSpriteFrame(const char* name)
 {
-	return NULL;
+	return CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(name);
 }

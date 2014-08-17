@@ -9,7 +9,12 @@ class DWLoadingScene : public CCLayer
 {
 public:
 	virtual bool init();
-	static CCScene* scene();
+	CCScene* scene() const;
 	static DWLoadingScene* create();
+private:
+	DWLoadingScene();
+	~DWLoadingScene();
+private:
+	CCScene* mScene;
 };
 #endif

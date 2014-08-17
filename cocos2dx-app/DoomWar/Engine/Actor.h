@@ -8,7 +8,7 @@
 class Actor
 {
 public:
-	Actor();
+	Actor(CCLayer* layer);
 	~Actor();
 
 public:
@@ -22,9 +22,10 @@ public:
 
 	void attack();
 
-	unsigned int iid() const;
+	ID iid() const;
 
 private:
+	CCLayer* mLayer;
 	ActorSprite* mSprite;
 	Unit* mData;
 };

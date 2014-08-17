@@ -7,10 +7,15 @@ using namespace cocos2d;
 class PVEBattleScene : public CCLayer
 {
 public:
+	
 	virtual bool init();
-	static CCScene* scene();
+	CCScene* scene() const;
 	static PVEBattleScene* create();
 private:
+	PVEBattleScene();
+	~PVEBattleScene();
+private:
 	CCSprite* mTempMap;
+	CCScene* mScene;
 };
 #endif

@@ -1,7 +1,7 @@
 #ifndef _GAME_H
 #define _GAME_H
 
-#include "PVEBattleScene.h"
+#include "DWLoadingScene.h"
 #include <cocoa\CCObject.h>
 
 class Game : public CCObject
@@ -14,8 +14,6 @@ public:
 
 	void setup();
 	
-	//void enterPVEBattle();
-
 private:
 	Game();
 	~Game();
@@ -25,7 +23,7 @@ private:
 	void onAllComplete();
 
 private:
-	
+	DWLoadingScene* mLoading;
 
 	static Game* mInstance;
 };

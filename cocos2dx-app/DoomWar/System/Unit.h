@@ -2,6 +2,7 @@
 #define _UNIT_H
 
 #include "Heap.h"
+#include "dwtype.h"
 
 #define MAX_ATTACK_GRIDS 20
 
@@ -23,22 +24,22 @@ typedef struct range_t
 typedef struct skill_t
 {
 	char* name;
-	unsigned int cid;
-	unsigned int type;
+	ID cid;
+	ID type;
 	int value;
 } Skill;
 
 typedef struct unit_t
 {
-	unsigned int iid;//instance id
-	unsigned int cid;//config id
+	ID iid;//instance id
+	ID cid;//config id
 	char* name;
-	unsigned int exp;
-	unsigned int maxHealth;
+	ID exp;
+	ID maxHealth;
 	int health;
 	Skill skill;
-	unsigned int agility;
-	unsigned int armor;
+	ID agility;
+	ID armor;
 	unsigned short atackFreq;//attacks per turn
 	Position positon;
 	Range attackRange;

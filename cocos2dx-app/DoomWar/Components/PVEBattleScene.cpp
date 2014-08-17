@@ -1,11 +1,8 @@
 #include "PVEBattleScene.h"
 
-CCScene* PVEBattleScene::scene()
+CCScene* PVEBattleScene::scene() const
 {
-	CCScene* scene = CCScene::create();
-	PVEBattleScene* layer = PVEBattleScene::create();
-	scene->addChild(layer);
-	return scene;
+	return mScene;
 }
 
 bool PVEBattleScene::init()
@@ -29,10 +26,22 @@ PVEBattleScene* PVEBattleScene::create()
 	if (pBattle && pBattle->init())
 	{
 		pBattle->autorelease();
+		pBattle->mScene->addChild(pBattle);
 		return pBattle;
 	}
 	return NULL;
 }
+
+PVEBattleScene::PVEBattleScene()
+{
+	mScene = CCScene::create();
+}
+
+PVEBattleScene::~PVEBattleScene()
+{
+
+}
+
 
 
 

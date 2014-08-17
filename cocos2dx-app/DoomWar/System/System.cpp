@@ -1,3 +1,4 @@
 #include "System.h"
 
-BattleSystem* System::battle = new BattleSystem();
+PVEBattle* System::pve = new PVEBattle();
+HeroPub* System::pub = new HeroPub();
