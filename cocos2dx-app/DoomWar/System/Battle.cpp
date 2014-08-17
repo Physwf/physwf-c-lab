@@ -47,6 +47,8 @@ void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
 	{
 		Unit* hero = heros + i;
 		(*mHeros)[hero->cid] = hero;
+		hero->positon.x = 3;
+		hero->positon.y = 1;
 	}
 	Event e = { BATTLE_ENTER_MAP, NULL };
 	dispatchEvent(&e);

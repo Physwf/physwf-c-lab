@@ -9,7 +9,7 @@ void Actor::setData(Unit* data)
 {
 	mData = data;
 	mSprite = ActorSprite::create(mData->cid);
-	mSprite->setPosition(ccp(300, 300));
+	mSprite->setPosition(ccp(mData->positon.x * 93, mData->positon.y * 93));
 	mLayer->addChild(mSprite);
 }
 
