@@ -27,6 +27,7 @@ ActorSprite* ActorSprite::create(ID cid)
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame("archer.png");
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
+		pActor->mBody->setAnchorPoint(ccp(0,0));
 
 		//blood bar
 		//armor

@@ -50,6 +50,7 @@ IPriority* MaxHeap::Dequeue()
 		childIndex = 2 * parentIndex + 1;
 	}
 	mHeap[parentIndex] = temp;
+	return max;
 }
 
 unsigned int MaxHeap::size() const

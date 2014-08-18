@@ -2,6 +2,8 @@
 #define _ACTOR_H
 
 #define MAX_ACTORS_IN_MAP 50
+#define X_MARGIN 36
+#define GRID_SIZE 94
 #include "ActorSprite.h"
 #include "Unit.h"
 
