@@ -51,6 +51,7 @@ public:
 	ID mapid() const;
 private:
 	void updateStarLevel();
+	bool claculateHerosMovement();
 	bool checkEncounter();
 	void calculateRoundResult();
 	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);

@@ -140,6 +140,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Components\Heap.cpp" />
     <ClCompile Include="..\Components\MapSprite.cpp" />
     <ClCompile Include="..\Components\PVEBattleScene.cpp" />
+    <ClCompile Include="..\Components\PVEBattleUI.cpp" />
     <ClCompile Include="..\Components\ResourceManager.cpp" />
     <ClCompile Include="..\Config\Config.cpp" />
     <ClCompile Include="..\Engine\Actor.cpp" />
@@ -163,6 +164,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Components\Heap.h" />
     <ClInclude Include="..\Components\MapSprite.h" />
     <ClInclude Include="..\Components\PVEBattleScene.h" />
+    <ClInclude Include="..\Components\PVEBattleUI.h" />
     <ClInclude Include="..\Components\ResourceManager.h" />
     <ClInclude Include="..\Config\Config.h" />
     <ClInclude Include="..\Engine\Actor.h" />

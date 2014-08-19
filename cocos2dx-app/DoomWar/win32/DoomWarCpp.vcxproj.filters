@@ -90,6 +90,9 @@
     <ClCompile Include="..\Config\Config.cpp">
       <Filter>Config</Filter>
     </ClCompile>
+    <ClCompile Include="..\Components\PVEBattleUI.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -147,6 +150,9 @@
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="..\Components\dwtype.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PVEBattleUI.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

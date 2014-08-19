@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 using namespace cocos2d;
 
+#include "PVEBattleUI.h"
+
 class PVEBattleScene : public CCLayer
 {
 public:
@@ -17,5 +19,6 @@ private:
 private:
 	CCSprite* mTempMap;
 	CCScene* mScene;
+	PVEBattleUI* mPVEUI;
 };
 #endif

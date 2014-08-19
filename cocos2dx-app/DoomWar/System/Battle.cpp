@@ -96,9 +96,21 @@ void PVEBattle::step()
 	}
 }
 
-void PVEBattle::update(ID eclipse)
+void PVEBattle::update(unsigned int eclipse)
 {
 
+}
+
+bool PVEBattle::claculateHerosMovement()
+{
+	std::map<ID, Unit*>::iterator it = mHeros->begin();
+	char gridCopy[MAX_SCREEN_GRID];
+	memcpy(gridCopy, mGrids, sizeof(mGrids));
+	for (it; it != mHeros->end(); it++)
+	{
+		int index = it->second->positon.x + (it->second->positon.y + mFrontRow) * NUM_GRIDS_ROW;
+	}
+	return false;
 }
 
 bool PVEBattle::checkEncounter()

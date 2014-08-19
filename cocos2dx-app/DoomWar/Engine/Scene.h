@@ -29,6 +29,7 @@ private:
 
 	DWLoadingScene* mLoading;
 	PVEBattleScene* mPVEScene;
+	
 
 };
 #endif
