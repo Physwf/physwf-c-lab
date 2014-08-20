@@ -50,7 +50,7 @@ void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
 		Unit* hero = heros + i;
 		(*mHeros)[hero->cid] = hero;
 		hero->positon.x = 3;
-		hero->positon.y = 1;
+		hero->positon.y = 2;
 	}
 	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW;
 	mBackLine = 0;
@@ -92,8 +92,9 @@ void PVEBattle::step()
 	if (!calculateHerosMovement()) return;
 
 	mFrontLine++;
+	mBackLine++;
 	//grids
-	memcpy(mGrids + NUM_GRIDS_ROW, mGrids, MAX_SCREEN_GRID*sizeof(char));
+	//memcpy(mGrids + NUM_GRIDS_ROW, mGrids, MAX_SCREEN_GRID*sizeof(char));
 	mMap->getGridsByRow(mFrontLine, mGrids);
 	//barriers
 	int numAdd = mMap->getBarriersByRow(mFrontLine, mBarriers);
@@ -192,8 +193,8 @@ bool PVEBattle::calculateHerosMovement()
 	Event e = { BATTLE_MOVE_SUCCESS, (char*)heroToMove };
 	dispatchEvent(&e);
 
-	delete heroToMove;
-	delete heroCantMove;
+	/*delete heroToMove;
+	delete heroCantMove;*/
 
 	return true;
 }
