@@ -24,6 +24,7 @@ public:
 	void leavePVPMap();
 private:
 	void onEnterPVEBattle(Event* event);
+	void onBattleMoveResult(Event* event);
 private:
 	std::map<ID, Actor*> *mActors;
 

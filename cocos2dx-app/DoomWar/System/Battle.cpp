@@ -17,6 +17,8 @@ PVEBattle::~PVEBattle()
 
 EType const PVEBattle::BATTLE_ENTER_MAP = "battle_enter_map";
 EType const PVEBattle::BATTLE_STEP_CLEAR = "battle_step_clear";
+EType const PVEBattle::BATTLE_MOVE_SUCCESS = "battle_move_success";
+EType const PVEBattle::BATTLE_MOVE_FAILED = "battle_move_failed";
 EType const PVEBattle::BATTLE_ATTACK_RESULT = "battle_attack_result";
 
 void PVEBattle::initialize()
@@ -36,7 +38,7 @@ void PVEBattle::initialize()
 	mRound = 0;
 	mStarLevel = MAX_STAR_LEVEL;
 	mGolds = 0;
-	mFrontRow = MAX_SCREEN_GRID / NUM_GRIDS_ROW;
+	
 }
 
 void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
@@ -50,6 +52,17 @@ void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
 		hero->positon.x = 3;
 		hero->positon.y = 1;
 	}
+	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW;
+	mBackLine = 0;
+
+	for (int row = mBackLine; row < mFrontLine; row++)
+	{
+		mMap->getEnemysByRow(row, mEnemys);
+		mMap->getBarriersByRow(row, mBarriers);
+	}
+
+	refreshGrids();
+
 	Event e = { BATTLE_ENTER_MAP, NULL };
 	dispatchEvent(&e);
 }
@@ -76,14 +89,16 @@ void PVEBattle::end()
 
 void PVEBattle::step()
 {
-	mFrontRow++;
+	if (!calculateHerosMovement()) return;
+
+	mFrontLine++;
 	//grids
 	memcpy(mGrids + NUM_GRIDS_ROW, mGrids, MAX_SCREEN_GRID*sizeof(char));
-	mMap->getGridsByRow(mFrontRow, mGrids);
+	mMap->getGridsByRow(mFrontLine, mGrids);
 	//barriers
-	int numAdd = mMap->getBarriersByRow(mFrontRow,mBarriers);
+	int numAdd = mMap->getBarriersByRow(mFrontLine, mBarriers);
 	//enemys
-	numAdd = mMap->getEnemysByRow(mFrontRow, mEnemys);
+	numAdd = mMap->getEnemysByRow(mFrontLine, mEnemys);
 
 	if (checkEncounter())
 	{
@@ -96,21 +111,91 @@ void PVEBattle::step()
 	}
 }
 
+void PVEBattle::refreshGrids()
+{
+	memset(mGrids, 0, sizeof(mGrids));
+
+	std::map<ID, Unit*>::iterator it = mHeros->begin();
+	for (it; it != mHeros->end(); it++)
+	{
+		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		mGrids[index] = GRID_OCCUPY_TYPE_HERO;
+	}
+
+	it = mEnemys->begin();
+	for (it; it != mEnemys->end(); it++)
+	{
+		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		mGrids[index] = GRID_OCCUPY_TYPE_ENEMY;
+	}
+
+	it = mBarriers->begin();
+	for (it; it != mBarriers->end(); it++)
+	{
+		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		mGrids[index] = GRID_OCCUPY_TYPE_BARRIER;
+	}
+}
+
 void PVEBattle::update(unsigned int eclipse)
 {
 
 }
 
-bool PVEBattle::claculateHerosMovement()
+bool PVEBattle::calculateHerosMovement()
 {
+	char gridsCopy[MAX_SCREEN_GRID];
+	memcpy(gridsCopy, mGrids, sizeof(mGrids));
+	int stepLen = 1;
+	Unit** heroToMove = new Unit*[MAX_SCREEN_HEROS];
+	int numHeroToMove = 0;
+	memset(heroToMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
+	Unit** heroCantMove = new Unit*[MAX_SCREEN_HEROS];
+	int numHeroCantMove = 0;
+	memset(heroCantMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
-	char gridCopy[MAX_SCREEN_GRID];
-	memcpy(gridCopy, mGrids, sizeof(mGrids));
 	for (it; it != mHeros->end(); it++)
 	{
-		int index = it->second->positon.x + (it->second->positon.y + mFrontRow) * NUM_GRIDS_ROW;
+		int index = it->second->positon.x + (it->second->positon.y + stepLen - mBackLine) * NUM_GRIDS_ROW;
+		//if grid is occupied by hero, set the index to the front rows, until no more heros are hitted
+		while (gridsCopy[index] == GRID_OCCUPY_TYPE_HERO)
+		{
+			index += NUM_GRIDS_ROW;
+		}
+		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE)
+		{
+			heroToMove[numHeroToMove++] = it->second;
+			continue;
+		}
+		if (gridsCopy[index] == GRID_OCCUPY_TYPE_BARRIER || gridsCopy[index] == GRID_OCCUPY_TYPE_ENEMY)
+		{
+			heroCantMove[numHeroCantMove++] = it->second;
+		}
 	}
-	return false;
+	if (numHeroCantMove>0)
+	{
+		for (int i = 0; i < numHeroCantMove; i++)
+		{
+			if (heroCantMove[i]->positon.y == mBackLine)
+			{
+				Event e = { BATTLE_MOVE_FAILED, (char*)heroCantMove };
+				dispatchEvent(&e);
+				return false;
+			}
+		}
+	}
+	for (int i = 0; i < numHeroToMove; i++)
+		heroToMove[i]->positon.y++;
+
+	refreshGrids();
+
+	Event e = { BATTLE_MOVE_SUCCESS, (char*)heroToMove };
+	dispatchEvent(&e);
+
+	delete heroToMove;
+	delete heroCantMove;
+
+	return true;
 }
 
 bool PVEBattle::checkEncounter()

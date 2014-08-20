@@ -18,5 +18,9 @@ ID Actor::iid() const
 	return mData->iid;
 }
 
+void Actor::stepForword()
+{
+	mSprite->setPositionY(mData->positon.y * GRID_SIZE);
+}
 
 

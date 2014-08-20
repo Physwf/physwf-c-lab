@@ -42,6 +42,27 @@ void Scene::onEnterPVEBattle(Event* event)
 	CCDirector::sharedDirector()->replaceScene(mPVEScene->scene());
 
 	System::pve->start();
+
+	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_SUCCESS, this, EventListener(&Scene::onBattleMoveResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&Scene::onBattleMoveResult));
+}
+
+void Scene::onBattleMoveResult(Event *event)
+{
+	if (event->type == PVEBattle::BATTLE_MOVE_SUCCESS)
+	{
+		Unit** herosToMove = (Unit**)event->data;
+		while (*herosToMove)
+		{
+			(*mActors)[(*herosToMove)->iid]->stepForword();
+			herosToMove++;
+		}
+	}
+	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
+	{
+		Unit* heroCantMove = (Unit*)event->data;
+	}
+	
 }
 
 void Scene::leavePVEMap()

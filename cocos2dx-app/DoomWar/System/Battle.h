@@ -13,6 +13,12 @@
 
 #define MAX_STAR_LEVEL 3
 
+#define GRID_OCCUPY_TYPE_NONE 0
+#define GRID_OCCUPY_TYPE_HERO 1
+#define GRID_OCCUPY_TYPE_ENEMY 2
+#define GRID_OCCUPY_TYPE_BARRIER 3
+#define GRID_OCCUPY_TYPE_PROPS 4
+
 typedef struct buff_result_t
 {
 	ID giver;
@@ -51,7 +57,8 @@ public:
 	ID mapid() const;
 private:
 	void updateStarLevel();
-	bool claculateHerosMovement();
+	void refreshGrids();
+	bool calculateHerosMovement();
 	bool checkEncounter();
 	void calculateRoundResult();
 	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);
@@ -67,6 +74,8 @@ private:
 public:
 	static const EType BATTLE_ENTER_MAP;
 	static const EType BATTLE_STEP_CLEAR;
+	static const EType BATTLE_MOVE_SUCCESS;
+	static const EType BATTLE_MOVE_FAILED;
 	static const EType BATTLE_ATTACK_RESULT;
 private:
 	//Unit mHeros[MAX_SCREEN_HEROS];
@@ -86,7 +95,8 @@ private:
 	int mRound;//»ØºÏ
 	int mStarLevel;//ÐÇ¼¶
 	int mGolds;
-	int mFrontRow;
+	int mFrontLine;
+	int mBackLine;
 };
 
 class PVPBattle

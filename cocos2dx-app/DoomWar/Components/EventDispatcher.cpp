@@ -45,11 +45,10 @@ void EventDispather::addEventListener(EType type, DWObject* object, EventListene
 	{
 		if ((*it)->value() <= priority)
 		{
-			list->insert(it, wraper);
 			break;
 		}
 	}
-	if (it == list->end()) list->insert(it, wraper);
+	list->insert(it, wraper);
 }
 
 void EventDispather::removeEventListener(EType type, EventListener listener)
@@ -58,14 +57,16 @@ void EventDispather::removeEventListener(EType type, EventListener listener)
 	if (list == NULL)
 		return;
 	std::vector<ListenerWraper*>::iterator it = list->begin();
+	bool find = false;
 	for (it; it<list->end(); it++)
 	{
 		if ((*it)->isWrap(listener))
 		{
-			list->erase(it);
+			find = true;
 			break;
 		}
 	}
+	list->erase(it);
 }
 
 void EventDispather::dispatchEvent(Event* event)
