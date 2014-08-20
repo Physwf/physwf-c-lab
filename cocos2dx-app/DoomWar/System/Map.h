@@ -24,8 +24,8 @@ public:
 	ID cid() const;
 private:
 	char mGrids[MAX_MAP_GRID];
-	Unit* mBrriers[MAX_MAP_BARRIERS];
-	Unit* mEnemys[MAX_MAP_ENEMYS];
+	ID mBrriers[MAX_MAP_BARRIERS];
+	ID mEnemys[MAX_MAP_ENEMYS];
 	ID mCID;
 };
 #endif

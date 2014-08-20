@@ -39,6 +39,21 @@ void Scene::onEnterPVEBattle(Event* event)
 		(*mActors)[actor->iid()] = actor;
 	}
 
+	std::map<ID, Unit*>* barriers = System::pve->barriers();
+	for (std::map<ID, Unit*>::iterator it = barriers->begin(); it != barriers->end(); it++)
+	{
+		Actor* actor = new Actor(mPVEScene);
+		actor->setData(it->second);
+		(*mActors)[actor->iid()] = actor;
+	}
+
+	std::map<ID, Unit*>* enemys = System::pve->enemys();
+	for (std::map<ID, Unit*>::iterator it = enemys->begin(); it != enemys->end(); it++)
+	{
+		Actor* actor = new Actor(mPVEScene);
+		actor->setData(it->second);
+		(*mActors)[actor->iid()] = actor;
+	}
 	CCDirector::sharedDirector()->replaceScene(mPVEScene->scene());
 
 	System::pve->start();

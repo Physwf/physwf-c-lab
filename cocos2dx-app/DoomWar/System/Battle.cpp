@@ -52,7 +52,7 @@ void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
 		hero->positon.x = 3;
 		hero->positon.y = 2;
 	}
-	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW;
+	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW - 1;
 	mBackLine = 0;
 
 	for (int row = mBackLine; row < mFrontLine; row++)
@@ -93,9 +93,6 @@ void PVEBattle::step()
 
 	mFrontLine++;
 	mBackLine++;
-	//grids
-	//memcpy(mGrids + NUM_GRIDS_ROW, mGrids, MAX_SCREEN_GRID*sizeof(char));
-	mMap->getGridsByRow(mFrontLine, mGrids);
 	//barriers
 	int numAdd = mMap->getBarriersByRow(mFrontLine, mBarriers);
 	//enemys
