@@ -66,16 +66,16 @@ void Scene::onBattleMoveResult(Event *event)
 {
 	if (event->type == PVEBattle::BATTLE_MOVE_SUCCESS)
 	{
-		Unit** herosToMove = (Unit**)event->data;
+		ID* herosToMove = (ID*)event->data;
 		while (*herosToMove)
 		{
-			(*mActors)[(*herosToMove)->iid]->stepForword();
+			(*mActors)[(*herosToMove)]->updatePosition();
 			herosToMove++;
 		}
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{
-		Unit* heroCantMove = (Unit*)event->data;
+		ID* heroCantMove = (ID*)event->data;
 	}
 	
 }

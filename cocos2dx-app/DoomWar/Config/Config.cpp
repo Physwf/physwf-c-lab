@@ -7,9 +7,8 @@ MonsterConfig* Config::monster = new MonsterConfig();
 
 Unit* HeroConfig::create(ID cid)
 {
-	ID iid = (ID)time(NULL);
 	Unit* u = new Unit();
-	u->iid = iid;
+	u->iid = (ID)u;
 	u->cid = cid;
 	u->name = "Hero";
 	u->maxHealth = 100;
@@ -19,9 +18,8 @@ Unit* HeroConfig::create(ID cid)
 
 Unit* BarrierConfig::create(ID cid)
 {
-	ID iid = (ID)time(NULL);
 	Unit* u = new Unit();
-	u->iid = iid;
+	u->iid = (ID)u;
 	u->cid = cid;
 	u->name = "Barrier";
 	u->maxHealth = 100;
@@ -30,13 +28,10 @@ Unit* BarrierConfig::create(ID cid)
 }
 
 
-
-
 Unit* MonsterConfig::create(ID cid)
 {
-	ID iid = (ID)time(NULL);
 	Unit* u = new Unit();
-	u->iid = iid;
+	u->iid = (ID)u;
 	u->cid = cid;
 	u->name = "Monster";
 	u->maxHealth = 100;

@@ -22,8 +22,10 @@ void PVEMap::init(const char* configFile)
 	memset(mGrids, 0, sizeof(mGrids));
 	memset(mBrriers, 0, sizeof(mBrriers));
 	memset(mEnemys, 0, sizeof(mEnemys));
-	mBrriers[37] = 1;
-	mBrriers[36] = 2;
+	mBrriers[38] = 2;
+	mBrriers[39] = 2;
+	mEnemys[43] = 3;
+	mEnemys[44] = 3;
 }
 
 int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers)
@@ -38,7 +40,7 @@ int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers)
 			Unit* barrier = Config::barrier->create(mBrriers[i]);
 			barrier->positon.x = i - start;
 			barrier->positon.y = row;
-			(*barriers)[mBrriers[i]] = barrier;
+			(*barriers)[barrier->iid] = barrier;
 			count++;
 		}
 	}
@@ -57,7 +59,7 @@ int PVEMap::getEnemysByRow(int row, std::map<ID, Unit*>* enemies)
 			Unit* monster = Config::monster->create(mEnemys[i]);
 			monster->positon.x = i - start;
 			monster->positon.y = row;
-			(*enemies)[mEnemys[i]] = monster;
+			(*enemies)[monster->iid] = monster;
 			count++;
 		}
 	}

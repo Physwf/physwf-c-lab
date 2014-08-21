@@ -22,9 +22,9 @@ ActorSprite* ActorSprite::create(ID cid)
 	if (pActor && pActor->init())
 	{
 		pActor->autorelease();
-		char strcid[10];
-		sprintf(strcid, "%d", cid);
-		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame("archer.png");
+		char strcid[20] = {0};
+		getFrameNameByCID(cid,strcid);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(strcid);
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
 		pActor->mBody->setAnchorPoint(ccp(0,0));
@@ -36,6 +36,29 @@ ActorSprite* ActorSprite::create(ID cid)
 	return NULL;
 }
 
+void ActorSprite::getFrameNameByCID(ID cid, char* name)
+{
+	switch (cid)
+	{
+	case 1:
+	{
+			  sprintf(name, "%s", "archer.png");
+			  break;
+	}
+	case 2:
+	{
+			  sprintf(name, "%s", "BarriersFlower.png");
+			  break;
+	}
+	case 3:
+	{
+			  sprintf(name, "%s", "gnome.png");
+			  break;
+	}
+	default:
+		break;
+	}
+}
 
 BloodRender::BloodRender(unsigned int color)
 {

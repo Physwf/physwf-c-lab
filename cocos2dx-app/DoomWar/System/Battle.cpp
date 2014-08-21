@@ -48,7 +48,7 @@ void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
 	for (int i = 0; i < numHeros; i++)
 	{
 		Unit* hero = heros + i;
-		(*mHeros)[hero->cid] = hero;
+		(*mHeros)[hero->iid] = hero;
 		hero->positon.x = 3;
 		hero->positon.y = 2;
 	}
@@ -145,10 +145,10 @@ bool PVEBattle::calculateHerosMovement()
 	char gridsCopy[MAX_SCREEN_GRID];
 	memcpy(gridsCopy, mGrids, sizeof(mGrids));
 	int stepLen = 1;
-	Unit** heroToMove = new Unit*[MAX_SCREEN_HEROS];
+	ID* heroToMove = new ID[MAX_SCREEN_HEROS];
 	int numHeroToMove = 0;
 	memset(heroToMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
-	Unit** heroCantMove = new Unit*[MAX_SCREEN_HEROS];
+	ID* heroCantMove = new ID[MAX_SCREEN_HEROS];
 	int numHeroCantMove = 0;
 	memset(heroCantMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
@@ -162,19 +162,19 @@ bool PVEBattle::calculateHerosMovement()
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE)
 		{
-			heroToMove[numHeroToMove++] = it->second;
+			heroToMove[numHeroToMove++] = it->second->iid;
 			continue;
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_BARRIER || gridsCopy[index] == GRID_OCCUPY_TYPE_ENEMY)
 		{
-			heroCantMove[numHeroCantMove++] = it->second;
+			heroCantMove[numHeroCantMove++] = it->second->iid;
 		}
 	}
 	if (numHeroCantMove>0)
 	{
 		for (int i = 0; i < numHeroCantMove; i++)
 		{
-			if (heroCantMove[i]->positon.y == mBackLine)
+			if ((*mHeros)[heroCantMove[i]]->positon.y == mBackLine)
 			{
 				Event e = { BATTLE_MOVE_FAILED, (char*)heroCantMove };
 				dispatchEvent(&e);
@@ -183,7 +183,7 @@ bool PVEBattle::calculateHerosMovement()
 		}
 	}
 	for (int i = 0; i < numHeroToMove; i++)
-		heroToMove[i]->positon.y++;
+		(*mHeros)[heroToMove[i]]->positon.y++;
 
 	refreshGrids();
 

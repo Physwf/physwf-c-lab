@@ -31,7 +31,7 @@ public:
 	~ActorSprite();
 	
 	static ActorSprite* create(ID cid);
-
+	static void getFrameNameByCID(ID cid,char* name);
 	
 
 	virtual void update(float delta);

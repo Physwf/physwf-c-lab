@@ -16,10 +16,7 @@ public:
 public:
 	void setData(Unit* data);
 
-	void stepForword();
-	void stepBackword();
-	void stepLeft();
-	void stepRight();
+	void updatePosition();
 	void moveTo();
 
 	void attack();
