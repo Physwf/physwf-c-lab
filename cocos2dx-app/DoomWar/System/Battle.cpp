@@ -190,8 +190,8 @@ bool PVEBattle::calculateHerosMovement()
 	Event e = { BATTLE_MOVE_SUCCESS, (char*)heroToMove };
 	dispatchEvent(&e);
 
-	/*delete heroToMove;
-	delete heroCantMove;*/
+	delete heroToMove;
+	delete heroCantMove;
 
 	return true;
 }
