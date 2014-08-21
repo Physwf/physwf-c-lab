@@ -9,19 +9,19 @@ using namespace cocos2d;
 #define BLOOD_RENDER_W 100
 #define BLOOD_RENDER_H 10
 
-class BloodRender : public CCRenderTexture
+class BloodRender : public CCSprite
 {
 public:
-	BloodRender(unsigned int color);
 	~BloodRender();
 
-	static BloodRender* create(unsigned int color);
+	static BloodRender* create(float percent);
 
 	void setPercent(float percent);
-	
+private:
+	BloodRender(float percent);
 private:
 	float mPercent;
-	unsigned int mColor;
+	CCTexture2D *mTexture;
 };
 
 class ActorSprite : public CCSprite

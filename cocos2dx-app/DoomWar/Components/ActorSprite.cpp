@@ -28,7 +28,9 @@ ActorSprite* ActorSprite::create(ID cid)
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
 		pActor->mBody->setAnchorPoint(ccp(0,0));
-
+		pActor->mBloodBar = BloodRender::create(0.3);
+		pActor->mBloodBar->setAnchorPoint(ccp(0, 0));
+		pActor->addChild(pActor->mBloodBar);
 		//blood bar
 		//armor
 		return pActor;
@@ -60,10 +62,20 @@ void ActorSprite::getFrameNameByCID(ID cid, char* name)
 	}
 }
 
-BloodRender::BloodRender(unsigned int color)
+BloodRender::BloodRender(float percent)
 {
-	mColor = color;
-	mPercent = 1.0;
+	mTexture = new CCTexture2D();
+	mPercent = percent;
+	unsigned int prog = percent * 100;
+	float n  =  prog / 100.0;
+	float p  = n - floor(n);
+	unsigned int temp1 = 0xFF * (1.0 - p);
+	unsigned int temp2 = 0xFF * p;
+	unsigned int color = (temp1 << 16) + (temp2 << 8);
+	color += 0xFF000000;
+	//unsigned int color = 0xFF00FF00;
+	CCSize size(96, 8);
+	mTexture->initWithData((const void*)&color, kCCTexture2DPixelFormat_RGBA8888, 1, 1, size);
 }
 
 BloodRender::~BloodRender()
@@ -71,11 +83,12 @@ BloodRender::~BloodRender()
 
 }
 
-BloodRender* BloodRender::create(unsigned int color)
+BloodRender* BloodRender::create(float percent)
 {
-	BloodRender* pBloor = new BloodRender(color);
-	if (pBloor && pBloor->init())
+	BloodRender* pBloor = new BloodRender(percent);
+	if (pBloor && pBloor->initWithTexture(pBloor->mTexture))
 	{
+		pBloor->autorelease();
 		return pBloor;
 	}
 	return NULL;
@@ -84,10 +97,9 @@ BloodRender* BloodRender::create(unsigned int color)
 void BloodRender::setPercent(float percent)
 {
 	mPercent = percent;
-	this->begin();
-	this->clear(0, 0, 0, 1);
-
-	this->end();
+	CCSize size(100, 8);
+	unsigned int color = 0xFF00FF00;
+	mTexture->initWithData((const void*)&color, kCCTexture2DPixelFormat_RGBA8888, 1, 1, size);
 }
 
 
