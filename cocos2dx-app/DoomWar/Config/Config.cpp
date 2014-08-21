@@ -13,6 +13,20 @@ Unit* HeroConfig::create(ID cid)
 	u->name = "Hero";
 	u->maxHealth = 100;
 	u->health = 100;
+	u->attackRange.numGrids = 8;
+	int n = 0;
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			if (i == 0 && j==0 ) continue;
+			u->attackRange.offsets[n].x = i;
+			u->attackRange.offsets[n].y = j;
+			n++;
+		}
+	}
+	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
+	u->skill.value = 1;
 	return u;
 }
 
@@ -36,5 +50,19 @@ Unit* MonsterConfig::create(ID cid)
 	u->name = "Monster";
 	u->maxHealth = 100;
 	u->health = 100;
+
+	u->attackRange.numGrids = 8;
+	int n = 0;
+	for (int i = -1; i < 1; i++)
+	{
+		for (int j = -1; j < 1; j++)
+		{
+			if (i == j) continue;
+			u->attackRange.offsets[n++].x = i;
+			u->attackRange.offsets[n++].y = j;
+		}
+	}
+	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
+	u->skill.value = 1;
 	return u;
 }

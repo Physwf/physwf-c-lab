@@ -94,19 +94,11 @@ void PVEBattle::step()
 	mFrontLine++;
 	mBackLine++;
 	//barriers
-	int numAdd = mMap->getBarriersByRow(mFrontLine, mBarriers);
+	mMap->getBarriersByRow(mFrontLine, mBarriers);
 	//enemys
-	numAdd = mMap->getEnemysByRow(mFrontLine, mEnemys);
+	mMap->getEnemysByRow(mFrontLine, mEnemys);
 
-	if (checkEncounter())
-	{
-		calculateRoundResult();
-	}
-	else
-	{
-		Event e = { BATTLE_STEP_CLEAR, NULL};
-		dispatchEvent(&e);
-	}
+	calculateRoundResult();
 }
 
 void PVEBattle::refreshGrids()
@@ -196,11 +188,6 @@ bool PVEBattle::calculateHerosMovement()
 	return true;
 }
 
-bool PVEBattle::checkEncounter()
-{
-	return false;
-}
-
 void PVEBattle::calculateRoundResult()
 {
 	//step 1, check blood recover, buff/debuff status 
@@ -237,9 +224,16 @@ void PVEBattle::calculateRoundResult()
 		Unit* enemy = wraper->unit();
 		if (calculateEnemyAttackResult(enemy, &results[count])) count++;
 	}
-	Event e = { BATTLE_ATTACK_RESULT, (char*)results };
-	dispatchEvent(&e);
-	//send battle result
+	if (count)
+	{
+		Event e = { BATTLE_ATTACK_RESULT, (char*)results };
+		dispatchEvent(&e);
+	}
+	else
+	{
+		Event e = { BATTLE_STEP_CLEAR, NULL };
+		dispatchEvent(&e);
+	}
 }
 bool PVEBattle::calculateHeroBuffResult(Unit* hero, BuffResult* result)
 {
@@ -317,7 +311,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 			break;
 			case SKILL_TYPE_HARM_MAGICAL:
 			{
-				result->type = ATTACK_TYPE_PHYSICAL;
+				result->type = ATTACK_TYPE_MAGICAL;
 				result->value = attacker->skill.value;//to be detailed
 				return true;
 			}
@@ -330,14 +324,14 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 {
 	//first, check if in attack grids
-	bool in = false;
 	for (int i = 0; i < attacker->attackRange.numGrids; i++)
 	{
 		if (attacker->attackRange.offsets[i].x + attacker->positon.x == victim->positon.x &&
 			attacker->attackRange.offsets[i].y + attacker->positon.y == victim->positon.y)
-			in = true;
+		{
+			return true;
+		}
 	}
-	if (!in) return false;
 
 	//second, check if be blocked, to do
 	return false;

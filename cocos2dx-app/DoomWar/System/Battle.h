@@ -59,7 +59,6 @@ private:
 	void updateStarLevel();
 	void refreshGrids();
 	bool calculateHerosMovement();
-	bool checkEncounter();
 	void calculateRoundResult();
 	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);
 	bool calculateEnemyBuffResult(Unit* enemy, BuffResult* result);

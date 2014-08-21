@@ -22,8 +22,8 @@ void PVEMap::init(const char* configFile)
 	memset(mGrids, 0, sizeof(mGrids));
 	memset(mBrriers, 0, sizeof(mBrriers));
 	memset(mEnemys, 0, sizeof(mEnemys));
-	mBrriers[38] = 2;
-	mBrriers[39] = 2;
+	//mBrriers[38] = 2;
+	//mBrriers[39] = 2;
 	mEnemys[43] = 3;
 	mEnemys[44] = 3;
 }
