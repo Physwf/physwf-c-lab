@@ -201,6 +201,7 @@ void PVEBattle::calculateRoundResult()
 		UnitWraper wraper = UnitWraper(it->second);
 		heros.Enqueue(&wraper);
 	}
+	//AttackResult* results = new AttackResult[MAX_SCREEN_HEROS];
 	AttackResult results[MAX_SCREEN_HEROS+MAX_SCREEN_ENYMYS] = { 0 };
 	int count = 0;
 	while (heros.size())
@@ -306,6 +307,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 			{
 				result->type = ATTACK_TYPE_PHYSICAL;
 				result->value = attacker->skill.value;//to be detailed
+				victim->health += result->value;
 				return true;
 			}
 			break;

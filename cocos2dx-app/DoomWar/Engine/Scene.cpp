@@ -60,6 +60,7 @@ void Scene::onEnterPVEBattle(Event* event)
 
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_SUCCESS, this, EventListener(&Scene::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&Scene::onBattleMoveResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&Scene::onBattleAttakResult));
 }
 
 void Scene::onBattleMoveResult(Event *event)
@@ -78,6 +79,23 @@ void Scene::onBattleMoveResult(Event *event)
 		ID* heroCantMove = (ID*)event->data;
 	}
 	
+}
+
+void Scene::onBattleAttakResult(Event* event)
+{
+	AttackResult* results = (AttackResult*)event->data;
+	//while (results)
+	{
+		switch (results->type)
+		{
+		case ATTACK_TYPE_PHYSICAL:
+		{
+			Actor* victim = (*mActors)[results->victim];
+			victim->updateHealth(results->value);
+		}
+		}
+		results++;
+	}
 }
 
 void Scene::leavePVEMap()

@@ -26,7 +26,7 @@ Unit* HeroConfig::create(ID cid)
 		}
 	}
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
-	u->skill.value = 1;
+	u->skill.value = -40;
 	return u;
 }
 
@@ -63,6 +63,6 @@ Unit* MonsterConfig::create(ID cid)
 		}
 	}
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
-	u->skill.value = 1;
+	u->skill.value = -20;
 	return u;
 }

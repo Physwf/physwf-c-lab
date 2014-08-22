@@ -10,6 +10,7 @@ void Actor::setData(Unit* data)
 	mData = data;
 	mSprite = ActorSprite::create(mData->cid);
 	mSprite->setPosition(ccp(mData->positon.x * GRID_SIZE + X_MARGIN, mData->positon.y * GRID_SIZE));
+	mSprite->bloor()->setPercent(0.1);
 	mLayer->addChild(mSprite);
 }
 
@@ -21,6 +22,11 @@ ID Actor::iid() const
 void Actor::updatePosition()
 {
 	mSprite->setPosition(ccp(mData->positon.x * GRID_SIZE + X_MARGIN, mData->positon.y * GRID_SIZE));
+}
+
+void Actor::updateHealth(int delta)
+{
+	mSprite->bloor()->setPercent((float)mData->health / (float)mData->maxHealth);
 }
 
 

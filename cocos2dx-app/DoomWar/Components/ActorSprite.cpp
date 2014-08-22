@@ -28,7 +28,7 @@ ActorSprite* ActorSprite::create(ID cid)
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
 		pActor->mBody->setAnchorPoint(ccp(0,0));
-		pActor->mBloodBar = BloodRender::create(0.3);
+		pActor->mBloodBar = BloodBar::create(1);
 		pActor->mBloodBar->setAnchorPoint(ccp(0, 0));
 		pActor->addChild(pActor->mBloodBar);
 		//blood bar
@@ -62,30 +62,26 @@ void ActorSprite::getFrameNameByCID(ID cid, char* name)
 	}
 }
 
-BloodRender::BloodRender(float percent)
+BloodBar* ActorSprite::bloor() const
+{
+	return mBloodBar;
+}
+
+BloodBar::BloodBar(float percent)
 {
 	mTexture = new CCTexture2D();
-	mPercent = percent;
-	unsigned int prog = percent * 100;
-	float n  =  prog / 100.0;
-	float p  = n - floor(n);
-	unsigned int temp1 = 0xFF * (1.0 - p);
-	unsigned int temp2 = 0xFF * p;
-	unsigned int color = (temp1 << 16) + (temp2 << 8);
-	color += 0xFF000000;
-	//unsigned int color = 0xFF00FF00;
-	CCSize size(96, 8);
-	mTexture->initWithData((const void*)&color, kCCTexture2DPixelFormat_RGBA8888, 1, 1, size);
+	setPercent(percent);
+	memset(mPixels, 0, sizeof(mPixels)); 
 }
 
-BloodRender::~BloodRender()
+BloodBar::~BloodBar()
 {
 
 }
 
-BloodRender* BloodRender::create(float percent)
+BloodBar* BloodBar::create(float percent)
 {
-	BloodRender* pBloor = new BloodRender(percent);
+	BloodBar* pBloor = new BloodBar(percent);
 	if (pBloor && pBloor->initWithTexture(pBloor->mTexture))
 	{
 		pBloor->autorelease();
@@ -94,12 +90,25 @@ BloodRender* BloodRender::create(float percent)
 	return NULL;
 }
 
-void BloodRender::setPercent(float percent)
+void BloodBar::setPercent(float percent)
 {
 	mPercent = percent;
-	CCSize size(100, 8);
-	unsigned int color = 0xFF00FF00;
-	mTexture->initWithData((const void*)&color, kCCTexture2DPixelFormat_RGBA8888, 1, 1, size);
+	unsigned int prog = (1.0 - percent / 10) * 100.0;
+	float n = prog / 100.0;
+	float p = n - floor(n);
+	unsigned int temp1 = 0xFF0000 * (1.0 - p);
+	unsigned int temp2 = 0xFF0000 * p;
+	unsigned int color = (temp1 >> 16) + (temp2 >> 8);
+	//memset(mPixels, 0, sizeof(mPixels));
+	std::fill_n(mPixels, 96, 0xFF000000);
+	color += 0xFF000000;
+	std::fill_n(mPixels, 96 * percent, color);
+	for (int i = 1; i < 8; i++)
+	{
+		memcpy(mPixels + 96 * i, mPixels, 96 * sizeof(unsigned int));
+	}
+	CCSize size(96, 8);
+	mTexture->initWithData((const void*)&mPixels, kCCTexture2DPixelFormat_RGBA8888, 96, 8, size);
 }
 
 

@@ -25,6 +25,7 @@ public:
 private:
 	void onEnterPVEBattle(Event* event);
 	void onBattleMoveResult(Event* event);
+	void onBattleAttakResult(Event* event);
 private:
 	std::map<ID, Actor*> *mActors;
 

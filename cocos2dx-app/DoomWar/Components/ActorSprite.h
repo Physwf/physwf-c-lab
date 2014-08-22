@@ -9,18 +9,19 @@ using namespace cocos2d;
 #define BLOOD_RENDER_W 100
 #define BLOOD_RENDER_H 10
 
-class BloodRender : public CCSprite
+class BloodBar : public CCSprite
 {
 public:
-	~BloodRender();
+	~BloodBar();
 
-	static BloodRender* create(float percent);
+	static BloodBar* create(float percent);
 
 	void setPercent(float percent);
 private:
-	BloodRender(float percent);
+	BloodBar(float percent);
 private:
 	float mPercent;
+	unsigned int mPixels[96*8];
 	CCTexture2D *mTexture;
 };
 
@@ -33,7 +34,7 @@ public:
 	static ActorSprite* create(ID cid);
 	static void getFrameNameByCID(ID cid,char* name);
 	
-
+	BloodBar* bloor() const;
 	virtual void update(float delta);
 
 private:
@@ -43,7 +44,7 @@ private:
 	CCSprite* mBody;
 	CCSprite* mDeadBody;
 	CCAnimation* mArmor;
-	CCSprite* mBloodBar;
+	BloodBar* mBloodBar;
 	CCLayer* mBloodLayer;
 	CCLayer* mEffectLayer;
 };

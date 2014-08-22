@@ -17,6 +17,7 @@ public:
 	void setData(Unit* data);
 
 	void updatePosition();
+	void updateHealth(int delta);
 	void moveTo();
 
 	void attack();
