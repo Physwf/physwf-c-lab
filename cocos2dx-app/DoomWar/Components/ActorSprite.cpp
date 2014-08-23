@@ -92,14 +92,13 @@ BloodBar* BloodBar::create(float percent)
 
 void BloodBar::setPercent(float percent)
 {
-	mPercent = percent;
-	unsigned int prog = (1.0 - percent / 10) * 100.0;
-	float n = prog / 100.0;
+	percent = percent<0 ? 0 : percent;
+	unsigned int prog = (percent) * 100.0;
+	float n = (float)prog / 100.0;
 	float p = n - floor(n);
-	unsigned int temp1 = 0xFF0000 * (1.0 - p);
-	unsigned int temp2 = 0xFF0000 * p;
-	unsigned int color = (temp1 >> 16) + (temp2 >> 8);
-	//memset(mPixels, 0, sizeof(mPixels));
+	unsigned int g = (float)0xFF * percent;
+	unsigned int r = (float)0xFF * (1.0 - percent);
+	unsigned int color = (g << 8) + (r);
 	std::fill_n(mPixels, 96, 0xFF000000);
 	color += 0xFF000000;
 	std::fill_n(mPixels, 96 * percent, color);
