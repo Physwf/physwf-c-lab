@@ -8,6 +8,8 @@ PVEBattle::PVEBattle()
 	mHeros = new std::map<ID, Unit*>();
 	mEnemys = new std::map<ID, Unit*>();
 	mBarriers = new std::map<ID, Unit*>();
+
+	
 }
 
 PVEBattle::~PVEBattle()

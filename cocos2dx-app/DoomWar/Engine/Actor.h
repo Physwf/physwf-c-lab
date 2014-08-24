@@ -21,6 +21,7 @@ public:
 	void moveTo();
 
 	void attack();
+	void shake(float delta);
 
 	ID iid() const;
 

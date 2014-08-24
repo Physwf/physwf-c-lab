@@ -22,6 +22,8 @@ public:
 
 	void enterPVPMap(ID mapid);
 	void leavePVPMap();
+
+	Actor* getActor(ID iid);
 private:
 	void onEnterPVEBattle(Event* event);
 	void onBattleMoveResult(Event* event);
@@ -32,6 +34,6 @@ private:
 	DWLoadingScene* mLoading;
 	PVEBattleScene* mPVEScene;
 	
-
+	CommandSequence* mMainThread;
 };
 #endif

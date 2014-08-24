@@ -93,6 +93,9 @@
     <ClCompile Include="..\Components\PVEBattleUI.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Engine\Command.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="..\Components\PVEBattleUI.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Command.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

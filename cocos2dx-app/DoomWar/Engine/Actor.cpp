@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include <math.h>
 
 Actor::Actor(CCLayer* layer)
 {
@@ -27,6 +28,22 @@ void Actor::updatePosition()
 void Actor::updateHealth(int delta)
 {
 	mSprite->bloor()->setPercent((float)mData->health / (float)mData->maxHealth);
+}
+
+void Actor::shake(float delta)
+{
+	static float time;
+	time += delta;
+	float amp = .5 / time;
+	float dx = amp * sin(time);
+	float dy = amp * sin(time);
+	
+	CCPoint p = mSprite->getPosition();
+	p.x += dx;
+	p.y += dy;
+	mSprite->setPosition(p);
+
+	//if (amp < 0.1) return true;
 }
 
 

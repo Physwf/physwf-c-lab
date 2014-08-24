@@ -6,6 +6,7 @@
 
 Scene::Scene() :mLoading(NULL), mPVEScene(NULL)
 {
+	mMainThread = CommandSequence::create();
 }
 
 Scene::~Scene()
@@ -86,14 +87,8 @@ void Scene::onBattleAttakResult(Event* event)
 	AttackResult* results = (AttackResult*)event->data;
 	//while (results)
 	{
-		switch (results->type)
-		{
-		case ATTACK_TYPE_PHYSICAL:
-		{
-			Actor* victim = (*mActors)[results->victim];
-			victim->updateHealth(results->value);
-		}
-		}
+		CommandAttck* attack = CommandAttck::create(results);
+		mMainThread->push(attack);
 		results++;
 	}
 }
@@ -101,6 +96,11 @@ void Scene::onBattleAttakResult(Event* event)
 void Scene::leavePVEMap()
 {
 
+}
+
+Actor* Scene::getActor(ID iid)
+{
+	return (*mActors)[iid];
 }
 
 

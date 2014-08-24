@@ -5,6 +5,7 @@
 #include "EventDispatcher.h"
 #include <map>
 #include "dwtype.h"
+#include "Command.h"
 
 #define MAX_SCREEN_HEROS 10
 #define MAX_SCREEN_ENYMYS 20
@@ -96,6 +97,8 @@ private:
 	int mGolds;
 	int mFrontLine;
 	int mBackLine;
+
+	
 };
 
 class PVPBattle
