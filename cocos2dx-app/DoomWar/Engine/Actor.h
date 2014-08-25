@@ -10,7 +10,7 @@
 class Actor
 {
 public:
-	Actor(CCLayer* layer);
+	Actor(CCSprite* layer);
 	~Actor();
 
 public:
@@ -27,8 +27,7 @@ public:
 
 	const CCPoint& position();
 private:
-	CCLayer* mLayer;
-	CCSprite* mEffect;
+	CCSprite* mLayer;
 	ActorSprite* mSprite;
 	Unit* mData;
 	CCPoint mPosition;

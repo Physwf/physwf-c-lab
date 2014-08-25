@@ -35,7 +35,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	std::map<ID,Unit*>* heros = System::pve->heros();
 	for (std::map<ID,Unit*>::iterator it=heros->begin(); it != heros->end(); it++)
 	{
-		Actor* actor = new Actor(mPVEScene);
+		Actor* actor = new Actor(mPVEScene->layerActor());
 		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
@@ -43,7 +43,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	std::map<ID, Unit*>* barriers = System::pve->barriers();
 	for (std::map<ID, Unit*>::iterator it = barriers->begin(); it != barriers->end(); it++)
 	{
-		Actor* actor = new Actor(mPVEScene);
+		Actor* actor = new Actor(mPVEScene->layerActor());
 		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
@@ -51,7 +51,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	std::map<ID, Unit*>* enemys = System::pve->enemys();
 	for (std::map<ID, Unit*>::iterator it = enemys->begin(); it != enemys->end(); it++)
 	{
-		Actor* actor = new Actor(mPVEScene);
+		Actor* actor = new Actor(mPVEScene->layerActor());
 		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
@@ -101,6 +101,11 @@ void Scene::leavePVEMap()
 Actor* Scene::getActor(ID iid)
 {
 	return (*mActors)[iid];
+}
+
+PVEBattleScene* Scene::pve()
+{
+	return mPVEScene;
 }
 
 

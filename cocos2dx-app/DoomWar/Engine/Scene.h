@@ -24,6 +24,8 @@ public:
 	void leavePVPMap();
 
 	Actor* getActor(ID iid);
+
+	PVEBattleScene* pve();
 private:
 	void onEnterPVEBattle(Event* event);
 	void onBattleMoveResult(Event* event);

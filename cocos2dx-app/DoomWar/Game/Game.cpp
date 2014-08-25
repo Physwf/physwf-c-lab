@@ -57,7 +57,7 @@ void Game::onSkillSprite(CCObject* tex)
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
 		axeFrames->addObject(frame);
 	}
-	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(axeFrames),"ice");
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(axeFrames,0.02f),"ice");
 	onMapSpriteComplete(NULL);
 }
 

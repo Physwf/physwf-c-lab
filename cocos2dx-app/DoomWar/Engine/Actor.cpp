@@ -2,7 +2,7 @@
 #include <math.h>
 #include "ResourceManager.h"
 
-Actor::Actor(CCLayer* layer)
+Actor::Actor(CCSprite* layer)
 {
 	mLayer = layer;
 }
@@ -14,10 +14,6 @@ void Actor::setData(Unit* data)
 	mSprite->setPosition(ccp(mData->positon.x * GRID_SIZE + X_MARGIN, mData->positon.y * GRID_SIZE));
 	//mSprite->bloor()->setPercent((float)mData->health / (float)mData->maxHealth);
 	mLayer->addChild(mSprite);
-
-	mEffect = CCSprite::create();
-	mEffect->setAnchorPoint(ccp(0, 0));
-	mLayer->addChild(mEffect);
 }
 
 ID Actor::iid() const
@@ -59,7 +55,6 @@ void Actor::shake(float delta)
 
 void Actor::attack()
 {
-	CCAnimation* ice = ResourceManager::instance()->getAnimation("ice");
-	mEffect->runAction(CCAnimate::create(ice));
+	
 }
 

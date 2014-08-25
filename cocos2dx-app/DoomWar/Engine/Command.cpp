@@ -1,5 +1,6 @@
 #include "Command.h"
 #include "Engine.h"
+#include "ResourceManager.h"
 
 Command::Command()
 {
@@ -61,6 +62,7 @@ CommandAttck::CommandAttck()
 {
 	mDuration = 2.0;
 	mNow = 0;
+	mEffect = CCSprite::create();
 }
 
 CommandAttck::~CommandAttck()
@@ -84,5 +86,9 @@ CommandAttck* CommandAttck::create(AttackResult* result)
 	cmd->attcker = Engine::scene->getActor(result->attacker);
 	cmd->victim = Engine::scene->getActor(result->victim);
 	cmd->attcker->attack();
+	Engine::scene->pve()->layerEffect()->addChild(cmd->mEffect);
+	cmd->mEffect->setPosition(cmd->attcker->position());
+	CCAnimation* ice = ResourceManager::instance()->getAnimation("ice");
+	cmd->mEffect->runAction(CCAnimate::create(ice));
 	return cmd;
 }

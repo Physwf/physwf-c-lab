@@ -38,5 +38,5 @@ void ResourceManager::addAnimation(CCAnimation* animation, const char* name)
 
 CCAnimation* ResourceManager::getAnimation(const char* name)
 {
-	CCAnimationCache::sharedAnimationCache()->animationByName(name);
+	return	CCAnimationCache::sharedAnimationCache()->animationByName(name);
 }

@@ -15,6 +15,9 @@ public:
 	static PVEBattleScene* create();
 	virtual void update(float delta);
 	void addCommand(Command* cmd);
+
+	CCSprite* layerActor();
+	CCSprite* layerEffect();
 private:
 	PVEBattleScene();
 	~PVEBattleScene();
@@ -24,5 +27,8 @@ private:
 	PVEBattleUI* mPVEUI;
 
 	CommandSequence* mMainThread;
+
+	CCSprite* mLayerActor;
+	CCSprite* mLayerEffect;
 };
 #endif

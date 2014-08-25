@@ -40,5 +40,6 @@ private:
 	float mNow;
 	Actor* attcker;
 	Actor* victim;
+	CCSprite* mEffect;
 };
 #endif

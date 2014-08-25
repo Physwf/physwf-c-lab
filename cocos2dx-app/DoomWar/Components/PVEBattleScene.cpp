@@ -17,6 +17,11 @@ bool PVEBattleScene::init()
 	this->addChild(mTempMap);
 	//CCTMXTiledMap::create();
 
+	mLayerActor = CCSprite::create();
+	mLayerEffect = CCSprite::create();
+	this->addChild(mLayerActor);
+	this->addChild(mLayerEffect);
+
 	mPVEUI = PVEBattleUI::create();
 	this->addChild(mPVEUI);
 
@@ -59,6 +64,16 @@ void PVEBattleScene::update(float delta)
 void PVEBattleScene::addCommand(Command* cmd)
 {
 	mMainThread->push(cmd);
+}
+
+CCSprite* PVEBattleScene::layerActor()
+{
+	return mLayerActor;
+}
+
+CCSprite* PVEBattleScene::layerEffect()
+{
+	return mLayerEffect;
 }
 
 
