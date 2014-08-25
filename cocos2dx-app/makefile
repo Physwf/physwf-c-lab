@@ -56,6 +56,7 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Engine/Engine.obj\
 		$(DIR_DW)/Engine/Scene.obj\
 		$(DIR_DW)/Engine/Actor.obj\
+		$(DIR_DW)/Engine/Command.obj\
 		$(DIR_DW)/Game/Game.obj\
 		$(DIR_DW)/System/Battle.obj\
 		$(DIR_DW)/System/HeroPub.obj\
