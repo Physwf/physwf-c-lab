@@ -25,9 +25,12 @@ public:
 
 	ID iid() const;
 
+	const CCPoint& position();
 private:
 	CCLayer* mLayer;
+	CCSprite* mEffect;
 	ActorSprite* mSprite;
 	Unit* mData;
+	CCPoint mPosition;
 };
 #endif

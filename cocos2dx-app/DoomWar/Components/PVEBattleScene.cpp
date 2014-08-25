@@ -19,6 +19,11 @@ bool PVEBattleScene::init()
 
 	mPVEUI = PVEBattleUI::create();
 	this->addChild(mPVEUI);
+
+	mMainThread = CommandSequence::create();
+
+	scheduleUpdate();
+
 	return true;
 }
 
@@ -46,7 +51,14 @@ PVEBattleScene::~PVEBattleScene()
 
 }
 
+void PVEBattleScene::update(float delta)
+{
+	mMainThread->tick(delta);
+}
 
-
+void PVEBattleScene::addCommand(Command* cmd)
+{
+	mMainThread->push(cmd);
+}
 
 

@@ -51,7 +51,7 @@ void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
 	{
 		Unit* hero = heros + i;
 		(*mHeros)[hero->iid] = hero;
-		hero->positon.x = 3;
+		hero->positon.x = 2;
 		hero->positon.y = 2;
 	}
 	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW - 1;

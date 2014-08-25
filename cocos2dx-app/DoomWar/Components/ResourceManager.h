@@ -13,10 +13,12 @@ public:
 
 	CCSpriteFrame* getSpriteFrame(const char* name);
 	CCAnimationFrame* getAnimationFrame(const char* name);
+	
+	CCAnimation* getAnimation(const char* name);
 
 	void load(const char* pszFile, CCObject* target, SEL_CallFuncO selector);
 	void addSpriteFramePack(const char* plist, CCTexture2D *pobTexture);
-
+	void addAnimation(CCAnimation* animation, const char* name);
 private:
 	ResourceManager();
 	~ResourceManager();

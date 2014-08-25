@@ -30,3 +30,13 @@ CCSpriteFrame* ResourceManager::getSpriteFrame(const char* name)
 {
 	return CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(name);
 }
+
+void ResourceManager::addAnimation(CCAnimation* animation, const char* name)
+{
+	CCAnimationCache::sharedAnimationCache()->addAnimation(animation,name);
+}
+
+CCAnimation* ResourceManager::getAnimation(const char* name)
+{
+	CCAnimationCache::sharedAnimationCache()->animationByName(name);
+}

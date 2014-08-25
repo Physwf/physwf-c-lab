@@ -33,7 +33,5 @@ private:
 
 	DWLoadingScene* mLoading;
 	PVEBattleScene* mPVEScene;
-	
-	CommandSequence* mMainThread;
 };
 #endif

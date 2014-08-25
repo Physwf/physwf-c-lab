@@ -1,7 +1,17 @@
 #include "Command.h"
 #include "Engine.h"
 
-CommandSequence::CommandSequence() :mCurCmd(NULL)
+Command::Command()
+{
+
+}
+
+Command::~Command()
+{
+
+}
+
+CommandSequence::CommandSequence() : mCurCmd(NULL)
 {
 
 }
@@ -30,10 +40,11 @@ bool CommandSequence::tick(float delta)
 			else
 			{
 				mCurCmd = NULL;
+				return true;
 			}
 		}
 	}
-		
+	return false;
 }
 
 CommandSequence* CommandSequence::create()
@@ -49,6 +60,7 @@ CommandAttck
 CommandAttck::CommandAttck()
 {
 	mDuration = 2.0;
+	mNow = 0;
 }
 
 CommandAttck::~CommandAttck()
@@ -71,6 +83,6 @@ CommandAttck* CommandAttck::create(AttackResult* result)
 	CommandAttck* cmd = new CommandAttck();
 	cmd->attcker = Engine::scene->getActor(result->attacker);
 	cmd->victim = Engine::scene->getActor(result->victim);
-	cmd->victim->updateHealth(result->value);
+	cmd->attcker->attack();
 	return cmd;
 }

@@ -9,9 +9,8 @@ class Command
 {
 public:
 	Command();
-
+	~Command();
 	virtual bool tick(float delta) = 0;
-
 };
 
 class CommandSequence : public Command

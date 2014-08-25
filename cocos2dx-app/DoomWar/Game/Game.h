@@ -20,6 +20,7 @@ private:
 
 	void onUnitSpriteComplete(CCObject* tex);
 	void onMapSpriteComplete(CCObject* tex);
+	void onSkillSprite(CCObject* tex);
 	void onAllComplete();
 
 private:

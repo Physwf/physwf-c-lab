@@ -43,7 +43,21 @@ void Game::onUnitSpriteComplete(CCObject* tex)
 {
 	CCTexture2D* texUnits = (CCTexture2D*)tex;
 	ResourceManager::instance()->addSpriteFramePack("./Data/units.plist", texUnits);
-	//ResourceManager::instance()->load("map.png", this, callfuncO_selector(onMapSpriteComplete));
+	ResourceManager::instance()->load("./Data/ice.png", this, callfuncO_selector(Game::onSkillSprite));
+}
+
+void Game::onSkillSprite(CCObject* tex)
+{
+	CCTexture2D* axeUnits = (CCTexture2D*)tex;
+	ResourceManager::instance()->addSpriteFramePack("./Data/ice.plist", axeUnits);
+	CCArray *axeFrames = CCArray::create();
+	for (int i = 1; i < 28; i++)
+	{
+		CCString* name = CCString::createWithFormat("ice%04d.png", i);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
+		axeFrames->addObject(frame);
+	}
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(axeFrames),"ice");
 	onMapSpriteComplete(NULL);
 }
 

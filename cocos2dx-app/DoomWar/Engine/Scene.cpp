@@ -6,7 +6,7 @@
 
 Scene::Scene() :mLoading(NULL), mPVEScene(NULL)
 {
-	mMainThread = CommandSequence::create();
+	
 }
 
 Scene::~Scene()
@@ -85,10 +85,10 @@ void Scene::onBattleMoveResult(Event *event)
 void Scene::onBattleAttakResult(Event* event)
 {
 	AttackResult* results = (AttackResult*)event->data;
-	//while (results)
+	//while (results->attacker)
 	{
 		CommandAttck* attack = CommandAttck::create(results);
-		mMainThread->push(attack);
+		mPVEScene->addCommand(attack);
 		results++;
 	}
 }
