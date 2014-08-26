@@ -25,11 +25,11 @@ public:
 
 	ID iid() const;
 
-	const CCPoint& position();
+	CCPoint* position();
 private:
 	CCSprite* mLayer;
 	ActorSprite* mSprite;
 	Unit* mData;
-	CCPoint mPosition;
+	CCPoint* mPosition;
 };
 #endif

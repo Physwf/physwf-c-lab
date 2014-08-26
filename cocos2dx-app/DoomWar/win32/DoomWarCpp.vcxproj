@@ -135,6 +135,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Classes\DoomWarScene.cpp" />
     <ClCompile Include="..\Components\ActorSprite.cpp" />
     <ClCompile Include="..\Components\DWLoadingScene.cpp" />
+    <ClCompile Include="..\Components\Effect.cpp" />
     <ClCompile Include="..\Components\EventDispatcher.cpp" />
     <ClCompile Include="..\Components\EventDispatcher.h" />
     <ClCompile Include="..\Components\Heap.cpp" />
@@ -162,6 +163,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Components\ActorSprite.h" />
     <ClInclude Include="..\Components\DWLoadingScene.h" />
     <ClInclude Include="..\Components\dwtype.h" />
+    <ClInclude Include="..\Components\Effect.h" />
     <ClInclude Include="..\Components\Heap.h" />
     <ClInclude Include="..\Components\MapSprite.h" />
     <ClInclude Include="..\Components\PVEBattleScene.h" />

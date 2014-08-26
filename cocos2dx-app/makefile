@@ -52,6 +52,7 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/DWLoadingScene.obj\
 		$(DIR_DW)/Components/PVEBattleScene.obj\
 		$(DIR_DW)/Components/PVEBattleUI.obj\
+		$(DIR_DW)/Components/Effect.obj\
 		$(DIR_DW)/Config/Config.obj\
 		$(DIR_DW)/Engine/Engine.obj\
 		$(DIR_DW)/Engine/Scene.obj\

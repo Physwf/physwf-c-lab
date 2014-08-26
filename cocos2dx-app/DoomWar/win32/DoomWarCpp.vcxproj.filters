@@ -96,6 +96,9 @@
     <ClCompile Include="..\Engine\Command.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\Components\Effect.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\Engine\Command.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Effect.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

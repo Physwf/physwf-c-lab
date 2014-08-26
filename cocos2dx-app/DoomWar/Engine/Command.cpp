@@ -25,6 +25,13 @@ CommandSequence::~CommandSequence()
 void CommandSequence::push(Command* cmd)
 {
 	mQueue.push_back(cmd);
+
+	if (mCurCmd == NULL)
+	{
+		mCurCmd = mQueue.front();
+		mCurCmd->trigger();
+		mQueue.pop_front();
+	}
 }
 
 bool CommandSequence::tick(float delta)
@@ -36,6 +43,7 @@ bool CommandSequence::tick(float delta)
 			if (mQueue.size())
 			{
 				mCurCmd = mQueue.front();
+				mCurCmd->trigger();
 				mQueue.pop_front();
 			}
 			else
@@ -46,6 +54,11 @@ bool CommandSequence::tick(float delta)
 		}
 	}
 	return false;
+}
+
+void CommandSequence::trigger()
+{
+
 }
 
 CommandSequence* CommandSequence::create()
@@ -62,7 +75,6 @@ CommandAttck::CommandAttck()
 {
 	mDuration = 2.0;
 	mNow = 0;
-	mEffect = CCSprite::create();
 }
 
 CommandAttck::~CommandAttck()
@@ -73,22 +85,21 @@ CommandAttck::~CommandAttck()
 bool CommandAttck::tick(float delta)
 {
 	mNow += delta;
-	if (mNow>=mDuration)
+	if (mEffect->tick(delta))
 	{
 		return true;
 	}
 	return false;
 }
 
+void CommandAttck::trigger()
+{
+	mEffect->fire();
+}
+
 CommandAttck* CommandAttck::create(AttackResult* result)
 {
 	CommandAttck* cmd = new CommandAttck();
-	cmd->attcker = Engine::scene->getActor(result->attacker);
-	cmd->victim = Engine::scene->getActor(result->victim);
-	cmd->attcker->attack();
-	Engine::scene->pve()->layerEffect()->addChild(cmd->mEffect);
-	cmd->mEffect->setPosition(cmd->attcker->position());
-	CCAnimation* ice = ResourceManager::instance()->getAnimation("ice");
-	cmd->mEffect->runAction(CCAnimate::create(ice));
+	cmd->mEffect = BulletEffect::create(0, result->attacker, result->victim);
 	return cmd;
 }
