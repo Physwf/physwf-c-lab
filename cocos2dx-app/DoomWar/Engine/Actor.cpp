@@ -24,8 +24,8 @@ ID Actor::iid() const
 
 void Actor::updatePosition()
 {
-	mPosition->x = mData->positon.x * GRID_SIZE + X_MARGIN;
-	mPosition->y = mData->positon.y * GRID_SIZE;
+	mPosition->x = mData->positon.x * GRID_SIZE + X_MARGIN + GRID_SIZE/2;
+	mPosition->y = mData->positon.y * GRID_SIZE + GRID_SIZE / 2;
 	mSprite->setPosition(*mPosition);
 }
 

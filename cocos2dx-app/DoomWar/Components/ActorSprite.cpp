@@ -27,9 +27,10 @@ ActorSprite* ActorSprite::create(ID cid)
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(strcid);
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
-		pActor->mBody->setAnchorPoint(ccp(0,0));
+		//pActor->mBody->setAnchorPoint(ccp(0,0));
 		pActor->mBloodBar = BloodBar::create(1);
-		pActor->mBloodBar->setAnchorPoint(ccp(0, 0));
+		//pActor->mBloodBar->setAnchorPoint(ccp(0, 0));
+		pActor->mBloodBar->setPosition(ccp(0, -pActor->mBody->getContentSize().height / 2));
 		pActor->addChild(pActor->mBloodBar);
 		//blood bar
 		//armor

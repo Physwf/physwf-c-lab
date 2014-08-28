@@ -53,13 +53,14 @@ Unit* MonsterConfig::create(ID cid)
 
 	u->attackRange.numGrids = 8;
 	int n = 0;
-	for (int i = -1; i < 1; i++)
+	for (int i = -1; i <= 1; i++)
 	{
-		for (int j = -1; j < 1; j++)
+		for (int j = -1; j <= 1; j++)
 		{
-			if (i == j) continue;
-			u->attackRange.offsets[n++].x = i;
-			u->attackRange.offsets[n++].y = j;
+			if (i == 0 && j == 0) continue;
+			u->attackRange.offsets[n].x = i;
+			u->attackRange.offsets[n].y = j;
+			n++;
 		}
 	}
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;

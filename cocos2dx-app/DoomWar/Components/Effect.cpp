@@ -19,33 +19,36 @@ bool BulletEffect::tick(float delta)
 	float dist = pos.getDistance(*mTarget);
 	if (dist <= mSpeed)
 	{
-		mLayer->removeChild(this,false);
+		Engine::scene->pve()->layerEffect()->removeChild(this, false);
 		return true;
 	}
 	mDir.x = (mTarget->x - pos.x) / dist;
 	mDir.y = (mTarget->y - pos.y) / dist;
-	float angle = -asin(mDir.y)*180.0 / 3.14 ;
-	if (mDir.x < 0 && mDir.y > 0)
-	{
-		angle -= 90.0;
-	}
-	else if(mDir.x < 0 && mDir.y < 0)
+	float angle = asin(abs(mDir.y))*180.0 / 3.14 ;
+	if (mDir.x <= 0 && -mDir.y > 0)//2
 	{
 		angle += 90.0;
+		OutputDebugString(L"90\n");
 	}
-	else if (mDir.x > 0 && mDir.y < 0)
+	else if(mDir.x < 0 && -mDir.y <= 0)//3
 	{
-		angle -= 270.0;
+		angle += 180.0;
+		OutputDebugString(L"180\n");
+	}
+	else if (mDir.x > 0 && -mDir.y < 0)//4
+	{
+		angle += 270.0;
+		OutputDebugString(L"270\n");
 	}
 	setRotation(angle + 90.0);
 	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
-	OutputDebugString(L"123\n");
+	
 	return false;
 }
 
 void BulletEffect::fire()
 {
-	mLayer->addChild(this);
+	Engine::scene->pve()->layerEffect()->addChild(this);
 }
 
 void BulletEffect::onEnter()
@@ -88,7 +91,7 @@ HackEffect::~HackEffect()
 
 bool HackEffect::tick(float delta)
 {
-
+	return false;
 }
 
 void HackEffect::fire()

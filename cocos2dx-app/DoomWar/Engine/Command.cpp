@@ -38,7 +38,7 @@ bool CommandSequence::tick(float delta)
 {
 	if (mCurCmd)
 	{
-		while (mCurCmd->tick(delta))
+		if (mCurCmd->tick(delta))
 		{
 			if (mQueue.size())
 			{

@@ -85,7 +85,7 @@ void Scene::onBattleMoveResult(Event *event)
 void Scene::onBattleAttakResult(Event* event)
 {
 	AttackResult* results = (AttackResult*)event->data;
-	//while (results->attacker)
+	while (results->attacker)
 	{
 		CommandAttck* attack = CommandAttck::create(results);
 		mPVEScene->addCommand(attack);
