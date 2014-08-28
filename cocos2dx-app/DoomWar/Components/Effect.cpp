@@ -61,6 +61,8 @@ void BulletEffect::onExit()
 {
 	CCSprite::onExit();
 	stopAction(mAction);
+	mAction->release();
+	release();
 }
 
 BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
@@ -70,10 +72,12 @@ BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 	if (effect && effect->init())
 	{
 		effect->autorelease();
+		effect->retain();
 		effect->mTarget = Engine::scene->getActor(victim)->position();
 		effect->setPosition(*Engine::scene->getActor(attacker)->position());
 		CCAnimation* anim = ResourceManager::instance()->getAnimation("ice");
 		effect->mAction = CCRepeatForever::create(CCAnimate::create(anim));
+		effect->mAction->retain();
 		return effect;
 	}
 	return NULL;
