@@ -200,8 +200,8 @@ void PVEBattle::calculateRoundResult()
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
 	for (it; it!=mHeros->end(); it++)
 	{
-		UnitWraper wraper = UnitWraper(it->second);
-		heros.Enqueue(&wraper);
+		UnitWraper *wraper = new UnitWraper(it->second);
+		heros.Enqueue(wraper);
 	}
 	//AttackResult* results = new AttackResult[MAX_SCREEN_HEROS];
 	AttackResult results[MAX_SCREEN_HEROS+MAX_SCREEN_ENYMYS] = { 0 };
@@ -210,6 +210,7 @@ void PVEBattle::calculateRoundResult()
 	{
 		UnitWraper *wraper = (UnitWraper*)heros.Dequeue();
 		Unit* hero = wraper->unit();
+		delete wraper;
 		if (calculateHeroAttackResult(hero, &results[count])) count++;
 	}
 
@@ -218,13 +219,14 @@ void PVEBattle::calculateRoundResult()
 	it = mEnemys->begin();
 	for (it; it != mEnemys->end(); it++)
 	{
-		UnitWraper wraper = UnitWraper(it->second);
-		enemys.Enqueue(&wraper);
+		UnitWraper *wraper = new UnitWraper(it->second);
+		enemys.Enqueue(wraper);
 	}
 	while (enemys.size())
 	{
 		UnitWraper *wraper = (UnitWraper*)enemys.Dequeue();
 		Unit* enemy = wraper->unit();
+		delete wraper;
 		if (calculateEnemyAttackResult(enemy, &results[count])) count++;
 	}
 	if (count)
