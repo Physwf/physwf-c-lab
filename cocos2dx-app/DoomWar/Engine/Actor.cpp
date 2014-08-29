@@ -22,6 +22,11 @@ ID Actor::iid() const
 	return mData->iid;
 }
 
+int Actor::health() const
+{
+	return mData->health;
+}
+
 void Actor::updatePosition()
 {
 	mPosition->x = mData->positon.x * GRID_SIZE + X_MARGIN + GRID_SIZE/2;
@@ -34,9 +39,9 @@ CCPoint* Actor::position()
 	return mPosition;
 }
 
-void Actor::updateHealth(int delta)
+void Actor::updateHealth(int health)
 {
-	mSprite->bloor()->setPercent((float)mData->health / (float)mData->maxHealth);
+	mSprite->bloor()->setPercent((float)health / (float)mData->maxHealth);
 }
 
 void Actor::shake(float delta)

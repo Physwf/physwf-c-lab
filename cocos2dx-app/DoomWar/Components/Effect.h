@@ -46,5 +46,7 @@ private:
 	~HackEffect();
 private:
 	CCAction* mAction;
+	CCPoint mDir;
+	CCPoint* mTarget;
 };
 #endif

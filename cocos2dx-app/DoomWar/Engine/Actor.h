@@ -17,13 +17,14 @@ public:
 	void setData(Unit* data);
 
 	void updatePosition();
-	void updateHealth(int delta);
+	void updateHealth(int health);
 	void moveTo();
 
 	void attack();
 	void shake(float delta);
 
 	ID iid() const;
+	int health() const;
 
 	CCPoint* position();
 private:

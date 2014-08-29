@@ -43,21 +43,58 @@ void Game::onUnitSpriteComplete(CCObject* tex)
 {
 	CCTexture2D* texUnits = (CCTexture2D*)tex;
 	ResourceManager::instance()->addSpriteFramePack("./Data/units.plist", texUnits);
-	ResourceManager::instance()->load("./Data/ice.png", this, callfuncO_selector(Game::onSkillSprite));
+	ResourceManager::instance()->load("./Data/skills.png", this, callfuncO_selector(Game::onSkillSprite));
 }
 
 void Game::onSkillSprite(CCObject* tex)
 {
-	CCTexture2D* axeUnits = (CCTexture2D*)tex;
-	ResourceManager::instance()->addSpriteFramePack("./Data/ice.plist", axeUnits);
-	CCArray *axeFrames = CCArray::create();
+	CCTexture2D* skills = (CCTexture2D*)tex;
+	ResourceManager::instance()->addSpriteFramePack("./Data/skills.plist", skills);
+	//ice
+	CCArray *frames = CCArray::create();
 	for (int i = 1; i < 28; i++)
 	{
 		CCString* name = CCString::createWithFormat("ice%04d.png", i);
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
-		axeFrames->addObject(frame);
+		frames->addObject(frame);
 	}
-	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(axeFrames,0.02f),"ice");
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "ice");
+	//axe
+	frames->removeAllObjects();
+	for (int i = 2; i < 19; i++)
+	{
+		CCString* name = CCString::createWithFormat("fuzi%04d.png", i);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
+		frames->addObject(frame);
+	}
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "axe");
+	//heal
+	frames->removeAllObjects();
+	for (int i = 1; i < 46; i++)
+	{
+		CCString* name = CCString::createWithFormat("heal%04d.png", i);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
+		frames->addObject(frame);
+	}
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "heal");
+	//dagger
+	frames->removeAllObjects();
+	for (int i = 1; i < 7; i++)
+	{
+		CCString* name = CCString::createWithFormat("dagger%04d.png", i);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
+		frames->addObject(frame);
+	}
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "dagger");
+	//arrow
+	frames->removeAllObjects();
+	for (int i = 1; i < 7; i++)
+	{
+		CCString* name = CCString::createWithFormat("arrow%04d.png", i);
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
+		frames->addObject(frame);
+	}
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "arrow");
 	onMapSpriteComplete(NULL);
 }
 

@@ -22,15 +22,27 @@ bool BulletEffect::tick(float delta)
 		Engine::scene->pve()->layerEffect()->removeChild(this, false);
 		return true;
 	}
+	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
+	
+	return false;
+}
+
+void BulletEffect::fire()
+{
+	mLayer->addChild(this);
+
+	CCPoint pos = getPosition();
+	float dist = pos.getDistance(*mTarget);
+
 	mDir.x = (mTarget->x - pos.x) / dist;
 	mDir.y = (mTarget->y - pos.y) / dist;
-	float angle = asin(abs(mDir.y))*180.0 / 3.14 ;
+	float angle = asin(abs(mDir.y))*180.0 / 3.14;
 	if (mDir.x <= 0 && -mDir.y > 0)//2
 	{
 		angle += 90.0;
 		OutputDebugString(L"90\n");
 	}
-	else if(mDir.x < 0 && -mDir.y <= 0)//3
+	else if (mDir.x < 0 && -mDir.y <= 0)//3
 	{
 		angle += 180.0;
 		OutputDebugString(L"180\n");
@@ -41,14 +53,6 @@ bool BulletEffect::tick(float delta)
 		OutputDebugString(L"270\n");
 	}
 	setRotation(angle + 90.0);
-	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
-	
-	return false;
-}
-
-void BulletEffect::fire()
-{
-	Engine::scene->pve()->layerEffect()->addChild(this);
 }
 
 void BulletEffect::onEnter()
@@ -95,12 +99,35 @@ HackEffect::~HackEffect()
 
 bool HackEffect::tick(float delta)
 {
-	return false;
+	return mAction->isDone();
 }
 
 void HackEffect::fire()
 {
 	mLayer->addChild(this);
+
+	CCPoint pos = getPosition();
+	float dist = pos.getDistance(*mTarget);
+
+	mDir.x = (mTarget->x - pos.x) / dist;
+	mDir.y = (mTarget->y - pos.y) / dist;
+	float angle = asin(abs(mDir.y))*180.0 / 3.14;
+	if (mDir.x <= 0 && -mDir.y > 0)//2
+	{
+		angle += 90.0;
+		OutputDebugString(L"90\n");
+	}
+	else if (mDir.x < 0 && -mDir.y <= 0)//3
+	{
+		angle += 180.0;
+		OutputDebugString(L"180\n");
+	}
+	else if (mDir.x > 0 && -mDir.y < 0)//4
+	{
+		angle += 270.0;
+		OutputDebugString(L"270\n");
+	}
+	setRotation(angle + 90.0);
 }
 
 void HackEffect::onEnter()
@@ -113,6 +140,8 @@ void HackEffect::onExit()
 {
 	CCSprite::onEnter();
 	stopAction(mAction);
+	mAction->release();
+	release();
 }
 
 HackEffect* HackEffect::create(ID cid, ID attacker, ID victim)
@@ -122,8 +151,12 @@ HackEffect* HackEffect::create(ID cid, ID attacker, ID victim)
 	if (effect && effect->init())
 	{
 		effect->autorelease();
+		effect->retain();
+		effect->setPosition(*Engine::scene->getActor(attacker)->position());
+		effect->mTarget = Engine::scene->getActor(victim)->position();
 		CCAnimation* anim = ResourceManager::instance()->getAnimation("axe");
 		effect->mAction = CCAnimate::create(anim);
+		effect->mAction->retain();
 		return effect;
 	}
 	return NULL;

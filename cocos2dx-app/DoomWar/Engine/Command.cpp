@@ -100,6 +100,50 @@ void CommandAttck::trigger()
 CommandAttck* CommandAttck::create(AttackResult* result)
 {
 	CommandAttck* cmd = new CommandAttck();
-	cmd->mEffect = BulletEffect::create(0, result->attacker, result->victim);
+	cmd->mEffect = HackEffect::create(0, result->attacker, result->victim);
 	return cmd;
 }
+
+/*CommandProgress*/
+
+CommandProgress::CommandProgress(ID actor, int delta)
+{
+	mActor = Engine::scene->getActor(actor);
+	mHealth = mActor->health();
+	mDelta = delta;
+}
+
+CommandProgress::~CommandProgress()
+{
+
+}
+
+bool CommandProgress::tick(float delta)
+{
+	mCurrent += mDelta / 10;
+	if (mDelta >= 0)
+	{
+		mCurrent = mCurrent >= mHealth ? mHealth : mCurrent;
+	}
+	else
+	{
+		mCurrent = mCurrent < mHealth ? mHealth : mCurrent;
+	}
+
+	mActor->updateHealth(mCurrent);
+
+	if (mCurrent == mHealth) return true;
+	return false;
+}
+
+void CommandProgress::trigger()
+{
+	mCurrent = mHealth - mDelta;
+}
+
+CommandProgress* CommandProgress::create(ID actor, int delta)
+{
+	CommandProgress* progress = new CommandProgress(actor,delta);
+	return progress;
+}
+

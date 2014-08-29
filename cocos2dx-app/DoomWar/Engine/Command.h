@@ -44,4 +44,20 @@ private:
 	float mNow;
 	Effect* mEffect;
 };
+
+class CommandProgress : public Command
+{
+private:
+	int mHealth;
+	int mDelta;
+	int mCurrent;
+	Actor* mActor;
+public:
+	static CommandProgress* create(ID actor, int delta);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandProgress(ID actor, int delta);
+	~CommandProgress();
+};
 #endif
