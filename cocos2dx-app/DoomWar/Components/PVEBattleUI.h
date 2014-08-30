@@ -2,11 +2,15 @@
 #define _PVEBATTLE_UI_H
 
 #include "cocos2d.h"
+#include "cocos-ext.h"
+
 using namespace cocos2d;
+using namespace cocos2d::extension;
+using namespace ui;
 
 class PVEUIController;
 
-class PVEBattleUI : public CCSprite
+class PVEBattleUI : public TouchGroup
 {
 public:
 	static PVEBattleUI* create();
@@ -16,6 +20,8 @@ public:
 private:
 	PVEBattleUI();
 	~PVEBattleUI();
+
+	void onForwardTouched(CCObject* object, TouchEventType type);
 private:
 	CCSprite* mFrame;
 	PVEUIController* mController;

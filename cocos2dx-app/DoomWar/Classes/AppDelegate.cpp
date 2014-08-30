@@ -1,5 +1,4 @@
 #include "AppDelegate.h"
-#include "DoomWarScene.h"
 
 USING_NS_CC;
 
@@ -19,9 +18,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     CCEGLView* pEGLView = CCEGLView::sharedOpenGLView();
 
     pDirector->setOpenGLView(pEGLView);
-	
+	pEGLView->setDesignResolutionSize(640, 960, kResolutionExactFit);
     // turn on display FPS
-    pDirector->setDisplayStats(true);
+   // pDirector->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);

@@ -30,9 +30,6 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\DoomWarScene.cpp">
-      <Filter>Classes</Filter>
-    </ClCompile>
     <ClCompile Include="..\System\Battle.h">
       <Filter>System</Filter>
     </ClCompile>
@@ -107,9 +104,6 @@
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\DoomWarScene.h">
-      <Filter>Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\System\Unit.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -166,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="..\Components\Effect.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppMacros.h">
+      <Filter>Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

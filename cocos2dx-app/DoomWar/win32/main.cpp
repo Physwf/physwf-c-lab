@@ -12,10 +12,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+	
     // create the application instance
     AppDelegate app;
-    CCEGLView* eglView = CCEGLView::sharedOpenGLView();
-    eglView->setViewName("HelloCpp");
+	CCEGLView* eglView = CCEGLView::sharedOpenGLView();
+	eglView->setViewName("HelloCpp");
     eglView->setFrameSize(640, 960);
 	eglView->setFrameZoomFactor(0.5);
     return CCApplication::sharedApplication()->run();

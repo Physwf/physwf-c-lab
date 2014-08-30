@@ -23,8 +23,11 @@ bool PVEBattleScene::init()
 	this->addChild(mLayerEffect);
 
 	mPVEUI = PVEBattleUI::create();
+	//TouchGroup * ul = TouchGroup::create();
+	//ul->addWidget(GUIReader::shareReader()->widgetFromJsonFile("./Data/UIPVE_1/UIPVE_1.ExportJson"));
 	this->addChild(mPVEUI);
-
+	mPVEUI->setTouchEnabled(true);
+	//ul->setPosition(ccp(0, 0));
 	mMainThread = CommandSequence::create();
 
 	scheduleUpdate();
@@ -39,7 +42,7 @@ PVEBattleScene* PVEBattleScene::create()
 	if (pBattle && pBattle->init())
 	{
 		pBattle->autorelease();
-		pBattle->setTouchEnabled(true);
+		//pBattle->setTouchEnabled(true);
 		pBattle->mScene->addChild(pBattle);
 		return pBattle;
 	}

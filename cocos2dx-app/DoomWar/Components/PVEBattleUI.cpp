@@ -1,4 +1,5 @@
 #include "PVEBattleUI.h"
+#include "System.h"
 
 PVEBattleUI::PVEBattleUI()
 {
@@ -13,10 +14,11 @@ PVEBattleUI::~PVEBattleUI()
 PVEBattleUI* PVEBattleUI::create()
 {
 	PVEBattleUI* pUi = new PVEBattleUI();
-	if (pUi && pUi->initWithFile("./Data/UIPVEBattle.png"))
+	if (pUi && pUi->init())
 	{
 		pUi->autorelease();
-		pUi->setAnchorPoint(ccp(0, 0));
+		pUi->addWidget(GUIReader::shareReader()->widgetFromJsonFile("./Data/UIPVE_1/UIPVE_1.ExportJson"));
+		//pUi->setAnchorPoint(ccp(-320, -480));
 		return pUi;
 	}
 	return NULL;
@@ -24,18 +26,27 @@ PVEBattleUI* PVEBattleUI::create()
 
 void PVEBattleUI::onEnter()
 {
+	TouchGroup::onEnter();
 	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(mController,0,false);
-	CCSprite::onEnter();
+	getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onForwardTouched));
 }
 
 void PVEBattleUI::onExit()
 {
+	TouchGroup::onExit();
 	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(mController);
-	CCSprite::onExit();
+}
+
+void PVEBattleUI::onForwardTouched(CCObject* object, TouchEventType type)
+{
+	if (type == TOUCH_EVENT_BEGAN)
+	{
+		System::pve->step();
+	}
 }
 
 /*PVEUIController*/
-#include "System.h"
+
 
 PVEUIController::PVEUIController(PVEBattleUI* view)
 {
@@ -55,7 +66,7 @@ PVEUIController* PVEUIController::create(PVEBattleUI* view)
 
 bool PVEUIController::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
-	System::pve->step();
+	
 	return true;
 }
 
