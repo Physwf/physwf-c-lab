@@ -58,7 +58,7 @@
               "sizeType": 0,
               "tag": 24,
               "touchAble": false,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 34,
               "x": 0,
@@ -71,7 +71,7 @@
               "fileNameData": {
                 "path": "left-mask.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "scale9Enable": false,
               "scale9Height": 1,
@@ -112,7 +112,7 @@
               "sizeType": 0,
               "tag": 25,
               "touchAble": false,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 34,
               "x": 640,
@@ -125,7 +125,7 @@
               "fileNameData": {
                 "path": "right-mask.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "scale9Enable": false,
               "scale9Height": 1,
@@ -166,7 +166,7 @@
               "sizeType": 0,
               "tag": 26,
               "touchAble": false,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 1,
               "x": 0,
@@ -179,7 +179,7 @@
               "fileNameData": {
                 "path": "up-mask.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "scale9Enable": false,
               "scale9Height": 88,
@@ -220,7 +220,7 @@
               "sizeType": 0,
               "tag": 27,
               "touchAble": false,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 1,
               "x": 0,
@@ -233,7 +233,7 @@
               "fileNameData": {
                 "path": "down-mask.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "scale9Enable": false,
               "scale9Height": 135,
@@ -274,7 +274,7 @@
               "sizeType": 0,
               "tag": 29,
               "touchAble": false,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 640,
               "x": 0,
@@ -287,7 +287,7 @@
               "fileNameData": {
                 "path": "frame.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "scale9Enable": false,
               "scale9Height": 113,
@@ -325,7 +325,7 @@
           "sizeType": 0,
           "tag": 23,
           "touchAble": true,
-          "useMergedTexture": false,
+          "useMergedTexture": true,
           "visible": true,
           "width": 640,
           "x": 0,
@@ -393,7 +393,7 @@
               "sizeType": 0,
               "tag": 30,
               "touchAble": true,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 108,
               "x": 70,
@@ -415,7 +415,7 @@
               "normalData": {
                 "path": "left-button.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "pressed": null,
               "pressedData": {
@@ -466,7 +466,7 @@
               "sizeType": 0,
               "tag": 31,
               "touchAble": true,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 142,
               "x": 232,
@@ -488,7 +488,7 @@
               "normalData": {
                 "path": "foword-button.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "pressed": null,
               "pressedData": {
@@ -539,7 +539,7 @@
               "sizeType": 0,
               "tag": 32,
               "touchAble": true,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 143,
               "x": 405,
@@ -561,7 +561,7 @@
               "normalData": {
                 "path": "backward.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "pressed": null,
               "pressedData": {
@@ -612,7 +612,7 @@
               "sizeType": 0,
               "tag": 33,
               "touchAble": true,
-              "useMergedTexture": false,
+              "useMergedTexture": true,
               "visible": true,
               "width": 107,
               "x": 568,
@@ -634,7 +634,7 @@
               "normalData": {
                 "path": "right-button.png",
                 "plistFile": "",
-                "resourceType": 0
+                "resourceType": 1
               },
               "pressed": null,
               "pressedData": {
@@ -682,7 +682,7 @@
           "sizeType": 0,
           "tag": 28,
           "touchAble": true,
-          "useMergedTexture": false,
+          "useMergedTexture": true,
           "visible": true,
           "width": 640,
           "x": 0,
@@ -743,7 +743,7 @@
       "sizeType": 0,
       "tag": 22,
       "touchAble": true,
-      "useMergedTexture": false,
+      "useMergedTexture": true,
       "visible": true,
       "width": 640,
       "x": 0,
