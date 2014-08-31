@@ -106,10 +106,8 @@ CommandAttck* CommandAttck::create(AttackResult* result)
 
 /*CommandProgress*/
 
-CommandProgress::CommandProgress(ID actor, int delta)
+CommandProgress::CommandProgress(int delta)
 {
-	mActor = Engine::scene->getActor(actor);
-	mHealth = mActor->health();
 	mDelta = delta;
 }
 
@@ -120,34 +118,28 @@ CommandProgress::~CommandProgress()
 
 bool CommandProgress::tick(float delta)
 {
-	mCurrent += mDelta / 10;
-	if (mDelta >= 0)
-	{
-		mCurrent = mCurrent >= mHealth ? mHealth : mCurrent;
-	}
-	else
-	{
-		mCurrent = mCurrent < mHealth ? mHealth : mCurrent;
-	}
+	mCurrent += mDelta/10.0;
 
-	mActor->updateHealth(mCurrent);
+	(mObject->*mOnProgressDelta)(mDelta / 10.0);
 
-	if (mCurrent == mHealth) return true;
+	if (mCurrent == mDelta) return true;
 	return false;
 }
 
 void CommandProgress::trigger()
 {
-	mCurrent = mHealth - mDelta;
+	mCurrent = 0;
 }
 
-CommandProgress* CommandProgress::create(ID actor, int delta)
+CommandProgress* CommandProgress::create(int delta, DWObject* object, OnProgressDelta onProgressDelta)
 {
-	CommandProgress* progress = new CommandProgress(actor,delta);
+	CommandProgress* progress = new CommandProgress(delta);
+	progress->mObject = object;
+	progress->mOnProgressDelta = onProgressDelta;
 	return progress;
 }
 
-
+/*CommandMove*/
 CommandMove::CommandMove(Actor* actor)
 {
 	mActor = actor;
@@ -178,7 +170,7 @@ CommandMove* CommandMove::create(Actor* actor)
 }
 
 
-
+/*CommandParallel*/
 CommandParallel* CommandParallel::create()
 {
 	return new CommandParallel();

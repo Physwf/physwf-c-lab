@@ -17,6 +17,7 @@ public:
 	static BloodBar* create(float percent);
 
 	void setPercent(float percent);
+	void setDelta(float delta);
 private:
 	BloodBar(float percent);
 private:

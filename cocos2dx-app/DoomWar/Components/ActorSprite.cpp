@@ -28,7 +28,7 @@ ActorSprite* ActorSprite::create(ID cid)
 		pActor->mBody = CCSprite::createWithSpriteFrame(frame);
 		pActor->addChild(pActor->mBody);
 		//pActor->mBody->setAnchorPoint(ccp(0,0));
-		pActor->mBloodBar = BloodBar::create(1);
+		pActor->mBloodBar = BloodBar::create(100);
 		//pActor->mBloodBar->setAnchorPoint(ccp(0, 0));
 		pActor->mBloodBar->setPosition(ccp(0, -pActor->mBody->getContentSize().height / 2));
 		pActor->addChild(pActor->mBloodBar);
@@ -98,22 +98,25 @@ BloodBar* BloodBar::create(float percent)
 
 void BloodBar::setPercent(float percent)
 {
-	percent = percent<0 ? 0 : percent;
-	unsigned int prog = (percent) * 100.0;
-	float n = (float)prog / 100.0;
-	float p = n - floor(n);
-	unsigned int g = (float)0xFF * percent;
-	unsigned int r = (float)0xFF * (1.0 - percent);
+	mPercent = (percent<0.0f) ? 0.0f : (percent>100.0f ? 100.0f : percent);
+	float n = mPercent / 100.0f;
+	unsigned int g = (float)0xFF * n;
+	unsigned int r = (float)0xFF * (1.0 - n);
 	unsigned int color = (g << 8) + (r);
 	std::fill_n(mPixels, 96, 0xFF000000);
 	color += 0xFF000000;
-	std::fill_n(mPixels, 96 * percent, color);
+	std::fill_n(mPixels, 96 * n, color);
 	for (int i = 1; i < 8; i++)
 	{
 		memcpy(mPixels + 96 * i, mPixels, 96 * sizeof(unsigned int));
 	}
 	CCSize size(96, 8);
 	mTexture->initWithData((const void*)&mPixels, kCCTexture2DPixelFormat_RGBA8888, 96, 8, size);
+}
+
+void BloodBar::setDelta(float delta)
+{
+	setPercent(mPercent + delta);
 }
 
 

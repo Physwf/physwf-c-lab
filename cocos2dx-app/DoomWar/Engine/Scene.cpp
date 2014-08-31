@@ -93,7 +93,8 @@ void Scene::onBattleAttakResult(Event* event)
 	{
 		CommandAttck* attack = CommandAttck::create(results);
 		mPVEScene->addCommand(attack);
-		CommandProgress* progress = CommandProgress::create(results->victim,results->value);
+		Actor* victim = getActor(results->victim);
+		CommandProgress* progress = CommandProgress::create(results->value, victim, (CommandProgress::OnProgressDelta)&Actor::updateHealth);
 		mPVEScene->addCommand(progress);
 		results++;
 	}

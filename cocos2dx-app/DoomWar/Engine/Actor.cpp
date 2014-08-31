@@ -40,9 +40,9 @@ CCPoint* Actor::position()
 	return mPosition;
 }
 
-void Actor::updateHealth(int health)
+void Actor::updateHealth(int delta)
 {
-	mSprite->bloor()->setPercent((float)health / (float)mData->maxHealth);
+	mSprite->bloor()->setDelta((float)delta);
 }
 
 void Actor::shake(float delta)

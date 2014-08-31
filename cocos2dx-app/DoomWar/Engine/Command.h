@@ -76,17 +76,20 @@ private:
 
 class CommandProgress : public Command
 {
+public:
+	typedef void(DWObject::*OnProgressDelta)(int delta);
 private:
-	int mHealth;
+	OnProgressDelta mOnProgressDelta;
+	DWObject* mObject;
 	int mDelta;
 	int mCurrent;
 	Actor* mActor;
 public:
-	static CommandProgress* create(ID actor, int delta);
+	static CommandProgress* create(int delta, DWObject* object, OnProgressDelta onProgressDelta);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:
-	CommandProgress(ID actor, int delta);
+	CommandProgress(int delta);
 	~CommandProgress();
 };
 #endif

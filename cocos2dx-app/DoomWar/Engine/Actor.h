@@ -7,7 +7,7 @@
 #include "ActorSprite.h"
 #include "Unit.h"
 
-class Actor
+class Actor : public DWObject
 {
 public:
 	Actor(CCSprite* layer);
@@ -17,7 +17,7 @@ public:
 	void setData(Unit* data);
 
 	void updatePosition();
-	void updateHealth(int health);
+	void updateHealth(int delta);
 	void moveTo();
 
 	void attack();
