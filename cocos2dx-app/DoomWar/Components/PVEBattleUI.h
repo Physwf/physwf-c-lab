@@ -21,7 +21,10 @@ private:
 	PVEBattleUI();
 	~PVEBattleUI();
 
+	void onLeftTouched(CCObject* object, TouchEventType type);
 	void onForwardTouched(CCObject* object, TouchEventType type);
+	void onBackwardTouched(CCObject* object, TouchEventType type);
+	void onRightwardTouched(CCObject* object, TouchEventType type);
 private:
 	CCSprite* mFrame;
 	PVEUIController* mController;

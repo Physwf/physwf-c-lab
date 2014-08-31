@@ -48,7 +48,7 @@ public:
 	void pause();
 	void refresh();
 	void end();
-	void step();
+	void step(StepDirection dir);
 	void update(ID eclipse);
 
 	std::map<ID, Unit*>* heros() const;
@@ -58,7 +58,8 @@ public:
 private:
 	void updateStarLevel();
 	void refreshGrids();
-	bool calculateHerosMovement();
+	bool calculateHerosMovement(StepDirection dir);
+	int calculateNextGrid(int index,StepDirection dir);
 	void calculateRoundResult();
 	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);
 	bool calculateEnemyBuffResult(Unit* enemy, BuffResult* result);

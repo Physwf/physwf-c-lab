@@ -28,7 +28,10 @@ void PVEBattleUI::onEnter()
 {
 	TouchGroup::onEnter();
 	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(mController,0,false);
+	getWidgetByName("leftward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onLeftTouched));
 	getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onForwardTouched));
+	getWidgetByName("backward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onBackwardTouched));
+	getWidgetByName("rightward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onRightwardTouched));
 }
 
 void PVEBattleUI::onExit()
@@ -37,13 +40,39 @@ void PVEBattleUI::onExit()
 	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(mController);
 }
 
+void PVEBattleUI::onLeftTouched(CCObject* object, TouchEventType type)
+{
+	if (type == TOUCH_EVENT_BEGAN)
+	{
+		System::pve->step(LEFTWARD);
+	}
+}
+
 void PVEBattleUI::onForwardTouched(CCObject* object, TouchEventType type)
 {
 	if (type == TOUCH_EVENT_BEGAN)
 	{
-		System::pve->step();
+		System::pve->step(FORWARD);
 	}
 }
+
+void PVEBattleUI::onBackwardTouched(CCObject* object, TouchEventType type)
+{
+	if (type == TOUCH_EVENT_BEGAN)
+	{
+		System::pve->step(BACKWARD);
+	}
+}
+
+void PVEBattleUI::onRightwardTouched(CCObject* object, TouchEventType type)
+{
+	if (type == TOUCH_EVENT_BEGAN)
+	{
+		System::pve->step(RIGHTWARD);
+	}
+}
+
+
 
 /*PVEUIController*/
 

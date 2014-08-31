@@ -89,12 +89,12 @@ void PVEBattle::end()
 
 }
 
-void PVEBattle::step()
+void PVEBattle::step(StepDirection dir)
 {
-	if (!calculateHerosMovement()) return;
+	if (!calculateHerosMovement(dir)) return;
 
-	mFrontLine++;
-	mBackLine++;
+	//mFrontLine++;
+	//mBackLine++;
 	//barriers
 	mMap->getBarriersByRow(mFrontLine, mBarriers);
 	//enemys
@@ -134,13 +134,14 @@ void PVEBattle::update(unsigned int eclipse)
 
 }
 
-bool PVEBattle::calculateHerosMovement()
+bool PVEBattle::calculateHerosMovement(StepDirection dir)
 {
 	char gridsCopy[MAX_SCREEN_GRID];
 	memcpy(gridsCopy, mGrids, sizeof(mGrids));
 	int stepLen = 1;
 	ID* heroToMove = new ID[MAX_SCREEN_HEROS];
 	int numHeroToMove = 0;
+	int nextGrids[MAX_SCREEN_HEROS] = {0};
 	memset(heroToMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
 	ID* heroCantMove = new ID[MAX_SCREEN_HEROS];
 	int numHeroCantMove = 0;
@@ -148,15 +149,20 @@ bool PVEBattle::calculateHerosMovement()
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
 	for (it; it != mHeros->end(); it++)
 	{
-		int index = it->second->positon.x + (it->second->positon.y + stepLen - mBackLine) * NUM_GRIDS_ROW;
+		int index = it->second->positon.x + (it->second->positon.y  - mBackLine) * NUM_GRIDS_ROW;
+		int next = 0;
 		//if grid is occupied by hero, set the index to the front rows, until no more heros are hitted
 		while (gridsCopy[index] == GRID_OCCUPY_TYPE_HERO)
 		{
-			index += NUM_GRIDS_ROW;
+			next = calculateNextGrid(index, dir);
+			if (next == index) break;
+			else index = next;
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE)
 		{
-			heroToMove[numHeroToMove++] = it->second->iid;
+			heroToMove[numHeroToMove] = it->second->iid;
+			nextGrids[numHeroToMove] = next;
+			numHeroToMove++;
 			continue;
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_BARRIER || gridsCopy[index] == GRID_OCCUPY_TYPE_ENEMY)
@@ -177,7 +183,10 @@ bool PVEBattle::calculateHerosMovement()
 		}
 	}
 	for (int i = 0; i < numHeroToMove; i++)
-		(*mHeros)[heroToMove[i]]->positon.y++;
+	{
+		(*mHeros)[heroToMove[i]]->positon.y = nextGrids[i] / NUM_GRIDS_ROW;
+		(*mHeros)[heroToMove[i]]->positon.x = nextGrids[i] % NUM_GRIDS_ROW;
+	}
 
 	refreshGrids();
 
@@ -188,6 +197,29 @@ bool PVEBattle::calculateHerosMovement()
 	delete heroCantMove;
 
 	return true;
+}
+
+int PVEBattle::calculateNextGrid(int index, StepDirection dir)
+{
+	if (dir == RIGHTWARD)
+	{
+		if (index % NUM_GRIDS_ROW == NUM_GRIDS_ROW - 1) return index;
+		else return index + 1;
+	}
+	else if (dir == FORWARD)
+	{
+		return index + NUM_GRIDS_ROW;
+	}
+	else if (dir == BACKWARD)
+	{
+		if (index < NUM_GRIDS_ROW) return index;
+		else return index - NUM_GRIDS_ROW;
+	}
+	else if (dir == LEFTWARD)
+	{
+		if (index % NUM_GRIDS_ROW == 0) return index;
+		else return index - 1;
+	}
 }
 
 void PVEBattle::calculateRoundResult()
@@ -362,6 +394,10 @@ ID PVEBattle::mapid() const
 {
 	return mMap->cid();
 }
+
+
+
+
 
 
 

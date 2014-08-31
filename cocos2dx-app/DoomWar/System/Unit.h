@@ -6,6 +6,13 @@
 
 #define MAX_ATTACK_GRIDS 20
 
+typedef enum {
+	LEFTWARD,
+	FORWARD,
+	BACKWARD,
+	RIGHTWARD
+} StepDirection;
+
 typedef struct position_t
 {
 	int x;
