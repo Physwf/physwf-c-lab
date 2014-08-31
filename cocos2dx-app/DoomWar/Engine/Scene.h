@@ -17,7 +17,7 @@ public:
 
 	void initialize();
 
-	void enterPVEMap(ID mapid, Unit* heros, int numHeros);
+	void enterPVEMap(ID mapid, Unit** heros, int numHeros);
 	void leavePVEMap();
 
 	void enterPVPMap(ID mapid);

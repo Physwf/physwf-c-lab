@@ -19,7 +19,7 @@ void Scene::initialize()
 	System::pve->initialize();
 }
 
-void Scene::enterPVEMap(ID mapid, Unit* heros, int numHeros)
+void Scene::enterPVEMap(ID mapid, Unit** heros, int numHeros)
 {
 	System::pve->addEventListener(PVEBattle::BATTLE_ENTER_MAP, this, EventListener(&Scene::onEnterPVEBattle));
 	System::pve->enter(mapid, heros, numHeros);

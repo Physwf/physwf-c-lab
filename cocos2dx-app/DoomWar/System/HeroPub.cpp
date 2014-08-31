@@ -13,7 +13,7 @@ HeroPub::~HeroPub()
 
 void HeroPub::initialize()
 {
-	for (ID i = 1; i < 2;i++)
+	for (ID i = 1; i < 3;i++)
 	{
 		mHeros[i] = Config::hero->create(i);
 	}

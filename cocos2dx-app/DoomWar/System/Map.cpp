@@ -24,8 +24,8 @@ void PVEMap::init(const char* configFile)
 	memset(mEnemys, 0, sizeof(mEnemys));
 	//mBrriers[38] = 2;
 	//mBrriers[39] = 2;
-	mEnemys[43] = 3;
-	mEnemys[44] = 3;
+	mEnemys[43] = 100;
+	mEnemys[44] = 100;
 }
 
 int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers)

@@ -50,10 +50,15 @@ void ActorSprite::getFrameNameByCID(ID cid, char* name)
 	}
 	case 2:
 	{
+			  sprintf(name, "%s", "oxe.png");
+			  break;
+	}
+	case 1000:
+	{
 			  sprintf(name, "%s", "BarriersFlower.png");
 			  break;
 	}
-	case 3:
+	case 100:
 	{
 			  sprintf(name, "%s", "gnome.png");
 			  break;

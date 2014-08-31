@@ -43,7 +43,7 @@ public:
 	PVEBattle();
 	~PVEBattle();
 	void initialize();
-	void enter(ID mapid, Unit* heros, int numHeros);
+	void enter(ID mapid, Unit** heros, int numHeros);
 	void start();
 	void pause();
 	void refresh();

@@ -13,7 +13,7 @@ Unit* HeroConfig::create(ID cid)
 	u->name = "Hero";
 	u->maxHealth = 100;
 	u->health = 100;
-	u->attackRange.numGrids = 8;
+	
 	int n = 0;
 	for (int i = -1; i <= 1; i++)
 	{
@@ -25,6 +25,7 @@ Unit* HeroConfig::create(ID cid)
 			n++;
 		}
 	}
+	u->attackRange.numGrids = n;
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
 	u->skill.value = -40;
 	return u;

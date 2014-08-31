@@ -43,15 +43,15 @@ void PVEBattle::initialize()
 	
 }
 
-void PVEBattle::enter(ID mapid, Unit* heros, int numHeros)
+void PVEBattle::enter(ID mapid, Unit** heros, int numHeros)
 {
 	mMap->init("");
 
 	for (int i = 0; i < numHeros; i++)
 	{
-		Unit* hero = heros + i;
+		Unit* hero = heros[i];
 		(*mHeros)[hero->iid] = hero;
-		hero->positon.x = 3;
+		hero->positon.x = 1+i;
 		hero->positon.y = 2;
 	}
 	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW - 1;
@@ -150,18 +150,19 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	for (it; it != mHeros->end(); it++)
 	{
 		int index = it->second->positon.x + (it->second->positon.y  - mBackLine) * NUM_GRIDS_ROW;
-		int next = 0;
+		int next = calculateNextGrid(index, dir);
+		int target = next;
 		//if grid is occupied by hero, set the index to the front rows, until no more heros are hitted
 		while (gridsCopy[index] == GRID_OCCUPY_TYPE_HERO)
 		{
-			next = calculateNextGrid(index, dir);
 			if (next == index) break;
-			else index = next;
+			index = next;
+			next = calculateNextGrid(index, dir);
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE)
 		{
 			heroToMove[numHeroToMove] = it->second->iid;
-			nextGrids[numHeroToMove] = next;
+			nextGrids[numHeroToMove] = target;
 			numHeroToMove++;
 			continue;
 		}
@@ -220,6 +221,7 @@ int PVEBattle::calculateNextGrid(int index, StepDirection dir)
 		if (index % NUM_GRIDS_ROW == 0) return index;
 		else return index - 1;
 	}
+	return 0;
 }
 
 void PVEBattle::calculateRoundResult()

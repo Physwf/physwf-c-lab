@@ -108,8 +108,9 @@ void Game::onAllComplete()
 	System::pub->initialize();
 	Engine::scene->initialize();
 	//temp 
-	
-	Unit* hero = System::pub->getHero(1);
-	
-	Engine::scene->enterPVEMap(0, hero, 1);
+	Unit* heros[5];
+	heros[0] = System::pub->getHero(1);
+	heros[1] = System::pub->getHero(2);
+
+	Engine::scene->enterPVEMap(0, heros, 2);
 }
