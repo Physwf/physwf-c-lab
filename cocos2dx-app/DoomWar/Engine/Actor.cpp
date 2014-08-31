@@ -14,6 +14,7 @@ void Actor::setData(Unit* data)
 	mSprite = ActorSprite::create(mData->cid);
 	updatePosition();
 	//mSprite->bloor()->setPercent((float)mData->health / (float)mData->maxHealth);
+	mSprite->setPosition(*mPosition);
 	mLayer->addChild(mSprite);
 }
 
@@ -31,7 +32,7 @@ void Actor::updatePosition()
 {
 	mPosition->x = mData->positon.x * GRID_SIZE + X_MARGIN + GRID_SIZE/2;
 	mPosition->y = mData->positon.y * GRID_SIZE + GRID_SIZE / 2;
-	mSprite->setPosition(*mPosition);
+	//
 }
 
 CCPoint* Actor::position()
@@ -63,5 +64,10 @@ void Actor::shake(float delta)
 void Actor::attack()
 {
 	
+}
+
+CCSprite* Actor::sprite() const
+{
+	return mSprite;
 }
 

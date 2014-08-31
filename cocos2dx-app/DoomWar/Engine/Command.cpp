@@ -147,3 +147,78 @@ CommandProgress* CommandProgress::create(ID actor, int delta)
 	return progress;
 }
 
+
+CommandMove::CommandMove(Actor* actor)
+{
+	mActor = actor;
+}
+
+CommandMove::~CommandMove()
+{
+	mAction->release();
+}
+
+bool CommandMove::tick(float delta)
+{
+	return mAction->isDone();
+}
+
+void CommandMove::trigger()
+{
+	mActor->sprite()->runAction(mAction);
+}
+
+CommandMove* CommandMove::create(Actor* actor)
+{
+	CommandMove* move = new CommandMove(actor);
+	CCPoint *pos = actor->position();
+	move->mAction = CCMoveTo::create(0.2f, *pos);
+	move->mAction->retain();
+	return move;
+}
+
+
+
+CommandParallel* CommandParallel::create()
+{
+	return new CommandParallel();
+}
+
+bool CommandParallel::tick(float delta)
+{
+	for (std::vector<Command*>::iterator it = mCommands.begin(); it != mCommands.end(); )
+	{
+		if ((*it)->tick(delta))
+		{
+			it = mCommands.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
+	return mCommands.size() == 0;
+}
+
+void CommandParallel::trigger()
+{
+	for (std::vector<Command*>::iterator it = mCommands.begin(); it != mCommands.end(); it++)
+	{
+		(*it)->trigger();
+	}
+}
+
+void CommandParallel::addCommand(Command* cmd)
+{
+	mCommands.push_back(cmd);
+}
+
+CommandParallel::CommandParallel()
+{
+
+}
+
+CommandParallel::~CommandParallel()
+{
+
+}

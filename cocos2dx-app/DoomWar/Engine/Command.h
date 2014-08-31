@@ -2,6 +2,7 @@
 #define _COMMAND_H
 
 #include <deque>
+#include <vector>
 #include "Actor.h"
 #include "Battle.h"
 #include "Effect.h"
@@ -28,6 +29,34 @@ private:
 private:
 	std::deque<Command*> mQueue;
 	Command* mCurCmd;
+};
+
+class CommandParallel : public Command
+{
+public:
+	static CommandParallel* create();
+	virtual bool tick(float delta);
+	virtual void trigger();
+	void addCommand(Command* cmd);
+private:
+	CommandParallel();
+	~CommandParallel();
+private:
+	std::vector<Command*> mCommands;
+};
+
+class CommandMove : public Command
+{
+public:
+	static CommandMove* create(Actor* actor);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandMove(Actor* actor);
+	~CommandMove();
+private:
+	Actor* mActor;
+	CCAction* mAction;
 };
 
 class CommandAttck : public Command

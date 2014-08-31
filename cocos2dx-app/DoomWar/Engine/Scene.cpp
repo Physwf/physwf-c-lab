@@ -69,11 +69,15 @@ void Scene::onBattleMoveResult(Event *event)
 	if (event->type == PVEBattle::BATTLE_MOVE_SUCCESS)
 	{
 		ID* herosToMove = (ID*)event->data;
+		CommandParallel* cmds = CommandParallel::create();
 		while (*herosToMove)
 		{
 			(*mActors)[(*herosToMove)]->updatePosition();
+			CommandMove *move = CommandMove::create((*mActors)[(*herosToMove)]);
+			cmds->addCommand(move);
 			herosToMove++;
 		}
+		mPVEScene->addCommand(cmds);
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{

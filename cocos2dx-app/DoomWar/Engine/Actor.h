@@ -27,6 +27,9 @@ public:
 	int health() const;
 
 	CCPoint* position();
+
+	CCSprite* sprite() const;
+
 private:
 	CCSprite* mLayer;
 	ActorSprite* mSprite;
