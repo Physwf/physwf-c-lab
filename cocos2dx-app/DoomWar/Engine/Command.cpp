@@ -163,29 +163,38 @@ CommandProgress* CommandProgress::create(int delta, DWObject* object, OnProgress
 CommandMove::CommandMove(Actor* actor)
 {
 	mActor = actor;
+	mMove = CCMoveTo::create(0.2f, mPos);
+	mMove->retain();
+	//mDelay = CCDelayTime::create(0.2f);
+	//mAction = CCSequence::create(mDelay, mMove);
+	//mAction->retain();
 }
 
 CommandMove::~CommandMove()
 {
+	mDelay->release();
+	mMove->release();
 	mAction->release();
 }
 
 bool CommandMove::tick(float delta)
 {
-	return mAction->isDone();
+	return mMove->isDone();
 }
 
 void CommandMove::trigger()
 {
-	mActor->sprite()->runAction(mAction);
+	mActor->sprite()->runAction(mMove);
 }
 
 CommandMove* CommandMove::create(Actor* actor)
 {
 	CommandMove* move = new CommandMove(actor);
-	CCPoint *pos = actor->position();
-	move->mAction = CCMoveTo::create(0.2f, *pos);
-	move->mAction->retain();
+	move->mPos = *actor->position();
+	srand(time(NULL));
+	//move->mDelay->initWithDuration(0.2 * (rand()%10/10.0));
+	move->mMove->initWithDuration(0.2f, move->mPos);
+	//move->mAction->initWithTwoActions(move->mDelay, move->mMove);
 	return move;
 }
 

@@ -56,7 +56,11 @@ private:
 	~CommandMove();
 private:
 	Actor* mActor;
-	CCAction* mAction;
+	CCSequence* mAction;
+	CCDelayTime* mDelay;
+	CCMoveTo* mMove;
+	CCPoint mPos;
+
 };
 
 class CommandAttck : public Command
