@@ -5,6 +5,7 @@
 #include "EventDispatcher.h"
 #include <map>
 #include "dwtype.h"
+#include "Unit.h"
 
 #define MAX_SCREEN_HEROS 10
 #define MAX_SCREEN_ENYMYS 20
@@ -35,6 +36,7 @@ typedef struct attack_result_t
 	ID victim;
 	ID type;//physical or magical or what
 	int value;
+	Skill skill;
 } AttackResult;
 
 class PVEBattle :public EventDispather

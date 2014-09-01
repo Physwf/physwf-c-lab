@@ -26,6 +26,7 @@ Unit* HeroConfig::create(ID cid)
 		}
 	}
 	u->attackRange.numGrids = n;
+	u->skill.cid = cid;
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
 	u->skill.value = -40;
 	return u;
@@ -39,6 +40,8 @@ Unit* BarrierConfig::create(ID cid)
 	u->name = "Barrier";
 	u->maxHealth = 100;
 	u->health = 100;
+
+
 	return u;
 }
 
@@ -64,6 +67,7 @@ Unit* MonsterConfig::create(ID cid)
 			n++;
 		}
 	}
+	u->skill.cid = cid;
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
 	u->skill.value = -20;
 	return u;

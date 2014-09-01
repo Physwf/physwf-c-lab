@@ -350,7 +350,9 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 			{
 				result->type = ATTACK_TYPE_PHYSICAL;
 				result->value = attacker->skill.value;//to be detailed
+				result->skill = attacker->skill;
 				victim->health += result->value;
+				
 				return true;
 			}
 			break;

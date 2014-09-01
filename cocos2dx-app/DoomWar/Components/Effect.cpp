@@ -37,20 +37,21 @@ void BulletEffect::fire()
 	mDir.x = (mTarget->x - pos.x) / dist;
 	mDir.y = (mTarget->y - pos.y) / dist;
 	float angle = asin(abs(mDir.y))*180.0 / 3.14;
-	if (mDir.x <= 0 && -mDir.y > 0)//2
+	if (mDir.x >= 0 && -mDir.y > 0)//1
 	{
-		angle += 90.0;
-		OutputDebugString(L"90\n");
+
+	}
+	else if (mDir.x <= 0 && -mDir.y > 0)//2
+	{
+		angle = 180.0 - angle;
 	}
 	else if (mDir.x < 0 && -mDir.y <= 0)//3
 	{
-		angle += 180.0;
-		OutputDebugString(L"180\n");
+		angle = 180.0 + angle;
 	}
-	else if (mDir.x > 0 && -mDir.y < 0)//4
+	else if (mDir.x >= 0 && -mDir.y < 0)//4
 	{
-		angle += 270.0;
-		OutputDebugString(L"270\n");
+		angle = 360.0 - angle;
 	}
 	setRotation(angle + 90.0);
 }
@@ -79,7 +80,7 @@ BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 		effect->retain();
 		effect->mTarget = Engine::scene->getActor(victim)->position();
 		effect->setPosition(*Engine::scene->getActor(attacker)->position());
-		CCAnimation* anim = ResourceManager::instance()->getAnimation("ice");
+		CCAnimation* anim = ResourceManager::instance()->getAnimation("arrow");
 		effect->mAction = CCRepeatForever::create(CCAnimate::create(anim));
 		effect->mAction->retain();
 		return effect;
@@ -112,20 +113,21 @@ void HackEffect::fire()
 	mDir.x = (mTarget->x - pos.x) / dist;
 	mDir.y = (mTarget->y - pos.y) / dist;
 	float angle = asin(abs(mDir.y))*180.0 / 3.14;
-	if (mDir.x <= 0 && -mDir.y > 0)//2
+	if (mDir.x >= 0 && -mDir.y > 0)//1
 	{
-		angle += 90.0;
-		OutputDebugString(L"90\n");
+
+	}
+	else if (mDir.x <= 0 && -mDir.y > 0)//2
+	{
+		angle = 180.0 - angle;
 	}
 	else if (mDir.x < 0 && -mDir.y <= 0)//3
 	{
-		angle += 180.0;
-		OutputDebugString(L"180\n");
+		angle = 180.0 + angle;
 	}
-	else if (mDir.x > 0 && -mDir.y < 0)//4
+	else if (mDir.x >= 0 && -mDir.y < 0)//4
 	{
-		angle += 270.0;
-		OutputDebugString(L"270\n");
+		angle = 360.0 - angle;
 	}
 	setRotation(angle + 90.0);
 }

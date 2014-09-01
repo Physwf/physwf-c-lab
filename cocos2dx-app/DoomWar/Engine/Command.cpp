@@ -1,6 +1,7 @@
 #include "Command.h"
 #include "Engine.h"
 #include "ResourceManager.h"
+#include "System.h"
 
 Command::Command()
 {
@@ -100,7 +101,18 @@ void CommandAttck::trigger()
 CommandAttck* CommandAttck::create(AttackResult* result)
 {
 	CommandAttck* cmd = new CommandAttck();
-	cmd->mEffect = HackEffect::create(0, result->attacker, result->victim);
+	if (result->skill.cid == 1)
+	{
+		cmd->mEffect = BulletEffect::create(0, result->attacker, result->victim);
+	}
+	else if (result->skill.cid == 2)
+	{
+		cmd->mEffect = HackEffect::create(0, result->attacker, result->victim);
+	}
+	else
+	{
+		cmd->mEffect = BulletEffect::create(0, result->attacker, result->victim);
+	}
 	return cmd;
 }
 
@@ -129,6 +141,14 @@ bool CommandProgress::tick(float delta)
 void CommandProgress::trigger()
 {
 	mCurrent = 0;
+}
+
+CommandProgress* CommandProgress::create(int delta, Actor* actor)
+{
+	CommandProgress* progress = new CommandProgress(delta);
+	progress->mObject = actor;
+	progress->mOnProgressDelta = (OnProgressDelta)&Actor::updateHealth;
+	return progress;
 }
 
 CommandProgress* CommandProgress::create(int delta, DWObject* object, OnProgressDelta onProgressDelta)

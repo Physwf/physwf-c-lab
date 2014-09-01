@@ -85,6 +85,7 @@ private:
 	int mCurrent;
 	Actor* mActor;
 public:
+	static CommandProgress* create(int delta, Actor* actor);
 	static CommandProgress* create(int delta, DWObject* object, OnProgressDelta onProgressDelta);
 	virtual bool tick(float delta);
 	virtual void trigger();
