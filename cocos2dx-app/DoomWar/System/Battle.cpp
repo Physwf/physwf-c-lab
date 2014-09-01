@@ -149,6 +149,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
 	for (it; it != mHeros->end(); it++)
 	{
+		if (it->second->health <= 0) continue;//don't move dead body.
 		int index = it->second->positon.x + (it->second->positon.y  - mBackLine) * NUM_GRIDS_ROW;
 		int next = calculateNextGrid(index, dir);
 		int target = next;
@@ -234,6 +235,7 @@ void PVEBattle::calculateRoundResult()
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
 	for (it; it!=mHeros->end(); it++)
 	{
+		if (it->second->health <= 0) continue;//dead
 		UnitWraper *wraper = new UnitWraper(it->second);
 		heros.Enqueue(wraper);
 	}
@@ -253,6 +255,7 @@ void PVEBattle::calculateRoundResult()
 	it = mEnemys->begin();
 	for (it; it != mEnemys->end(); it++)
 	{
+		if (it->second->health <= 0) continue;//dead
 		UnitWraper *wraper = new UnitWraper(it->second);
 		enemys.Enqueue(wraper);
 	}
@@ -317,6 +320,7 @@ bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
 {
 	for (std::map<ID, Unit*>::iterator it = mEnemys->begin(); it != mEnemys->end(); it++)
 	{
+		if (it->second->health <= 0) continue;//don't attack dead body.
 		// to do, implement multi-attack in one turn
 		if (calculateAttackResult(hero, it->second, result)) return true;
 	}
@@ -328,6 +332,7 @@ bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
 {
 	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
 	{
+		if (it->second->health <= 0) continue;//don't attack dead body.
 		// to do, implement multi-attack in on turn
 		if (calculateAttackResult(enemy, it->second, result)) return true;
 	}
