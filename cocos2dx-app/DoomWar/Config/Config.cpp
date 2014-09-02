@@ -32,6 +32,11 @@ Unit* HeroConfig::create(ID cid)
 	return u;
 }
 
+void HeroConfig::onHeroConfigLoaded(xmlNodePtr root)
+{
+
+}
+
 Unit* BarrierConfig::create(ID cid)
 {
 	Unit* u = new Unit();
@@ -45,6 +50,10 @@ Unit* BarrierConfig::create(ID cid)
 	return u;
 }
 
+void BarrierConfig::onBarrierConfigLoaded(xmlNodePtr root)
+{
+
+}
 
 Unit* MonsterConfig::create(ID cid)
 {
@@ -71,4 +80,10 @@ Unit* MonsterConfig::create(ID cid)
 	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
 	u->skill.value = -20;
 	return u;
+}
+
+
+void MonsterConfig::onMonsterConfigLoaded(xmlNodePtr root)
+{
+
 }

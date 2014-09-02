@@ -36,7 +36,7 @@ void Game::setup()
 {
 	mLoading = DWLoadingScene::create();
 	CCDirector::sharedDirector()->runWithScene(mLoading->scene());
-	ResourceManager::instance()->load("./Data/units.png", this, callfuncO_selector(Game::onUnitSpriteComplete));
+	ResourceManager::instance()->loadTexture("./Data/units.png", this, callfuncO_selector(Game::onUnitSpriteComplete));
 }
 
 void Game::onUnitSpriteComplete(CCObject* tex)
