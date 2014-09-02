@@ -1,0 +1,4 @@
+<heros>
+  <hero id="1000" name="soldier" level="1" maxHealth="100" agility="2" attackRange="" view=""/>
+  <hero id="1001" name="archer" level="1" maxHealth="100" agility="2" attackRange="" view=""/>
+</heros>

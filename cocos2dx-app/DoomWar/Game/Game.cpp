@@ -43,7 +43,7 @@ void Game::onUnitSpriteComplete(CCObject* tex)
 {
 	CCTexture2D* texUnits = (CCTexture2D*)tex;
 	ResourceManager::instance()->addSpriteFramePack("./Data/units.plist", texUnits);
-	ResourceManager::instance()->load("./Data/skills.png", this, callfuncO_selector(Game::onSkillSprite));
+	ResourceManager::instance()->loadTexture("./Data/skills.png", this, callfuncO_selector(Game::onSkillSprite));
 }
 
 void Game::onSkillSprite(CCObject* tex)
@@ -95,6 +95,8 @@ void Game::onSkillSprite(CCObject* tex)
 		frames->addObject(frame);
 	}
 	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "arrow");
+
+	ResourceManager::instance()->loadXML("./Data/heros.xml",Config::hero,(Config::OnConfigLoaded)&Config::hero->onHeroConfigLoaded);
 	onMapSpriteComplete(NULL);
 }
 
