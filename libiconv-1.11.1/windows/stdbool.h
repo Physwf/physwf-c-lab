@@ -32,12 +32,12 @@
 /* For the sake of symbolic names in gdb, define _Bool as an enum type.  */
 #ifndef __cplusplus
 # if !0
-typedef enum { false = 0, true = 1 } _Bool;
+typedef enum { false = 0, true = 1 } _Bool_;
 # endif
 #else
-typedef bool _Bool;
+typedef bool _Bool_;
 #endif
-#define bool _Bool
+#define bool _Bool_
 
 /* The other macros must be usable in preprocessor directives.  */
 #define false 0

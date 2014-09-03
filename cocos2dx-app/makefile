@@ -73,4 +73,4 @@ DWclient:$(DWObjs)
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
 $(DWObjs):
-INCLUDE+=/I"./DoomWar/Classes" /I"./DoomWar/Game" /I"./DoomWar/Components" /I"./DoomWar/Engine" /I"./DoomWar/System" /I"./DoomWar/Config" /I"../libiconv-1.9.2/include"
+INCLUDE+=/I"./DoomWar/Classes" /I"./DoomWar/Game" /I"./DoomWar/Components" /I"./DoomWar/Engine" /I"./DoomWar/System" /I"./DoomWar/Config" /I"../libiconv-1.11.1/include"
