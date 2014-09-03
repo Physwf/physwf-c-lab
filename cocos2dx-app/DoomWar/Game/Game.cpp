@@ -96,7 +96,7 @@ void Game::onSkillSprite(CCObject* tex)
 	}
 	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "arrow");
 
-	ResourceManager::instance()->loadXML("./Data/heros.xml",Config::hero,(Config::OnConfigLoaded)&Config::hero->onHeroConfigLoaded);
+	ResourceManager::instance()->loadXML("./Data/heros.xml",Config::hero,(Config::OnConfigLoaded)&HeroConfig::onHeroConfigLoaded);
 	onMapSpriteComplete(NULL);
 }
 
