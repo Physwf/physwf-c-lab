@@ -34,7 +34,17 @@ Unit* HeroConfig::create(ID cid)
 
 void HeroConfig::onHeroConfigLoaded(xmlNodePtr root)
 {
-
+	xmlNodePtr child = root->children;
+	while (child)
+	{
+		if (child->type != XML_TEXT_NODE && child->type != XML_COMMENT_NODE && child->type != XML_DTD_NODE)
+		{
+			Unit* unit = new Unit();
+			constructUnitWithXML(unit, child);
+			mHeros[unit->cid] = unit;
+		}
+		child = child->next;
+	}
 }
 
 Unit* BarrierConfig::create(ID cid)

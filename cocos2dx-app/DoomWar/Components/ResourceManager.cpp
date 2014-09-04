@@ -45,7 +45,7 @@ void ResourceManager::loadXML(const char* pszFile, DWObject* object, Config::OnC
 {
 	xmlDocPtr pDoc;
 	xmlNodePtr pRoot;
-	pDoc = xmlReadFile(pszFile, "GB2312", XML_PARSE_RECOVER);
+	pDoc = xmlReadFile(pszFile, "utf-8", XML_PARSE_RECOVER);
 	CCAssert(pDoc != NULL, "Failed to read xml file!");
 	pRoot = xmlDocGetRootElement(pDoc);
 	(object->*onConfigLoaded)(pRoot);

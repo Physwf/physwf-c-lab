@@ -3,6 +3,7 @@
 
 #include "Heap.h"
 #include "dwtype.h"
+#include "libxml\parser.h"
 
 #define MAX_ATTACK_GRIDS 20
 
@@ -52,6 +53,8 @@ typedef struct unit_t
 	Range attackRange;
 	Range view;//йср╟
 } Unit;
+
+void constructUnitWithXML(Unit* unit, xmlNodePtr attr);
 
 class UnitWraper :public IPriority
 {
