@@ -1,0 +1,8 @@
+<skills>
+<skill id="101" name="soldier" 	type="" cast="" level="1" value="-10"/>
+<skill id="102" name="archer" 	type="" cast="" level="1" value="-10"/>
+<skill id="103" name="warlock" 	type="" cast="" level="1" value="-10"/>
+<skill id="104" name="assassin" type="" cast="" level="1" value="-10"/>
+<skill id="105" name="wizard" 	type="" cast="" level="1" value="-10"/>
+<skill id="106" name="oxe" 		type="" cast="" level="1" value="-10"/>
+</skills>
