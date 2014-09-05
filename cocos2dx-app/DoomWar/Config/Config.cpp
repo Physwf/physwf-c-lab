@@ -40,11 +40,23 @@ void HeroConfig::onHeroConfigLoaded(xmlNodePtr root)
 		if (child->type != XML_TEXT_NODE && child->type != XML_COMMENT_NODE && child->type != XML_DTD_NODE)
 		{
 			Unit* unit = new Unit();
-			constructUnitWithXML(unit, child);
+			constructWithXML(unit, child);
 			mHeros[unit->cid] = unit;
 		}
 		child = child->next;
 	}
+}
+
+void HeroConfig::constructWithXML(Unit* hero, xmlNodePtr node)
+{
+	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
+	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
+	xmlChar* szlevel = xmlGetProp(node, BAD_CAST"level");
+	xmlChar* szMaxHealth = xmlGetProp(node, BAD_CAST"maxHealth");
+	xmlChar* szAgility = xmlGetProp(node, BAD_CAST"agility");
+
+	hero->cid = atoi((const char*)szid);
+	hero->name = (char*)szname;
 }
 
 Unit* BarrierConfig::create(ID cid)

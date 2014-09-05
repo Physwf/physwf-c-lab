@@ -13,6 +13,8 @@ public:
 	Unit* create(ID cid);
 	void onHeroConfigLoaded(xmlNodePtr root);
 private:
+	void constructWithXML(Unit* hero, xmlNodePtr node);
+private:
 	std::map<ID, Unit*> mHeros;
 };
 

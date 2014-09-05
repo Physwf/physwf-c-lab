@@ -1,4 +1,5 @@
 #include "PVEBattleScene.h"
+#include "MapSprite.h"
 
 CCScene* PVEBattleScene::scene() const
 {
@@ -12,8 +13,8 @@ bool PVEBattleScene::init()
 		return false;
 	}
 	
-	mTempMap = CCSprite::create("./Data/map.png");
-	mTempMap->setAnchorPoint(ccp(0, 0));
+	mTempMap = MapSprite::create(0);
+	mTempMap->setPosition(ccp(-64, 0));
 	this->addChild(mTempMap);
 	//CCTMXTiledMap::create();
 

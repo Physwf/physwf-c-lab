@@ -17,5 +17,6 @@ protected:
 private:
 	unsigned int mMid;
 	CCSprite* mTempMap;//for temp use
+	CCTMXTiledMap* mMap;
 };
 #endif

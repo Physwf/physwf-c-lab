@@ -15,8 +15,10 @@ MapSprite* MapSprite::create(unsigned int mid)
 	MapSprite* pMap = new MapSprite(mid);
 	if (pMap && pMap->init())
 	{
-		pMap->mTempMap = CCSprite::create("./Data/single.png");
-		pMap->addChild(pMap->mTempMap);
+		//pMap->mTempMap = CCSprite::create("./Data/single.png");
+		//pMap->addChild(pMap->mTempMap);
+		pMap->mMap = CCTMXTiledMap::create("./Data/MAPPVE.tmx");
+		pMap->addChild(pMap->mMap);
 		return pMap;
 	}
 	return NULL;

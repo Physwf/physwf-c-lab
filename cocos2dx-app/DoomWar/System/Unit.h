@@ -54,7 +54,6 @@ typedef struct unit_t
 	Range view;//йср╟
 } Unit;
 
-void constructUnitWithXML(Unit* unit, xmlNodePtr attr);
 
 class UnitWraper :public IPriority
 {
