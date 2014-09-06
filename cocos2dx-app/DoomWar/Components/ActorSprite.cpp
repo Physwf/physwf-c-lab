@@ -43,14 +43,14 @@ void ActorSprite::getFrameNameByCID(ID cid, char* name)
 {
 	switch (cid)
 	{
-	case 1:
+	case 1001:
 	{
-			  sprintf(name, "%s", "archer.png");
+			  sprintf(name, "%s", "soldier.png");
 			  break;
 	}
-	case 2:
+	case 1002:
 	{
-			  sprintf(name, "%s", "oxe.png");
+			  sprintf(name, "%s", "archer.png");
 			  break;
 	}
 	case 1000:

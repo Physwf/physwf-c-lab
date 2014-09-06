@@ -12,7 +12,7 @@ UnitWraper::~UnitWraper()
 
 int UnitWraper::value()const
 {
-	return (int)mUnit->agility;
+	return mUnit->agility;
 }
 
 Unit* UnitWraper::unit() const

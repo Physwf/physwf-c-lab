@@ -42,11 +42,11 @@ typedef struct unit_t
 	ID iid;//instance id
 	ID cid;//config id
 	char* name;
-	ID exp;
-	ID maxHealth;
+	int exp;
+	int maxHealth;
 	int health;
 	Skill skill;
-	ID agility;
+	int agility;
 	ID armor;
 	unsigned short atackFreq;//attacks per turn
 	Position positon;

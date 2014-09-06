@@ -51,6 +51,7 @@ void PVEBattle::enter(ID mapid, Unit** heros, int numHeros)
 	{
 		Unit* hero = heros[i];
 		(*mHeros)[hero->iid] = hero;
+		hero->health = hero->maxHealth;
 		hero->positon.x = 1+i;
 		hero->positon.y = 2;
 	}
