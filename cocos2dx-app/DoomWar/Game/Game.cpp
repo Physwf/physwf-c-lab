@@ -96,7 +96,10 @@ void Game::onSkillSprite(CCObject* tex)
 	}
 	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "arrow");
 
-	ResourceManager::instance()->loadXML("./Data/heros.xml",Config::hero,(Config::OnConfigLoaded)&HeroConfig::onHeroConfigLoaded);
+	ResourceManager::instance()->loadXML("./Data/heros.xml", Config::hero, (Config::OnConfigLoaded)&HeroConfig::onHeroConfigLoaded);
+	ResourceManager::instance()->loadXML("./Data/monsters.xml", Config::monster, (Config::OnConfigLoaded)&MonsterConfig::onMonsterConfigLoaded);
+	ResourceManager::instance()->loadXML("./Data/skills.xml", Config::skill, (Config::OnConfigLoaded)&SkillConfig::onSkillConfigLoaded);
+
 	onMapSpriteComplete(NULL);
 }
 
@@ -113,6 +116,9 @@ void Game::onAllComplete()
 	Unit* heros[5];
 	heros[0] = System::pub->getHero(1001);
 	heros[1] = System::pub->getHero(1002);
+	heros[2] = System::pub->getHero(1003);
+	heros[3] = System::pub->getHero(1004);
+	heros[4] = System::pub->getHero(1005);
 
-	Engine::scene->enterPVEMap(0, heros, 2);
+	Engine::scene->enterPVEMap(0, heros, 5);
 }

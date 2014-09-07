@@ -80,12 +80,30 @@ BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 		effect->retain();
 		effect->mTarget = Engine::scene->getActor(victim)->position();
 		effect->setPosition(*Engine::scene->getActor(attacker)->position());
-		CCAnimation* anim = ResourceManager::instance()->getAnimation("arrow");
+		char szName[10] = { 0 };
+		effect->getFrameNameByCID(cid, szName);
+		CCAnimation* anim = ResourceManager::instance()->getAnimation(szName);
 		effect->mAction = CCRepeatForever::create(CCAnimate::create(anim));
 		effect->mAction->retain();
 		return effect;
 	}
 	return NULL;
+}
+
+void BulletEffect::getFrameNameByCID(ID cid, char* name)
+{
+	if (cid == SKILL_EFFECT_ARROW)
+	{
+		sprintf(name, "%s", "arrow");
+	}
+	else if (cid == SKILL_EFFECT_ICE)
+	{
+		sprintf(name, "%s", "ice");
+	}
+	else if (cid == SKILL_EFFECT_DAGGER)
+	{
+		sprintf(name, "%s", "dagger");
+	}
 }
 
 HackEffect::HackEffect(CCSprite* layer)

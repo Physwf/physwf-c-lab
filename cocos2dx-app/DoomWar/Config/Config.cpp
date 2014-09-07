@@ -14,9 +14,7 @@ Unit* HeroConfig::create(ID cid)
 	memcpy(copy, master, sizeof Unit);
 	copy->iid = (ID)copy;
 
-	copy->skill.cid = cid;
-	copy->skill.type = SKILL_TYPE_HARM_PHYSICAL;
-	copy->skill.value = -40;
+	Config::skill->fill(&copy->skill, copy->skill.cid);
 
 	return copy;
 
@@ -90,6 +88,15 @@ void BarrierConfig::onBarrierConfigLoaded(xmlNodePtr root)
 
 Unit* MonsterConfig::create(ID cid)
 {
+	Unit *copy = new Unit();
+	Unit *master = mMaster[cid];
+	memcpy(copy, master, sizeof Unit);
+	copy->iid = (ID)copy;
+
+	Config::skill->fill(&copy->skill, copy->skill.cid);
+
+	return copy;
+
 	Unit* u = new Unit();
 	u->iid = (ID)u;
 	u->cid = cid;
@@ -146,6 +153,12 @@ void SkillConfig::onSkillConfigLoaded(xmlNodePtr root)
 	}
 }
 
+void SkillConfig::fill(Skill* skill, ID cid)
+{
+	Skill* master = mMaster[cid];
+	memcpy(skill, master, sizeof Skill);
+}
+
 void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 {
 	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
@@ -153,11 +166,14 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	xmlChar* szlevel = xmlGetProp(node, BAD_CAST"level");
 	xmlChar* szMaxHealth = xmlGetProp(node, BAD_CAST"maxHealth");
 	xmlChar* szAgility = xmlGetProp(node, BAD_CAST"agility");
+	xmlChar* szSkill = xmlGetProp(node, BAD_CAST"skill");
 	xmlChar* szAttackRange = xmlGetProp(node, BAD_CAST"attackRange");
 
 	unit->cid = atoi((const char*)szid);
 	unit->name = (char*)szname;
-
+	unit->maxHealth = atoi((const char*)szMaxHealth);
+	unit->agility = atoi((const char*)szAgility);
+	unit->skill.cid = atoi((const char*)szSkill);
 	parseRange(unit, szAttackRange);
 }
 
@@ -182,7 +198,19 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 {
 	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
 	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
+	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
+	xmlChar* szCast = xmlGetProp(node, BAD_CAST"cast");
+	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
+	xmlChar* szEffect = xmlGetProp(node, BAD_CAST"effect");
+	xmlChar* szLevel = xmlGetProp(node, BAD_CAST"level");
+	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
 
 	skill->cid = atoi((const char*)szid);
 	skill->name = (char*)szname;
+	skill->type = atoi((const char*)szType);
+	skill->cast = atoi((const char*)szCast);
+	skill->track = atoi((const char*)szTrack);
+	skill->effect = atoi((const char*)szEffect);
+	skill->level = atoi((const char*)szLevel);
+	skill->value = atoi((const char*)szValue);
 }

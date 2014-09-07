@@ -1,8 +1,8 @@
 <heros>
-  <hero id="1001" name="soldier" 	level="1" maxHealth="100" agility="2" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
-  <hero id="1002" name="archer" 	level="1" maxHealth="100" agility="2" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
-  <hero id="1003" name="warlock" 	level="1" maxHealth="100" agility="2" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
-  <hero id="1004" name="assassin" 	level="1" maxHealth="100" agility="2" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
-  <hero id="1005" name="wizard" 	level="1" maxHealth="100" agility="2" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
-  <hero id="1006" name="oxe" 		level="1" maxHealth="100" agility="2" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1001" name="soldier" 	level="1" maxHealth="100" agility="2" skill="101" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1002" name="archer" 	level="1" maxHealth="100" agility="2" skill="102" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1003" name="warlock" 	level="1" maxHealth="100" agility="2" skill="103" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1004" name="assassin" 	level="1" maxHealth="100" agility="2" skill="104" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1005" name="wizard" 	level="1" maxHealth="100" agility="2" skill="105" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1006" name="oxe" 		level="1" maxHealth="100" agility="2" skill="106" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
 </heros>

@@ -57,6 +57,7 @@ private:
 class SkillConfig : public Config
 {
 public:
+	void fill(Skill* skill,ID cid);
 	void onSkillConfigLoaded(xmlNodePtr root);
 private:
 	std::map<ID, Skill*> mMaster;

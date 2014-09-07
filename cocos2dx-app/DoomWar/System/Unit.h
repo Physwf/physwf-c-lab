@@ -29,11 +29,25 @@ typedef struct range_t
 #define SKILL_TYPE_HARM_PHYSICAL	1L
 #define SKILL_TYPE_HARM_MAGICAL		2L
 #define SKILL_TYPE_BUFF_HEALTH		3L
+
+#define  SKILL_TRACK_HACK			0L
+#define  SKILL_TRACK_BULLET			1L
+#define  SKILL_TRACK_FIXXED			2L
+
+#define SKILL_EFFECT_AXE			1L
+#define SKILL_EFFECT_ARROW			2L
+#define SKILL_EFFECT_DAGGER			3L
+#define SKILL_EFFECT_ICE			4L
+
 typedef struct skill_t
 {
 	char* name;
 	ID cid;
 	ID type;
+	ID cast;
+	ID track;
+	ID effect;
+	int level;
 	int value;
 } Skill;
 

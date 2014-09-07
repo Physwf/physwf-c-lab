@@ -65,12 +65,21 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/System/System.obj\
 		$(DIR_DW)/System/Unit.obj\
 		$(DIR_DW)/win32/main.obj
+		
 DWOBJ_DIR=DoomWar/
 
-DWclient:$(DWObjs)
-	$(LINK) $(BIN)/$(DWOBJ_DIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)/$@.exe
 
+		
+DWclient:$(DWObjs) 
+	$(LINK) $(BIN)/$(DWOBJ_DIR)*.obj $(LIB_PUBLIC) /OUT:$(BIN)/$@.exe
+DWcpy:
+	@cp $(DIR_DW)/Data/heros.xml $(BIN)/Data/heros.xml
+	@cp $(DIR_DW)/Data/monsters.xml $(BIN)/Data/monsters.xml
+	@cp $(DIR_DW)/Data/skills.xml $(BIN)/Data/skills.xml
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
+%.xml : %.xml
+	@cp $< $(BIN)/
 $(DWObjs):
+
 INCLUDE+=/I"./DoomWar/Classes" /I"./DoomWar/Game" /I"./DoomWar/Components" /I"./DoomWar/Engine" /I"./DoomWar/System" /I"./DoomWar/Config" /I"../libiconv-1.11.1/include"

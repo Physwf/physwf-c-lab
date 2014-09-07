@@ -101,17 +101,21 @@ void CommandAttck::trigger()
 CommandAttck* CommandAttck::create(AttackResult* result)
 {
 	CommandAttck* cmd = new CommandAttck();
-	if (result->skill.cid == 1)
+	if (result->skill.track == SKILL_TRACK_HACK)
 	{
-		cmd->mEffect = BulletEffect::create(0, result->attacker, result->victim);
+		cmd->mEffect = HackEffect::create(result->skill.effect, result->attacker, result->victim);
 	}
-	else if (result->skill.cid == 2)
+	else if (result->skill.track == SKILL_TRACK_BULLET)
 	{
-		cmd->mEffect = HackEffect::create(0, result->attacker, result->victim);
+		cmd->mEffect = BulletEffect::create(result->skill.effect, result->attacker, result->victim);
+	}
+	else if (result->skill.track == SKILL_TRACK_FIXXED)
+	{
+
 	}
 	else
 	{
-		cmd->mEffect = BulletEffect::create(0, result->attacker, result->victim);
+		cmd->mEffect = BulletEffect::create(result->skill.effect, result->attacker, result->victim);
 	}
 	return cmd;
 }

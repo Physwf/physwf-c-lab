@@ -24,8 +24,8 @@ void PVEMap::init(const char* configFile)
 	memset(mEnemys, 0, sizeof(mEnemys));
 	//mBrriers[38] = 2;
 	//mBrriers[39] = 2;
-	mEnemys[43] = 100;
-	mEnemys[44] = 100;
+	mEnemys[43] = 2001;
+	mEnemys[44] = 2001;
 }
 
 int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers)
@@ -59,6 +59,7 @@ int PVEMap::getEnemysByRow(int row, std::map<ID, Unit*>* enemies)
 			Unit* monster = Config::monster->create(mEnemys[i]);
 			monster->positon.x = i - start;
 			monster->positon.y = row;
+			monster->health = monster->maxHealth;
 			(*enemies)[monster->iid] = monster;
 			count++;
 		}

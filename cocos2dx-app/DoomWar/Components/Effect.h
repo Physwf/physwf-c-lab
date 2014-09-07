@@ -26,6 +26,8 @@ public:
 private:
 	BulletEffect(CCSprite* layer);
 	~BulletEffect();
+
+	void getFrameNameByCID(ID cid, char* name);
 private:
 	CCAction* mAction;
 	CCPoint* mTarget;
