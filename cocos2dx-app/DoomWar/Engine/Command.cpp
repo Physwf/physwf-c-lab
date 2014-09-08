@@ -247,3 +247,63 @@ CommandParallel::~CommandParallel()
 {
 
 }
+
+CommandScroll::CommandScroll(CCLayer* layer)
+{
+	mLayer = layer;
+}
+
+CommandScroll::~CommandScroll()
+{
+
+}
+
+CommandScroll* CommandScroll::create(CCLayer* layer, StepDirection dir)
+{
+	CommandScroll* pScroll = new CommandScroll(layer);
+	CCPoint pos = layer->getPosition();
+	if (dir == FORWARD)
+		pos.y -= GRID_SIZE;
+	else if (dir == BACKWARD)
+		pos.y += GRID_SIZE;
+	pScroll->mMove = CCMoveTo::create(0.2f,pos);
+	pScroll->mMove->retain();
+
+	return pScroll;
+}
+
+bool CommandScroll::tick(float delta)
+{
+	return mMove->isDone();
+}
+
+void CommandScroll::trigger()
+{
+	mLayer->runAction(mMove);
+}
+
+CommandDie::CommandDie(Actor* actor)
+{
+	mActor = actor;
+}
+
+CommandDie::~CommandDie()
+{
+
+}
+
+CommandDie* CommandDie::create(Actor* actor)
+{
+	CommandDie* pDie = new CommandDie(actor);
+	return pDie;
+}
+
+bool CommandDie::tick(float delta)
+{
+	return true;
+}
+
+void CommandDie::trigger()
+{
+	mActor->sprite()->removeFromParent();
+}

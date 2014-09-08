@@ -20,6 +20,15 @@
 #define GRID_OCCUPY_TYPE_BARRIER 3
 #define GRID_OCCUPY_TYPE_PROPS 4
 
+typedef struct move_result_t
+{
+	StepDirection dir;
+	ID moveUnits[MAX_SCREEN_ENYMYS];
+	ID cantmoveUnits[MAX_SCREEN_ENYMYS];
+	ID comeIntoView[NUM_GRIDS_ROW + 1];
+	ID comeOutOfView[NUM_GRIDS_ROW + 1];
+} MoveResult;
+
 typedef struct buff_result_t
 {
 	ID giver;
@@ -36,6 +45,7 @@ typedef struct attack_result_t
 	ID victim;
 	ID type;//physical or magical or what
 	int value;
+	int healthLeft;
 	Skill skill;
 } AttackResult;
 
@@ -56,6 +66,7 @@ public:
 	std::map<ID, Unit*>* heros() const;
 	std::map<ID, Unit*>* enemys() const;
 	std::map<ID, Unit*>* barriers() const;
+	Unit* getUnit(ID iid) const;
 	ID mapid() const;
 private:
 	void updateStarLevel();

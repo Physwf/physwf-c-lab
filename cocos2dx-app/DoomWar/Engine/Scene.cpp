@@ -68,16 +68,31 @@ void Scene::onBattleMoveResult(Event *event)
 {
 	if (event->type == PVEBattle::BATTLE_MOVE_SUCCESS)
 	{
-		ID* herosToMove = (ID*)event->data;
+		MoveResult* result = (MoveResult*)event->data;
 		CommandParallel* cmds = CommandParallel::create();
-		while (*herosToMove)
+		int i = 0;
+		ID iid;
+		while (iid = result->moveUnits[i])
 		{
-			(*mActors)[(*herosToMove)]->updatePosition();
-			CommandMove *move = CommandMove::create((*mActors)[(*herosToMove)]);
+			(*mActors)[iid]->updatePosition();
+			CommandMove *move = CommandMove::create((*mActors)[iid]);
 			cmds->addCommand(move);
-			herosToMove++;
+			i++;
 		}
+		CommandScroll* cmd = CommandScroll::create(mPVEScene, result->dir);
+		cmds->addCommand(cmd);
 		mPVEScene->addCommand(cmds);
+		
+		i = 0;
+		while (iid = result->comeIntoView[i])
+		{
+			Actor* actor = new Actor(mPVEScene->layerActor());
+			Unit* unit = System::pve->getUnit(iid);
+			CCAssert(unit != NULL, "Unit is null!");
+			actor->setData(unit);
+			(*mActors)[actor->iid()] = actor;
+			i++;
+		}
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{
@@ -96,6 +111,12 @@ void Scene::onBattleAttakResult(Event* event)
 		Actor* victim = getActor(results->victim);
 		CommandProgress* progress = CommandProgress::create(results->value, victim);
 		mPVEScene->addCommand(progress);
+		if (results->healthLeft <= 0)
+		{
+			CommandDie* die = CommandDie::create(victim);
+			mPVEScene->addCommand(die);
+		}
+		
 		results++;
 	}
 }

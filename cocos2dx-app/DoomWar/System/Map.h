@@ -18,14 +18,16 @@ public:
 	~PVEMap();
 	void init(const char* configFile);
 	int getGridsByRow(int row, char* girds);
-	int getBarriersByRow(int row, std::map<ID, Unit*>*);
-	int getEnemysByRow(int row, std::map<ID, Unit*>*);
+	int getBarriersByRow(int row, std::map<ID, Unit*>*,ID*);
+	int getEnemysByRow(int row, std::map<ID, Unit*>*,ID*);
 
 	ID cid() const;
 private:
 	char mGrids[MAX_MAP_GRID];
-	ID mBrriers[MAX_MAP_BARRIERS];
-	ID mEnemys[MAX_MAP_ENEMYS];
+	std::map<int, ID> mBarriers;
+	std::map<int, ID> mEnemys;
+	//ID mBrriers[MAX_MAP_BARRIERS];
+	//ID mEnemys[MAX_MAP_ENEMYS];
 	ID mCID;
 };
 #endif

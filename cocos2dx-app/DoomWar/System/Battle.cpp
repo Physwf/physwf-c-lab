@@ -56,12 +56,13 @@ void PVEBattle::enter(ID mapid, Unit** heros, int numHeros)
 		hero->positon.y = 2;
 	}
 	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW - 1;
-	mBackLine = 0;
+	mBackLine = 1;
 
-	for (int row = mBackLine; row < mFrontLine; row++)
+	for (int row = mBackLine; row <= mFrontLine; row++)
 	{
-		mMap->getEnemysByRow(row, mEnemys);
-		mMap->getBarriersByRow(row, mBarriers);
+		ID iids[NUM_GRIDS_ROW + 1];
+		mMap->getEnemysByRow(row, mEnemys, iids);
+		mMap->getBarriersByRow(row, mBarriers, iids);
 	}
 
 	refreshGrids();
@@ -93,15 +94,15 @@ void PVEBattle::end()
 void PVEBattle::step(StepDirection dir)
 {
 	if (!calculateHerosMovement(dir)) return;
-
-	//mFrontLine++;
-	//mBackLine++;
-	//barriers
-	mMap->getBarriersByRow(mFrontLine, mBarriers);
-	//enemys
-	mMap->getEnemysByRow(mFrontLine, mEnemys);
+	
+	
 
 	calculateRoundResult();
+
+	
+	
+
+	refreshGrids();
 }
 
 void PVEBattle::refreshGrids()
@@ -112,6 +113,7 @@ void PVEBattle::refreshGrids()
 	for (it; it != mHeros->end(); it++)
 	{
 		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		if (index <0 || index >= MAX_SCREEN_GRID) continue;
 		mGrids[index] = GRID_OCCUPY_TYPE_HERO;
 	}
 
@@ -119,6 +121,7 @@ void PVEBattle::refreshGrids()
 	for (it; it != mEnemys->end(); it++)
 	{
 		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		if (index <0 || index >= MAX_SCREEN_GRID) continue;
 		mGrids[index] = GRID_OCCUPY_TYPE_ENEMY;
 	}
 
@@ -126,6 +129,7 @@ void PVEBattle::refreshGrids()
 	for (it; it != mBarriers->end(); it++)
 	{
 		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		if (index <0 || index >= MAX_SCREEN_GRID) continue;
 		mGrids[index] = GRID_OCCUPY_TYPE_BARRIER;
 	}
 }
@@ -140,18 +144,19 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	char gridsCopy[MAX_SCREEN_GRID];
 	memcpy(gridsCopy, mGrids, sizeof(mGrids));
 	int stepLen = 1;
-	ID* heroToMove = new ID[MAX_SCREEN_HEROS];
+	//ID* heroToMove = new ID[MAX_SCREEN_HEROS];
 	int numHeroToMove = 0;
 	int nextGrids[MAX_SCREEN_HEROS] = {0};
-	memset(heroToMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
-	ID* heroCantMove = new ID[MAX_SCREEN_HEROS];
+	//memset(heroToMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
+	MoveResult result = { dir, { 0 }, { 0 }, { 0 }, { 0 } };
+	//ID* heroCantMove = new ID[MAX_SCREEN_HEROS];
 	int numHeroCantMove = 0;
-	memset(heroCantMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
+	//memset(heroCantMove, 0, sizeof(Unit*)*MAX_SCREEN_HEROS);
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
 	for (it; it != mHeros->end(); it++)
 	{
 		if (it->second->health <= 0) continue;//don't move dead body.
-		int index = it->second->positon.x + (it->second->positon.y  - mBackLine) * NUM_GRIDS_ROW;
+		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
 		int next = calculateNextGrid(index, dir);
 		int target = next;
 		//if grid is occupied by hero, set the index to the front rows, until no more heros are hitted
@@ -163,23 +168,25 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE)
 		{
-			heroToMove[numHeroToMove] = it->second->iid;
+			//heroToMove[numHeroToMove] = it->second->iid;
+			result.moveUnits[numHeroToMove] = it->second->iid;
 			nextGrids[numHeroToMove] = target;
 			numHeroToMove++;
 			continue;
 		}
 		if (gridsCopy[index] == GRID_OCCUPY_TYPE_BARRIER || gridsCopy[index] == GRID_OCCUPY_TYPE_ENEMY)
 		{
-			heroCantMove[numHeroCantMove++] = it->second->iid;
+			//heroCantMove[numHeroCantMove++] = it->second->iid;
+			result.cantmoveUnits[numHeroCantMove++] = it->second->iid;
 		}
 	}
 	if (numHeroCantMove>0)
 	{
 		for (int i = 0; i < numHeroCantMove; i++)
 		{
-			if ((*mHeros)[heroCantMove[i]]->positon.y == mBackLine)
+			if ((*mHeros)[result.cantmoveUnits[i]]->positon.y == mBackLine)
 			{
-				Event e = { BATTLE_MOVE_FAILED, (char*)heroCantMove };
+				Event e = { BATTLE_MOVE_FAILED, (char*)&result };
 				dispatchEvent(&e);
 				return false;
 			}
@@ -187,17 +194,27 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	}
 	for (int i = 0; i < numHeroToMove; i++)
 	{
-		(*mHeros)[heroToMove[i]]->positon.y = nextGrids[i] / NUM_GRIDS_ROW;
-		(*mHeros)[heroToMove[i]]->positon.x = nextGrids[i] % NUM_GRIDS_ROW;
+		(*mHeros)[result.moveUnits[i]]->positon.y = nextGrids[i] / NUM_GRIDS_ROW + mBackLine;
+		(*mHeros)[result.moveUnits[i]]->positon.x = nextGrids[i] % NUM_GRIDS_ROW;
 	}
 
-	refreshGrids();
 
-	Event e = { BATTLE_MOVE_SUCCESS, (char*)heroToMove };
+	if (dir == FORWARD)
+	{
+		mFrontLine++;
+		mBackLine++;
+		//barriers
+		int count = mMap->getBarriersByRow(mFrontLine, mBarriers, result.comeIntoView);
+		//enemys
+		mMap->getEnemysByRow(mFrontLine, mEnemys, result.comeIntoView + count);
+	}
+	else if (dir == BACKWARD)
+	{
+		mFrontLine--;
+		mBackLine--;
+	}
+	Event e = { BATTLE_MOVE_SUCCESS, (char*)&result };
 	dispatchEvent(&e);
-
-	delete heroToMove;
-	delete heroCantMove;
 
 	return true;
 }
@@ -254,11 +271,16 @@ void PVEBattle::calculateRoundResult()
 	//step 5, enemys round, attack heros in aligity order
 	MaxHeap enemys = MaxHeap(mEnemys->size());
 	it = mEnemys->begin();
-	for (it; it != mEnemys->end(); it++)
+	for (it; it != mEnemys->end(); )
 	{
-		if (it->second->health <= 0) continue;//dead
+		if (it->second->health <= 0)//dead
+		{
+			it = mEnemys->erase(it);
+			continue;
+		}
 		UnitWraper *wraper = new UnitWraper(it->second);
 		enemys.Enqueue(wraper);
+		it++;
 	}
 	while (enemys.size())
 	{
@@ -353,7 +375,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 				result->value = attacker->skill.value;//to be detailed
 				result->skill = attacker->skill;
 				victim->health += result->value;
-				
+				result->healthLeft = victim->health;
 				return true;
 			}
 			break;
@@ -403,6 +425,14 @@ std::map<ID, Unit*>* PVEBattle::barriers() const
 ID PVEBattle::mapid() const
 {
 	return mMap->cid();
+}
+
+Unit* PVEBattle::getUnit(ID iid) const
+{
+	if (mHeros->find(iid) != mHeros->end()) return (*mHeros)[iid];
+	if (mEnemys->find(iid) != mEnemys->end()) return (*mEnemys)[iid];
+	if (mBarriers->find(iid) != mBarriers->end()) return (*mBarriers)[iid];
+	return NULL;
 }
 
 

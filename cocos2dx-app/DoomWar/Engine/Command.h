@@ -63,6 +63,21 @@ private:
 
 };
 
+class CommandScroll : public Command
+{
+public:
+	static CommandScroll* create(CCLayer* layer, StepDirection dir);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandScroll(CCLayer* layer);
+	~CommandScroll();
+private:
+	CCLayer* mLayer;
+	CCMoveTo* mMove;
+
+};
+
 class CommandAttck : public Command
 {
 public:
@@ -97,4 +112,18 @@ private:
 	CommandProgress(int delta);
 	~CommandProgress();
 };
+
+class CommandDie : public Command
+{
+public:
+	static CommandDie* create(Actor* actor);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandDie(Actor* actor);
+	~CommandDie();
+private:
+	Actor* mActor;
+};
+
 #endif
