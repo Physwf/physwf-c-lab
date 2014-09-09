@@ -136,4 +136,19 @@ PVEBattleScene* Scene::pve()
 	return mPVEScene;
 }
 
+Actor* Scene::getActorByGrid(const CCPoint &pos)
+{
+	CCRect bounds;
+	for (std::map<ID, Actor*>::iterator it = mActors->begin(); it != mActors->end(); it++)
+	{
+
+		bounds.origin = it->second->sprite()->getPosition();
+		bounds.origin.x -= GRID_SIZE / 2;
+		bounds.origin.y -= GRID_SIZE / 2;
+		bounds.size = CCSize(GRID_SIZE,GRID_SIZE);
+		if (bounds.containsPoint(pos)) return it->second;
+	}
+	return NULL;
+}
+
 

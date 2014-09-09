@@ -71,3 +71,8 @@ CCSprite* Actor::sprite() const
 	return mSprite;
 }
 
+Unit* Actor::getData()
+{
+	return mData;
+}
+

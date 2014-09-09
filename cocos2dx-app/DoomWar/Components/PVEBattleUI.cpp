@@ -1,6 +1,7 @@
 #include "PVEBattleUI.h"
 #include "System.h"
 
+
 PVEBattleUI::PVEBattleUI()
 {
 }
@@ -10,7 +11,7 @@ PVEBattleUI::~PVEBattleUI()
 
 }
 
-PVEBattleUI* PVEBattleUI::create(PVEBattleScene* pve)
+PVEBattleUI* PVEBattleUI::create(CCLayer* pve)
 {
 	PVEBattleUI* pUi = new PVEBattleUI();
 	if (pUi && pUi->init())
@@ -74,8 +75,8 @@ void PVEBattleUI::onRightwardTouched(CCObject* object, TouchEventType type)
 
 bool PVEBattleUI::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
-	mPVEBattle->ccTouchBegan(touch, event);
-	return true;
+	mPVEBattle->ccTouchBegan(touch,event);
+	return TouchGroup::ccTouchBegan(touch, event);
 }
 
 

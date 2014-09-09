@@ -3,7 +3,7 @@
 
 #define MAX_ACTORS_IN_MAP 50
 #define X_MARGIN 36
-#define GRID_SIZE 96
+#define GRID_SIZE 96.0
 #include "ActorSprite.h"
 #include "Unit.h"
 
@@ -15,6 +15,7 @@ public:
 
 public:
 	void setData(Unit* data);
+	Unit* getData();
 
 	void updatePosition();
 	void updateHealth(int delta);

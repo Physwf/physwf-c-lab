@@ -9,7 +9,7 @@ using namespace cocos2d;
 
 #define BLOOD_RENDER_W 100
 #define BLOOD_RENDER_H 10
-#define GRID_SIZE 96
+#define GRID_SIZE 96.0
 
 class BloodBar : public CCSprite
 {
@@ -55,11 +55,12 @@ private:
 class ColorSprite : public CCSprite
 {
 public:
-	ColorSprite(unsigned int color, Range* range);
+	ColorSprite();
 	~ColorSprite();
 
-	static ColorSprite* create(unsigned int color, Range* range);
+	static ColorSprite* create(unsigned int color);
 
+	void updateData(Unit* unit);
 private:
 	CCTexture2D* mColorTex;
 	std::vector<CCSprite*> mSprites;

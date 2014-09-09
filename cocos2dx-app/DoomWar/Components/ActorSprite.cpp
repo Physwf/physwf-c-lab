@@ -139,7 +139,7 @@ void BloodBar::setDelta(float delta)
 	setPercent(mPercent + delta);
 }
 
-ColorSprite::ColorSprite(unsigned int color, Range* range)
+ColorSprite::ColorSprite()
 {
 	
 }
@@ -149,25 +149,42 @@ ColorSprite::~ColorSprite()
 
 }
 
-ColorSprite* ColorSprite::create(unsigned int color, Range* range)
+ColorSprite* ColorSprite::create(unsigned int color)
 {
-	ColorSprite* pSprite = new ColorSprite(color, range);
+	ColorSprite* pSprite = new ColorSprite();
 	if (pSprite && pSprite->init())
 	{
-		for (int i = 0; i < range->numGrids; i++)
-		{
-			pSprite->mColorTex = new CCTexture2D();
-			CCSize size(GRID_SIZE, GRID_SIZE);
-			pSprite->mColorTex->initWithData(&color, kCCTexture2DPixelFormat_RGBA8888, GRID_SIZE, GRID_SIZE, size);
-			CCSprite* tile = CCSprite::createWithTexture(pSprite->mColorTex);
-
-			pSprite->setPosition(ccp(range->offsets[i].x * GRID_SIZE, range->offsets[i].y * GRID_SIZE));
-			pSprite->retain();
-			pSprite->addChild(tile);
-			pSprite->mSprites.push_back(tile);
-		}
+		pSprite->mColorTex = new CCTexture2D();
+		pSprite->mColorTex->retain();
+		CCSize size(GRID_SIZE, GRID_SIZE);
+		pSprite->mColorTex->initWithData(&color, kCCTexture2DPixelFormat_RGBA8888, 1, 1, size);
+		
 		pSprite->autorelease();
 		return pSprite;
 	}
 	return NULL;
+}
+
+void ColorSprite::updateData(Unit* unit)
+{
+	int i = 0;
+	int size = mSprites.size();
+	for (int i = 0; i < unit->attackRange.numGrids; i++)
+	{
+		CCSprite* tile;
+		if (i<size)
+			tile = mSprites[i];
+		else
+		{
+			tile = CCSprite::createWithTexture(mColorTex);
+			tile->retain();
+			mSprites.push_back(tile);
+		}		
+		addChild(tile);
+		tile->setPosition(ccp(unit->attackRange.offsets[i].x * GRID_SIZE, unit->attackRange.offsets[i].y * GRID_SIZE));
+	}
+	for (i; i < size; i++)
+	{
+		mSprites[i]->removeFromParent();
+	}
 }

@@ -24,6 +24,7 @@ public:
 	void leavePVPMap();
 
 	Actor* getActor(ID iid);
+	Actor* getActorByGrid(const CCPoint &pos);
 
 	PVEBattleScene* pve();
 private:

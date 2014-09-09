@@ -1,5 +1,6 @@
 #include "PVEBattleScene.h"
 #include "MapSprite.h"
+#include "Engine.h"
 
 CCScene* PVEBattleScene::scene() const
 {
@@ -23,13 +24,16 @@ bool PVEBattleScene::init()
 	this->addChild(mLayerActor);
 	this->addChild(mLayerEffect);
 
-	mPVEUI = PVEBattleUI::create();
+	mPVEUI = PVEBattleUI::create(this);
 	//TouchGroup * ul = TouchGroup::create();
 	//ul->addWidget(GUIReader::shareReader()->widgetFromJsonFile("./Data/UIPVE_1/UIPVE_1.ExportJson"));
 	//mScene->addChild(mPVEUI);
 	mPVEUI->setTouchEnabled(true);
 	//ul->setPosition(ccp(0, 0));
 	mMainThread = CommandSequence::create();
+
+	mRangeSprite = ColorSprite::create(0x6F0000FF);
+	mRangeSprite->retain();
 
 	scheduleUpdate();
 
@@ -93,7 +97,15 @@ void PVEBattleScene::onExit()
 
 bool PVEBattleScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
-	
+	CCLog("x:%f,y:%f\n", touch->getLocation().x, touch->getLocation().y);
+	Actor* actor = Engine::scene->getActorByGrid(touch->getLocation());
+	if (actor != NULL)
+	{
+		mRangeSprite->updateData(actor->getData());
+		const Position pos = actor->getData()->positon;
+		mRangeSprite->setPosition(ccp(pos.x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, pos.y * GRID_SIZE + GRID_SIZE / 2));
+		mLayerEffect->addChild(mRangeSprite);
+	}
 	return true;
 }
 
