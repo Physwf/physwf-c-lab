@@ -43,7 +43,7 @@ PVEBattleScene* PVEBattleScene::create()
 	if (pBattle && pBattle->init())
 	{
 		pBattle->autorelease();
-		//pBattle->setTouchEnabled(true);
+		pBattle->setTouchEnabled(true);
 		pBattle->mScene->addChild(pBattle);
 		pBattle->mScene->addChild(pBattle->mPVEUI);
 		return pBattle;
@@ -81,4 +81,33 @@ CCSprite* PVEBattleScene::layerEffect()
 	return mLayerEffect;
 }
 
+void PVEBattleScene::onEnter()
+{
+	CCLayer::onEnter();
+}
 
+void PVEBattleScene::onExit()
+{
+	CCLayer::onExit();
+}
+
+bool PVEBattleScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
+{
+	
+	return true;
+}
+
+void PVEBattleScene::ccTouchMoved(CCTouch* touch, CCEvent* event)
+{
+
+}
+
+void PVEBattleScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
+{
+
+}
+
+void PVEBattleScene::ccTouchCancelled(CCTouch* touch, CCEvent* event)
+{
+
+}

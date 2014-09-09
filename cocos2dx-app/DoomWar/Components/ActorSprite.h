@@ -3,11 +3,13 @@
 
 #include "cocos2d.h"
 #include "dwtype.h"
+#include "Unit.h"
 
 using namespace cocos2d;
 
 #define BLOOD_RENDER_W 100
 #define BLOOD_RENDER_H 10
+#define GRID_SIZE 96
 
 class BloodBar : public CCSprite
 {
@@ -49,4 +51,18 @@ private:
 	CCLayer* mBloodLayer;
 	CCLayer* mEffectLayer;
 };
+
+class ColorSprite : public CCSprite
+{
+public:
+	ColorSprite(unsigned int color, Range* range);
+	~ColorSprite();
+
+	static ColorSprite* create(unsigned int color, Range* range);
+
+private:
+	CCTexture2D* mColorTex;
+	std::vector<CCSprite*> mSprites;
+};
+
 #endif

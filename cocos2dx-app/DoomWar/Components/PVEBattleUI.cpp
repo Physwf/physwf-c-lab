@@ -3,7 +3,6 @@
 
 PVEBattleUI::PVEBattleUI()
 {
-	mController = new PVEUIController(this);
 }
 
 PVEBattleUI::~PVEBattleUI()
@@ -11,13 +10,14 @@ PVEBattleUI::~PVEBattleUI()
 
 }
 
-PVEBattleUI* PVEBattleUI::create()
+PVEBattleUI* PVEBattleUI::create(PVEBattleScene* pve)
 {
 	PVEBattleUI* pUi = new PVEBattleUI();
 	if (pUi && pUi->init())
 	{
 		pUi->autorelease();
 		pUi->addWidget(GUIReader::shareReader()->widgetFromJsonFile("./Data/UIPVE_1/UIPVE_1.ExportJson"));
+		pUi->mPVEBattle = pve;
 		//pUi->setAnchorPoint(ccp(-320, -480));
 		return pUi;
 	}
@@ -27,7 +27,7 @@ PVEBattleUI* PVEBattleUI::create()
 void PVEBattleUI::onEnter()
 {
 	TouchGroup::onEnter();
-	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(mController,0,false);
+	//CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(mController,1,false);
 	getWidgetByName("leftward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onLeftTouched));
 	getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onForwardTouched));
 	getWidgetByName("backward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onBackwardTouched));
@@ -37,7 +37,7 @@ void PVEBattleUI::onEnter()
 void PVEBattleUI::onExit()
 {
 	TouchGroup::onExit();
-	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(mController);
+	//CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(mController);
 }
 
 void PVEBattleUI::onLeftTouched(CCObject* object, TouchEventType type)
@@ -72,7 +72,27 @@ void PVEBattleUI::onRightwardTouched(CCObject* object, TouchEventType type)
 	}
 }
 
+bool PVEBattleUI::ccTouchBegan(CCTouch* touch, CCEvent* event)
+{
+	mPVEBattle->ccTouchBegan(touch, event);
+	return true;
+}
 
+
+void PVEBattleUI::ccTouchMoved(CCTouch* touch, CCEvent* event)
+{
+	mPVEBattle->ccTouchMoved(touch, event);
+}
+
+void PVEBattleUI::ccTouchEnded(CCTouch* touch, CCEvent* event)
+{
+	mPVEBattle->ccTouchEnded(touch, event);
+}
+
+void PVEBattleUI::ccTouchCancelled(CCTouch* touch, CCEvent* event)
+{
+	mPVEBattle->ccTouchCancelled(touch, event);
+}
 
 /*PVEUIController*/
 
@@ -95,7 +115,6 @@ PVEUIController* PVEUIController::create(PVEBattleUI* view)
 
 bool PVEUIController::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
-	
 	return true;
 }
 

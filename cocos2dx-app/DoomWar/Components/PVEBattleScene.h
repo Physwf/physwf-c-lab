@@ -18,6 +18,13 @@ public:
 
 	CCSprite* layerActor();
 	CCSprite* layerEffect();
+
+	virtual void onEnter();
+	virtual void onExit();
+	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
 private:
 	PVEBattleScene();
 	~PVEBattleScene();
@@ -30,5 +37,20 @@ private:
 
 	CCSprite* mLayerActor;
 	CCSprite* mLayerEffect;
+};
+
+class TopTouchLayer : public CCLayer
+{
+public:
+	static TopTouchLayer* create();
+
+	virtual void onEnter();
+	virtual void onExit();
+	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
+private:
+
 };
 #endif

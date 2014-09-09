@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "cocos-ext.h"
+#include "PVEBattleScene.h"
 
 using namespace cocos2d;
 using namespace cocos2d::extension;
@@ -13,7 +14,7 @@ class PVEUIController;
 class PVEBattleUI : public TouchGroup
 {
 public:
-	static PVEBattleUI* create();
+	static PVEBattleUI* create(PVEBattleScene* pve);
 
 	virtual void onEnter();
 	virtual void onExit();
@@ -25,9 +26,14 @@ private:
 	void onForwardTouched(CCObject* object, TouchEventType type);
 	void onBackwardTouched(CCObject* object, TouchEventType type);
 	void onRightwardTouched(CCObject* object, TouchEventType type);
+
+	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
+	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
 private:
 	CCSprite* mFrame;
-	PVEUIController* mController;
+	PVEBattleScene* mPVEBattle;
 };
 
 /*PVEUIController*/
