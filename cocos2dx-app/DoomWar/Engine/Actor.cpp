@@ -8,13 +8,12 @@ Actor::Actor(CCSprite* layer)
 	mPosition = new CCPoint();
 }
 
-void Actor::setData(Unit* data)
+void Actor::setData(Unit* data, bool bHero)
 {
 	mData = data;
 	mSprite = ActorSprite::create(mData->cid);
 	updatePosition();
-	//mSprite->bloor()->setPercent((float)mData->health / (float)mData->maxHealth);
-	mSprite->setPosition(*mPosition);
+	mIsHero = bHero;
 	mLayer->addChild(mSprite);
 }
 
@@ -28,11 +27,21 @@ int Actor::health() const
 	return mData->health;
 }
 
+bool Actor::isHero()
+{
+	return mIsHero;
+}
+
 void Actor::updatePosition()
 {
-	mPosition->x = mData->positon.x * GRID_SIZE + X_MARGIN + GRID_SIZE/2;
+	calculateNextPosition();
+	mSprite->setPosition(*mPosition);
+}
+
+void Actor::calculateNextPosition()
+{
+	mPosition->x = mData->positon.x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2;
 	mPosition->y = mData->positon.y * GRID_SIZE + GRID_SIZE / 2;
-	//
 }
 
 CCPoint* Actor::position()

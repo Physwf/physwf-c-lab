@@ -38,6 +38,7 @@ private:
 	CCSprite* mLayerActor;
 	CCSprite* mLayerEffect;
 	ColorSprite* mRangeSprite;
+	Actor* mCurDrag;
 };
 
 class TopTouchLayer : public CCLayer

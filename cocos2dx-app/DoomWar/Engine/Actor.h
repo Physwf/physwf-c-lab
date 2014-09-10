@@ -14,10 +14,11 @@ public:
 	~Actor();
 
 public:
-	void setData(Unit* data);
+	void setData(Unit* data, bool bHero=false);
 	Unit* getData();
 
 	void updatePosition();
+	void calculateNextPosition();
 	void updateHealth(int delta);
 	void moveTo();
 
@@ -26,6 +27,7 @@ public:
 
 	ID iid() const;
 	int health() const;
+	bool isHero();
 
 	CCPoint* position();
 
@@ -36,5 +38,6 @@ private:
 	ActorSprite* mSprite;
 	Unit* mData;
 	CCPoint* mPosition;
+	bool mIsHero;
 };
 #endif

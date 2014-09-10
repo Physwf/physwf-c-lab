@@ -1,6 +1,7 @@
 #include "Battle.h"
 #include <string.h>
 #include "dwtype.h"
+#include <assert.h>
 
 PVEBattle::PVEBattle()
 {
@@ -22,6 +23,7 @@ EType const PVEBattle::BATTLE_STEP_CLEAR = "battle_step_clear";
 EType const PVEBattle::BATTLE_MOVE_SUCCESS = "battle_move_success";
 EType const PVEBattle::BATTLE_MOVE_FAILED = "battle_move_failed";
 EType const PVEBattle::BATTLE_ATTACK_RESULT = "battle_attack_result";
+EType const PVEBattle::BATTLE_MOVE_HERO_SUCESS = "battle_move_hero_sucess";
 
 void PVEBattle::initialize()
 {
@@ -94,13 +96,31 @@ void PVEBattle::end()
 void PVEBattle::step(StepDirection dir)
 {
 	if (!calculateHerosMovement(dir)) return;
-	
-	
 
 	calculateRoundResult();
 
-	
-	
+	refreshGrids();
+}
+
+void PVEBattle::moveHero(ID iid, int x, int y)
+{
+	std::map<ID, Unit*>::iterator it = mHeros->find(iid);
+	assert(it != mHeros->end());
+
+	assert(x >= 0 && x < NUM_GRIDS_ROW);
+	assert(y >= 0 && y< MAX_MAP_GRID / NUM_GRIDS_ROW);
+
+	if (it->second->positon.x == x && it->second->positon.y == y) return;
+
+	it->second->positon.x = x;
+	it->second->positon.y = y;
+
+	Event e = { BATTLE_MOVE_HERO_SUCESS, (char*)&iid };
+	dispatchEvent(&e);
+
+	refreshGrids();
+
+	calculateRoundResult();
 
 	refreshGrids();
 }

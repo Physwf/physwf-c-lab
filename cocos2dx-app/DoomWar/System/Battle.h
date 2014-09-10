@@ -61,6 +61,7 @@ public:
 	void refresh();
 	void end();
 	void step(StepDirection dir);
+	void moveHero(ID iid, int x, int y);
 	void update(ID eclipse);
 
 	std::map<ID, Unit*>* heros() const;
@@ -90,6 +91,7 @@ public:
 	static const EType BATTLE_MOVE_SUCCESS;
 	static const EType BATTLE_MOVE_FAILED;
 	static const EType BATTLE_ATTACK_RESULT;
+	static const EType BATTLE_MOVE_HERO_SUCESS;
 private:
 	//Unit mHeros[MAX_SCREEN_HEROS];
 	//int mNumHeros;

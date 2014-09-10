@@ -1,6 +1,7 @@
 #include "PVEBattleScene.h"
 #include "MapSprite.h"
 #include "Engine.h"
+#include "System.h"
 
 CCScene* PVEBattleScene::scene() const
 {
@@ -34,7 +35,8 @@ bool PVEBattleScene::init()
 
 	mRangeSprite = ColorSprite::create(0x6F0000FF);
 	mRangeSprite->retain();
-
+	mRangeSprite->setVisible(false);
+	mLayerEffect->addChild(mRangeSprite);
 	scheduleUpdate();
 
 	return true;
@@ -98,25 +100,40 @@ void PVEBattleScene::onExit()
 bool PVEBattleScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	CCLog("x:%f,y:%f\n", touch->getLocation().x, touch->getLocation().y);
-	Actor* actor = Engine::scene->getActorByGrid(touch->getLocation());
-	if (actor != NULL)
+	mCurDrag = Engine::scene->getActorByGrid(touch->getLocation()-getPosition());
+	if (mCurDrag != NULL)
 	{
-		mRangeSprite->updateData(actor->getData());
-		const Position pos = actor->getData()->positon;
-		mRangeSprite->setPosition(ccp(pos.x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, pos.y * GRID_SIZE + GRID_SIZE / 2));
-		mLayerEffect->addChild(mRangeSprite);
+		mRangeSprite->updateData(mCurDrag->getData());
+		const Position pos = mCurDrag->getData()->positon;
+		mRangeSprite->setPosition(mCurDrag->sprite()->getPosition());
+		mRangeSprite->setVisible(true);
+	}
+	else
+	{
+		mRangeSprite->setVisible(false);
 	}
 	return true;
 }
 
 void PVEBattleScene::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
-
+	if (mCurDrag && mCurDrag->isHero())
+	{
+		mCurDrag->sprite()->setPosition(touch->getLocation() - getPosition());
+		mRangeSprite->setPosition(touch->getLocation() - getPosition());
+	}
 }
 
 void PVEBattleScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
+	if (mCurDrag && mCurDrag->isHero())
+	{
 
+		int x = floor((touch->getLocation().x - getPositionX()- X_MARGIN) / GRID_SIZE);
+		int y = floor((touch->getLocation().y - getPositionY()) / GRID_SIZE);
+		mRangeSprite->setPosition(ccp(x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, y * GRID_SIZE + GRID_SIZE / 2));
+		System::pve->moveHero(mCurDrag->getData()->iid, x, y);
+	}
 }
 
 void PVEBattleScene::ccTouchCancelled(CCTouch* touch, CCEvent* event)

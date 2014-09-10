@@ -36,7 +36,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	for (std::map<ID,Unit*>::iterator it=heros->begin(); it != heros->end(); it++)
 	{
 		Actor* actor = new Actor(mPVEScene->layerActor());
-		actor->setData(it->second);
+		actor->setData(it->second,true);
 		(*mActors)[actor->iid()] = actor;
 	}
 
@@ -60,6 +60,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	System::pve->start();
 
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_SUCCESS, this, EventListener(&Scene::onBattleMoveResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_HERO_SUCESS, this, EventListener(&Scene::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&Scene::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&Scene::onBattleAttakResult));
 }
@@ -74,7 +75,7 @@ void Scene::onBattleMoveResult(Event *event)
 		ID iid;
 		while (iid = result->moveUnits[i])
 		{
-			(*mActors)[iid]->updatePosition();
+			(*mActors)[iid]->calculateNextPosition();
 			CommandMove *move = CommandMove::create((*mActors)[iid]);
 			cmds->addCommand(move);
 			i++;
@@ -96,9 +97,13 @@ void Scene::onBattleMoveResult(Event *event)
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{
-		ID* heroCantMove = (ID*)event->data;
+		//ID* heroCantMove = (ID*)event->data;
 	}
-	
+	else if (event->type == PVEBattle::BATTLE_MOVE_HERO_SUCESS)
+	{
+		ID* iid = (ID*)event->data;
+		(*mActors)[(*iid)]->updatePosition();
+	}
 }
 
 void Scene::onBattleAttakResult(Event* event)
@@ -115,6 +120,7 @@ void Scene::onBattleAttakResult(Event* event)
 		{
 			CommandDie* die = CommandDie::create(victim);
 			mPVEScene->addCommand(die);
+			mActors->erase(mActors->find(results->victim));
 		}
 		
 		results++;

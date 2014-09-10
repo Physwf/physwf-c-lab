@@ -169,7 +169,11 @@ void ColorSprite::updateData(Unit* unit)
 {
 	int i = 0;
 	int size = mSprites.size();
-	for (int i = 0; i < unit->attackRange.numGrids; i++)
+	for (i; i < mSprites.size(); i++)
+	{
+		mSprites[i]->removeFromParent();
+	}
+	for (i=0; i < unit->attackRange.numGrids; i++)
 	{
 		CCSprite* tile;
 		if (i<size)
