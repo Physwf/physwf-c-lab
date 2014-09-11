@@ -320,6 +320,7 @@ void PVEBattle::calculateRoundResult()
 		dispatchEvent(&e);
 	}
 }
+
 bool PVEBattle::calculateHeroBuffResult(Unit* hero, BuffResult* result)
 {
 	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
@@ -386,9 +387,21 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 {
 	if (isInRange(attacker, victim))
 	{
-		result->attacker = attacker->iid;
-		result->victim = victim->iid;
-		switch (attacker->skill.type){
+		ID idBarrier = 0;
+		if (checkBarrier(attacker->positon, victim->positon, &idBarrier))
+		{
+			Unit* barrier = (*mBarriers)[idBarrier];
+			result->attacker = attacker->iid;
+			result->victim = victim->iid;
+			result->value = attacker->skill.value;
+			result->skill = attacker->skill;
+			barrier->health += result->value;
+		}
+		else
+		{
+			result->attacker = attacker->iid;
+			result->victim = victim->iid;
+			switch (attacker->skill.type){
 			case SKILL_TYPE_HARM_PHYSICAL:
 			{
 				result->type = ATTACK_TYPE_PHYSICAL;
@@ -406,7 +419,9 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 				return true;
 			}
 			break;
+			}
 		}
+		
 	}
 	return false;
 }
@@ -453,6 +468,33 @@ Unit* PVEBattle::getUnit(ID iid) const
 	if (mEnemys->find(iid) != mEnemys->end()) return (*mEnemys)[iid];
 	if (mBarriers->find(iid) != mBarriers->end()) return (*mBarriers)[iid];
 	return NULL;
+}
+
+bool PVEBattle::checkBarrier(Position grid1, Position grid2, ID* iid)
+{
+	int offsetx = grid1.x - grid2.x;
+	int offsety = grid1.y - grid2.y;
+	int max = abs(offsetx) > abs(offsety) ? abs(offsetx) : abs(offsety);
+	for (int i = 1; i < max; i++)
+	{
+		float testx = grid2.x + (float)offsetx / max;
+		float testy = grid2.y + (float)offsety / max;
+		int gridx = (int)testx;
+		int gridy = (int)testy;
+		int index = gridx + gridy * NUM_GRIDS_ROW;
+		if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER)
+		{
+			for (std::map<ID, Unit*>::iterator it = mBarriers->begin(); it != mBarriers->end(); it++)
+			{
+				if (it->second->positon.x == gridx && it->second->positon.y == gridy)
+				{
+					*iid = it->second->iid;
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 

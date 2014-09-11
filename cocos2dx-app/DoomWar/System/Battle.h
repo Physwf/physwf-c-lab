@@ -82,6 +82,7 @@ private:
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
 	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
 	bool isInRange(Unit* attacker, Unit* victim);
+	bool checkBarrier(Position grid1, Position grid2, ID* iid);
 	void calculateSkillResult(Skill* skill, Unit* victim, AttackResult* result);
 
 
