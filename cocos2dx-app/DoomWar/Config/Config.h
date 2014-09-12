@@ -24,7 +24,8 @@ public:
 protected:
 	void constructUnitWithXML(Unit* unit, xmlNodePtr node);
 	void parseRange(Unit* unit, xmlChar* szRange);
-	void constructSkillWithXML(Skill* monster, xmlNodePtr node);
+	void constructSkillWithXML(Skill* skill, xmlNodePtr node);
+	void constructBuffWithXML(Buff* buff, xmlNodePtr node);
 };
 
 class HeroConfig : public Config
@@ -58,9 +59,12 @@ class SkillConfig : public Config
 {
 public:
 	void fill(Skill* skill,ID cid);
+	void fill(Buff* buff, ID cid);
 	void onSkillConfigLoaded(xmlNodePtr root);
+	void onBuffConfigLoaded(xmlNodePtr root);
 private:
-	std::map<ID, Skill*> mMaster;
+	std::map<ID, Skill*> mSkills;
+	std::map<ID, Buff*> mBuffs;
 };
 
 

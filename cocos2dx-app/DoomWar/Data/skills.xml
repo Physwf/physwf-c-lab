@@ -1,10 +1,10 @@
 <skills>
 	<!-- type: 1 physical -->
-<skill id="101" name="soldier" 		type="1" cast="1" track="0" effect="1" level="1" value="-40"/>
-<skill id="102" name="archer" 		type="1" cast="1" track="1" effect="2" level="1" value="-20"/>
-<skill id="103" name="warlock" 		type="1" cast="2" track="1" effect="4" level="1" value="-30"/>
-<skill id="104" name="assassin" 	type="1" cast="1" track="1" effect="3" level="1" value="-100"/>
-<skill id="105" name="wizard" 		type="1" cast="2" track="1" effect="4" level="1" value="-30"/>
-<skill id="106" name="oxe" 			type="1" cast="1" track="0" effect="1" level="1" value="-20"/>
-<skill id="107" name="gnome" 		type="1" cast="1" track="0" effect="1" level="1" value="-10"/>
+<skill id="101" name="soldier" 		type="1" cast="1" track="0" effect="1" level="1" value="-40" condition="0"/>
+<skill id="102" name="archer" 		type="1" cast="1" track="1" effect="2" level="1" value="-20" condition="0"/>
+<skill id="103" name="warlock" 		type="1" cast="2" track="1" effect="4" level="1" value="-30" condition="1"/>
+<skill id="104" name="assassin" 	type="1" cast="1" track="1" effect="3" level="1" value="-100" condition="0"/>
+<skill id="105" name="wizard" 		type="1" cast="2" track="1" effect="4" level="1" value="-30" condition="0"/>
+<skill id="106" name="oxe" 			type="1" cast="1" track="0" effect="1" level="1" value="-20" condition="0"/>
+<skill id="107" name="gnome" 		type="1" cast="1" track="0" effect="1" level="1" value="-10" condition="0"/>
 </skills>

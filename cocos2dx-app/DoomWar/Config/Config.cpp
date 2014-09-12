@@ -147,7 +147,7 @@ void SkillConfig::onSkillConfigLoaded(xmlNodePtr root)
 		{
 			Skill* skill = new Skill();
 			constructSkillWithXML(skill, child);
-			mMaster[skill->cid] = skill;
+			mSkills[skill->cid] = skill;
 		}
 		child = child->next;
 	}
@@ -155,8 +155,29 @@ void SkillConfig::onSkillConfigLoaded(xmlNodePtr root)
 
 void SkillConfig::fill(Skill* skill, ID cid)
 {
-	Skill* master = mMaster[cid];
+	Skill* master = mSkills[cid];
 	memcpy(skill, master, sizeof Skill);
+}
+
+void SkillConfig::onBuffConfigLoaded(xmlNodePtr root)
+{
+	xmlNodePtr child = root->children;
+	while (child)
+	{
+		if (child->type != XML_TEXT_NODE && child->type != XML_COMMENT_NODE && child->type != XML_DTD_NODE)
+		{
+			Buff* buff = new Buff();
+			constructBuffWithXML(buff, child);
+			mBuffs[buff->cid] = buff;
+		}
+		child = child->next;
+	}
+}
+
+void SkillConfig::fill(Buff* buff, ID cid)
+{
+	Buff* master = mBuffs[cid];
+	memcpy(buff, master, sizeof Buff);
 }
 
 void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
@@ -213,4 +234,17 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	skill->effect = atoi((const char*)szEffect);
 	skill->level = atoi((const char*)szLevel);
 	skill->value = atoi((const char*)szValue);
+}
+
+void Config::constructBuffWithXML(Buff* buff, xmlNodePtr node)
+{
+	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
+	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
+	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
+	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
+
+	buff->cid = atoi((const char*)szid);
+	buff->name = (char*)szname;
+	buff->type = atoi((const char*)szType);
+	buff->value = atoi((const char*)szValue);
 }

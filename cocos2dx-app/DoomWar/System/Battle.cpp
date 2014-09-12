@@ -1,4 +1,5 @@
 #include "Battle.h"
+#include "Config.h"
 #include <string.h>
 #include "dwtype.h"
 #include <assert.h>
@@ -212,10 +213,24 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 			}
 		}
 	}
+	int skill_count = 0;
 	for (int i = 0; i < numHeroToMove; i++)
 	{
-		(*mHeros)[result.moveUnits[i]]->positon.y = nextGrids[i] / NUM_GRIDS_ROW + mBackLine;
-		(*mHeros)[result.moveUnits[i]]->positon.x = nextGrids[i] % NUM_GRIDS_ROW;
+		Unit* who = (*mHeros)[result.moveUnits[i]];
+		who->positon.y = nextGrids[i] / NUM_GRIDS_ROW + mBackLine;
+		who->positon.x = nextGrids[i] % NUM_GRIDS_ROW;
+		
+		int j = 0;
+		while (who->skills[j])
+		{
+			Skill skill;
+			Config::skill->fill(&skill, who->skills[j]);
+			if (skill.condition == SKILL_CONDITION_MOVE_FORWARD)
+			{
+				calculateHeroHealResult(who, result.skills + skill_count);
+				skill_count++;
+			}
+		}
 	}
 
 
@@ -237,6 +252,12 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	dispatchEvent(&e);
 
 	return true;
+}
+
+void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
+{
+	//first, find nearest
+	//second, find weakest
 }
 
 int PVEBattle::calculateNextGrid(int index, StepDirection dir)
@@ -344,8 +365,7 @@ bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* re
 {
 	if (isInRange(giver, recipient))
 	{
-		result->giver = giver->iid;
-		result->recipient = recipient->iid;
+		result->owner = giver->iid;
 		switch (giver->skill.type)
 		{
 		case SKILL_TYPE_BUFF_HEALTH:
@@ -391,39 +411,49 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 		if (checkBarrier(attacker->positon, victim->positon, &idBarrier))
 		{
 			Unit* barrier = (*mBarriers)[idBarrier];
-			result->attacker = attacker->iid;
-			result->victim = victim->iid;
-			result->value = attacker->skill.value;
-			result->skill = attacker->skill;
-			barrier->health += result->value;
+			Skill main;
+			Config::skill->fill(&main, attacker->skills[0]);
+			calculateSkillResult(&main, attacker,barrier, result->results);
 		}
 		else
 		{
-			result->attacker = attacker->iid;
-			result->victim = victim->iid;
-			switch (attacker->skill.type){
-			case SKILL_TYPE_HARM_PHYSICAL:
+			int i = 0;
+			while (attacker->skills[i])
 			{
-				result->type = ATTACK_TYPE_PHYSICAL;
-				result->value = attacker->skill.value;//to be detailed
-				result->skill = attacker->skill;
-				victim->health += result->value;
-				result->healthLeft = victim->health;
-				return true;
+				Skill skill;
+				Config::skill->fill(&skill, attacker->skills[i]);
+				calculateSkillResult(&skill, attacker,victim, result->results+i);
+				i++;
 			}
-			break;
-			case SKILL_TYPE_HARM_MAGICAL:
-			{
-				result->type = ATTACK_TYPE_MAGICAL;
-				result->value = attacker->skill.value;//to be detailed
-				return true;
-			}
-			break;
-			}
+			
 		}
 		
 	}
 	return false;
+}
+
+void PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result)
+{
+	result->giver = attacker->iid;
+	result->recipient = victim->iid;
+	switch (attacker->skill.type)
+	{
+		case SKILL_TYPE_HARM_PHYSICAL:
+		{
+			result->type = ATTACK_TYPE_PHYSICAL;
+			result->value = attacker->skill.value;//to be detailed
+			result->skill = attacker->skill;
+			victim->health += result->value;
+			result->healthLeft = victim->health;
+		}
+	break;
+	case SKILL_TYPE_HARM_MAGICAL:
+		{
+			result->type = ATTACK_TYPE_MAGICAL;
+			result->value = attacker->skill.value;//to be detailed
+		}
+	break;
+	}
 }
 
 bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
@@ -439,6 +469,33 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 	}
 
 	//second, check if be blocked, to do
+	return false;
+}
+
+bool PVEBattle::checkBarrier(Position grid1, Position grid2, ID* iid)
+{
+	int offsetx = grid1.x - grid2.x;
+	int offsety = grid1.y - grid2.y;
+	int max = abs(offsetx) > abs(offsety) ? abs(offsetx) : abs(offsety);
+	for (int i = 1; i < max; i++)
+	{
+		float testx = grid2.x + (float)offsetx / max;
+		float testy = grid2.y + (float)offsety / max;
+		int gridx = (int)testx;
+		int gridy = (int)testy;
+		int index = gridx + gridy * NUM_GRIDS_ROW;
+		if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER)
+		{
+			for (std::map<ID, Unit*>::iterator it = mBarriers->begin(); it != mBarriers->end(); it++)
+			{
+				if (it->second->positon.x == gridx && it->second->positon.y == gridy)
+				{
+					*iid = it->second->iid;
+					return true;
+				}
+			}
+		}
+	}
 	return false;
 }
 
@@ -470,32 +527,7 @@ Unit* PVEBattle::getUnit(ID iid) const
 	return NULL;
 }
 
-bool PVEBattle::checkBarrier(Position grid1, Position grid2, ID* iid)
-{
-	int offsetx = grid1.x - grid2.x;
-	int offsety = grid1.y - grid2.y;
-	int max = abs(offsetx) > abs(offsety) ? abs(offsetx) : abs(offsety);
-	for (int i = 1; i < max; i++)
-	{
-		float testx = grid2.x + (float)offsetx / max;
-		float testy = grid2.y + (float)offsety / max;
-		int gridx = (int)testx;
-		int gridy = (int)testy;
-		int index = gridx + gridy * NUM_GRIDS_ROW;
-		if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER)
-		{
-			for (std::map<ID, Unit*>::iterator it = mBarriers->begin(); it != mBarriers->end(); it++)
-			{
-				if (it->second->positon.x == gridx && it->second->positon.y == gridy)
-				{
-					*iid = it->second->iid;
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
+
 
 
 

@@ -108,19 +108,19 @@ void Scene::onBattleMoveResult(Event *event)
 
 void Scene::onBattleAttakResult(Event* event)
 {
-	AttackResult* results = (AttackResult*)event->data;
-	while (results->attacker)
+	SkillResult* results = (SkillResult*)event->data;
+	while (results->giver)
 	{
 		CommandAttck* attack = CommandAttck::create(results);
 		mPVEScene->addCommand(attack);
-		Actor* victim = getActor(results->victim);
+		Actor* victim = getActor(results->recipient);
 		CommandProgress* progress = CommandProgress::create(results->value, victim);
 		mPVEScene->addCommand(progress);
 		if (results->healthLeft <= 0)
 		{
 			CommandDie* die = CommandDie::create(victim);
 			mPVEScene->addCommand(die);
-			mActors->erase(mActors->find(results->victim));
+			mActors->erase(mActors->find(results->recipient));
 		}
 		
 		results++;

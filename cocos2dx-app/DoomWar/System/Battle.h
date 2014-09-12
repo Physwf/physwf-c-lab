@@ -11,6 +11,7 @@
 #define MAX_SCREEN_ENYMYS 20
 #define MAX_SCREEN_BARRIERS 10
 #define MAX_SCREEN_GRID 60
+#define MAX_SKILL_RESULTS 5
 
 #define MAX_STAR_LEVEL 3
 
@@ -20,33 +21,48 @@
 #define GRID_OCCUPY_TYPE_BARRIER 3
 #define GRID_OCCUPY_TYPE_PROPS 4
 
+#define SKILL_CONDITION_MOVE_FORWARD 1
+
+#define BUFF_CONDITION_MOVE_FORWARD 1
+
+typedef struct skill_result_t	SkillResult;
+typedef struct move_result_t	MoveResult;
+typedef struct buff_result_t	BuffResult;
+
 typedef struct move_result_t
 {
 	StepDirection dir;
-	ID moveUnits[MAX_SCREEN_ENYMYS];
+	ID moveUnits[MAX_SCREEN_HEROS];
 	ID cantmoveUnits[MAX_SCREEN_ENYMYS];
 	ID comeIntoView[NUM_GRIDS_ROW + 1];
 	ID comeOutOfView[NUM_GRIDS_ROW + 1];
+	SkillResult skills[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
+	BuffResult buffs[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
 } MoveResult;
 
 typedef struct buff_result_t
 {
-	ID giver;
-	ID recipient;
+	ID owner;
+	//ID recipient;
 	ID type;
 	int value;
 } BuffResult;
 
 #define ATTACK_TYPE_PHYSICAL	1L
 #define ATTACK_TYPE_MAGICAL		2L
-typedef struct attack_result_t
+typedef struct skill_result_t
 {
-	ID attacker;
-	ID victim;
+	ID giver;
+	ID recipient;
 	ID type;//physical or magical or what
 	int value;
 	int healthLeft;
 	Skill skill;
+} SkillResult;
+
+typedef struct attack_result_t
+{
+	SkillResult results[MAX_SKILL_RESULTS];
 } AttackResult;
 
 class PVEBattle :public EventDispather
@@ -73,17 +89,19 @@ private:
 	void updateStarLevel();
 	void refreshGrids();
 	bool calculateHerosMovement(StepDirection dir);
+	void calculateHeroHealResult(Unit* hero, SkillResult* result);
 	int calculateNextGrid(int index,StepDirection dir);
 	void calculateRoundResult();
 	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);
 	bool calculateEnemyBuffResult(Unit* enemy, BuffResult* result);
 	bool calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* result);
-	bool calculateHeroAttackResult(Unit* hero,AttackResult* result);
+	bool calculateHeroAttackResult(Unit* hero, AttackResult* result);
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
 	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
+	void calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result);
 	bool isInRange(Unit* attacker, Unit* victim);
 	bool checkBarrier(Position grid1, Position grid2, ID* iid);
-	void calculateSkillResult(Skill* skill, Unit* victim, AttackResult* result);
+	
 
 
 public:

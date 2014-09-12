@@ -6,6 +6,8 @@
 #include "libxml\parser.h"
 
 #define MAX_ATTACK_GRIDS 20
+#define MAX_NUM_SKILLS 10
+#define MAX_NUM_BUFFS 10
 
 typedef enum {
 	LEFTWARD,
@@ -49,7 +51,17 @@ typedef struct skill_t
 	ID effect;
 	int level;
 	int value;
+	int condition;
 } Skill;
+
+typedef struct  buff_t
+{
+	char* name;
+	ID cid;
+	ID type;
+	char condition;
+	int value;
+} Buff;
 
 typedef struct unit_t
 {
@@ -59,6 +71,8 @@ typedef struct unit_t
 	int exp;
 	int maxHealth;
 	int health;
+	ID skills[MAX_NUM_SKILLS];
+	ID buffs[MAX_NUM_BUFFS];
 	Skill skill;
 	int agility;
 	ID armor;

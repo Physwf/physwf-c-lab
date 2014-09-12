@@ -98,16 +98,16 @@ void CommandAttck::trigger()
 	mEffect->fire();
 }
 
-CommandAttck* CommandAttck::create(AttackResult* result)
+CommandAttck* CommandAttck::create(SkillResult* result)
 {
 	CommandAttck* cmd = new CommandAttck();
 	if (result->skill.track == SKILL_TRACK_HACK)
 	{
-		cmd->mEffect = HackEffect::create(result->skill.effect, result->attacker, result->victim);
+		cmd->mEffect = HackEffect::create(result->skill.effect, result->giver, result->recipient);
 	}
 	else if (result->skill.track == SKILL_TRACK_BULLET)
 	{
-		cmd->mEffect = BulletEffect::create(result->skill.effect, result->attacker, result->victim);
+		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{
@@ -115,7 +115,7 @@ CommandAttck* CommandAttck::create(AttackResult* result)
 	}
 	else
 	{
-		cmd->mEffect = BulletEffect::create(result->skill.effect, result->attacker, result->victim);
+		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
 	}
 	return cmd;
 }
