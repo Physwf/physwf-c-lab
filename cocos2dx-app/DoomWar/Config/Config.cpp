@@ -14,7 +14,7 @@ Unit* HeroConfig::create(ID cid)
 	memcpy(copy, master, sizeof Unit);
 	copy->iid = (ID)copy;
 
-	Config::skill->fill(&copy->skill, copy->skill.cid);
+	//Config::skill->fill(&copy->skill, copy->skill.cid);
 
 	return copy;
 
@@ -93,7 +93,7 @@ Unit* MonsterConfig::create(ID cid)
 	memcpy(copy, master, sizeof Unit);
 	copy->iid = (ID)copy;
 
-	Config::skill->fill(&copy->skill, copy->skill.cid);
+	//Config::skill->fill(&copy->skill, copy->skill.cid);
 
 	return copy;
 
@@ -187,15 +187,27 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	xmlChar* szlevel = xmlGetProp(node, BAD_CAST"level");
 	xmlChar* szMaxHealth = xmlGetProp(node, BAD_CAST"maxHealth");
 	xmlChar* szAgility = xmlGetProp(node, BAD_CAST"agility");
-	xmlChar* szSkill = xmlGetProp(node, BAD_CAST"skill");
+	xmlChar* szSkills = xmlGetProp(node, BAD_CAST"skills");
 	xmlChar* szAttackRange = xmlGetProp(node, BAD_CAST"attackRange");
 
 	unit->cid = atoi((const char*)szid);
 	unit->name = (char*)szname;
 	unit->maxHealth = atoi((const char*)szMaxHealth);
 	unit->agility = atoi((const char*)szAgility);
-	unit->skill.cid = atoi((const char*)szSkill);
+
+	parseSkills(unit,szSkills);
 	parseRange(unit, szAttackRange);
+}
+
+void Config::parseSkills(Unit* unit, xmlChar* szSkills)
+{
+	char* skill = strtok((char*)szSkills, ",");
+	int count = 0;
+	while (skill != NULL)
+	{
+		unit->skills[count++] = atoi(skill);
+		skill = strtok(NULL, ",");
+	}
 }
 
 void Config::parseRange(Unit* unit, xmlChar* szRange)
@@ -248,3 +260,4 @@ void Config::constructBuffWithXML(Buff* buff, xmlNodePtr node)
 	buff->type = atoi((const char*)szType);
 	buff->value = atoi((const char*)szValue);
 }
+

@@ -3,6 +3,13 @@
 UnitWraper::UnitWraper(Unit* unit)
 {
 	mUnit = unit;
+	mValue = unit->agility;
+}
+
+UnitWraper::UnitWraper(Unit* unit, int value)
+{
+	mUnit = unit;
+	mValue = value;
 }
 
 UnitWraper::~UnitWraper()
@@ -12,7 +19,7 @@ UnitWraper::~UnitWraper()
 
 int UnitWraper::value()const
 {
-	return mUnit->agility;
+	return mValue;
 }
 
 Unit* UnitWraper::unit() const

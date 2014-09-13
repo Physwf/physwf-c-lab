@@ -30,16 +30,18 @@ typedef struct range_t
 
 #define SKILL_TYPE_HARM_PHYSICAL	1L
 #define SKILL_TYPE_HARM_MAGICAL		2L
-#define SKILL_TYPE_BUFF_HEALTH		3L
+#define SKILL_TYPE_HEAL				3L
 
-#define  SKILL_TRACK_HACK			0L
-#define  SKILL_TRACK_BULLET			1L
-#define  SKILL_TRACK_FIXXED			2L
+#define SKILL_TRACK_HACK			0L
+#define SKILL_TRACK_BULLET			1L
+#define SKILL_TRACK_FIXXED			2L
 
 #define SKILL_EFFECT_AXE			1L
 #define SKILL_EFFECT_ARROW			2L
 #define SKILL_EFFECT_DAGGER			3L
 #define SKILL_EFFECT_ICE			4L
+
+#define BUFF_TYPE_HEAL				1L
 
 typedef struct skill_t
 {
@@ -87,6 +89,7 @@ class UnitWraper :public IPriority
 {
 public:
 	UnitWraper(Unit* unit);
+	UnitWraper(Unit* unit, int value);
 	~UnitWraper();
 
 	virtual int value() const;
@@ -95,5 +98,6 @@ private:
 	UnitWraper();
 private:
 	Unit* mUnit;
+	int mValue;
 };
 #endif

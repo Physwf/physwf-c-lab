@@ -76,6 +76,7 @@ DWcpy:
 	@cp $(DIR_DW)/Data/heros.xml $(BIN)/Data/heros.xml
 	@cp $(DIR_DW)/Data/monsters.xml $(BIN)/Data/monsters.xml
 	@cp $(DIR_DW)/Data/skills.xml $(BIN)/Data/skills.xml
+	@cp $(DIR_DW)/Data/buffs.xml $(BIN)/Data/buffs.xml
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
 %.xml : %.xml

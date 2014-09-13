@@ -57,6 +57,7 @@ void PVEBattle::enter(ID mapid, Unit** heros, int numHeros)
 		hero->health = hero->maxHealth;
 		hero->positon.x = 1+i;
 		hero->positon.y = 2;
+		hero->buffs[0] = BUFF_SELF_HEAL;
 	}
 	mFrontLine = MAX_SCREEN_GRID / NUM_GRIDS_ROW - 1;
 	mBackLine = 1;
@@ -214,6 +215,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		}
 	}
 	int skill_count = 0;
+	int buff_count = 0;
 	for (int i = 0; i < numHeroToMove; i++)
 	{
 		Unit* who = (*mHeros)[result.moveUnits[i]];
@@ -230,7 +232,12 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 				calculateHeroHealResult(who, result.skills + skill_count);
 				skill_count++;
 			}
+			j++;
 		}
+		if (dir != FORWARD) continue;
+
+		calculateBuffResult(who, result.buffs + buff_count, BUFF_CONDITION_MOVE_FORWARD);
+		buff_count++;
 	}
 
 
@@ -256,8 +263,26 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 
 void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
 {
-	//first, find nearest
-	//second, find weakest
+	//if in range, sort by health
+	std::map<ID, Unit*>::iterator it = mHeros->begin();
+	MinHeap heap = MinHeap(mHeros->size());
+	for (; it != mHeros->end(); it++)
+	{
+		if (it->second->iid == hero->iid) continue;
+		if (isInRange(hero, it->second))
+		{
+			UnitWraper* wraper = new UnitWraper(it->second, it->second->health);
+			heap.Enqueue(wraper);
+		}
+	}
+	//find weakest
+	Skill heal;
+	Config::skill->fill(&heal, hero->skills[0]);
+	for (int i = 0; i < hero->atackFreq; i++)
+	{
+		UnitWraper* wraper = (UnitWraper*)heap.Dequeue();
+		calculateSkillResult(&heal, hero, wraper->unit(), result);
+	}
 }
 
 int PVEBattle::calculateNextGrid(int index, StepDirection dir)
@@ -342,17 +367,16 @@ void PVEBattle::calculateRoundResult()
 	}
 }
 
-bool PVEBattle::calculateHeroBuffResult(Unit* hero, BuffResult* result)
+bool PVEBattle::calculateHeroBuffResult(int condition)
 {
 	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
 	{
 		// to do, implement multi-buff in one turn
-		if (calculateBuffResult(hero, it->second, result)) return true;
 	}
 	return false;
 }
 
-bool PVEBattle::calculateEnemyBuffResult(Unit* enemy, BuffResult* result)
+bool PVEBattle::calculateEnemyBuffResult(int condition)
 {
 	for (std::map<ID, Unit*>::iterator it = mEnemys->begin(); it != mEnemys->end(); it++)
 	{
@@ -361,18 +385,22 @@ bool PVEBattle::calculateEnemyBuffResult(Unit* enemy, BuffResult* result)
 	return false;
 }
 
-bool PVEBattle::calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* result)
+bool PVEBattle::calculateBuffResult(Unit* who, BuffResult* result, int condition)
 {
-	if (isInRange(giver, recipient))
+	result->owner = who->iid;
+	int i = 0;
+	while (ID cid = who->buffs[i])
 	{
-		result->owner = giver->iid;
-		switch (giver->skill.type)
+		i++;
+		Buff buff;
+		Config::skill->fill(&buff, cid);
+		if (buff.condition != condition) continue;
+		switch (buff.type)
 		{
-		case SKILL_TYPE_BUFF_HEALTH:
-			{
-				recipient->health += giver->skill.value;
-				recipient->health = recipient->health > recipient->maxHealth ? recipient->maxHealth : recipient->health;
-			}
+		case BUFF_TYPE_HEAL:
+			result->type = BUFF_TYPE_HEAL;
+			who->health += buff.value;
+			break;
 		default:
 			break;
 		}
@@ -414,6 +442,8 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 			Skill main;
 			Config::skill->fill(&main, attacker->skills[0]);
 			calculateSkillResult(&main, attacker,barrier, result->results);
+			result->count++;
+			return true;
 		}
 		else
 		{
@@ -423,11 +453,11 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 				Skill skill;
 				Config::skill->fill(&skill, attacker->skills[i]);
 				calculateSkillResult(&skill, attacker,victim, result->results+i);
+				result->count++;
 				i++;
 			}
-			
+			return true;
 		}
-		
 	}
 	return false;
 }
@@ -436,23 +466,30 @@ void PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 {
 	result->giver = attacker->iid;
 	result->recipient = victim->iid;
-	switch (attacker->skill.type)
+	switch (skill->type)
 	{
 		case SKILL_TYPE_HARM_PHYSICAL:
 		{
-			result->type = ATTACK_TYPE_PHYSICAL;
-			result->value = attacker->skill.value;//to be detailed
-			result->skill = attacker->skill;
+			result->type = SKILL_TYPE_HARM_PHYSICAL;
+			result->value = skill->value;//to be detailed
+			result->skill = *skill;
 			victim->health += result->value;
 			result->healthLeft = victim->health;
 		}
-	break;
-	case SKILL_TYPE_HARM_MAGICAL:
+		break;
+		case SKILL_TYPE_HARM_MAGICAL:
 		{
-			result->type = ATTACK_TYPE_MAGICAL;
-			result->value = attacker->skill.value;//to be detailed
+			result->type = SKILL_TYPE_HARM_MAGICAL;
+			result->value = skill->value;//to be detailed
 		}
-	break;
+		break;
+		case SKILL_TYPE_HEAL:
+		{
+			result->type = SKILL_TYPE_HEAL;
+			victim->health += skill->value;
+			victim->health = attacker->health > victim->maxHealth ? victim->maxHealth : victim->health;
+		}
+		break;
 	}
 }
 

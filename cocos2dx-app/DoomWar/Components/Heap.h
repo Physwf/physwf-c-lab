@@ -21,4 +21,18 @@ private:
 	IPriority** mHeap;
 };
 
+class MinHeap
+{
+public:
+	MinHeap(unsigned int capacity);
+	void Enqueue(IPriority* item);
+	IPriority* Dequeue();
+	unsigned int size() const;
+	bool hasItem(IPriority* item);
+	IPriority* getMin()const;
+private:
+	unsigned int mSize;
+	IPriority** mHeap;
+};
+
 #endif

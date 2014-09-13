@@ -25,20 +25,8 @@
 
 #define BUFF_CONDITION_MOVE_FORWARD 1
 
-typedef struct skill_result_t	SkillResult;
-typedef struct move_result_t	MoveResult;
-typedef struct buff_result_t	BuffResult;
+#define BUFF_SELF_HEAL	201L
 
-typedef struct move_result_t
-{
-	StepDirection dir;
-	ID moveUnits[MAX_SCREEN_HEROS];
-	ID cantmoveUnits[MAX_SCREEN_ENYMYS];
-	ID comeIntoView[NUM_GRIDS_ROW + 1];
-	ID comeOutOfView[NUM_GRIDS_ROW + 1];
-	SkillResult skills[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
-	BuffResult buffs[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
-} MoveResult;
 
 typedef struct buff_result_t
 {
@@ -60,8 +48,21 @@ typedef struct skill_result_t
 	Skill skill;
 } SkillResult;
 
+typedef struct move_result_t
+{
+	StepDirection dir;
+	ID moveUnits[MAX_SCREEN_HEROS];
+	ID cantmoveUnits[MAX_SCREEN_ENYMYS];
+	ID comeIntoView[NUM_GRIDS_ROW + 1];
+	ID comeOutOfView[NUM_GRIDS_ROW + 1];
+	SkillResult skills[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
+	BuffResult buffs[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
+} MoveResult;
+
+
 typedef struct attack_result_t
 {
+	char count;
 	SkillResult results[MAX_SKILL_RESULTS];
 } AttackResult;
 
@@ -92,9 +93,9 @@ private:
 	void calculateHeroHealResult(Unit* hero, SkillResult* result);
 	int calculateNextGrid(int index,StepDirection dir);
 	void calculateRoundResult();
-	bool calculateHeroBuffResult(Unit* hero, BuffResult* result);
-	bool calculateEnemyBuffResult(Unit* enemy, BuffResult* result);
-	bool calculateBuffResult(Unit* giver, Unit* recipient, BuffResult* result);
+	bool calculateHeroBuffResult(int condition);
+	bool calculateEnemyBuffResult(int condition);
+	bool calculateBuffResult(Unit* who, BuffResult* result,int condition);
 	bool calculateHeroAttackResult(Unit* hero, AttackResult* result);
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
 	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
