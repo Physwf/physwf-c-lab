@@ -82,6 +82,13 @@ void Scene::onBattleMoveResult(Event *event)
 		}
 		CommandScroll* cmd = CommandScroll::create(mPVEScene, result->dir);
 		cmds->addCommand(cmd);
+		i = 0;
+		while (result->skills[i].giver)
+		{
+			CommandSkill* skill = CommandSkill::create(&result->skills[i]);
+			cmds->addCommand(skill);
+			i++;
+		}
 		mPVEScene->addCommand(cmds);
 		
 		i = 0;
@@ -116,7 +123,7 @@ void Scene::onBattleAttakResult(Event* event)
 		while (i < aResults->count)
 		{
 			SkillResult* sResult = aResults->results + i;
-			CommandAttck* attack = CommandAttck::create(sResult);
+			CommandSkill* attack = CommandSkill::create(sResult);
 			mPVEScene->addCommand(attack);
 			Actor* victim = getActor(sResult->recipient);
 			CommandProgress* progress = CommandProgress::create(sResult->value, victim);

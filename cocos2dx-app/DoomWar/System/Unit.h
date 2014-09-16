@@ -35,6 +35,7 @@ typedef struct range_t
 #define SKILL_TRACK_HACK			0L
 #define SKILL_TRACK_BULLET			1L
 #define SKILL_TRACK_FIXXED			2L
+#define SKILL_TRACK_ARC				3L
 
 #define SKILL_EFFECT_AXE			1L
 #define SKILL_EFFECT_ARROW			2L
@@ -78,7 +79,7 @@ typedef struct unit_t
 	Skill skill;
 	int agility;
 	ID armor;
-	unsigned short atackFreq;//attacks per turn
+	unsigned short attackFreq;//attacks per turn
 	Position positon;
 	Range attackRange;
 	Range view;//йср╟

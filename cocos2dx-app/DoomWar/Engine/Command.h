@@ -78,15 +78,15 @@ private:
 
 };
 
-class CommandAttck : public Command
+class CommandSkill : public Command
 {
 public:
-	static CommandAttck* create(SkillResult* result);
+	static CommandSkill* create(SkillResult* result);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:
-	CommandAttck();
-	~CommandAttck();
+	CommandSkill();
+	~CommandSkill();
 private:
 	float mDuration;
 	float mNow;

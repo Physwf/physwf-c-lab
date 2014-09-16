@@ -278,7 +278,7 @@ void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
 	//find weakest
 	Skill heal;
 	Config::skill->fill(&heal, hero->skills[0]);
-	for (int i = 0; i < hero->atackFreq; i++)
+	for (int i = 0; i < hero->attackFreq; i++)
 	{
 		UnitWraper* wraper = (UnitWraper*)heap.Dequeue();
 		calculateSkillResult(&heal, hero, wraper->unit(), result);
@@ -466,13 +466,13 @@ void PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 {
 	result->giver = attacker->iid;
 	result->recipient = victim->iid;
+	result->skill = *skill;
 	switch (skill->type)
 	{
 		case SKILL_TYPE_HARM_PHYSICAL:
 		{
 			result->type = SKILL_TYPE_HARM_PHYSICAL;
 			result->value = skill->value;//to be detailed
-			result->skill = *skill;
 			victim->health += result->value;
 			result->healthLeft = victim->health;
 		}

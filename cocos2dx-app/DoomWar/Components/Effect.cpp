@@ -181,3 +181,60 @@ HackEffect* HackEffect::create(ID cid, ID attacker, ID victim)
 	}
 	return NULL;
 }
+
+ArcEffect::ArcEffect()
+{
+
+}
+
+ArcEffect::~ArcEffect()
+{
+
+}
+
+bool ArcEffect::tick(float delta)
+{
+	return false;
+}
+
+void ArcEffect::fire()
+{
+
+}
+
+void ArcEffect::draw()
+{
+	ccDrawColor4B(255, 255, 255, 255);
+	glLineWidth(1);
+	drawArc(mAttacker->position()->x, mAttacker->position()->y, mVictim->position()->x,mVictim->position()->y,200.0f);
+}
+
+void ArcEffect::drawArc(float x1,float y1,float x2,float y2,float distance)
+{
+	if (distance < 5)
+	{
+		ccDrawLine(ccp(x1,y1),ccp(x2,y2));
+	}
+	else
+	{
+		float midx = (x1 + x2) / 2;
+		float midy = (y1 + y2) / 2;
+		midx += (CCRANDOM_0_1() - .5) * distance;
+		midy += (CCRANDOM_0_1() - .5) * distance;
+		drawArc(x1, y1, midx, midy, distance / 2);
+		drawArc(x2, y2, midx, midy, distance / 2);
+	}
+}
+
+ArcEffect* ArcEffect::create(ID cid, ID attacker, ID victim)
+{
+	CCSprite* layer = Engine::scene->pve()->layerEffect();
+	ArcEffect * arc = new ArcEffect();
+	if (arc && arc->init())
+	{
+		return arc;
+	}
+	return NULL;
+}
+
+

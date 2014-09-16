@@ -188,6 +188,7 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	xmlChar* szMaxHealth = xmlGetProp(node, BAD_CAST"maxHealth");
 	xmlChar* szAgility = xmlGetProp(node, BAD_CAST"agility");
 	xmlChar* szSkills = xmlGetProp(node, BAD_CAST"skills");
+	xmlChar* szAttackFreq = xmlGetProp(node, BAD_CAST"attackFreq");
 	xmlChar* szAttackRange = xmlGetProp(node, BAD_CAST"attackRange");
 
 	unit->cid = atoi((const char*)szid);
@@ -196,6 +197,7 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	unit->agility = atoi((const char*)szAgility);
 
 	parseSkills(unit,szSkills);
+	unit->attackFreq = atoi((const char*)szAttackFreq);
 	parseRange(unit, szAttackRange);
 }
 
@@ -236,7 +238,9 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
 	xmlChar* szEffect = xmlGetProp(node, BAD_CAST"effect");
 	xmlChar* szLevel = xmlGetProp(node, BAD_CAST"level");
+	xmlChar* szCondition = xmlGetProp(node, BAD_CAST"condition");
 	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
+	xmlChar* szAttackFreq = xmlGetProp(node, BAD_CAST"attackFreq");
 
 	skill->cid = atoi((const char*)szid);
 	skill->name = (char*)szname;
@@ -245,6 +249,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	skill->track = atoi((const char*)szTrack);
 	skill->effect = atoi((const char*)szEffect);
 	skill->level = atoi((const char*)szLevel);
+	skill->condition = atoi((const char*)szCondition);
 	skill->value = atoi((const char*)szValue);
 }
 

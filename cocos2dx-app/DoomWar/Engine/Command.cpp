@@ -72,18 +72,18 @@ CommandSequence* CommandSequence::create()
 CommandAttck
 **/
 
-CommandAttck::CommandAttck()
+CommandSkill::CommandSkill()
 {
 	mDuration = 2.0;
 	mNow = 0;
 }
 
-CommandAttck::~CommandAttck()
+CommandSkill::~CommandSkill()
 {
 
 }
 
-bool CommandAttck::tick(float delta)
+bool CommandSkill::tick(float delta)
 {
 	mNow += delta;
 	if (mEffect->tick(delta))
@@ -93,14 +93,14 @@ bool CommandAttck::tick(float delta)
 	return false;
 }
 
-void CommandAttck::trigger()
+void CommandSkill::trigger()
 {
 	mEffect->fire();
 }
 
-CommandAttck* CommandAttck::create(SkillResult* result)
+CommandSkill* CommandSkill::create(SkillResult* result)
 {
-	CommandAttck* cmd = new CommandAttck();
+	CommandSkill* cmd = new CommandSkill();
 	if (result->skill.track == SKILL_TRACK_HACK)
 	{
 		cmd->mEffect = HackEffect::create(result->skill.effect, result->giver, result->recipient);
@@ -112,6 +112,10 @@ CommandAttck* CommandAttck::create(SkillResult* result)
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{
 
+	}
+	else if (result->skill.track == SKILL_TRACK_ARC)
+	{
+		cmd->mEffect = ArcEffect::create(result->skill.effect, result->giver, result->recipient);
 	}
 	else
 	{
