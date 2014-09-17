@@ -93,6 +93,17 @@ private:
 	Effect* mEffect;
 };
 
+class CommandBuff : public Command
+{
+public:
+	static Command* create(BuffResult* result);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandBuff();
+	~CommandBuff();
+};
+
 class CommandProgress : public Command
 {
 public:

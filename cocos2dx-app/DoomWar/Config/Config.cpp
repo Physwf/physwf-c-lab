@@ -259,10 +259,12 @@ void Config::constructBuffWithXML(Buff* buff, xmlNodePtr node)
 	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
 	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
 	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
+	xmlChar* szCondition = xmlGetProp(node, BAD_CAST"condition");
 
 	buff->cid = atoi((const char*)szid);
 	buff->name = (char*)szname;
 	buff->type = atoi((const char*)szType);
 	buff->value = atoi((const char*)szValue);
+	buff->condition = atoi((const char*)szCondition);
 }
 

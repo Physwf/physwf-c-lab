@@ -76,23 +76,27 @@ void PVEBattleUI::onRightwardTouched(CCObject* object, TouchEventType type)
 bool PVEBattleUI::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchBegan(touch,event);
-	return TouchGroup::ccTouchBegan(touch, event);
+	TouchGroup::ccTouchBegan(touch, event);
+	return true;
 }
 
 
 void PVEBattleUI::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchMoved(touch, event);
+	TouchGroup::ccTouchMoved(touch, event);
 }
 
 void PVEBattleUI::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchEnded(touch, event);
+	TouchGroup::ccTouchEnded(touch, event);
 }
 
 void PVEBattleUI::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchCancelled(touch, event);
+	TouchGroup::ccTouchCancelled(touch, event);
 }
 
 /*PVEUIController*/

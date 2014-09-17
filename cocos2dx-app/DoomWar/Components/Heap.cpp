@@ -83,7 +83,7 @@ MinHeap::MinHeap(unsigned int capacity)
 void MinHeap::Enqueue(IPriority* item)
 {
 	mHeap[mSize] = item;
-	unsigned int lastIndex = mSize;//最后一个元素的索引
+	int lastIndex = mSize;//最后一个元素的索引
 	int parentIndex = (lastIndex - 1) * .5;
 	mSize++;
 

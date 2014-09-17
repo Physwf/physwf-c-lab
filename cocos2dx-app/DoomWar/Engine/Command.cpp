@@ -319,3 +319,35 @@ void CommandDie::trigger()
 {
 	mActor->sprite()->removeFromParent();
 }
+
+/*CommandBuff*/
+
+CommandBuff::CommandBuff()
+{
+
+}
+
+CommandBuff::~CommandBuff()
+{
+
+}
+
+bool CommandBuff::tick(float delta)
+{
+	return true;
+}
+
+void CommandBuff::trigger()
+{
+
+}
+
+Command* CommandBuff::create(BuffResult* result)
+{
+	CommandSequence * seq = CommandSequence::create();
+	//to do implement command buff
+	Actor* owner = Engine::scene->getActor(result->owner);
+	CommandProgress* progress = CommandProgress::create(result->value, owner);
+	seq->push(progress, false);
+	return seq;
+}

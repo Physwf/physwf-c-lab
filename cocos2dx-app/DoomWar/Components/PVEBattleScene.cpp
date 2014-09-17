@@ -132,6 +132,7 @@ void PVEBattleScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
 		int x = floor((touch->getLocation().x - getPositionX()- X_MARGIN) / GRID_SIZE);
 		int y = floor((touch->getLocation().y - getPositionY()) / GRID_SIZE);
 		mRangeSprite->setPosition(ccp(x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, y * GRID_SIZE + GRID_SIZE / 2));
+		mCurDrag->sprite()->setPosition(ccp(x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, y * GRID_SIZE + GRID_SIZE / 2));
 		System::pve->moveHero(mCurDrag->getData()->iid, x, y);
 	}
 }

@@ -402,6 +402,8 @@ bool PVEBattle::calculateBuffResult(Unit* who, BuffResult* result, int condition
 		case BUFF_TYPE_HEAL:
 			result->type = BUFF_TYPE_HEAL;
 			who->health += buff.value;
+			result->value = buff.value;
+			who->health = who->health > who->maxHealth ? who->maxHealth : who->health;
 			break;
 		default:
 			break;
@@ -493,7 +495,7 @@ bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 			result->type = SKILL_TYPE_HEAL;
 			result->value = skill->value;//to be detailed
 			victim->health += skill->value;
-			victim->health = attacker->health > victim->maxHealth ? victim->maxHealth : victim->health;
+			victim->health = victim->health > victim->maxHealth ? victim->maxHealth : victim->health;
 		}
 		break;
 	}

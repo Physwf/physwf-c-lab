@@ -89,8 +89,15 @@ void Scene::onBattleMoveResult(Event *event)
 			cmds->addCommand(skill);
 			i++;
 		}
+		i = 0;
+		while (result->buffs[i].owner)
+		{
+			Command* buff = CommandBuff::create(&result->buffs[i]);
+			cmds->addCommand(buff);
+			i++;
+		}
 		mPVEScene->addCommand(cmds);
-		
+
 		i = 0;
 		while (iid = result->comeIntoView[i])
 		{
