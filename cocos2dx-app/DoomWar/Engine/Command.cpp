@@ -23,14 +23,14 @@ CommandSequence::~CommandSequence()
 
 }
 
-void CommandSequence::push(Command* cmd)
+void CommandSequence::push(Command* cmd, bool autoTrigger)
 {
 	mQueue.push_back(cmd);
 
 	if (mCurCmd == NULL)
 	{
 		mCurCmd = mQueue.front();
-		mCurCmd->trigger();
+		if (autoTrigger) trigger();
 		mQueue.pop_front();
 	}
 }
@@ -59,7 +59,7 @@ bool CommandSequence::tick(float delta)
 
 void CommandSequence::trigger()
 {
-
+	mCurCmd->trigger();
 }
 
 CommandSequence* CommandSequence::create()
@@ -98,8 +98,9 @@ void CommandSkill::trigger()
 	mEffect->fire();
 }
 
-CommandSkill* CommandSkill::create(SkillResult* result)
+Command* CommandSkill::create(SkillResult* result)
 {
+	CommandSequence * seq = CommandSequence::create();
 	CommandSkill* cmd = new CommandSkill();
 	if (result->skill.track == SKILL_TRACK_HACK)
 	{
@@ -121,7 +122,14 @@ CommandSkill* CommandSkill::create(SkillResult* result)
 	{
 		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
 	}
-	return cmd;
+	seq->push(cmd,false);
+	if (result->value != 0)
+	{
+		Actor* victim = Engine::scene->getActor(result->recipient);
+		CommandProgress* progress = CommandProgress::create(result->value, victim);
+		seq->push(progress, false);
+	}
+	return seq;
 }
 
 /*CommandProgress*/

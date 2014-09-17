@@ -21,7 +21,8 @@
 #define GRID_OCCUPY_TYPE_BARRIER 3
 #define GRID_OCCUPY_TYPE_PROPS 4
 
-#define SKILL_CONDITION_MOVE_FORWARD 1
+#define SKILL_CONDITION_WHEN_MOVING 1
+#define SKILL_CONDITION_AFTER_MOVE 2
 
 #define BUFF_CONDITION_MOVE_FORWARD 1
 
@@ -99,7 +100,7 @@ private:
 	bool calculateHeroAttackResult(Unit* hero, AttackResult* result);
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
 	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
-	void calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result);
+	bool calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result,int condition);
 	bool isInRange(Unit* attacker, Unit* victim);
 	bool checkBarrier(Position grid1, Position grid2, ID* iid);
 	

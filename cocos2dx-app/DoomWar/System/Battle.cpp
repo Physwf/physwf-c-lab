@@ -227,7 +227,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		{
 			Skill skill;
 			Config::skill->fill(&skill, who->skills[j]);
-			if (skill.condition == SKILL_CONDITION_MOVE_FORWARD)
+			if (skill.condition == SKILL_CONDITION_WHEN_MOVING)
 			{
 				calculateHeroHealResult(who, result.skills + skill_count);
 				skill_count++;
@@ -269,19 +269,21 @@ void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
 	for (; it != mHeros->end(); it++)
 	{
 		if (it->second->iid == hero->iid) continue;
+		if (it->second->health >= it->second->maxHealth) continue;
 		if (isInRange(hero, it->second))
 		{
 			UnitWraper* wraper = new UnitWraper(it->second, it->second->health);
 			heap.Enqueue(wraper);
 		}
 	}
+	if (heap.size() <= 0) return;
 	//find weakest
 	Skill heal;
 	Config::skill->fill(&heal, hero->skills[0]);
 	for (int i = 0; i < hero->attackFreq; i++)
 	{
 		UnitWraper* wraper = (UnitWraper*)heap.Dequeue();
-		calculateSkillResult(&heal, hero, wraper->unit(), result);
+		calculateSkillResult(&heal, hero, wraper->unit(), result, SKILL_CONDITION_WHEN_MOVING);
 	}
 }
 
@@ -441,9 +443,11 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 			Unit* barrier = (*mBarriers)[idBarrier];
 			Skill main;
 			Config::skill->fill(&main, attacker->skills[0]);
-			calculateSkillResult(&main, attacker,barrier, result->results);
-			result->count++;
-			return true;
+			if (calculateSkillResult(&main, attacker, barrier, result->results, SKILL_CONDITION_AFTER_MOVE))
+			{
+				result->count++;
+				return true;
+			}
 		}
 		else
 		{
@@ -452,18 +456,19 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 			{
 				Skill skill;
 				Config::skill->fill(&skill, attacker->skills[i]);
-				calculateSkillResult(&skill, attacker,victim, result->results+i);
-				result->count++;
+				if (calculateSkillResult(&skill, attacker, victim, result->results + result->count, SKILL_CONDITION_AFTER_MOVE))
+					result->count++;
 				i++;
 			}
-			return true;
+			if (result->count) return true;
 		}
 	}
 	return false;
 }
 
-void PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result)
+bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition)
 {
+	if (skill->condition != condition) return false;
 	result->giver = attacker->iid;
 	result->recipient = victim->iid;
 	result->skill = *skill;
@@ -486,11 +491,13 @@ void PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 		case SKILL_TYPE_HEAL:
 		{
 			result->type = SKILL_TYPE_HEAL;
+			result->value = skill->value;//to be detailed
 			victim->health += skill->value;
 			victim->health = attacker->health > victim->maxHealth ? victim->maxHealth : victim->health;
 		}
 		break;
 	}
+	return true;
 }
 
 bool PVEBattle::isInRange(Unit* attacker, Unit* victim)

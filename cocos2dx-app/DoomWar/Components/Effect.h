@@ -59,14 +59,17 @@ public:
 	virtual bool tick(float delta);
 	virtual void fire();
 	virtual void draw();
+	virtual void onEnter();
+	virtual void onExit();
 	void drawArc(float x1, float y1, float x2, float y2, float distance);
 	static ArcEffect* create(ID cid, ID attacker, ID victim);
 private:
-	ArcEffect();
+	ArcEffect(CCSprite* layer);
 	~ArcEffect();
 private:
+	CCAction* mAction;
 	Actor* mAttacker;
 	Actor* mVictim;
-	CCPoint* mTarget;
+	float mTime;
 };
 #endif

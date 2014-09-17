@@ -20,7 +20,7 @@ class CommandSequence : public Command
 {
 public:
 	static CommandSequence* create();
-	void push(Command* cmd);
+	void push(Command* cmd,bool autoTrigger);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:
@@ -81,7 +81,7 @@ private:
 class CommandSkill : public Command
 {
 public:
-	static CommandSkill* create(SkillResult* result);
+	static Command* create(SkillResult* result);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:

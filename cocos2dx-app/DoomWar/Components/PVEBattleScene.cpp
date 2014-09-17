@@ -74,7 +74,7 @@ void PVEBattleScene::update(float delta)
 
 void PVEBattleScene::addCommand(Command* cmd)
 {
-	mMainThread->push(cmd);
+	mMainThread->push(cmd,true);
 }
 
 CCSprite* PVEBattleScene::layerActor()

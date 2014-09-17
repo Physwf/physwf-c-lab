@@ -182,9 +182,9 @@ HackEffect* HackEffect::create(ID cid, ID attacker, ID victim)
 	return NULL;
 }
 
-ArcEffect::ArcEffect()
+ArcEffect::ArcEffect(CCSprite* layer)
 {
-
+	mLayer = layer;
 }
 
 ArcEffect::~ArcEffect()
@@ -194,10 +194,27 @@ ArcEffect::~ArcEffect()
 
 bool ArcEffect::tick(float delta)
 {
+	mTime += delta;
+	if (mTime > 0.2f)
+	{
+		mLayer->removeChild(this,true);
+		return true;
+	}
 	return false;
 }
 
 void ArcEffect::fire()
+{
+	mLayer->addChild(this);
+	mTime = 0;
+}
+
+void ArcEffect::onEnter()
+{
+
+}
+
+void ArcEffect::onExit()
 {
 
 }
@@ -206,7 +223,10 @@ void ArcEffect::draw()
 {
 	ccDrawColor4B(255, 255, 255, 255);
 	glLineWidth(1);
-	drawArc(mAttacker->position()->x, mAttacker->position()->y, mVictim->position()->x,mVictim->position()->y,200.0f);
+	CCPoint aPos = mAttacker->sprite()->getPosition();
+	CCPoint vPos = mVictim->sprite()->getPosition();
+	setPosition(aPos);
+	drawArc(0, 0, vPos.x - aPos.x, vPos.y - aPos.y, 100.0f);
 }
 
 void ArcEffect::drawArc(float x1,float y1,float x2,float y2,float distance)
@@ -229,9 +249,12 @@ void ArcEffect::drawArc(float x1,float y1,float x2,float y2,float distance)
 ArcEffect* ArcEffect::create(ID cid, ID attacker, ID victim)
 {
 	CCSprite* layer = Engine::scene->pve()->layerEffect();
-	ArcEffect * arc = new ArcEffect();
+	ArcEffect * arc = new ArcEffect(layer);
 	if (arc && arc->init())
 	{
+		arc->mAttacker = Engine::scene->getActor(attacker);
+		arc->mVictim = Engine::scene->getActor(victim);
+		arc->setPosition(arc->mAttacker->sprite()->getPosition());
 		return arc;
 	}
 	return NULL;

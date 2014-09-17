@@ -85,7 +85,7 @@ void Scene::onBattleMoveResult(Event *event)
 		i = 0;
 		while (result->skills[i].giver)
 		{
-			CommandSkill* skill = CommandSkill::create(&result->skills[i]);
+			Command* skill = CommandSkill::create(&result->skills[i]);
 			cmds->addCommand(skill);
 			i++;
 		}
@@ -123,11 +123,11 @@ void Scene::onBattleAttakResult(Event* event)
 		while (i < aResults->count)
 		{
 			SkillResult* sResult = aResults->results + i;
-			CommandSkill* attack = CommandSkill::create(sResult);
+			Command* attack = CommandSkill::create(sResult);
 			mPVEScene->addCommand(attack);
 			Actor* victim = getActor(sResult->recipient);
-			CommandProgress* progress = CommandProgress::create(sResult->value, victim);
-			mPVEScene->addCommand(progress);
+			//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
+			//mPVEScene->addCommand(progress);
 			if (sResult->healthLeft <= 0)
 			{
 				CommandDie* die = CommandDie::create(victim);
@@ -147,7 +147,9 @@ void Scene::leavePVEMap()
 
 Actor* Scene::getActor(ID iid)
 {
-	return (*mActors)[iid];
+	std::map<ID, Actor*>::iterator res = mActors->find(iid);
+	assert(res != mActors->end());
+	return res->second;
 }
 
 PVEBattleScene* Scene::pve()
