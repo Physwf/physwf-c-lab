@@ -65,7 +65,8 @@ typedef struct  buff_t
 	char condition;
 	int value;
 } Buff;
-
+#define UNIT_AI_TYPE_NEAREST 1L
+#define UNIT_AI_TYPE_WEAKEST 2L
 typedef struct unit_t
 {
 	ID iid;//instance id
@@ -78,6 +79,7 @@ typedef struct unit_t
 	ID buffs[MAX_NUM_BUFFS];
 	Skill skill;
 	int agility;
+	ID ai;
 	ID armor;
 	unsigned short attackFreq;//attacks per turn
 	Position positon;

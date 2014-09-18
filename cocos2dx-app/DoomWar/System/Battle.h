@@ -99,7 +99,7 @@ private:
 	bool calculateBuffResult(Unit* who, BuffResult* result,int condition);
 	bool calculateHeroAttackResult(Unit* hero, AttackResult* result);
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
-	bool calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result);
+	bool calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result);
 	bool calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result,int condition);
 	bool isInRange(Unit* attacker, Unit* victim);
 	bool checkBarrier(Position grid1, Position grid2, ID* iid);

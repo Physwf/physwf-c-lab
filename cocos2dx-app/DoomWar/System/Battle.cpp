@@ -416,31 +416,46 @@ bool PVEBattle::calculateBuffResult(Unit* who, BuffResult* result, int condition
 
 bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
 {
+	MinHeap nearEneymeys = MinHeap(mEnemys->size());
 	for (std::map<ID, Unit*>::iterator it = mEnemys->begin(); it != mEnemys->end(); it++)
 	{
+		if (!isInRange(hero, it->second)) continue;
 		if (it->second->health <= 0) continue;//don't attack dead body.
+		int dist = (it->second->positon.x - hero->positon.x) * (it->second->positon.x - hero->positon.x) + (it->second->positon.y - hero->positon.y) + (it->second->positon.y - hero->positon.y);
+		UnitWraper *wraper = new UnitWraper(it->second, dist);
+		nearEneymeys.Enqueue(wraper);
 		// to do, implement multi-attack in one turn
-		if (calculateAttackResult(hero, it->second, result)) return true;
 	}
+	if (calculateAttackResult(hero, &nearEneymeys, result)) return true;
 	return false;
 }
 
 
 bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
 {
+	MinHeap nearHeros = MinHeap(mHeros->size());
 	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
 	{
+		if (!isInRange(enemy, it->second)) continue;
 		if (it->second->health <= 0) continue;//don't attack dead body.
+		int dist = (it->second->positon.x - enemy->positon.x) * (it->second->positon.x - enemy->positon.x) + (it->second->positon.y - enemy->positon.y) + (it->second->positon.y - enemy->positon.y);
 		// to do, implement multi-attack in on turn
-		if (calculateAttackResult(enemy, it->second, result)) return true;
+		UnitWraper *wraper = new UnitWraper(it->second, dist);
+		nearHeros.Enqueue(wraper);
 	}
+	if (calculateAttackResult(enemy, &nearHeros, result)) return true;
 	return false;
 }
 
-bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult* result)
+bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result)
 {
-	if (isInRange(attacker, victim))
+	int i = 0;
+	while (i < attacker->attackFreq && candidates->size())
 	{
+		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
+		Unit* victim = wraper->unit();
+		i++;
+
 		ID idBarrier = 0;
 		if (checkBarrier(attacker->positon, victim->positon, &idBarrier))
 		{
@@ -464,9 +479,9 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, Unit* victim, AttackResult
 					result->count++;
 				i++;
 			}
-			if (result->count) return true;
 		}
 	}
+	if (result->count) return true;
 	return false;
 }
 
