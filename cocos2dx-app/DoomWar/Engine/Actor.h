@@ -33,6 +33,8 @@ public:
 
 	CCSprite* sprite() const;
 
+	void hideBlood();
+	void showBlood();
 private:
 	CCSprite* mLayer;
 	ActorSprite* mSprite;

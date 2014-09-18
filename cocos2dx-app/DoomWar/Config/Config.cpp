@@ -60,15 +60,11 @@ void HeroConfig::onHeroConfigLoaded(xmlNodePtr root)
 
 Unit* BarrierConfig::create(ID cid)
 {
-	Unit* u = new Unit();
-	u->iid = (ID)u;
-	u->cid = cid;
-	u->name = "Barrier";
-	u->maxHealth = 100;
-	u->health = 100;
-
-
-	return u;
+	Unit *copy = new Unit();
+	Unit *master = mMaster[cid];
+	memcpy(copy, master, sizeof Unit);
+	copy->iid = (ID)copy;
+	return copy;
 }
 
 void BarrierConfig::onBarrierConfigLoaded(xmlNodePtr root)

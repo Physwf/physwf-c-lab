@@ -60,7 +60,7 @@ unsigned int MaxHeap::size() const
 
 bool MaxHeap::hasItem(IPriority* item)
 {
-	for (unsigned int i = 0; i < mSize; i++)
+	for (int i = 0; i < mSize; i++)
 	{
 		if (mHeap[i] == item) return true;
 	}
@@ -132,7 +132,7 @@ unsigned int MinHeap::size() const
 
 bool MinHeap::hasItem(IPriority* item)
 {
-	for (unsigned int i = 0; i < mSize; i++)
+	for (int i = 0; i < mSize; i++)
 	{
 		if (mHeap[i] == item) return true;
 	}

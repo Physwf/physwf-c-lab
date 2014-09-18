@@ -99,6 +99,8 @@ void PVEBattle::step(StepDirection dir)
 {
 	if (!calculateHerosMovement(dir)) return;
 
+	refreshGrids();
+
 	calculateRoundResult();
 
 	refreshGrids();
@@ -529,7 +531,7 @@ bool PVEBattle::checkBarrier(Position grid1, Position grid2, ID* iid)
 		float testy = grid2.y + (float)offsety / max;
 		int gridx = (int)testx;
 		int gridy = (int)testy;
-		int index = gridx + gridy * NUM_GRIDS_ROW;
+		int index = gridx + (gridy - mBackLine)* NUM_GRIDS_ROW;
 		if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER)
 		{
 			for (std::map<ID, Unit*>::iterator it = mBarriers->begin(); it != mBarriers->end(); it++)

@@ -1,5 +1,5 @@
 <heros>
-  <hero id="1001" name="soldier" 	level="1" maxHealth="100" agility="2" skills="101" attackFreq="1" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
+  <hero id="1001" name="soldier" 	level="1" maxHealth="100" agility="2" skills="101" attackFreq="1" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1;-1,2;0,2;1,2" view=""/>
   <hero id="1002" name="archer" 	level="1" maxHealth="100" agility="2" skills="102" attackFreq="1" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
   <hero id="1003" name="warlock" 	level="1" maxHealth="100" agility="2" skills="103" attackFreq="1" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>
   <hero id="1004" name="assassin" 	level="1" maxHealth="100" agility="2" skills="104" attackFreq="1" attackRange="-1,-1;0,-1;1,-1;-1,0;1,0;-1,1;0,1;1,1" view=""/>

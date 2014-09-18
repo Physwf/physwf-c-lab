@@ -45,6 +45,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	{
 		Actor* actor = new Actor(mPVEScene->layerActor());
 		actor->setData(it->second);
+		actor->hideBlood();
 		(*mActors)[actor->iid()] = actor;
 	}
 

@@ -51,6 +51,9 @@ void PVEMap::init(const char* configFile)
 
 	mEnemys[135] = 2001;
 	mEnemys[138] = 2001;
+
+	mBarriers[38] = 3001;
+	mBarriers[37] = 3001;
 }
 
 int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers, ID* iids)
@@ -65,6 +68,7 @@ int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers, ID* iids)
 			Unit* barrier = Config::barrier->create(mBarriers[i]);
 			barrier->positon.x = i - start;
 			barrier->positon.y = row;
+			barrier->health = barrier->maxHealth;
 			(*barriers)[barrier->iid] = barrier;
 			iids[count] = barrier->iid;
 			mBarriers.erase(mBarriers.find(i));

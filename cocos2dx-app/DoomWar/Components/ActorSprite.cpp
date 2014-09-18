@@ -43,48 +43,32 @@ void ActorSprite::getFrameNameByCID(ID cid, char* name)
 {
 	switch (cid)
 	{
-	case 1001:
-	{
-			  sprintf(name, "%s", "soldier.png");
-			  break;
-	}
-	case 1002:
-	{
-			  sprintf(name, "%s", "archer.png");
-			  break;
-	}
-	case 1003:
-	{
-				 sprintf(name, "%s", "Warlock.png");
-				 break;
-	}
-	case 1004:
-	{
-				 sprintf(name, "%s", "assassin.png");
-				 break;
-	}
-	case 1005:
-	{
-				 sprintf(name, "%s", "wizard.png");
-				 break;
-	}
-	case 1006:
-	{
-				 sprintf(name, "%s", "oxe.png");
-				 break;
-	}
-	case 1000:
-	{
-			  sprintf(name, "%s", "BarriersFlower.png");
-			  break;
-	}
-	case 2001:
-	{
-			  sprintf(name, "%s", "gnome.png");
-			  break;
-	}
-	default:
-		break;
+		case 1001:
+			sprintf(name, "%s", "soldier.png");
+			break;
+		case 1002:
+			sprintf(name, "%s", "archer.png");
+			break;
+		case 1003:
+			sprintf(name, "%s", "Warlock.png");
+			break;
+		case 1004:
+			sprintf(name, "%s", "assassin.png");
+			break;
+		case 1005:
+			sprintf(name, "%s", "wizard.png");
+			break;
+		case 1006:
+			sprintf(name, "%s", "oxe.png");
+			break;
+		case 2001:
+			sprintf(name, "%s", "gnome.png");
+			break;
+		case 3001:
+			sprintf(name, "%s", "BarriersFlower.png");
+			break;
+		default:
+			break;
 	}
 }
 

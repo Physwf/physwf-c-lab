@@ -80,6 +80,16 @@ CCSprite* Actor::sprite() const
 	return mSprite;
 }
 
+void Actor::hideBlood()
+{
+	mSprite->bloor()->setVisible(false);
+}
+
+void Actor::showBlood()
+{
+	mSprite->bloor()->setVisible(false);
+}
+
 Unit* Actor::getData()
 {
 	return mData;

@@ -17,7 +17,7 @@ public:
 	bool hasItem(IPriority* item);
 	IPriority* getMax()const;
 private:
-	unsigned int mSize;
+	int mSize;
 	IPriority** mHeap;
 };
 
@@ -31,7 +31,7 @@ public:
 	bool hasItem(IPriority* item);
 	IPriority* getMin()const;
 private:
-	unsigned int mSize;
+	int mSize;
 	IPriority** mHeap;
 };
 
