@@ -53,6 +53,7 @@ typedef struct move_result_t
 {
 	StepDirection dir;
 	ID moveUnits[MAX_SCREEN_HEROS];
+	ID enemys[MAX_SCREEN_HEROS];
 	ID cantmoveUnits[MAX_SCREEN_ENYMYS];
 	ID comeIntoView[NUM_GRIDS_ROW + 1];
 	ID comeOutOfView[NUM_GRIDS_ROW + 1];
@@ -91,6 +92,7 @@ private:
 	void updateStarLevel();
 	void refreshGrids();
 	bool calculateHerosMovement(StepDirection dir);
+	void calculateEnemyMovement(MoveResult* result);
 	void calculateHeroHealResult(Unit* hero, SkillResult* result);
 	int calculateNextGrid(int index,StepDirection dir);
 	void calculateRoundResult();
@@ -102,6 +104,7 @@ private:
 	bool calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result);
 	bool calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result,int condition);
 	bool isInRange(Unit* attacker, Unit* victim);
+	bool isInView(Unit* attacker, Unit* victim);
 	bool checkBarrier(Position grid1, Position grid2, ID* iid);
 	
 

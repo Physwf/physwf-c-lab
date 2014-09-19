@@ -186,6 +186,7 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	xmlChar* szSkills = xmlGetProp(node, BAD_CAST"skills");
 	xmlChar* szAttackFreq = xmlGetProp(node, BAD_CAST"attackFreq");
 	xmlChar* szAttackRange = xmlGetProp(node, BAD_CAST"attackRange");
+	xmlChar *szView = xmlGetProp(node, BAD_CAST"view");
 
 	unit->cid = atoi((const char*)szid);
 	unit->name = (char*)szname;
@@ -195,6 +196,7 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	parseSkills(unit,szSkills);
 	unit->attackFreq = atoi((const char*)szAttackFreq);
 	parseRange(unit, szAttackRange);
+	parseView(unit, szView);
 }
 
 void Config::parseSkills(Unit* unit, xmlChar* szSkills)
@@ -223,6 +225,34 @@ void Config::parseRange(Unit* unit, xmlChar* szRange)
 	}
 	CCAssert(count % 2 == 0, "Must be even!");
 	unit->attackRange.numGrids = count / 2;
+}
+
+void Config::parseView(Unit* unit, xmlChar* szView)
+{
+	char* view = strtok((char*)szView, ",");
+	int rect[4] = {0};
+	int count = 0;
+	while (view != NULL)
+	{
+		rect[count++] = atoi(view);
+		view = strtok(NULL, ",");
+		if (count >= 4) break;
+	}
+	int minX = rect[0];
+	int minY = rect[1];
+	int maxX = rect[2];
+	int maxY = rect[3];
+	for (int x = minX; x <= maxX; x++)
+	{
+		for (int y = minY; y <= maxY; y++)
+		{
+			if (x == 0 && y == 0) continue;
+			int index = unit->view.numGrids / 2;
+			unit->view.offsets[index].x = x;
+			unit->view.offsets[index].y = y;
+			unit->view.numGrids++;
+		}
+	}
 }
 
 void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)

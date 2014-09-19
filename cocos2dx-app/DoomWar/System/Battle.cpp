@@ -257,10 +257,51 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		mFrontLine--;
 		mBackLine--;
 	}
+
+	calculateEnemyMovement(&result);
+
 	Event e = { BATTLE_MOVE_SUCCESS, (char*)&result };
 	dispatchEvent(&e);
 
 	return true;
+}
+
+void PVEBattle::calculateEnemyMovement(MoveResult* result)
+{
+	std::map<ID, Unit*>::iterator iEnemy = mEnemys->begin();
+	std::map<ID, Unit*>::iterator iHero = mHeros->begin();
+	int count = 0;
+	while (iEnemy != mEnemys->end())
+	{
+		Unit* enemy = iEnemy->second;
+		MinHeap nearHeros = MinHeap(mHeros->size());
+		while (iHero != mHeros->end())
+		{
+			Unit* hero = iHero->second;
+			if (!isInRange(enemy, hero) && isInView(enemy, hero))
+			{
+				int dist = (hero->positon.x - enemy->positon.x)*(hero->positon.x - enemy->positon.x) + (hero->positon.y - enemy->positon.y)*(hero->positon.y - enemy->positon.y);
+				nearHeros.Enqueue(new UnitWraper(hero, dist));
+			}
+			iHero++;
+		}
+		if (nearHeros.size())
+		{
+			UnitWraper* wraper = (UnitWraper*)nearHeros.Dequeue();
+			Unit* target = wraper->unit();
+			
+			int dir[2] = { target->positon.x - enemy->positon.x, target->positon.y - enemy->positon.y };
+			if (dir[0] > 0) dir[0] = 1;
+			if (dir[1] > 0) dir[1] = 1;
+			if (dir[0] < 0) dir[0] = -1;
+			if (dir[1] < 0) dir[1] = -1;
+			// to do, avoid barriers
+			enemy->positon.x += dir[0];
+			enemy->positon.y += dir[1];
+			result->enemys[count++] = enemy->iid;
+		}
+		iEnemy++;
+	}
 }
 
 void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
@@ -526,6 +567,22 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 	{
 		if (attacker->attackRange.offsets[i].x + attacker->positon.x == victim->positon.x &&
 			attacker->attackRange.offsets[i].y + attacker->positon.y == victim->positon.y)
+		{
+			return true;
+		}
+	}
+
+	//second, check if be blocked, to do
+	return false;
+}
+
+bool PVEBattle::isInView(Unit* attacker, Unit* victim)
+{
+	//first, check if in attack grids
+	for (int i = 0; i < attacker->view.numGrids; i++)
+	{
+		if (attacker->view.offsets[i].x + attacker->positon.x == victim->positon.x &&
+			attacker->view.offsets[i].y + attacker->positon.y == victim->positon.y)
 		{
 			return true;
 		}

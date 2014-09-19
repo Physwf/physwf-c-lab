@@ -24,6 +24,7 @@ public:
 protected:
 	void constructUnitWithXML(Unit* unit, xmlNodePtr node);
 	void parseRange(Unit* unit, xmlChar* szRange);
+	void parseView(Unit* unit, xmlChar* szView);
 	void parseSkills(Unit* unit,xmlChar* szSkills);
 	void constructSkillWithXML(Skill* skill, xmlNodePtr node);
 	void constructBuffWithXML(Buff* buff, xmlNodePtr node);
