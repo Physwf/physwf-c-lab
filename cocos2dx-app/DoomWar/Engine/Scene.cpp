@@ -109,6 +109,16 @@ void Scene::onBattleMoveResult(Event *event)
 			(*mActors)[actor->iid()] = actor;
 			i++;
 		}
+		i = 0;
+		CommandParallel* enemysMove = CommandParallel::create();
+		while (iid = result->enemys[i])
+		{
+			(*mActors)[iid]->calculateNextPosition();
+			CommandMove *move = CommandMove::create((*mActors)[iid]);
+			enemysMove->addCommand(move);
+			i++;
+		}
+		mPVEScene->addCommand(enemysMove);
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{

@@ -247,7 +247,7 @@ void Config::parseView(Unit* unit, xmlChar* szView)
 		for (int y = minY; y <= maxY; y++)
 		{
 			if (x == 0 && y == 0) continue;
-			int index = unit->view.numGrids / 2;
+			int index = unit->view.numGrids;
 			unit->view.offsets[index].x = x;
 			unit->view.offsets[index].y = y;
 			unit->view.numGrids++;

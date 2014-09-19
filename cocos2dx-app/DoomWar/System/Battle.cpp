@@ -269,16 +269,19 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 void PVEBattle::calculateEnemyMovement(MoveResult* result)
 {
 	std::map<ID, Unit*>::iterator iEnemy = mEnemys->begin();
-	std::map<ID, Unit*>::iterator iHero = mHeros->begin();
+	
 	int count = 0;
-	while (iEnemy != mEnemys->end())
+	external:while (iEnemy != mEnemys->end())
 	{
 		Unit* enemy = iEnemy->second;
+		iEnemy++;
 		MinHeap nearHeros = MinHeap(mHeros->size());
+		std::map<ID, Unit*>::iterator iHero = mHeros->begin();
 		while (iHero != mHeros->end())
 		{
 			Unit* hero = iHero->second;
-			if (!isInRange(enemy, hero) && isInView(enemy, hero))
+			if (isInRange(enemy, hero)) goto external;
+			if (isInView(enemy, hero))
 			{
 				int dist = (hero->positon.x - enemy->positon.x)*(hero->positon.x - enemy->positon.x) + (hero->positon.y - enemy->positon.y)*(hero->positon.y - enemy->positon.y);
 				nearHeros.Enqueue(new UnitWraper(hero, dist));
@@ -291,16 +294,18 @@ void PVEBattle::calculateEnemyMovement(MoveResult* result)
 			Unit* target = wraper->unit();
 			
 			int dir[2] = { target->positon.x - enemy->positon.x, target->positon.y - enemy->positon.y };
-			if (dir[0] > 0) dir[0] = 1;
-			if (dir[1] > 0) dir[1] = 1;
-			if (dir[0] < 0) dir[0] = -1;
-			if (dir[1] < 0) dir[1] = -1;
+			dir[0] = dir[0] ? abs(dir[0]) / dir[0] : dir[0];
+			dir[1] = dir[1] ? abs(dir[1]) / dir[1] : dir[1];
 			// to do, avoid barriers
-			enemy->positon.x += dir[0];
-			enemy->positon.y += dir[1];
-			result->enemys[count++] = enemy->iid;
+			int index = (enemy->positon.x + dir[0]) + ((enemy->positon.y + dir[1]) - mBackLine) * NUM_GRIDS_ROW;
+			if (mGrids[index] == GRID_OCCUPY_TYPE_NONE)
+			{
+				enemy->positon.x += dir[0];
+				enemy->positon.y += dir[1];
+				result->enemys[count++] = enemy->iid;
+			}
 		}
-		iEnemy++;
+		
 	}
 }
 
