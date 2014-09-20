@@ -19,9 +19,10 @@ bool PVEBattleScene::init()
 	mTempMap->setPosition(ccp(-64, 0));
 	this->addChild(mTempMap);
 	//CCTMXTiledMap::create();
-
+	mLayerProp = CCSprite::create();
 	mLayerActor = CCSprite::create();
 	mLayerEffect = CCSprite::create();
+	this->addChild(mLayerProp);
 	this->addChild(mLayerActor);
 	this->addChild(mLayerEffect);
 
@@ -75,6 +76,11 @@ void PVEBattleScene::update(float delta)
 void PVEBattleScene::addCommand(Command* cmd)
 {
 	mMainThread->push(cmd,true);
+}
+
+CCSprite* PVEBattleScene::layerProp()
+{
+	return mLayerProp;
 }
 
 CCSprite* PVEBattleScene::layerActor()

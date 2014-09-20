@@ -6,6 +6,7 @@ HeroConfig* Config::hero = new HeroConfig();
 BarrierConfig* Config::barrier = new BarrierConfig();
 MonsterConfig* Config::monster = new MonsterConfig();
 SkillConfig* Config::skill = new SkillConfig();
+ItemConfig* Config::item = new ItemConfig();
 
 Unit* HeroConfig::create(ID cid)
 {
@@ -92,30 +93,6 @@ Unit* MonsterConfig::create(ID cid)
 	//Config::skill->fill(&copy->skill, copy->skill.cid);
 
 	return copy;
-
-	Unit* u = new Unit();
-	u->iid = (ID)u;
-	u->cid = cid;
-	u->name = "Monster";
-	u->maxHealth = 100;
-	u->health = 100;
-
-	u->attackRange.numGrids = 8;
-	int n = 0;
-	for (int i = -1; i <= 1; i++)
-	{
-		for (int j = -1; j <= 1; j++)
-		{
-			if (i == 0 && j == 0) continue;
-			u->attackRange.offsets[n].x = i;
-			u->attackRange.offsets[n].y = j;
-			n++;
-		}
-	}
-	u->skill.cid = cid;
-	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
-	u->skill.value = -20;
-	return u;
 }
 
 
@@ -174,6 +151,30 @@ void SkillConfig::fill(Buff* buff, ID cid)
 {
 	Buff* master = mBuffs[cid];
 	memcpy(buff, master, sizeof Buff);
+}
+
+Item* ItemConfig::create(ID cid)
+{
+	Item *copy = new Item();
+	Item *master = mItems[cid];
+	memcpy(copy, master, sizeof Item);
+	copy->iid = (ID)copy;
+	return copy;
+}
+
+void ItemConfig::onItemConfigLoaded(xmlNodePtr root)
+{
+	xmlNodePtr child = root->children;
+	while (child)
+	{
+		if (child->type != XML_TEXT_NODE && child->type != XML_COMMENT_NODE && child->type != XML_DTD_NODE)
+		{
+			Item* item = new Item();
+			constructItemWithXML(item, child);
+			mItems[item->cid] = item;
+		}
+		child = child->next;
+	}
 }
 
 void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
@@ -294,3 +295,15 @@ void Config::constructBuffWithXML(Buff* buff, xmlNodePtr node)
 	buff->condition = atoi((const char*)szCondition);
 }
 
+void Config::constructItemWithXML(Item* item, xmlNodePtr node)
+{
+	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
+	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
+	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
+	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
+
+	item->cid = atoi((const char*)szid);
+	item->name = (char*)szname;
+	item->type = atoi((const char*)szType);
+	item->value = atoi((const char*)szValue);
+}

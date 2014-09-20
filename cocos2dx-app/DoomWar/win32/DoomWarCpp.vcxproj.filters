@@ -96,6 +96,12 @@
     <ClCompile Include="..\Components\Effect.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Components\PropSprite.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Prop.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -163,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="..\Classes\AppMacros.h">
       <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PropSprite.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Prop.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

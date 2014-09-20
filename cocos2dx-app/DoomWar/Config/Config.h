@@ -11,6 +11,7 @@ class HeroConfig;
 class BarrierConfig;
 class MonsterConfig;
 class SkillConfig;
+class ItemConfig;
 
 class Config : public DWObject
 {
@@ -21,6 +22,7 @@ public:
 	static BarrierConfig* barrier;
 	static MonsterConfig* monster;
 	static SkillConfig* skill;
+	static ItemConfig* item;
 protected:
 	void constructUnitWithXML(Unit* unit, xmlNodePtr node);
 	void parseRange(Unit* unit, xmlChar* szRange);
@@ -28,6 +30,7 @@ protected:
 	void parseSkills(Unit* unit,xmlChar* szSkills);
 	void constructSkillWithXML(Skill* skill, xmlNodePtr node);
 	void constructBuffWithXML(Buff* buff, xmlNodePtr node);
+	void constructItemWithXML(Item* item, xmlNodePtr node);
 };
 
 class HeroConfig : public Config
@@ -69,7 +72,14 @@ private:
 	std::map<ID, Buff*> mBuffs;
 };
 
-
+class ItemConfig :public Config
+{
+public:
+	Item* create(ID cid);
+	void onItemConfigLoaded(xmlNodePtr root);
+private:
+	std::map<ID, Item*> mItems;
+};
 
 
 #endif

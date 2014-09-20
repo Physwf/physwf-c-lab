@@ -56,6 +56,9 @@ void Scene::onEnterPVEBattle(Event* event)
 		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
+
+	mProps = new std::map<ID, Prop*>();
+
 	CCDirector::sharedDirector()->replaceScene(mPVEScene->scene());
 
 	System::pve->start();
@@ -98,7 +101,20 @@ void Scene::onBattleMoveResult(Event *event)
 			i++;
 		}
 		mPVEScene->addCommand(cmds);
-
+		i = 0;
+		CommandParallel* picks = CommandParallel::create();
+		while (iid = result->pick[i])
+		{
+			std::map<ID, Prop*>::iterator it;
+			if ((it = mProps->find(iid)) != mProps->end())
+			{
+				CommandPick* pCmd = CommandPick::create(it->second);
+				picks->addCommand(pCmd);
+				mProps->erase(it);
+			}
+			i++;
+		}
+		mPVEScene->addCommand(picks);
 		i = 0;
 		while (iid = result->comeIntoView[i])
 		{
@@ -126,8 +142,19 @@ void Scene::onBattleMoveResult(Event *event)
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_HERO_SUCESS)
 	{
-		ID* iid = (ID*)event->data;
-		(*mActors)[(*iid)]->updatePosition();
+		MoveResult *result = (MoveResult *)event->data;
+		ID iid = result->moveUnits[0];
+		(*mActors)[iid]->updatePosition();
+		int i = 0;
+		CommandParallel* enemysMove = CommandParallel::create();
+		while (iid = result->enemys[i])
+		{
+			(*mActors)[iid]->calculateNextPosition();
+			CommandMove *move = CommandMove::create((*mActors)[iid]);
+			enemysMove->addCommand(move);
+			i++;
+		}
+		mPVEScene->addCommand(enemysMove);
 	}
 }
 
@@ -153,6 +180,13 @@ void Scene::onBattleAttakResult(Event* event)
 				mActors->erase(mActors->find(sResult->recipient));
 			}
 			i++;
+		}
+		if (aResults->loot)
+		{
+			Item* loot = System::pve->getItem(aResults->loot);
+			Prop* prop = new Prop(mPVEScene->layerProp());
+			prop->bindData(loot);
+			(*mProps)[loot->iid] = prop;
 		}
 		aResults++;
 	}

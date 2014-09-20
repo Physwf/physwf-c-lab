@@ -4,6 +4,7 @@
 #include <deque>
 #include <vector>
 #include "Actor.h"
+#include "Prop.h"
 #include "Battle.h"
 #include "Effect.h"
 
@@ -137,4 +138,16 @@ private:
 	Actor* mActor;
 };
 
+class CommandPick : public Command
+{
+public:
+	static CommandPick* create(Prop* prop);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandPick();
+	~CommandPick();
+private:
+	Prop* mProp;
+};
 #endif

@@ -16,6 +16,7 @@ public:
 	virtual void update(float delta);
 	void addCommand(Command* cmd);
 
+	CCSprite* layerProp();
 	CCSprite* layerActor();
 	CCSprite* layerEffect();
 
@@ -35,6 +36,7 @@ private:
 
 	CommandSequence* mMainThread;
 
+	CCSprite* mLayerProp;
 	CCSprite* mLayerActor;
 	CCSprite* mLayerEffect;
 	ColorSprite* mRangeSprite;

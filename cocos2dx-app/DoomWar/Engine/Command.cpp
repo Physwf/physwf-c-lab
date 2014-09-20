@@ -351,3 +351,30 @@ Command* CommandBuff::create(BuffResult* result)
 	seq->push(progress, false);
 	return seq;
 }
+
+CommandPick::CommandPick()
+{
+
+}
+
+CommandPick::~CommandPick()
+{
+
+}
+
+CommandPick* CommandPick::create(Prop* prop)
+{
+	CommandPick* pick = new CommandPick();
+	pick->mProp = prop;
+	return pick;
+}
+
+void CommandPick::trigger()
+{
+	mProp->sprite()->removeFromParent();
+}
+
+bool CommandPick::tick(float delta)
+{
+	return true;
+}

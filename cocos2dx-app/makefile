@@ -53,10 +53,12 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/PVEBattleScene.obj\
 		$(DIR_DW)/Components/PVEBattleUI.obj\
 		$(DIR_DW)/Components/Effect.obj\
+		$(DIR_DW)/Components/PropSprite.obj\
 		$(DIR_DW)/Config/Config.obj\
 		$(DIR_DW)/Engine/Engine.obj\
 		$(DIR_DW)/Engine/Scene.obj\
 		$(DIR_DW)/Engine/Actor.obj\
+		$(DIR_DW)/Engine/Prop.obj\
 		$(DIR_DW)/Engine/Command.obj\
 		$(DIR_DW)/Game/Game.obj\
 		$(DIR_DW)/System/Battle.obj\
@@ -78,6 +80,7 @@ DWcpy:
 	@cp $(DIR_DW)/Data/barriers.xml $(BIN)/Data/barriers.xml
 	@cp $(DIR_DW)/Data/skills.xml $(BIN)/Data/skills.xml
 	@cp $(DIR_DW)/Data/buffs.xml $(BIN)/Data/buffs.xml
+	@cp $(DIR_DW)/Data/items.xml $(BIN)/Data/items.xml
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
 %.xml : %.xml

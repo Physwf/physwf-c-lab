@@ -2,6 +2,7 @@
 #define _SCENE_H
 
 #include "Actor.h"
+#include "Prop.h"
 #include "DWLoadingScene.h"
 #include "PVEBattleScene.h"
 #include "dwtype.h"
@@ -33,6 +34,7 @@ private:
 	void onBattleAttakResult(Event* event);
 private:
 	std::map<ID, Actor*> *mActors;
+	std::map<ID, Prop*> *mProps;
 
 	DWLoadingScene* mLoading;
 	PVEBattleScene* mPVEScene;

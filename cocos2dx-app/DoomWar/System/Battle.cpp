@@ -10,7 +10,7 @@ PVEBattle::PVEBattle()
 	mHeros = new std::map<ID, Unit*>();
 	mEnemys = new std::map<ID, Unit*>();
 	mBarriers = new std::map<ID, Unit*>();
-
+	mLoots = new std::map<ID, Item*>();
 	
 }
 
@@ -39,6 +39,7 @@ void PVEBattle::initialize()
 	mHeros->clear();
 	mEnemys->clear();
 	mBarriers->clear();
+	mLoots->clear();
 
 	mRound = 0;
 	mStarLevel = MAX_STAR_LEVEL;
@@ -119,7 +120,20 @@ void PVEBattle::moveHero(ID iid, int x, int y)
 	it->second->positon.x = x;
 	it->second->positon.y = y;
 
-	Event e = { BATTLE_MOVE_HERO_SUCESS, (char*)&iid };
+	MoveResult mResult = { NONE, { 0 }, { 0 }, { 0 }, { 0 } };
+
+	int index = convertToIndex(x, y);
+	if (mGrids[index] == GRID_OCCUPY_TYPE_PROPS)
+	{
+		Item* loot = getItem(x, y);
+		mResult.pick[0] = loot->iid;
+		mLoots->erase(mLoots->find(loot->iid));
+	}
+
+	mResult.moveUnits[0] = iid;
+	calculateEnemyMovement(&mResult);
+
+	Event e = { BATTLE_MOVE_HERO_SUCESS, (char*)&mResult };
 	dispatchEvent(&e);
 
 	refreshGrids();
@@ -136,7 +150,7 @@ void PVEBattle::refreshGrids()
 	std::map<ID, Unit*>::iterator it = mHeros->begin();
 	for (it; it != mHeros->end(); it++)
 	{
-		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		int index = convertToIndex(it->second->positon.x, it->second->positon.y);
 		if (index <0 || index >= MAX_SCREEN_GRID) continue;
 		mGrids[index] = GRID_OCCUPY_TYPE_HERO;
 	}
@@ -144,7 +158,7 @@ void PVEBattle::refreshGrids()
 	it = mEnemys->begin();
 	for (it; it != mEnemys->end(); it++)
 	{
-		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		int index = convertToIndex(it->second->positon.x, it->second->positon.y);
 		if (index <0 || index >= MAX_SCREEN_GRID) continue;
 		mGrids[index] = GRID_OCCUPY_TYPE_ENEMY;
 	}
@@ -152,9 +166,17 @@ void PVEBattle::refreshGrids()
 	it = mBarriers->begin();
 	for (it; it != mBarriers->end(); it++)
 	{
-		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		int index = convertToIndex(it->second->positon.x, it->second->positon.y);
 		if (index <0 || index >= MAX_SCREEN_GRID) continue;
 		mGrids[index] = GRID_OCCUPY_TYPE_BARRIER;
+	}
+
+	std::map<ID, Item*>::iterator iLoot = mLoots->begin();
+	for (iLoot; iLoot != mLoots->end(); iLoot++)
+	{
+		int index = convertToIndex(iLoot->second->position.x, iLoot->second->position.y);
+		if (index <0 || index >= MAX_SCREEN_GRID) continue;
+		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
 	}
 }
 
@@ -180,7 +202,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	for (it; it != mHeros->end(); it++)
 	{
 		if (it->second->health <= 0) continue;//don't move dead body.
-		int index = it->second->positon.x + (it->second->positon.y - mBackLine) * NUM_GRIDS_ROW;
+		int index = convertToIndex(it->second->positon.x, it->second->positon.y);
 		int next = calculateNextGrid(index, dir);
 		int target = next;
 		//if grid is occupied by hero, set the index to the front rows, until no more heros are hitted
@@ -190,7 +212,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 			index = next;
 			next = calculateNextGrid(index, dir);
 		}
-		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE)
+		if (gridsCopy[index] == GRID_OCCUPY_TYPE_NONE || gridsCopy[index] == GRID_OCCUPY_TYPE_PROPS)
 		{
 			//heroToMove[numHeroToMove] = it->second->iid;
 			result.moveUnits[numHeroToMove] = it->second->iid;
@@ -218,12 +240,21 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 	}
 	int skill_count = 0;
 	int buff_count = 0;
+	int pick_count = 0;
 	for (int i = 0; i < numHeroToMove; i++)
 	{
 		Unit* who = (*mHeros)[result.moveUnits[i]];
 		who->positon.y = nextGrids[i] / NUM_GRIDS_ROW + mBackLine;
 		who->positon.x = nextGrids[i] % NUM_GRIDS_ROW;
-		
+		//pick loot
+		int index = convertToIndex(who->positon.x, who->positon.y);
+		if (mGrids[index] == GRID_OCCUPY_TYPE_PROPS)
+		{
+			Item* loot = getItem(who->positon.x, who->positon.y);
+			result.pick[pick_count++] = loot->iid;
+			mLoots->erase(mLoots->find(loot->iid));
+		}
+
 		int j = 0;
 		while (who->skills[j])
 		{
@@ -298,7 +329,7 @@ void PVEBattle::calculateEnemyMovement(MoveResult* result)
 			dir[0] = dir[0] ? abs(dir[0]) / dir[0] : dir[0];
 			dir[1] = dir[1] ? abs(dir[1]) / dir[1] : dir[1];
 			// to do, avoid barriers
-			int index = (enemy->positon.x + dir[0]) + ((enemy->positon.y + dir[1]) - mBackLine) * NUM_GRIDS_ROW;
+			int index = convertToIndex(enemy->positon.x + dir[0], (enemy->positon.y + dir[1]));
 			if (mGrids[index] == GRID_OCCUPY_TYPE_NONE)
 			{
 				enemy->positon.x += dir[0];
@@ -385,7 +416,7 @@ void PVEBattle::calculateRoundResult()
 		delete wraper;
 		if (calculateHeroAttackResult(hero, &results[count])) count++;
 	}
-
+	
 	//step 5, enemys round, attack heros in aligity order
 	MaxHeap enemys = MaxHeap(mEnemys->size());
 	it = mEnemys->begin();
@@ -407,6 +438,7 @@ void PVEBattle::calculateRoundResult()
 		delete wraper;
 		if (calculateEnemyAttackResult(enemy, &results[count])) count++;
 	}
+
 	if (count)
 	{
 		Event e = { BATTLE_ATTACK_RESULT, (char*)results };
@@ -513,7 +545,6 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 			if (calculateSkillResult(&main, attacker, barrier, result->results, SKILL_CONDITION_AFTER_MOVE))
 			{
 				result->count++;
-				return true;
 			}
 		}
 		else
@@ -525,10 +556,12 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 				Config::skill->fill(&skill, attacker->skills[i]);
 				if (calculateSkillResult(&skill, attacker, victim, result->results + result->count, SKILL_CONDITION_AFTER_MOVE))
 					result->count++;
+				calculateLootResult(victim,result);
 				i++;
 			}
 		}
 	}
+	
 	if (result->count) return true;
 	return false;
 }
@@ -565,6 +598,32 @@ bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 		break;
 	}
 	return true;
+}
+
+void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
+{
+	std::map<ID, Unit*>::iterator it;
+	if (victim->health > 0) return;
+
+	if ((it = mHeros->find(victim->iid)) != mHeros->end())
+	{
+		mHeros->erase(it);
+	}
+	if ((it = mEnemys->find(victim->iid)) != mEnemys->end())
+	{
+		mEnemys->erase(it);
+		Item* item = Config::item->create(4001);
+		item->position = victim->positon;
+		(*mLoots)[item->iid] = item;
+		result->loot = item->iid;
+		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
+		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
+		// to do, grid occupy
+	}
+	if ((it = mBarriers->find(victim->iid)) != mBarriers->end())
+	{
+		mBarriers->erase(it);
+	}
 }
 
 bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
@@ -654,8 +713,26 @@ Unit* PVEBattle::getUnit(ID iid) const
 	return NULL;
 }
 
+Item* PVEBattle::getItem(ID iid) const
+{
+	if (mLoots->find(iid) != mLoots->end()) return (*mLoots)[iid];
+	return NULL;
+}
 
+Item* PVEBattle::getItem(int x, int y) const
+{
+	std::map<ID, Item*>::iterator it = mLoots->begin();
+	for (it; it != mLoots->end(); it++)
+	{
+		if (it->second->position.x == x && it->second->position.y == y) return it->second;
+	}
+	return NULL;
+}
 
+int PVEBattle::convertToIndex(int x, int y)
+{
+	return x + (y - mBackLine) * NUM_GRIDS_ROW;
+}
 
 
 

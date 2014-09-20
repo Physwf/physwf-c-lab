@@ -10,6 +10,7 @@
 #define MAX_NUM_BUFFS 10
 
 typedef enum {
+	NONE,
 	LEFTWARD,
 	FORWARD,
 	BACKWARD,
@@ -87,6 +88,15 @@ typedef struct unit_t
 	Range view;//йср╟
 } Unit;
 
+typedef struct item_t
+{
+	ID iid;
+	ID cid;
+	char* name;
+	ID type;
+	ID value;
+	Position position;
+} Item;
 
 class UnitWraper :public IPriority
 {

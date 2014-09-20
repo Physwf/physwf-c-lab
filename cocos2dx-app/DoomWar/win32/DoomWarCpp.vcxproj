@@ -139,6 +139,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Components\EventDispatcher.h" />
     <ClCompile Include="..\Components\Heap.cpp" />
     <ClCompile Include="..\Components\MapSprite.cpp" />
+    <ClCompile Include="..\Components\PropSprite.cpp" />
     <ClCompile Include="..\Components\PVEBattleScene.cpp" />
     <ClCompile Include="..\Components\PVEBattleUI.cpp" />
     <ClCompile Include="..\Components\ResourceManager.cpp" />
@@ -146,6 +147,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Engine\Actor.cpp" />
     <ClCompile Include="..\Engine\Command.cpp" />
     <ClCompile Include="..\Engine\Engine.cpp" />
+    <ClCompile Include="..\Engine\Prop.cpp" />
     <ClCompile Include="..\Engine\Scene.cpp" />
     <ClCompile Include="..\Game\Game.cpp" />
     <ClCompile Include="..\System\Battle.cpp" />
@@ -165,6 +167,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Components\Effect.h" />
     <ClInclude Include="..\Components\Heap.h" />
     <ClInclude Include="..\Components\MapSprite.h" />
+    <ClInclude Include="..\Components\PropSprite.h" />
     <ClInclude Include="..\Components\PVEBattleScene.h" />
     <ClInclude Include="..\Components\PVEBattleUI.h" />
     <ClInclude Include="..\Components\ResourceManager.h" />
@@ -172,6 +175,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Engine\Actor.h" />
     <ClInclude Include="..\Engine\Command.h" />
     <ClInclude Include="..\Engine\Engine.h" />
+    <ClInclude Include="..\Engine\Prop.h" />
     <ClInclude Include="..\Engine\Scene.h" />
     <ClInclude Include="..\Game\Game.h" />
     <ClInclude Include="..\System\HeroPub.h" />

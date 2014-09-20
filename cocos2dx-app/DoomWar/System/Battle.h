@@ -57,6 +57,7 @@ typedef struct move_result_t
 	ID cantmoveUnits[MAX_SCREEN_ENYMYS];
 	ID comeIntoView[NUM_GRIDS_ROW + 1];
 	ID comeOutOfView[NUM_GRIDS_ROW + 1];
+	ID pick[MAX_SCREEN_HEROS];
 	SkillResult skills[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
 	BuffResult buffs[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
 } MoveResult;
@@ -66,6 +67,7 @@ typedef struct attack_result_t
 {
 	char count;
 	SkillResult results[MAX_SKILL_RESULTS];
+	ID loot;
 } AttackResult;
 
 class PVEBattle :public EventDispather
@@ -87,7 +89,10 @@ public:
 	std::map<ID, Unit*>* enemys() const;
 	std::map<ID, Unit*>* barriers() const;
 	Unit* getUnit(ID iid) const;
+	Item* getItem(ID iid) const;
+	Item* getItem(int x, int y) const;
 	ID mapid() const;
+	int convertToIndex(int x, int y);
 private:
 	void updateStarLevel();
 	void refreshGrids();
@@ -103,6 +108,7 @@ private:
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
 	bool calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result);
 	bool calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result,int condition);
+	void calculateLootResult(Unit* victim, AttackResult* result);
 	bool isInRange(Unit* attacker, Unit* victim);
 	bool isInView(Unit* attacker, Unit* victim);
 	bool checkBarrier(Position grid1, Position grid2, ID* iid);
@@ -128,7 +134,7 @@ private:
 	std::map<ID, Unit*>* mHeros;
 	std::map<ID, Unit*>* mEnemys;
 	std::map<ID, Unit*>* mBarriers;
-
+	std::map<ID, Item*>* mLoots;
 	PVEMap* mMap;
 
 	int mRound;//»ØºÏ
