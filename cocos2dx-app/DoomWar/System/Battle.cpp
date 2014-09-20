@@ -242,6 +242,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		buff_count++;
 	}
 
+	calculateEnemyMovement(&result);
 
 	if (dir == FORWARD)
 	{
@@ -258,7 +259,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		mBackLine--;
 	}
 
-	calculateEnemyMovement(&result);
+	
 
 	Event e = { BATTLE_MOVE_SUCCESS, (char*)&result };
 	dispatchEvent(&e);
@@ -303,6 +304,7 @@ void PVEBattle::calculateEnemyMovement(MoveResult* result)
 				enemy->positon.x += dir[0];
 				enemy->positon.y += dir[1];
 				result->enemys[count++] = enemy->iid;
+				mGrids[index] = GRID_OCCUPY_TYPE_ENEMY;
 			}
 		}
 		
