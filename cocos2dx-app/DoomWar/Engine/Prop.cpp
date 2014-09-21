@@ -8,15 +8,15 @@ Prop::Prop(CCSprite* layer)
 
 Prop::~Prop()
 {
-
+	mSprite->release();
 }
 
 void Prop::bindData(Item* item)
 {
 	mData = item;
 	mSprite = PropSprite::create(item->cid);
+	mSprite->retain();
 	updatePosition();
-	mLayer->addChild(mSprite);
 }
 
 void Prop::calculateNextPosition()
@@ -34,4 +34,14 @@ void Prop::updatePosition()
 PropSprite* Prop::sprite() const
 {
 	return mSprite;
+}
+
+void Prop::show()
+{
+	mLayer->addChild(mSprite);
+}
+
+void Prop::hide()
+{
+	mLayer->removeChild(mSprite,true);
 }

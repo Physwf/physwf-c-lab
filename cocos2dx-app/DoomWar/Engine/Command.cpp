@@ -352,6 +352,34 @@ Command* CommandBuff::create(BuffResult* result)
 	return seq;
 }
 
+CommandDrop::CommandDrop()
+{
+
+}
+
+CommandDrop::~CommandDrop()
+{
+
+}
+
+CommandDrop* CommandDrop::create(Prop* prop)
+{
+	CommandDrop* drop = new CommandDrop();
+	drop->mProp = prop;
+	return drop;
+}
+
+void CommandDrop::trigger()
+{
+	mProp->show();
+}
+
+bool CommandDrop::tick(float delta)
+{
+	return true;
+}
+
+/*CommandDrop*/
 CommandPick::CommandPick()
 {
 
@@ -371,7 +399,7 @@ CommandPick* CommandPick::create(Prop* prop)
 
 void CommandPick::trigger()
 {
-	mProp->sprite()->removeFromParent();
+	mProp->hide();
 }
 
 bool CommandPick::tick(float delta)

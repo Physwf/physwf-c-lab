@@ -19,6 +19,9 @@ public:
 	void updatePosition();
 	void calculateNextPosition();
 
+	void show();
+	void hide();
+
 	PropSprite* sprite() const;
 private:
 	Item* mData;

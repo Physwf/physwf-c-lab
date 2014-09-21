@@ -102,20 +102,6 @@ void Scene::onBattleMoveResult(Event *event)
 		}
 		mPVEScene->addCommand(cmds);
 		i = 0;
-		CommandParallel* picks = CommandParallel::create();
-		while (iid = result->pick[i])
-		{
-			std::map<ID, Prop*>::iterator it;
-			if ((it = mProps->find(iid)) != mProps->end())
-			{
-				CommandPick* pCmd = CommandPick::create(it->second);
-				picks->addCommand(pCmd);
-				mProps->erase(it);
-			}
-			i++;
-		}
-		mPVEScene->addCommand(picks);
-		i = 0;
 		while (iid = result->comeIntoView[i])
 		{
 			Actor* actor = new Actor(mPVEScene->layerActor());
@@ -135,6 +121,20 @@ void Scene::onBattleMoveResult(Event *event)
 			i++;
 		}
 		mPVEScene->addCommand(enemysMove);
+		i = 0;
+		CommandParallel* picks = CommandParallel::create();
+		while (iid = result->pick[i])
+		{
+			std::map<ID, Prop*>::iterator it;
+			if ((it = mProps->find(iid)) != mProps->end())
+			{
+				CommandPick* pCmd = CommandPick::create(it->second);
+				picks->addCommand(pCmd);
+				mProps->erase(it);
+			}
+			i++;
+		}
+		mPVEScene->addCommand(picks);
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{
@@ -183,10 +183,13 @@ void Scene::onBattleAttakResult(Event* event)
 		}
 		if (aResults->loot)
 		{
+
 			Item* loot = System::pve->getItem(aResults->loot);
 			Prop* prop = new Prop(mPVEScene->layerProp());
 			prop->bindData(loot);
 			(*mProps)[loot->iid] = prop;
+			CommandDrop* drop = CommandDrop::create(prop);
+			mPVEScene->addCommand(drop);
 		}
 		aResults++;
 	}

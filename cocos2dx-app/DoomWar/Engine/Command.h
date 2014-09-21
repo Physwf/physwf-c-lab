@@ -138,6 +138,19 @@ private:
 	Actor* mActor;
 };
 
+class CommandDrop : public Command
+{
+public:
+	static CommandDrop* create(Prop* prop);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandDrop();
+	~CommandDrop();
+private:
+	Prop* mProp;
+};
+
 class CommandPick : public Command
 {
 public:
