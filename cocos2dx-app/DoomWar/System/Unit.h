@@ -68,6 +68,10 @@ typedef struct  buff_t
 } Buff;
 #define UNIT_AI_TYPE_NEAREST 1L
 #define UNIT_AI_TYPE_WEAKEST 2L
+
+#define UNIT_ALIGN_TYPE_HERO 1L
+#define UNIT_ALIGN_TYPE_ENEMY 2L
+#define UNIT_ALIGN_TYPE_BARRIER 3L
 typedef struct unit_t
 {
 	ID iid;//instance id
@@ -81,6 +85,7 @@ typedef struct unit_t
 	Skill skill;
 	int agility;
 	ID ai;
+	ID alignment;
 	ID armor;
 	unsigned short attackFreq;//attacks per turn
 	Position positon;

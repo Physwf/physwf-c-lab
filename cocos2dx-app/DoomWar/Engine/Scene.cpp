@@ -36,7 +36,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	for (std::map<ID,Unit*>::iterator it=heros->begin(); it != heros->end(); it++)
 	{
 		Actor* actor = new Actor(mPVEScene->layerActor());
-		actor->setData(it->second,true);
+		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
 
@@ -108,6 +108,7 @@ void Scene::onBattleMoveResult(Event *event)
 			Unit* unit = System::pve->getUnit(iid);
 			CCAssert(unit != NULL, "Unit is null!");
 			actor->setData(unit);
+			if (actor->isBarrier()) actor->hideBlood();
 			(*mActors)[actor->iid()] = actor;
 			i++;
 		}
@@ -155,6 +156,20 @@ void Scene::onBattleMoveResult(Event *event)
 			i++;
 		}
 		mPVEScene->addCommand(enemysMove);
+		i = 0;
+		CommandParallel* picks = CommandParallel::create();
+		while (iid = result->pick[i])
+		{
+			std::map<ID, Prop*>::iterator it;
+			if ((it = mProps->find(iid)) != mProps->end())
+			{
+				CommandPick* pCmd = CommandPick::create(it->second);
+				picks->addCommand(pCmd);
+				mProps->erase(it);
+			}
+			i++;
+		}
+		mPVEScene->addCommand(picks);
 	}
 }
 
@@ -181,15 +196,16 @@ void Scene::onBattleAttakResult(Event* event)
 			}
 			i++;
 		}
-		if (aResults->loot)
+		i = 0;
+		while (i < aResults->numLoot)
 		{
-
-			Item* loot = System::pve->getItem(aResults->loot);
+			Item* loot = System::pve->getItem(aResults->loots[i]);
 			Prop* prop = new Prop(mPVEScene->layerProp());
 			prop->bindData(loot);
 			(*mProps)[loot->iid] = prop;
 			CommandDrop* drop = CommandDrop::create(prop);
 			mPVEScene->addCommand(drop);
+			i++;
 		}
 		aResults++;
 	}

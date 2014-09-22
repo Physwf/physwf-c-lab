@@ -54,6 +54,18 @@ void PVEMap::init(const char* configFile)
 
 	mBarriers[38] = 3001;
 	mBarriers[37] = 3001;
+
+	mBarriers[52] = 3001;
+	mBarriers[53] = 3001;
+
+	mBarriers[65] = 3001;
+	mBarriers[66] = 3001;
+
+	mBarriers[80] = 3001;
+	mBarriers[81] = 3001;
+
+	mBarriers[92] = 3001;
+	mBarriers[93] = 3001;
 }
 
 int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers, ID* iids)

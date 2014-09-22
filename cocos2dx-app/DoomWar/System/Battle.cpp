@@ -615,7 +615,7 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 		Item* item = Config::item->create(4001);
 		item->position = victim->positon;
 		(*mLoots)[item->iid] = item;
-		result->loot = item->iid;
+		result->loots[result->numLoot++] = item->iid;
 		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
 		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
 		// to do, grid occupy

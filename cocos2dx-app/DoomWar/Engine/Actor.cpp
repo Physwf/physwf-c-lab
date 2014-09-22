@@ -8,12 +8,14 @@ Actor::Actor(CCSprite* layer)
 	mPosition = new CCPoint();
 }
 
-void Actor::setData(Unit* data, bool bHero)
+void Actor::setData(Unit* data)
 {
 	mData = data;
 	mSprite = ActorSprite::create(mData->cid);
 	updatePosition();
-	mIsHero = bHero;
+	mIsHero = mData->alignment == UNIT_ALIGN_TYPE_HERO;
+	mIsEnemy = mData->alignment == UNIT_ALIGN_TYPE_ENEMY;
+	mIsBarrier = mData->alignment == UNIT_ALIGN_TYPE_BARRIER;
 	mLayer->addChild(mSprite);
 }
 
@@ -30,6 +32,16 @@ int Actor::health() const
 bool Actor::isHero()
 {
 	return mIsHero;
+}
+
+bool Actor::isEnemy()
+{
+	return mIsEnemy;
+}
+
+bool Actor::isBarrier()
+{
+	return mIsBarrier;
 }
 
 void Actor::updatePosition()

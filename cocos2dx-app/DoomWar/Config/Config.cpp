@@ -15,33 +15,7 @@ Unit* HeroConfig::create(ID cid)
 	memcpy(copy, master, sizeof Unit);
 	copy->iid = (ID)copy;
 
-	//Config::skill->fill(&copy->skill, copy->skill.cid);
-
 	return copy;
-
-	Unit* u = new Unit();
-	u->iid = (ID)u;
-	u->cid = cid;
-	u->name = "Hero";
-	u->maxHealth = 100;
-	u->health = 100;
-	
-	int n = 0;
-	for (int i = -1; i <= 1; i++)
-	{
-		for (int j = -1; j <= 1; j++)
-		{
-			if (i == 0 && j==0 ) continue;
-			u->attackRange.offsets[n].x = i;
-			u->attackRange.offsets[n].y = j;
-			n++;
-		}
-	}
-	u->attackRange.numGrids = n;
-	u->skill.cid = cid;
-	u->skill.type = SKILL_TYPE_HARM_PHYSICAL;
-	u->skill.value = -40;
-	return u;
 }
 
 void HeroConfig::onHeroConfigLoaded(xmlNodePtr root)
@@ -89,8 +63,6 @@ Unit* MonsterConfig::create(ID cid)
 	Unit *master = mMaster[cid];
 	memcpy(copy, master, sizeof Unit);
 	copy->iid = (ID)copy;
-
-	//Config::skill->fill(&copy->skill, copy->skill.cid);
 
 	return copy;
 }
@@ -182,6 +154,8 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
 	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
 	xmlChar* szlevel = xmlGetProp(node, BAD_CAST"level");
+	xmlChar* szAI = xmlGetProp(node, BAD_CAST"ai");
+	xmlChar* szAlign = xmlGetProp(node, BAD_CAST"alignment");
 	xmlChar* szMaxHealth = xmlGetProp(node, BAD_CAST"maxHealth");
 	xmlChar* szAgility = xmlGetProp(node, BAD_CAST"agility");
 	xmlChar* szSkills = xmlGetProp(node, BAD_CAST"skills");
@@ -193,6 +167,8 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	unit->name = (char*)szname;
 	unit->maxHealth = atoi((const char*)szMaxHealth);
 	unit->agility = atoi((const char*)szAgility);
+	unit->ai = atoi((const char*)szAI);
+	unit->alignment = atoi((const char*)szAlign);
 
 	parseSkills(unit,szSkills);
 	unit->attackFreq = atoi((const char*)szAttackFreq);

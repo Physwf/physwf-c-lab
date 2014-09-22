@@ -12,7 +12,7 @@
 #define MAX_SCREEN_BARRIERS 10
 #define MAX_SCREEN_GRID 60
 #define MAX_SKILL_RESULTS 5
-
+#define MAX_LOOT_RESULT 4
 #define MAX_STAR_LEVEL 3
 
 #define GRID_OCCUPY_TYPE_NONE 0
@@ -67,7 +67,8 @@ typedef struct attack_result_t
 {
 	char count;
 	SkillResult results[MAX_SKILL_RESULTS];
-	ID loot;
+	ID loots[MAX_LOOT_RESULT];
+	char numLoot;
 } AttackResult;
 
 class PVEBattle :public EventDispather

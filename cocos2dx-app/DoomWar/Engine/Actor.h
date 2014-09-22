@@ -14,7 +14,7 @@ public:
 	~Actor();
 
 public:
-	void setData(Unit* data, bool bHero=false);
+	void setData(Unit* data);
 	Unit* getData();
 
 	void updatePosition();
@@ -28,6 +28,8 @@ public:
 	ID iid() const;
 	int health() const;
 	bool isHero();
+	bool isEnemy();
+	bool isBarrier();
 
 	CCPoint* position();
 
@@ -41,5 +43,7 @@ private:
 	Unit* mData;
 	CCPoint* mPosition;
 	bool mIsHero;
+	bool mIsEnemy;
+	bool mIsBarrier;
 };
 #endif
