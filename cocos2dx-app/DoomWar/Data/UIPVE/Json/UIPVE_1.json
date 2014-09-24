@@ -12,10 +12,8 @@
   "textures": [
     "UIPVE0.plist"
   ],
-  "texturesPng": [
-    "UIPVE0.png"
-  ],
-  "version": "1.5.0.1",
+  "texturesPng": [],
+  "version": "1.6.0.0",
   "widgetTree": {
     "classname": "Panel",
     "name": null,
@@ -922,6 +920,53 @@
               "text": "10000",
               "touchScaleEnable": false,
               "vAlignment": 0
+            }
+          },
+          {
+            "classname": "LabelBMFont",
+            "name": null,
+            "children": [],
+            "options": {
+              "__type": "LabelBMFontSurrogate:#EditorCommon.JsonModel.Component.GUI",
+              "classname": "LabelBMFont",
+              "name": "ste",
+              "ZOrder": 0,
+              "actiontag": 3738651,
+              "anchorPointX": 0.5,
+              "anchorPointY": 0.5,
+              "classType": "CocoStudio.EngineAdapterWrap.CSLabelBMFont",
+              "colorB": 255,
+              "colorG": 255,
+              "colorR": 255,
+              "customProperty": "",
+              "flipX": false,
+              "flipY": false,
+              "height": 37,
+              "ignoreSize": true,
+              "layoutParameter": null,
+              "opacity": 255,
+              "positionPercentX": -0.353125,
+              "positionPercentY": 0.364583343,
+              "positionType": 0,
+              "rotation": 0,
+              "scaleX": 1,
+              "scaleY": 1,
+              "sizePercentX": 0.1359375,
+              "sizePercentY": 0.0385416672,
+              "sizeType": 0,
+              "tag": 43,
+              "touchAble": false,
+              "useMergedTexture": false,
+              "visible": true,
+              "width": 87,
+              "x": -226,
+              "y": 350,
+              "fileNameData": {
+                "path": "GUI/missing-font.fnt",
+                "plistFile": "",
+                "resourceType": 0
+              },
+              "text": "111"
             }
           }
         ],
