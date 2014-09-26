@@ -12,7 +12,9 @@
   "textures": [
     "UIPVE0.plist"
   ],
-  "texturesPng": [],
+  "texturesPng": [
+    "UIPVE0.png"
+  ],
   "version": "1.6.0.0",
   "widgetTree": {
     "classname": "Panel",

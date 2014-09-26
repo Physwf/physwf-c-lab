@@ -19,7 +19,9 @@
   <imageFileList>
     <string>UIPVE0.plist</string>
   </imageFileList>
-  <imagePngList />
+  <imagePngList>
+    <string>UIPVE0.png</string>
+  </imagePngList>
   <JsonSuffix>.json</JsonSuffix>
   <CurrentUIJson>UIPVE_1.json</CurrentUIJson>
 </UIProject>
