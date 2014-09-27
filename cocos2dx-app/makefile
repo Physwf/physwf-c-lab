@@ -81,7 +81,7 @@ DWcpy:
 	@cp $(DIR_DW)/Data/skills.xml $(BIN)/Data/skills.xml
 	@cp $(DIR_DW)/Data/buffs.xml $(BIN)/Data/buffs.xml
 	@cp $(DIR_DW)/Data/items.xml $(BIN)/Data/items.xml
-	@cp -R $(DIR_DW)/Data/UIPVE $(BIN)/Data/UIPVE
+	@cp -R $(DIR_DW)/Data//UIPVE/Export/UIPVE_1/ $(BIN)/Data/
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
 %.xml : %.xml

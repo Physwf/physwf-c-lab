@@ -860,7 +860,7 @@
               "touchAble": false,
               "useMergedTexture": true,
               "visible": true,
-              "width": 62,
+              "width": 31,
               "x": 161,
               "y": 914,
               "fileNameData": {
@@ -868,7 +868,7 @@
                 "plistFile": "",
                 "resourceType": 0
               },
-              "text": "39"
+              "text": "0"
             }
           },
           {
@@ -907,7 +907,7 @@
               "touchAble": false,
               "useMergedTexture": true,
               "visible": true,
-              "width": 144,
+              "width": 31,
               "x": 460,
               "y": 917,
               "fileNameData": {
@@ -915,7 +915,7 @@
                 "plistFile": "",
                 "resourceType": 0
               },
-              "text": "10000"
+              "text": "0"
             }
           }
         ],
