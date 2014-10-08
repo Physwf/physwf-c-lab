@@ -96,6 +96,7 @@ public:
 	int convertToIndex(int x, int y);
 private:
 	void updateStarLevel();
+	void addUnit(Unit* unit);
 	void refreshGrids();
 	bool calculateHerosMovement(StepDirection dir);
 	void calculateEnemyMovement(MoveResult* result);

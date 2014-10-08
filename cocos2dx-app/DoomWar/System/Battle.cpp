@@ -96,6 +96,21 @@ void PVEBattle::end()
 
 }
 
+void PVEBattle::addUnit(Unit* unit)
+{
+	int index = (unit->positon.x) + ((unit->positon.y) - mBackLine) * NUM_GRIDS_ROW;
+	if (unit->alignment == UNIT_ALIGN_TYPE_HERO)
+	{
+		(*mHeros)[unit->iid] = unit;
+		mGrids[index] = GRID_OCCUPY_TYPE_HERO;
+	}
+	else if (unit->alignment == UNIT_ALIGN_TYPE_ENEMY)
+	{
+		(*mEnemys)[unit->iid] = unit;
+		mGrids[index] = GRID_OCCUPY_TYPE_ENEMY;
+	}
+}
+
 void PVEBattle::step(StepDirection dir)
 {
 	if (!calculateHerosMovement(dir)) return;
@@ -618,11 +633,20 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 		result->loots[result->numLoot++] = item->iid;
 		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
 		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
-		// to do, grid occupy
 	}
 	if ((it = mBarriers->find(victim->iid)) != mBarriers->end())
 	{
 		mBarriers->erase(it);
+		Item* item = Config::item->create(4003);
+		ID cid = item->value;
+		Unit* monster = Config::monster->create(cid);
+		monster->positon = victim->positon;
+		addUnit(monster);
+		
+		(*mLoots)[item->iid] = item;
+		result->loots[result->numLoot++] = item->iid;
+		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
+		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
 	}
 }
 
