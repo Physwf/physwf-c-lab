@@ -32,6 +32,7 @@ private:
 	void onEnterPVEBattle(Event* event);
 	void onBattleMoveResult(Event* event);
 	void onBattleAttakResult(Event* event);
+	void onUnitFlop(Event* event);
 private:
 	std::map<ID, Actor*> *mActors;
 	std::map<ID, Prop*> *mProps;

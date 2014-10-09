@@ -25,6 +25,7 @@ EType const PVEBattle::BATTLE_MOVE_SUCCESS = "battle_move_success";
 EType const PVEBattle::BATTLE_MOVE_FAILED = "battle_move_failed";
 EType const PVEBattle::BATTLE_ATTACK_RESULT = "battle_attack_result";
 EType const PVEBattle::BATTLE_MOVE_HERO_SUCESS = "battle_move_hero_sucess";
+EType const PVEBattle::BATTLE_UNIT_FLOP = "battle_unit_flop";
 
 void PVEBattle::initialize()
 {
@@ -561,6 +562,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 			{
 				result->count++;
 			}
+			calculateLootResult(barrier, result);
 		}
 		else
 		{
@@ -638,15 +640,17 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 	{
 		mBarriers->erase(it);
 		Item* item = Config::item->create(4003);
+		
+		(*mLoots)[item->iid] = item;
+		result->loots[result->numLoot++] = item->iid;
+
 		ID cid = item->value;
 		Unit* monster = Config::monster->create(cid);
 		monster->positon = victim->positon;
 		addUnit(monster);
-		
-		(*mLoots)[item->iid] = item;
-		result->loots[result->numLoot++] = item->iid;
-		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
-		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
+
+		//Event e = {BATTLE_UNIT_FLOP,(char*)&monster->iid};
+		//dispatchEvent(&e);
 	}
 }
 

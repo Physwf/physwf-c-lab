@@ -67,6 +67,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_HERO_SUCESS, this, EventListener(&Scene::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&Scene::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&Scene::onBattleAttakResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_UNIT_FLOP, this, EventListener(&Scene::onUnitFlop));
 }
 
 void Scene::onBattleMoveResult(Event *event)
@@ -209,6 +210,16 @@ void Scene::onBattleAttakResult(Event* event)
 		}
 		aResults++;
 	}
+}
+
+void Scene::onUnitFlop(Event* event)
+{
+	ID iid = *(ID*)event->data;
+	Actor* actor = new Actor(mPVEScene->layerActor());
+	Unit* unit = System::pve->getUnit(iid);
+	CCAssert(unit != NULL, "Unit is null!");
+	actor->setData(unit);
+	(*mActors)[actor->iid()] = actor;
 }
 
 void Scene::leavePVEMap()

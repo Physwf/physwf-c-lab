@@ -124,6 +124,7 @@ public:
 	static const EType BATTLE_MOVE_FAILED;
 	static const EType BATTLE_ATTACK_RESULT;
 	static const EType BATTLE_MOVE_HERO_SUCESS;
+	static const EType BATTLE_UNIT_FLOP;
 private:
 	//Unit mHeros[MAX_SCREEN_HEROS];
 	//int mNumHeros;

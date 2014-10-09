@@ -93,6 +93,9 @@ typedef struct unit_t
 	Range view;//йср╟
 } Unit;
 
+#define ITEM_TYPE_BLOOD 1
+#define ITEM_TYPE_GOLD	2
+#define ITEM_TYPE_EGG	3
 typedef struct item_t
 {
 	ID iid;
