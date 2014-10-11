@@ -13,6 +13,8 @@ public:
 	void addItem(Item* item);
 	void useItem(ID iid);
 	void destroyItem(ID iid);
+	int addGold(int gold);
+	int getGold() const;
 private:
 	std::map<ID, Item*> mItems;
 	int mGold;

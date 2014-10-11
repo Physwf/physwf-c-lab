@@ -130,7 +130,7 @@ void Scene::onBattleMoveResult(Event *event)
 			std::map<ID, Prop*>::iterator it;
 			if ((it = mProps->find(iid)) != mProps->end())
 			{
-				CommandPick* pCmd = CommandPick::create(it->second);
+				CommandPick* pCmd = CommandPick::create(it->second, result->picker[i]);
 				picks->addCommand(pCmd);
 				mProps->erase(it);
 			}
@@ -164,9 +164,10 @@ void Scene::onBattleMoveResult(Event *event)
 			std::map<ID, Prop*>::iterator it;
 			if ((it = mProps->find(iid)) != mProps->end())
 			{
-				CommandPick* pCmd = CommandPick::create(it->second);
+				CommandPick* pCmd = CommandPick::create(it->second, result->picker[i]);
 				picks->addCommand(pCmd);
 				mProps->erase(it);
+				//System::pve->pickItem(iid, result->picker[i]);
 			}
 			i++;
 		}
@@ -201,24 +202,35 @@ void Scene::onBattleAttakResult(Event* event)
 		while (i < aResults->numLoot)
 		{
 			Item* loot = System::pve->getItem(aResults->loots[i]);
-			Prop* prop = new Prop(mPVEScene->layerProp());
-			prop->bindData(loot);
-			(*mProps)[loot->iid] = prop;
-			CommandDrop* drop = CommandDrop::create(prop);
-			mPVEScene->addCommand(drop);
+			if (loot->pick == ITEM_PICK_TYPE_STEP)
+			{
+				Prop* prop = new Prop(mPVEScene->layerProp());
+				prop->bindData(loot);
+				(*mProps)[loot->iid] = prop;
+				CommandDrop* drop = CommandDrop::create(prop);
+				mPVEScene->addCommand(drop);
+			}
+			else if (loot->pick == ITEM_PICK_TYPE_AUTO)
+			{
+				Prop* prop = new Prop(mPVEScene->layerProp());
+				prop->bindData(loot);
+				CommandPick* pCmd = CommandPick::create(prop, 0);
+				mPVEScene->addCommand(pCmd);
+			}
 			i++;
 		}
 		aResults++;
 	}
 }
 
-void Scene::onUnitFlop(Event* event)
+void Scene::onUnitFlop(Event* e)
 {
-	ID iid = *(ID*)event->data;
+	ID iid = *(ID*)e->data;
 	Actor* actor = new Actor(mPVEScene->layerActor());
 	Unit* unit = System::pve->getUnit(iid);
 	CCAssert(unit != NULL, "Unit is null!");
 	actor->setData(unit);
+	if (actor->isBarrier()) actor->hideBlood();
 	(*mActors)[actor->iid()] = actor;
 }
 

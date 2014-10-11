@@ -96,12 +96,16 @@ typedef struct unit_t
 #define ITEM_TYPE_BLOOD 1
 #define ITEM_TYPE_GOLD	2
 #define ITEM_TYPE_EGG	3
+
+#define ITEM_PICK_TYPE_STEP 1
+#define ITEM_PICK_TYPE_AUTO 2
 typedef struct item_t
 {
 	ID iid;
 	ID cid;
 	char* name;
 	ID type;
+	char pick;
 	ID value;
 	Position position;
 } Item;

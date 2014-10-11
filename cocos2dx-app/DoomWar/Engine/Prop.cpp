@@ -19,6 +19,11 @@ void Prop::bindData(Item* item)
 	updatePosition();
 }
 
+Item* Prop::data()
+{
+	return mData;
+}
+
 void Prop::calculateNextPosition()
 {
 	mPosition->x = mData->position.x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2;

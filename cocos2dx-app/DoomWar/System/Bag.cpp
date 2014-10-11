@@ -28,3 +28,14 @@ void Bag::destroyItem(ID iid)
 {
 
 }
+
+int Bag::addGold(int gold)
+{
+	mGold += gold;
+	return mGold;
+}
+
+int Bag::getGold() const
+{
+	return mGold;
+}

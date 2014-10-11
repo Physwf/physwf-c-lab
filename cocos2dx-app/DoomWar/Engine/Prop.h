@@ -15,7 +15,7 @@ public:
 	~Prop();
 
 	void bindData(Item* item);
-
+	Item* data();
 	void updatePosition();
 	void calculateNextPosition();
 

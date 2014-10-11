@@ -390,16 +390,18 @@ CommandPick::~CommandPick()
 
 }
 
-CommandPick* CommandPick::create(Prop* prop)
+CommandPick* CommandPick::create(Prop* prop,ID who)
 {
 	CommandPick* pick = new CommandPick();
 	pick->mProp = prop;
+	pick->mPicker = who;
 	return pick;
 }
 
 void CommandPick::trigger()
 {
 	mProp->hide();
+	System::pve->pickItem(mProp->data()->iid, mPicker);
 }
 
 bool CommandPick::tick(float delta)

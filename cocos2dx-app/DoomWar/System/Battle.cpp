@@ -3,6 +3,7 @@
 #include <string.h>
 #include "dwtype.h"
 #include <assert.h>
+#include "System.h"
 
 PVEBattle::PVEBattle()
 {
@@ -267,7 +268,9 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 		if (mGrids[index] == GRID_OCCUPY_TYPE_PROPS)
 		{
 			Item* loot = getItem(who->positon.x, who->positon.y);
-			result.pick[pick_count++] = loot->iid;
+			result.pick[pick_count] = loot->iid;
+			result.picker[pick_count] = who->iid;
+			pick_count++;
 			mLoots->erase(mLoots->find(loot->iid));
 		}
 
@@ -440,7 +443,7 @@ void PVEBattle::calculateRoundResult()
 	{
 		if (it->second->health <= 0)//dead
 		{
-			it = mEnemys->erase(it);
+			//it = mEnemys->erase(it);
 			continue;
 		}
 		UnitWraper *wraper = new UnitWraper(it->second);
@@ -642,13 +645,16 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 		Item* item = Config::item->create(4003);
 		
 		(*mLoots)[item->iid] = item;
+		item->position = victim->positon;
 		result->loots[result->numLoot++] = item->iid;
 
-		ID cid = item->value;
-		Unit* monster = Config::monster->create(cid);
-		monster->positon = victim->positon;
-		addUnit(monster);
+		//ID cid = item->value;
+		//Unit* monster = Config::monster->create(cid);
+		//monster->health = monster->maxHealth;
+		//monster->positon = victim->positon;
+		//addUnit(monster);
 
+		//result->unearthing[result->numUnearth++] = monster->iid;
 		//Event e = {BATTLE_UNIT_FLOP,(char*)&monster->iid};
 		//dispatchEvent(&e);
 	}
@@ -757,15 +763,39 @@ Item* PVEBattle::getItem(int x, int y) const
 	return NULL;
 }
 
+void PVEBattle::pickItem(ID iid,ID who)
+{
+	std::map<ID, Item*>::iterator it = mLoots->find(iid);
+	if (it != mLoots->end())
+	{
+		Item* item = it->second;
+		if (item->type == ITEM_TYPE_GOLD)
+		{
+			System::bag->addGold(item->value);
+		}
+		else if (item->type == ITEM_TYPE_BLOOD)
+		{
+			std::map<ID, Unit*>::iterator itHero = mHeros->find(who);
+			assert(itHero != mHeros->end());
+			Unit* picker = itHero->second;
+			picker->health += item->value;
+		}
+		else if (item->type == ITEM_TYPE_EGG)
+		{
+			ID cid = item->value;
+			Unit* monster = Config::monster->create(cid);
+			monster->health = monster->maxHealth;
+			monster->positon = item->position;
+			addUnit(monster);
+
+			Event e = {BATTLE_UNIT_FLOP,(char*)&monster->iid};
+			dispatchEvent(&e);
+		}
+		mLoots->erase(it);
+	}
+}
+
 int PVEBattle::convertToIndex(int x, int y)
 {
 	return x + (y - mBackLine) * NUM_GRIDS_ROW;
 }
-
-
-
-
-
-
-
-

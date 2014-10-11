@@ -276,10 +276,12 @@ void Config::constructItemWithXML(Item* item, xmlNodePtr node)
 	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
 	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
 	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
+	xmlChar* szPick = xmlGetProp(node, BAD_CAST"pick");
 	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
 
 	item->cid = atoi((const char*)szid);
 	item->name = (char*)szname;
 	item->type = atoi((const char*)szType);
+	item->pick = atoi((const char*)szPick);
 	item->value = atoi((const char*)szValue);
 }

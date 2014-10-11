@@ -58,6 +58,7 @@ typedef struct move_result_t
 	ID comeIntoView[NUM_GRIDS_ROW + 1];
 	ID comeOutOfView[NUM_GRIDS_ROW + 1];
 	ID pick[MAX_SCREEN_HEROS];
+	ID picker[MAX_SCREEN_HEROS];
 	SkillResult skills[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
 	BuffResult buffs[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
 } MoveResult;
@@ -69,6 +70,8 @@ typedef struct attack_result_t
 	SkillResult results[MAX_SKILL_RESULTS];
 	ID loots[MAX_LOOT_RESULT];
 	char numLoot;
+	ID unearthing[MAX_LOOT_RESULT];
+	char numUnearth;
 } AttackResult;
 
 class PVEBattle :public EventDispather
@@ -92,11 +95,13 @@ public:
 	Unit* getUnit(ID iid) const;
 	Item* getItem(ID iid) const;
 	Item* getItem(int x, int y) const;
+	void pickItem(ID iid, ID who);
 	ID mapid() const;
 	int convertToIndex(int x, int y);
 private:
 	void updateStarLevel();
 	void addUnit(Unit* unit);
+	
 	void refreshGrids();
 	bool calculateHerosMovement(StepDirection dir);
 	void calculateEnemyMovement(MoveResult* result);
@@ -126,12 +131,6 @@ public:
 	static const EType BATTLE_MOVE_HERO_SUCESS;
 	static const EType BATTLE_UNIT_FLOP;
 private:
-	//Unit mHeros[MAX_SCREEN_HEROS];
-	//int mNumHeros;
-	//Unit mEnemys[MAX_SCREEN_ENYMYS];
-	//int mNumEnemys;
-	//Unit mBarriers[MAX_SCREEN_BARRIERS];
-	//int mNumBarries;
 	char mGrids[MAX_SCREEN_GRID];
 	
 	std::map<ID, Unit*>* mHeros;

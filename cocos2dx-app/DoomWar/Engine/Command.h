@@ -154,7 +154,7 @@ private:
 class CommandPick : public Command
 {
 public:
-	static CommandPick* create(Prop* prop);
+	static CommandPick* create(Prop* prop, ID who);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:
@@ -162,5 +162,6 @@ private:
 	~CommandPick();
 private:
 	Prop* mProp;
+	ID mPicker;
 };
 #endif
