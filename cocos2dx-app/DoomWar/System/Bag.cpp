@@ -1,5 +1,7 @@
 #include "Bag.h"
 
+EType const Bag::BAG_GOLD_CHANGE = "bag_gold_change";
+
 Bag::Bag()
 {
 
@@ -32,6 +34,8 @@ void Bag::destroyItem(ID iid)
 int Bag::addGold(int gold)
 {
 	mGold += gold;
+	Event e = { BAG_GOLD_CHANGE, (char*)&gold };
+	dispatchEvent(&e);
 	return mGold;
 }
 

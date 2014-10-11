@@ -33,6 +33,7 @@ void PVEBattleUI::onEnter()
 	getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onForwardTouched));
 	getWidgetByName("backward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onBackwardTouched));
 	getWidgetByName("rightward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onRightwardTouched));
+	//System::bag->addEventListener(Bag::BAG_GOLD_CHANGE, this, EventListener(&Scene::onUnitFlop))
 }
 
 void PVEBattleUI::onExit()

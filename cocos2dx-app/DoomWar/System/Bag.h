@@ -15,6 +15,8 @@ public:
 	void destroyItem(ID iid);
 	int addGold(int gold);
 	int getGold() const;
+public:
+	static const EType BAG_GOLD_CHANGE;
 private:
 	std::map<ID, Item*> mItems;
 	int mGold;
