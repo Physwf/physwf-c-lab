@@ -105,6 +105,9 @@
     <ClCompile Include="..\System\Bag.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\Game\Launcher.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="..\System\Bag.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Game\Launcher.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

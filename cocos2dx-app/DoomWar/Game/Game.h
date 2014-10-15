@@ -3,29 +3,26 @@
 
 #include "DWLoadingScene.h"
 #include <cocoa\CCObject.h>
+#include "Launcher.h"
 
-class Game : public CCObject
+class Game : public CCScene, public DWObject
 {
 public:
 	static Game* instance();
 
+	void start();
 	void pause();
 	void resume();
 
-	void setup();
-	
 private:
 	Game();
 	~Game();
-
-	void onUnitSpriteComplete(CCObject* tex);
-	void onMapSpriteComplete(CCObject* tex);
-	void onSkillSprite(CCObject* tex);
-	void onAllComplete();
+	void onLaunchSuccess(Event* e);
 
 private:
 	DWLoadingScene* mLoading;
 
 	static Game* mInstance;
+	Launcher* mLauncher;
 };
 #endif
