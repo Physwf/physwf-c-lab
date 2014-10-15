@@ -34,6 +34,8 @@ void Game::resume()
 
 void Game::start()
 {
+	mLoading = DWLoadingScene::create();
+	CCDirector::sharedDirector()->runWithScene(mLoading->scene());
 	mLauncher = new Launcher();
 	mLauncher->addEventListener(Launcher::SET_UP_SUCCESS, this, EventListener(&Game::onLaunchSuccess));
 	mLauncher->setup();

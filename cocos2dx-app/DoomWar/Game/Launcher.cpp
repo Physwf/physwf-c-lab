@@ -1,6 +1,8 @@
 #include "Launcher.h"
 #include "ResourceManager.h"
 
+EType const Launcher::SET_UP_SUCCESS = "set_up_success";
+
 Launcher::Launcher()
 {
 
@@ -90,6 +92,6 @@ void Launcher::onMapSpriteComplete(CCObject* tex)
 
 void Launcher::onAllComplete()
 {
-	Event e = {SET_UP_SUCCESS,NULL};
-	dispatchEvent(&e);
+	Event e = {SET_UP_SUCCESS,"d"};
+	//dispatchEvent(&e);
 }
