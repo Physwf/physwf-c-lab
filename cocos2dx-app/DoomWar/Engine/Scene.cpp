@@ -28,7 +28,7 @@ void Scene::enterPVEMap(ID mapid, Unit** heros, int numHeros)
 void Scene::onEnterPVEBattle(Event* event)
 {
 	//to do add enemys and barriers
-	mPVEScene = PVEBattleScene::create();
+	mPVEScene = PVEMap::create();
 	//to do load map
 
 	mActors = new std::map<ID, Actor*>();
@@ -246,7 +246,7 @@ Actor* Scene::getActor(ID iid)
 	return res->second;
 }
 
-PVEBattleScene* Scene::pve()
+PVEMap* Scene::pve()
 {
 	return mPVEScene;
 }

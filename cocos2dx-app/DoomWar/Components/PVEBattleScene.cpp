@@ -3,12 +3,12 @@
 #include "Engine.h"
 #include "System.h"
 
-CCScene* PVEBattleScene::scene() const
+CCScene* PVEMap::scene() const
 {
 	return mScene;
 }
 
-bool PVEBattleScene::init()
+bool PVEMap::init()
 {
 	if (!CCLayer::init())
 	{
@@ -44,9 +44,9 @@ bool PVEBattleScene::init()
 }
 
 
-PVEBattleScene* PVEBattleScene::create()
+PVEMap* PVEMap::create()
 {
-	PVEBattleScene* pBattle = new PVEBattleScene();
+	PVEMap* pBattle = new PVEMap();
 	if (pBattle && pBattle->init())
 	{
 		pBattle->autorelease();
@@ -58,52 +58,52 @@ PVEBattleScene* PVEBattleScene::create()
 	return NULL;
 }
 
-PVEBattleScene::PVEBattleScene()
+PVEMap::PVEMap()
 {
 	mScene = CCScene::create();
 }
 
-PVEBattleScene::~PVEBattleScene()
+PVEMap::~PVEMap()
 {
 
 }
 
-void PVEBattleScene::update(float delta)
+void PVEMap::update(float delta)
 {
 	mMainThread->tick(delta);
 }
 
-void PVEBattleScene::addCommand(Command* cmd)
+void PVEMap::addCommand(Command* cmd)
 {
 	mMainThread->push(cmd,true);
 }
 
-CCSprite* PVEBattleScene::layerProp()
+CCSprite* PVEMap::layerProp()
 {
 	return mLayerProp;
 }
 
-CCSprite* PVEBattleScene::layerActor()
+CCSprite* PVEMap::layerActor()
 {
 	return mLayerActor;
 }
 
-CCSprite* PVEBattleScene::layerEffect()
+CCSprite* PVEMap::layerEffect()
 {
 	return mLayerEffect;
 }
 
-void PVEBattleScene::onEnter()
+void PVEMap::onEnter()
 {
 	CCLayer::onEnter();
 }
 
-void PVEBattleScene::onExit()
+void PVEMap::onExit()
 {
 	CCLayer::onExit();
 }
 
-bool PVEBattleScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
+bool PVEMap::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	CCLog("x:%f,y:%f\n", touch->getLocation().x, touch->getLocation().y);
 	mCurDrag = Engine::scene->getActorByGrid(touch->getLocation()-getPosition());
@@ -121,7 +121,7 @@ bool PVEBattleScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
 	return true;
 }
 
-void PVEBattleScene::ccTouchMoved(CCTouch* touch, CCEvent* event)
+void PVEMap::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	if (mCurDrag && mCurDrag->isHero())
 	{
@@ -130,7 +130,7 @@ void PVEBattleScene::ccTouchMoved(CCTouch* touch, CCEvent* event)
 	}
 }
 
-void PVEBattleScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
+void PVEMap::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	if (mCurDrag && mCurDrag->isHero())
 	{
@@ -143,7 +143,7 @@ void PVEBattleScene::ccTouchEnded(CCTouch* touch, CCEvent* event)
 	}
 }
 
-void PVEBattleScene::ccTouchCancelled(CCTouch* touch, CCEvent* event)
+void PVEMap::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 {
 
 }

@@ -27,7 +27,7 @@ public:
 	Actor* getActor(ID iid);
 	Actor* getActorByGrid(const CCPoint &pos);
 
-	PVEBattleScene* pve();
+	PVEMap* pve();
 private:
 	void onEnterPVEBattle(Event* event);
 	void onBattleMoveResult(Event* event);
@@ -38,6 +38,6 @@ private:
 	std::map<ID, Prop*> *mProps;
 
 	DWLoadingScene* mLoading;
-	PVEBattleScene* mPVEScene;
+	PVEMap* mPVEScene;
 };
 #endif

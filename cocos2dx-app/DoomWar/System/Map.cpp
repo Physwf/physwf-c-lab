@@ -2,22 +2,22 @@
 #include "Config.h"
 #include <string.h>
 
-PVEMap::PVEMap()
+PVEMapData::PVEMapData()
 {
 	
 }
 
-PVEMap::~PVEMap()
+PVEMapData::~PVEMapData()
 {
 
 }
 
-ID PVEMap::cid() const
+ID PVEMapData::cid() const
 {
 	return mCID;
 }
 
-void PVEMap::init(const char* configFile)
+void PVEMapData::init(const char* configFile)
 {
 	memset(mGrids, 0, sizeof(mGrids));
 	//mBrriers[38] = 2;
@@ -68,7 +68,7 @@ void PVEMap::init(const char* configFile)
 	mBarriers[93] = 3001;
 }
 
-int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers, ID* iids)
+int PVEMapData::getBarriersByRow(int row, std::map<ID, Unit*>* barriers, ID* iids)
 {
 	int start = row * NUM_GRIDS_ROW;
 	int end = start + NUM_GRIDS_ROW;
@@ -90,7 +90,7 @@ int PVEMap::getBarriersByRow(int row, std::map<ID, Unit*>* barriers, ID* iids)
 	return count;
 }
 
-int PVEMap::getEnemysByRow(int row, std::map<ID, Unit*>* enemies, ID* iids)
+int PVEMapData::getEnemysByRow(int row, std::map<ID, Unit*>* enemies, ID* iids)
 {
 	int start = row * NUM_GRIDS_ROW;
 	int end = start + NUM_GRIDS_ROW;

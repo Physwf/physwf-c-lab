@@ -3,6 +3,7 @@
 #include "System.h"
 #include "Engine.h"
 
+
 Game::Game()
 {
 
@@ -37,14 +38,17 @@ void Game::start()
 	mLoading = DWLoadingScene::create();
 	CCDirector::sharedDirector()->runWithScene(mLoading->scene());
 	mLauncher = new Launcher();
-	mLauncher->addEventListener(Launcher::SET_UP_SUCCESS, this, EventListener(&Game::onLaunchSuccess));
 	mLauncher->setup();
+	delete mLauncher;
 }
 
-void Game::onLaunchSuccess(Event* e)
+void Game::enterWorld()
 {
-	delete mLauncher;
 
+}
+
+void Game::enterPVE(ID mid)
+{
 	System::pub->initialize();
 	Engine::scene->initialize();
 	//temp 
@@ -55,5 +59,10 @@ void Game::onLaunchSuccess(Event* e)
 	heros[3] = System::pub->getHero(1004);
 	heros[4] = System::pub->getHero(1005);
 
-	Engine::scene->enterPVEMap(0, heros, 5);
+	Engine::scene->enterPVEMap(mid, heros, 5);
+}
+
+void Game::enterNoLimit()
+{
+
 }

@@ -1,5 +1,6 @@
 #include "Launcher.h"
 #include "ResourceManager.h"
+#include "Game.h"
 
 EType const Launcher::SET_UP_SUCCESS = "set_up_success";
 
@@ -92,6 +93,5 @@ void Launcher::onMapSpriteComplete(CCObject* tex)
 
 void Launcher::onAllComplete()
 {
-	Event e = {SET_UP_SUCCESS,"d"};
-	//dispatchEvent(&e);
+	Game::instance()->enterPVE(0);
 }

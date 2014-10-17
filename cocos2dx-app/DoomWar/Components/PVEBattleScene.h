@@ -1,5 +1,5 @@
-#ifndef _PVE_BATTLE_SCENE_H
-#define _PVE_BATTLE_SCENE_H
+#ifndef _PVE_MAP_H
+#define _PVE_MAP_H
 
 #include "cocos2d.h"
 using namespace cocos2d;
@@ -7,12 +7,12 @@ using namespace cocos2d;
 #include "PVEBattleUI.h"
 #include "Command.h"
 
-class PVEBattleScene : public CCLayer
+class PVEMap : public CCLayer
 {
 public:
 	virtual bool init();
 	CCScene* scene() const;
-	static PVEBattleScene* create();
+	static PVEMap* create();
 	virtual void update(float delta);
 	void addCommand(Command* cmd);
 
@@ -27,8 +27,8 @@ public:
 	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
 private:
-	PVEBattleScene();
-	~PVEBattleScene();
+	PVEMap();
+	~PVEMap();
 private:
 	CCSprite* mTempMap;
 	CCScene* mScene;

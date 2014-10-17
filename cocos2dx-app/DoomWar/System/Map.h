@@ -10,12 +10,12 @@
 #define MAX_MAP_BARRIERS 60
 #define MAX_MAP_ENEMYS 100
 
-class PVEMap
+class PVEMapData
 {
 public:
-	PVEMap();
+	PVEMapData();
 	//PVEMap(config)
-	~PVEMap();
+	~PVEMapData();
 	void init(const char* configFile);
 	int getGridsByRow(int row, char* girds);
 	int getBarriersByRow(int row, std::map<ID, Unit*>*,ID*);

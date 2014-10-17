@@ -137,7 +137,7 @@ private:
 	std::map<ID, Unit*>* mEnemys;
 	std::map<ID, Unit*>* mBarriers;
 	std::map<ID, Item*>* mLoots;
-	PVEMap* mMap;
+	PVEMapData* mMap;
 
 	int mRound;//»ØºÏ
 	int mStarLevel;//ÐÇ¼¶

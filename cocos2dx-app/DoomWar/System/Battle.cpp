@@ -7,7 +7,7 @@
 
 PVEBattle::PVEBattle()
 {
-	mMap = new PVEMap();
+	mMap = new PVEMapData();
 	mHeros = new std::map<ID, Unit*>();
 	mEnemys = new std::map<ID, Unit*>();
 	mBarriers = new std::map<ID, Unit*>();

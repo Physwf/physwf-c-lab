@@ -8,7 +8,7 @@
 
 USING_NS_CC;
 
-class Launcher : public EventDispather ,public CCObject
+class Launcher : public CCObject
 {
 public:
 	Launcher();
