@@ -1,7 +1,7 @@
 #ifndef _GAME_H
 #define _GAME_H
 
-#include "DWLoadingScene.h"
+#include "DWLoading.h"
 #include <cocoa\CCObject.h>
 #include "Launcher.h"
 

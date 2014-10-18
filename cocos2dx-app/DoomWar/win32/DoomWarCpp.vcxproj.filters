@@ -63,9 +63,6 @@
     <ClCompile Include="..\Components\ActorSprite.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\Components\DWLoadingScene.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\Engine\Actor.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -108,6 +105,9 @@
     <ClCompile Include="..\Components\PVEUI.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Components\DWLoading.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -138,9 +138,6 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\Components\ActorSprite.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\DWLoadingScene.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Engine\Actor.h">
@@ -186,6 +183,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Components\PVEUI.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\DWLoading.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

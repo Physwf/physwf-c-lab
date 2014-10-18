@@ -48,7 +48,7 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/Heap.obj\
 		$(DIR_DW)/Components/ResourceManager.obj\
 		$(DIR_DW)/Components/ActorSprite.obj\
-		$(DIR_DW)/Components/DWLoadingScene.obj\
+		$(DIR_DW)/Components/DWLoading.obj\
 		$(DIR_DW)/Components/PVEView.obj\
 		$(DIR_DW)/Components/PVEUI.obj\
 		$(DIR_DW)/Components/Effect.obj\

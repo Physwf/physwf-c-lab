@@ -1,9 +1,4 @@
-#include "DWLoadingScene.h"
-
-CCScene* DWLoading::scene() const
-{
-	return mScene;
-}
+#include "DWLoading.h"
 
 bool DWLoading::init()
 {
@@ -34,7 +29,7 @@ DWLoading* DWLoading::create()
 
 DWLoading::DWLoading()
 {
-	mScene = CCScene::create();
+
 }
 
 DWLoading::~DWLoading()

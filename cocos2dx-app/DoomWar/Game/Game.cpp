@@ -43,7 +43,7 @@ void Game::start()
 	
 	mLauncher = new Launcher();
 	mLauncher->setup();
-	delete mLauncher;
+	mLauncher->release();
 }
 
 void Game::initWorld()

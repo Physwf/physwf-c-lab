@@ -1,6 +1,5 @@
 #include "World.h"
 #include <string.h>
-#include "DWLoadingScene.h"
 #include "PVEView.h"
 #include "System.h"
 #include "Game.h"

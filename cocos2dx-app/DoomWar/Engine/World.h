@@ -3,7 +3,6 @@
 
 #include "Actor.h"
 #include "Prop.h"
-#include "DWLoadingScene.h"
 #include "PVEView.h"
 #include "dwtype.h"
 #include "EventDispatcher.h"
