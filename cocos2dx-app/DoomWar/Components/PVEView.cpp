@@ -1,37 +1,39 @@
-#include "PVEBattleScene.h"
-#include "MapSprite.h"
+#include "PVEView.h"
 #include "Engine.h"
 #include "System.h"
 
-CCScene* PVEMap::scene() const
+CCScene* PVEView::scene() const
 {
 	return mScene;
 }
 
-bool PVEMap::init()
+bool PVEView::init()
 {
 	if (!CCLayer::init())
 	{
 		return false;
 	}
-	
-	mTempMap = MapSprite::create(0);
-	mTempMap->setPosition(ccp(-64, 0));
-	this->addChild(mTempMap);
-	//CCTMXTiledMap::create();
+		
+	mLayerMap = CCSprite::create();
 	mLayerProp = CCSprite::create();
 	mLayerActor = CCSprite::create();
 	mLayerEffect = CCSprite::create();
+	mLayerUI = CCSprite::create();
+
+	this->addChild(mLayerMap);
 	this->addChild(mLayerProp);
 	this->addChild(mLayerActor);
 	this->addChild(mLayerEffect);
+	this->addChild(mLayerUI);
 
-	mPVEUI = PVEBattleUI::create(this);
-	//TouchGroup * ul = TouchGroup::create();
-	//ul->addWidget(GUIReader::shareReader()->widgetFromJsonFile("./Data/UIPVE_1/UIPVE_1.ExportJson"));
-	//mScene->addChild(mPVEUI);
+	CCTMXTiledMap* map = CCTMXTiledMap::create("./Data/MAPPVE.tmx");
+	map->setPosition(-69, 0);
+	mLayerMap->addChild(map);
+
+	mPVEUI = PVEUI::create(this);
 	mPVEUI->setTouchEnabled(true);
-	//ul->setPosition(ccp(0, 0));
+	mLayerUI->addChild(mPVEUI);
+
 	mMainThread = CommandSequence::create();
 
 	mRangeSprite = ColorSprite::create(0x6F0000FF);
@@ -44,69 +46,77 @@ bool PVEMap::init()
 }
 
 
-PVEMap* PVEMap::create()
+PVEView* PVEView::create()
 {
-	PVEMap* pBattle = new PVEMap();
+	PVEView* pBattle = new PVEView();
 	if (pBattle && pBattle->init())
 	{
 		pBattle->autorelease();
 		pBattle->setTouchEnabled(true);
-		pBattle->mScene->addChild(pBattle);
-		pBattle->mScene->addChild(pBattle->mPVEUI);
 		return pBattle;
 	}
 	return NULL;
 }
 
-PVEMap::PVEMap()
+PVEView::PVEView()
 {
 	mScene = CCScene::create();
 }
 
-PVEMap::~PVEMap()
+PVEView::~PVEView()
 {
 
 }
 
-void PVEMap::update(float delta)
+void PVEView::update(float delta)
 {
 	mMainThread->tick(delta);
 }
 
-void PVEMap::addCommand(Command* cmd)
+void PVEView::addCommand(Command* cmd)
 {
 	mMainThread->push(cmd,true);
 }
 
-CCSprite* PVEMap::layerProp()
+CCSprite* PVEView::layerMap()
+{
+	return mLayerMap;
+}
+
+CCSprite* PVEView::layerProp()
 {
 	return mLayerProp;
 }
 
-CCSprite* PVEMap::layerActor()
+CCSprite* PVEView::layerActor()
 {
 	return mLayerActor;
 }
 
-CCSprite* PVEMap::layerEffect()
+CCSprite* PVEView::layerEffect()
 {
 	return mLayerEffect;
 }
 
-void PVEMap::onEnter()
+CCSprite* PVEView::layerUI()
+{
+	return mLayerUI;
+}
+
+void PVEView::onEnter()
 {
 	CCLayer::onEnter();
 }
 
-void PVEMap::onExit()
+void PVEView::onExit()
 {
 	CCLayer::onExit();
 }
 
-bool PVEMap::ccTouchBegan(CCTouch* touch, CCEvent* event)
+bool PVEView::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	CCLog("x:%f,y:%f\n", touch->getLocation().x, touch->getLocation().y);
-	mCurDrag = Engine::scene->getActorByGrid(touch->getLocation()-getPosition());
+	mCurDrag = Engine::world->getActorByGrid(touch->getLocation() - getPosition());
 	if (mCurDrag != NULL)
 	{
 		mRangeSprite->updateData(mCurDrag->getData());
@@ -121,7 +131,7 @@ bool PVEMap::ccTouchBegan(CCTouch* touch, CCEvent* event)
 	return true;
 }
 
-void PVEMap::ccTouchMoved(CCTouch* touch, CCEvent* event)
+void PVEView::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	if (mCurDrag && mCurDrag->isHero())
 	{
@@ -130,7 +140,7 @@ void PVEMap::ccTouchMoved(CCTouch* touch, CCEvent* event)
 	}
 }
 
-void PVEMap::ccTouchEnded(CCTouch* touch, CCEvent* event)
+void PVEView::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	if (mCurDrag && mCurDrag->isHero())
 	{
@@ -143,7 +153,7 @@ void PVEMap::ccTouchEnded(CCTouch* touch, CCEvent* event)
 	}
 }
 
-void PVEMap::ccTouchCancelled(CCTouch* touch, CCEvent* event)
+void PVEView::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 {
 
 }

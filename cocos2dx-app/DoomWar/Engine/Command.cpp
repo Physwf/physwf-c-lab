@@ -125,7 +125,7 @@ Command* CommandSkill::create(SkillResult* result)
 	seq->push(cmd,false);
 	if (result->value != 0)
 	{
-		Actor* victim = Engine::scene->getActor(result->recipient);
+		Actor* victim = Engine::world->getActor(result->recipient);
 		CommandProgress* progress = CommandProgress::create(result->value, victim);
 		seq->push(progress, false);
 	}
@@ -260,7 +260,7 @@ CommandParallel::~CommandParallel()
 
 }
 
-CommandScroll::CommandScroll(CCLayer* layer)
+CommandScroll::CommandScroll(CCSprite* layer)
 {
 	mLayer = layer;
 }
@@ -270,7 +270,7 @@ CommandScroll::~CommandScroll()
 
 }
 
-CommandScroll* CommandScroll::create(CCLayer* layer, StepDirection dir)
+CommandScroll* CommandScroll::create(CCSprite* layer, StepDirection dir)
 {
 	CommandScroll* pScroll = new CommandScroll(layer);
 	CCPoint pos = layer->getPosition();
@@ -292,6 +292,37 @@ bool CommandScroll::tick(float delta)
 void CommandScroll::trigger()
 {
 	mLayer->runAction(mMove);
+}
+
+CommandPVEScroll::CommandPVEScroll()
+{
+	
+}
+
+CommandPVEScroll::~CommandPVEScroll()
+{
+
+}
+
+CommandPVEScroll* CommandPVEScroll::create(StepDirection dir)
+{
+	CommandPVEScroll* mCmd = new CommandPVEScroll();
+	mCmd->mScrollCmds = CommandParallel::create();
+	mCmd->mScrollCmds->addCommand(CommandScroll::create(Engine::world->pve()->layerMap(), dir));
+	mCmd->mScrollCmds->addCommand(CommandScroll::create(Engine::world->pve()->layerProp(), dir));
+	mCmd->mScrollCmds->addCommand(CommandScroll::create(Engine::world->pve()->layerActor(), dir));
+	mCmd->mScrollCmds->addCommand(CommandScroll::create(Engine::world->pve()->layerEffect(), dir));
+	return mCmd;
+}
+
+bool CommandPVEScroll::tick(float delta)
+{
+	return mScrollCmds->tick(delta);
+}
+
+void CommandPVEScroll::trigger()
+{
+	mScrollCmds->trigger();
 }
 
 CommandDie::CommandDie(Actor* actor)
@@ -346,7 +377,7 @@ Command* CommandBuff::create(BuffResult* result)
 {
 	CommandSequence * seq = CommandSequence::create();
 	//to do implement command buff
-	Actor* owner = Engine::scene->getActor(result->owner);
+	Actor* owner = Engine::world->getActor(result->owner);
 	CommandProgress* progress = CommandProgress::create(result->value, owner);
 	seq->push(progress, false);
 	return seq;

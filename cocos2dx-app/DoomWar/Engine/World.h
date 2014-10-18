@@ -4,22 +4,22 @@
 #include "Actor.h"
 #include "Prop.h"
 #include "DWLoadingScene.h"
-#include "PVEBattleScene.h"
+#include "PVEView.h"
 #include "dwtype.h"
 #include "EventDispatcher.h"
 
 #include <map>
 
-class Scene : public DWObject
+class World : public DWObject
 {
 public:
-	Scene();
-	~Scene();
+	World();
+	~World();
 
 	void initialize();
 
-	void enterPVEMap(ID mapid, Unit** heros, int numHeros);
-	void leavePVEMap();
+	void enterPVEView(ID mapid, Unit** heros, int numHeros);
+	void leavePVEView();
 
 	void enterPVPMap(ID mapid);
 	void leavePVPMap();
@@ -27,7 +27,7 @@ public:
 	Actor* getActor(ID iid);
 	Actor* getActorByGrid(const CCPoint &pos);
 
-	PVEMap* pve();
+	PVEView* pve();
 private:
 	void onEnterPVEBattle(Event* event);
 	void onBattleMoveResult(Event* event);
@@ -37,7 +37,6 @@ private:
 	std::map<ID, Actor*> *mActors;
 	std::map<ID, Prop*> *mProps;
 
-	DWLoadingScene* mLoading;
-	PVEMap* mPVEScene;
+	PVEView* mPVEView;
 };
 #endif

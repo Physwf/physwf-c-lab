@@ -67,16 +67,29 @@ private:
 class CommandScroll : public Command
 {
 public:
-	static CommandScroll* create(CCLayer* layer, StepDirection dir);
+	static CommandScroll* create(CCSprite* layer, StepDirection dir);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:
-	CommandScroll(CCLayer* layer);
+	CommandScroll(CCSprite* layer);
 	~CommandScroll();
 private:
-	CCLayer* mLayer;
+	CCSprite* mLayer;
 	CCMoveTo* mMove;
 
+};
+
+class CommandPVEScroll : public Command
+{
+public:
+	static CommandPVEScroll* create(StepDirection dir);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandPVEScroll();
+	~CommandPVEScroll();
+private:
+	CommandParallel* mScrollCmds;
 };
 
 class CommandSkill : public Command

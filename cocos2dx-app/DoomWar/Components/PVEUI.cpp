@@ -1,19 +1,19 @@
-#include "PVEBattleUI.h"
+#include "PVEUI.h"
 #include "System.h"
 
 
-PVEBattleUI::PVEBattleUI()
+PVEUI::PVEUI()
 {
 }
 
-PVEBattleUI::~PVEBattleUI()
+PVEUI::~PVEUI()
 {
 
 }
 
-PVEBattleUI* PVEBattleUI::create(CCLayer* pve)
+PVEUI* PVEUI::create(CCLayer* pve)
 {
-	PVEBattleUI* pUi = new PVEBattleUI();
+	PVEUI* pUi = new PVEUI();
 	if (pUi && pUi->init())
 	{
 		pUi->autorelease();
@@ -25,24 +25,24 @@ PVEBattleUI* PVEBattleUI::create(CCLayer* pve)
 	return NULL;
 }
 
-void PVEBattleUI::onEnter()
+void PVEUI::onEnter()
 {
 	TouchGroup::onEnter();
 	//CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(mController,1,false);
-	getWidgetByName("leftward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onLeftTouched));
-	getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onForwardTouched));
-	getWidgetByName("backward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onBackwardTouched));
-	getWidgetByName("rightward")->addTouchEventListener(this, toucheventselector(PVEBattleUI::onRightwardTouched));
+	getWidgetByName("leftward")->addTouchEventListener(this, toucheventselector(PVEUI::onLeftTouched));
+	getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEUI::onForwardTouched));
+	getWidgetByName("backward")->addTouchEventListener(this, toucheventselector(PVEUI::onBackwardTouched));
+	getWidgetByName("rightward")->addTouchEventListener(this, toucheventselector(PVEUI::onRightwardTouched));
 	//System::bag->addEventListener(Bag::BAG_GOLD_CHANGE, this, EventListener(&Scene::onUnitFlop))
 }
 
-void PVEBattleUI::onExit()
+void PVEUI::onExit()
 {
 	TouchGroup::onExit();
 	//CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(mController);
 }
 
-void PVEBattleUI::onLeftTouched(CCObject* object, TouchEventType type)
+void PVEUI::onLeftTouched(CCObject* object, TouchEventType type)
 {
 	if (type == TOUCH_EVENT_BEGAN)
 	{
@@ -50,7 +50,7 @@ void PVEBattleUI::onLeftTouched(CCObject* object, TouchEventType type)
 	}
 }
 
-void PVEBattleUI::onForwardTouched(CCObject* object, TouchEventType type)
+void PVEUI::onForwardTouched(CCObject* object, TouchEventType type)
 {
 	if (type == TOUCH_EVENT_BEGAN)
 	{
@@ -58,7 +58,7 @@ void PVEBattleUI::onForwardTouched(CCObject* object, TouchEventType type)
 	}
 }
 
-void PVEBattleUI::onBackwardTouched(CCObject* object, TouchEventType type)
+void PVEUI::onBackwardTouched(CCObject* object, TouchEventType type)
 {
 	if (type == TOUCH_EVENT_BEGAN)
 	{
@@ -66,7 +66,7 @@ void PVEBattleUI::onBackwardTouched(CCObject* object, TouchEventType type)
 	}
 }
 
-void PVEBattleUI::onRightwardTouched(CCObject* object, TouchEventType type)
+void PVEUI::onRightwardTouched(CCObject* object, TouchEventType type)
 {
 	if (type == TOUCH_EVENT_BEGAN)
 	{
@@ -74,7 +74,7 @@ void PVEBattleUI::onRightwardTouched(CCObject* object, TouchEventType type)
 	}
 }
 
-bool PVEBattleUI::ccTouchBegan(CCTouch* touch, CCEvent* event)
+bool PVEUI::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchBegan(touch,event);
 	TouchGroup::ccTouchBegan(touch, event);
@@ -82,19 +82,19 @@ bool PVEBattleUI::ccTouchBegan(CCTouch* touch, CCEvent* event)
 }
 
 
-void PVEBattleUI::ccTouchMoved(CCTouch* touch, CCEvent* event)
+void PVEUI::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchMoved(touch, event);
 	TouchGroup::ccTouchMoved(touch, event);
 }
 
-void PVEBattleUI::ccTouchEnded(CCTouch* touch, CCEvent* event)
+void PVEUI::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchEnded(touch, event);
 	TouchGroup::ccTouchEnded(touch, event);
 }
 
-void PVEBattleUI::ccTouchCancelled(CCTouch* touch, CCEvent* event)
+void PVEUI::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 {
 	mPVEBattle->ccTouchCancelled(touch, event);
 	TouchGroup::ccTouchCancelled(touch, event);
@@ -103,7 +103,7 @@ void PVEBattleUI::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 /*PVEUIController*/
 
 
-PVEUIController::PVEUIController(PVEBattleUI* view)
+PVEUIController::PVEUIController(PVEUI* view)
 {
 	mView = view;
 }
@@ -113,7 +113,7 @@ PVEUIController::~PVEUIController()
 
 }
 
-PVEUIController* PVEUIController::create(PVEBattleUI* view)
+PVEUIController* PVEUIController::create(PVEUI* view)
 {
 	PVEUIController* controller = new PVEUIController(view);
 	return NULL;

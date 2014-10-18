@@ -5,7 +5,7 @@
 #include <cocoa\CCObject.h>
 #include "Launcher.h"
 
-class Game : public CCScene
+class Game
 {
 public:
 	static Game* instance();
@@ -14,9 +14,9 @@ public:
 	void pause();
 	void resume();
 
-	void enterWorld();
-	void enterPVE(ID mid);
-	void enterNoLimit();
+	void initWorld();
+
+	void replaceView(CCLayer* view);
 private:
 	Game();
 	~Game();
@@ -26,7 +26,8 @@ private:
 	static Game* mInstance;
 	Launcher* mLauncher;
 
-	DWLoadingScene* mLoading;
-	PVEMap* mPVE;
+	CCScene* mScene;
+	CCLayer* mCurrentView;
+	DWLoading* mLoading;
 };
 #endif

@@ -1,41 +1,45 @@
-#include "Scene.h"
+#include "World.h"
 #include <string.h>
 #include "DWLoadingScene.h"
-#include "PVEBattleScene.h"
+#include "PVEView.h"
 #include "System.h"
+#include "Game.h"
 
-Scene::Scene() :mLoading(NULL), mPVEScene(NULL)
+World::World() : mPVEView(NULL)
 {
 	
 }
 
-Scene::~Scene()
+World::~World()
 {
 
 }
 
-void Scene::initialize()
+void World::initialize()
 {
 	System::pve->initialize();
+
+	mPVEView = PVEView::create();
+	mPVEView->retain();
 }
 
-void Scene::enterPVEMap(ID mapid, Unit** heros, int numHeros)
+void World::enterPVEView(ID mapid, Unit** heros, int numHeros)
 {
-	System::pve->addEventListener(PVEBattle::BATTLE_ENTER_MAP, this, EventListener(&Scene::onEnterPVEBattle));
+	System::pve->addEventListener(PVEBattle::BATTLE_ENTER_MAP, this, EventListener(&World::onEnterPVEBattle));
 	System::pve->enter(mapid, heros, numHeros);
 }
 
-void Scene::onEnterPVEBattle(Event* event)
+void World::onEnterPVEBattle(Event* event)
 {
 	//to do add enemys and barriers
-	mPVEScene = PVEMap::create();
+	
 	//to do load map
 
 	mActors = new std::map<ID, Actor*>();
 	std::map<ID,Unit*>* heros = System::pve->heros();
 	for (std::map<ID,Unit*>::iterator it=heros->begin(); it != heros->end(); it++)
 	{
-		Actor* actor = new Actor(mPVEScene->layerActor());
+		Actor* actor = new Actor(mPVEView->layerActor());
 		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
@@ -43,7 +47,7 @@ void Scene::onEnterPVEBattle(Event* event)
 	std::map<ID, Unit*>* barriers = System::pve->barriers();
 	for (std::map<ID, Unit*>::iterator it = barriers->begin(); it != barriers->end(); it++)
 	{
-		Actor* actor = new Actor(mPVEScene->layerActor());
+		Actor* actor = new Actor(mPVEView->layerActor());
 		actor->setData(it->second);
 		actor->hideBlood();
 		(*mActors)[actor->iid()] = actor;
@@ -52,25 +56,27 @@ void Scene::onEnterPVEBattle(Event* event)
 	std::map<ID, Unit*>* enemys = System::pve->enemys();
 	for (std::map<ID, Unit*>::iterator it = enemys->begin(); it != enemys->end(); it++)
 	{
-		Actor* actor = new Actor(mPVEScene->layerActor());
+		Actor* actor = new Actor(mPVEView->layerActor());
 		actor->setData(it->second);
 		(*mActors)[actor->iid()] = actor;
 	}
 
 	mProps = new std::map<ID, Prop*>();
 
-	CCDirector::sharedDirector()->replaceScene(mPVEScene->scene());
+	//CCDirector::sharedDirector()->replaceScene(mPVEView->scene());
+
+	Game::instance()->replaceView(mPVEView);
 
 	System::pve->start();
 
-	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_SUCCESS, this, EventListener(&Scene::onBattleMoveResult));
-	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_HERO_SUCESS, this, EventListener(&Scene::onBattleMoveResult));
-	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&Scene::onBattleMoveResult));
-	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&Scene::onBattleAttakResult));
-	System::pve->addEventListener(PVEBattle::BATTLE_UNIT_FLOP, this, EventListener(&Scene::onUnitFlop));
+	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_SUCCESS, this, EventListener(&World::onBattleMoveResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_HERO_SUCESS, this, EventListener(&World::onBattleMoveResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&World::onBattleMoveResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&World::onBattleAttakResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_UNIT_FLOP, this, EventListener(&World::onUnitFlop));
 }
 
-void Scene::onBattleMoveResult(Event *event)
+void World::onBattleMoveResult(Event *event)
 {
 	if (event->type == PVEBattle::BATTLE_MOVE_SUCCESS)
 	{
@@ -85,7 +91,8 @@ void Scene::onBattleMoveResult(Event *event)
 			cmds->addCommand(move);
 			i++;
 		}
-		CommandScroll* cmd = CommandScroll::create(mPVEScene, result->dir);
+		
+		CommandPVEScroll* cmd = CommandPVEScroll::create(result->dir);
 		cmds->addCommand(cmd);
 		i = 0;
 		while (result->skills[i].giver)
@@ -101,11 +108,11 @@ void Scene::onBattleMoveResult(Event *event)
 			cmds->addCommand(buff);
 			i++;
 		}
-		mPVEScene->addCommand(cmds);
+		mPVEView->addCommand(cmds);
 		i = 0;
 		while (iid = result->comeIntoView[i])
 		{
-			Actor* actor = new Actor(mPVEScene->layerActor());
+			Actor* actor = new Actor(mPVEView->layerActor());
 			Unit* unit = System::pve->getUnit(iid);
 			CCAssert(unit != NULL, "Unit is null!");
 			actor->setData(unit);
@@ -122,7 +129,7 @@ void Scene::onBattleMoveResult(Event *event)
 			enemysMove->addCommand(move);
 			i++;
 		}
-		mPVEScene->addCommand(enemysMove);
+		mPVEView->addCommand(enemysMove);
 		i = 0;
 		CommandParallel* picks = CommandParallel::create();
 		while (iid = result->pick[i])
@@ -136,7 +143,7 @@ void Scene::onBattleMoveResult(Event *event)
 			}
 			i++;
 		}
-		mPVEScene->addCommand(picks);
+		mPVEView->addCommand(picks);
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_FAILED)
 	{
@@ -156,7 +163,7 @@ void Scene::onBattleMoveResult(Event *event)
 			enemysMove->addCommand(move);
 			i++;
 		}
-		mPVEScene->addCommand(enemysMove);
+		mPVEView->addCommand(enemysMove);
 		i = 0;
 		CommandParallel* picks = CommandParallel::create();
 		while (iid = result->pick[i])
@@ -171,11 +178,11 @@ void Scene::onBattleMoveResult(Event *event)
 			}
 			i++;
 		}
-		mPVEScene->addCommand(picks);
+		mPVEView->addCommand(picks);
 	}
 }
 
-void Scene::onBattleAttakResult(Event* event)
+void World::onBattleAttakResult(Event* event)
 {
 	AttackResult* aResults = (AttackResult*)event->data;
 	
@@ -186,14 +193,14 @@ void Scene::onBattleAttakResult(Event* event)
 		{
 			SkillResult* sResult = aResults->results + i;
 			Command* attack = CommandSkill::create(sResult);
-			mPVEScene->addCommand(attack);
+			mPVEView->addCommand(attack);
 			Actor* victim = getActor(sResult->recipient);
 			//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
 			//mPVEScene->addCommand(progress);
 			if (sResult->healthLeft <= 0)
 			{
 				CommandDie* die = CommandDie::create(victim);
-				mPVEScene->addCommand(die);
+				mPVEView->addCommand(die);
 				mActors->erase(mActors->find(sResult->recipient));
 			}
 			i++;
@@ -204,18 +211,18 @@ void Scene::onBattleAttakResult(Event* event)
 			Item* loot = System::pve->getItem(aResults->loots[i]);
 			if (loot->pick == ITEM_PICK_TYPE_STEP)
 			{
-				Prop* prop = new Prop(mPVEScene->layerProp());
+				Prop* prop = new Prop(mPVEView->layerProp());
 				prop->bindData(loot);
 				(*mProps)[loot->iid] = prop;
 				CommandDrop* drop = CommandDrop::create(prop);
-				mPVEScene->addCommand(drop);
+				mPVEView->addCommand(drop);
 			}
 			else if (loot->pick == ITEM_PICK_TYPE_AUTO)
 			{
-				Prop* prop = new Prop(mPVEScene->layerProp());
+				Prop* prop = new Prop(mPVEView->layerProp());
 				prop->bindData(loot);
 				CommandPick* pCmd = CommandPick::create(prop, 0);
-				mPVEScene->addCommand(pCmd);
+				mPVEView->addCommand(pCmd);
 			}
 			i++;
 		}
@@ -223,10 +230,10 @@ void Scene::onBattleAttakResult(Event* event)
 	}
 }
 
-void Scene::onUnitFlop(Event* e)
+void World::onUnitFlop(Event* e)
 {
 	ID iid = *(ID*)e->data;
-	Actor* actor = new Actor(mPVEScene->layerActor());
+	Actor* actor = new Actor(mPVEView->layerActor());
 	Unit* unit = System::pve->getUnit(iid);
 	CCAssert(unit != NULL, "Unit is null!");
 	actor->setData(unit);
@@ -234,24 +241,24 @@ void Scene::onUnitFlop(Event* e)
 	(*mActors)[actor->iid()] = actor;
 }
 
-void Scene::leavePVEMap()
+void World::leavePVEView()
 {
 
 }
 
-Actor* Scene::getActor(ID iid)
+Actor* World::getActor(ID iid)
 {
 	std::map<ID, Actor*>::iterator res = mActors->find(iid);
 	assert(res != mActors->end());
 	return res->second;
 }
 
-PVEMap* Scene::pve()
+PVEView* World::pve()
 {
-	return mPVEScene;
+	return mPVEView;
 }
 
-Actor* Scene::getActorByGrid(const CCPoint &pos)
+Actor* World::getActorByGrid(const CCPoint &pos)
 {
 	CCRect bounds;
 	for (std::map<ID, Actor*>::iterator it = mActors->begin(); it != mActors->end(); it++)

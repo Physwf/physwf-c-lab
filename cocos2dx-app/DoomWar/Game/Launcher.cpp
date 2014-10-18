@@ -93,5 +93,5 @@ void Launcher::onMapSpriteComplete(CCObject* tex)
 
 void Launcher::onAllComplete()
 {
-	Game::instance()->enterPVE(0);
+	Game::instance()->initWorld();
 }

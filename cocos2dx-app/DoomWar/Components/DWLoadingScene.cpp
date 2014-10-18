@@ -1,11 +1,11 @@
 #include "DWLoadingScene.h"
 
-CCScene* DWLoadingScene::scene() const
+CCScene* DWLoading::scene() const
 {
 	return mScene;
 }
 
-bool DWLoadingScene::init()
+bool DWLoading::init()
 {
 	if (!CCLayer::init())
 	{
@@ -21,24 +21,23 @@ bool DWLoadingScene::init()
 	return true;
 }
 
-DWLoadingScene* DWLoadingScene::create()
+DWLoading* DWLoading::create()
 {
-	DWLoadingScene* pLoading = new DWLoadingScene();
+	DWLoading* pLoading = new DWLoading();
 	if (pLoading && pLoading->init())
 	{
 		pLoading->autorelease();
-		pLoading->mScene->addChild(pLoading);
 		return pLoading;
 	}
 	return NULL;
 }
 
-DWLoadingScene::DWLoadingScene()
+DWLoading::DWLoading()
 {
 	mScene = CCScene::create();
 }
 
-DWLoadingScene::~DWLoadingScene()
+DWLoading::~DWLoading()
 {
 
 }

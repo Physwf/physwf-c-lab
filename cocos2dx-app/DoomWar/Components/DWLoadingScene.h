@@ -5,15 +5,15 @@
 
 USING_NS_CC;
 
-class DWLoadingScene : public CCLayer
+class DWLoading : public CCLayer
 {
 public:
 	virtual bool init();
 	CCScene* scene() const;
-	static DWLoadingScene* create();
+	static DWLoading* create();
 private:
-	DWLoadingScene();
-	~DWLoadingScene();
+	DWLoading();
+	~DWLoading();
 private:
 	CCScene* mScene;
 };

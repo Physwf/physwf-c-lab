@@ -66,16 +66,7 @@
     <ClCompile Include="..\Components\DWLoadingScene.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\Components\MapSprite.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Components\PVEBattleScene.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\Engine\Actor.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Engine\Scene.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\Engine\Engine.cpp">
@@ -86,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="..\Config\Config.cpp">
       <Filter>Config</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Components\PVEBattleUI.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Engine\Command.cpp">
       <Filter>Engine</Filter>
@@ -107,6 +95,18 @@
     </ClCompile>
     <ClCompile Include="..\Game\Launcher.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\World.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PVEView.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\WorldView.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PVEUI.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,16 +143,7 @@
     <ClInclude Include="..\Components\DWLoadingScene.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\Components\MapSprite.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\PVEBattleScene.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\Engine\Actor.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Engine\Scene.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\System\HeroPub.h">
@@ -162,9 +153,6 @@
       <Filter>Config</Filter>
     </ClInclude>
     <ClInclude Include="..\Components\dwtype.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Components\PVEBattleUI.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Engine\Command.h">
@@ -187,6 +175,18 @@
     </ClInclude>
     <ClInclude Include="..\Game\Launcher.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\World.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PVEView.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\WorldView.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PVEUI.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

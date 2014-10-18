@@ -1,7 +1,7 @@
 #ifndef _ENGINE_H
 #define _ENGINE_H
 
-#include "Scene.h"
+#include "World.h"
 
 class Engine
 {
@@ -9,6 +9,6 @@ private:
 	Engine();
 	~Engine();
 public:
-	static Scene* scene;
+	static World* world;
 };
 #endif

@@ -10,4 +10,4 @@ Engine::~Engine()
 
 }
 
-Scene* Engine::scene = new Scene();
+World* Engine::world = new World();

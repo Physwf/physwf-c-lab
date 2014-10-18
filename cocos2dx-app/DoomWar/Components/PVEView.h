@@ -4,21 +4,23 @@
 #include "cocos2d.h"
 using namespace cocos2d;
 
-#include "PVEBattleUI.h"
+#include "PVEUI.h"
 #include "Command.h"
 
-class PVEMap : public CCLayer
+class PVEView : public CCLayer
 {
 public:
 	virtual bool init();
 	CCScene* scene() const;
-	static PVEMap* create();
+	static PVEView* create();
 	virtual void update(float delta);
 	void addCommand(Command* cmd);
 
+	CCSprite* layerMap();
 	CCSprite* layerProp();
 	CCSprite* layerActor();
 	CCSprite* layerEffect();
+	CCSprite* layerUI();
 
 	virtual void onEnter();
 	virtual void onExit();
@@ -26,19 +28,23 @@ public:
 	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
+
+	void scroll(int dx, int dy);
 private:
-	PVEMap();
-	~PVEMap();
+	PVEView();
+	~PVEView();
 private:
 	CCSprite* mTempMap;
 	CCScene* mScene;
-	PVEBattleUI* mPVEUI;
+	PVEUI* mPVEUI;
 
 	CommandSequence* mMainThread;
 
+	CCSprite* mLayerMap;
 	CCSprite* mLayerProp;
 	CCSprite* mLayerActor;
 	CCSprite* mLayerEffect;
+	CCSprite* mLayerUI;
 	ColorSprite* mRangeSprite;
 	Actor* mCurDrag;
 };

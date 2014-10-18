@@ -19,7 +19,7 @@ bool BulletEffect::tick(float delta)
 	float dist = pos.getDistance(*mTarget);
 	if (dist <= mSpeed)
 	{
-		Engine::scene->pve()->layerEffect()->removeChild(this, false);
+		Engine::world->pve()->layerEffect()->removeChild(this, false);
 		return true;
 	}
 	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
@@ -72,14 +72,14 @@ void BulletEffect::onExit()
 
 BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 {
-	CCSprite* layer = Engine::scene->pve()->layerEffect();
+	CCSprite* layer = Engine::world->pve()->layerEffect();
 	BulletEffect* effect = new BulletEffect(layer);
 	if (effect && effect->init())
 	{
 		effect->autorelease();
 		effect->retain();
-		effect->mTarget = Engine::scene->getActor(victim)->position();
-		effect->setPosition(*Engine::scene->getActor(attacker)->position());
+		effect->mTarget = Engine::world->getActor(victim)->position();
+		effect->setPosition(*Engine::world->getActor(attacker)->position());
 		char szName[10] = { 0 };
 		effect->getFrameNameByCID(cid, szName);
 		CCAnimation* anim = ResourceManager::instance()->getAnimation(szName);
@@ -166,14 +166,14 @@ void HackEffect::onExit()
 
 HackEffect* HackEffect::create(ID cid, ID attacker, ID victim)
 {
-	CCSprite* layer = Engine::scene->pve()->layerEffect();
+	CCSprite* layer = Engine::world->pve()->layerEffect();
 	HackEffect* effect = new HackEffect(layer);
 	if (effect && effect->init())
 	{
 		effect->autorelease();
 		effect->retain();
-		effect->setPosition(*Engine::scene->getActor(attacker)->position());
-		effect->mTarget = Engine::scene->getActor(victim)->position();
+		effect->setPosition(*Engine::world->getActor(attacker)->position());
+		effect->mTarget = Engine::world->getActor(victim)->position();
 		CCAnimation* anim = ResourceManager::instance()->getAnimation("axe");
 		effect->mAction = CCAnimate::create(anim);
 		effect->mAction->retain();
@@ -248,12 +248,12 @@ void ArcEffect::drawArc(float x1,float y1,float x2,float y2,float distance)
 
 ArcEffect* ArcEffect::create(ID cid, ID attacker, ID victim)
 {
-	CCSprite* layer = Engine::scene->pve()->layerEffect();
+	CCSprite* layer = Engine::world->pve()->layerEffect();
 	ArcEffect * arc = new ArcEffect(layer);
 	if (arc && arc->init())
 	{
-		arc->mAttacker = Engine::scene->getActor(attacker);
-		arc->mVictim = Engine::scene->getActor(victim);
+		arc->mAttacker = Engine::world->getActor(attacker);
+		arc->mVictim = Engine::world->getActor(victim);
 		arc->setPosition(arc->mAttacker->sprite()->getPosition());
 		return arc;
 	}

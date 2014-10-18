@@ -48,15 +48,14 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/Heap.obj\
 		$(DIR_DW)/Components/ResourceManager.obj\
 		$(DIR_DW)/Components/ActorSprite.obj\
-		$(DIR_DW)/Components/MapSprite.obj\
 		$(DIR_DW)/Components/DWLoadingScene.obj\
-		$(DIR_DW)/Components/PVEBattleScene.obj\
-		$(DIR_DW)/Components/PVEBattleUI.obj\
+		$(DIR_DW)/Components/PVEView.obj\
+		$(DIR_DW)/Components/PVEUI.obj\
 		$(DIR_DW)/Components/Effect.obj\
 		$(DIR_DW)/Components/PropSprite.obj\
 		$(DIR_DW)/Config/Config.obj\
 		$(DIR_DW)/Engine/Engine.obj\
-		$(DIR_DW)/Engine/Scene.obj\
+		$(DIR_DW)/Engine/World.obj\
 		$(DIR_DW)/Engine/Actor.obj\
 		$(DIR_DW)/Engine/Prop.obj\
 		$(DIR_DW)/Engine/Command.obj\

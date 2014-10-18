@@ -10,16 +10,16 @@ using namespace ui;
 
 class PVEUIController;
 
-class PVEBattleUI : public TouchGroup
+class PVEUI : public TouchGroup
 {
 public:
-	static PVEBattleUI* create(CCLayer* pve);
+	static PVEUI* create(CCLayer* pve);
 
 	virtual void onEnter();
 	virtual void onExit();
 private:
-	PVEBattleUI();
-	~PVEBattleUI();
+	PVEUI();
+	~PVEUI();
 
 	void onLeftTouched(CCObject* object, TouchEventType type);
 	void onForwardTouched(CCObject* object, TouchEventType type);
@@ -39,16 +39,16 @@ private:
 class PVEUIController : public CCTouchDelegate, public CCObject
 {
 public:
-	PVEUIController(PVEBattleUI* view);
+	PVEUIController(PVEUI* view);
 	~PVEUIController();
 
-	static PVEUIController* create(PVEBattleUI* view);
+	static PVEUIController* create(PVEUI* view);
 
 	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
 private:
-	PVEBattleUI* mView;
+	PVEUI* mView;
 };
 #endif

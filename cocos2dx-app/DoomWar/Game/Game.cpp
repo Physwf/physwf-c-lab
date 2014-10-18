@@ -4,7 +4,7 @@
 #include "Engine.h"
 
 
-Game::Game()
+Game::Game() :mCurrentView(NULL)
 {
 
 }
@@ -35,22 +35,21 @@ void Game::resume()
 
 void Game::start()
 {
-	mLoading = DWLoadingScene::create();
-	CCDirector::sharedDirector()->runWithScene(mLoading->scene());
+	mLoading = DWLoading::create();
+	mScene = CCScene::create();
+	CCDirector::sharedDirector()->runWithScene(mScene);
+	replaceView(mLoading);
+
+	
 	mLauncher = new Launcher();
 	mLauncher->setup();
 	delete mLauncher;
 }
 
-void Game::enterWorld()
-{
-
-}
-
-void Game::enterPVE(ID mid)
+void Game::initWorld()
 {
 	System::pub->initialize();
-	Engine::scene->initialize();
+	Engine::world->initialize();
 	//temp 
 	Unit* heros[5];
 	heros[0] = System::pub->getHero(1001);
@@ -59,10 +58,15 @@ void Game::enterPVE(ID mid)
 	heros[3] = System::pub->getHero(1004);
 	heros[4] = System::pub->getHero(1005);
 
-	Engine::scene->enterPVEMap(mid, heros, 5);
+	Engine::world->enterPVEView(0, heros, 5);
 }
 
-void Game::enterNoLimit()
+void Game::replaceView(CCLayer* view)
 {
-
+	if (mCurrentView != NULL)
+	{
+		mScene->removeChild(mCurrentView);
+	}
+	mCurrentView = view;
+	mScene->addChild(mCurrentView);
 }
