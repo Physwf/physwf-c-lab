@@ -35,7 +35,7 @@ private:
 	CCSprite* mFrame;
 	CCLayer* mPVEBattle;
 
-	CCSprite* mMask;
+	UILayout* mMask;
 	UILayout* mDashBoard;
 	UIButton* mBtnLeft;
 	UIButton* mBtnForward;

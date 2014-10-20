@@ -13,32 +13,39 @@ PVEUI::~PVEUI()
 
 bool PVEUI::init()
 {
-	mMask = CCSprite::create();
+	TouchGroup::init();
 
-	CCSprite* maskL = CCSprite::createWithSpriteFrameName("left-mask");
+	mMask = UILayout::create();
+	mMask->setTouchEnabled(false);
+
+	UIImageView* maskL = UIImageView::create();
+	maskL->loadTexture("left-mask",UI_TEX_TYPE_PLIST);
 	maskL->setScaleY(960);
 	maskL->setAnchorPoint(CCPoint(0,0));
 	maskL->setPosition(CCPoint(0, 0));
 	mMask->addChild(maskL);
 
-	CCSprite* maskUp = CCSprite::createWithSpriteFrameName("up-mask");
+	UIImageView* maskUp = UIImageView::create();
+	maskUp->loadTexture("up-mask", UI_TEX_TYPE_PLIST);
 	maskUp->setScaleX(640);
 	maskUp->setAnchorPoint(CCPoint(0, 1));
 	maskUp->setPosition(CCPoint(0,960));
 	mMask->addChild(maskUp);
 
-	CCSprite* maskR = CCSprite::createWithSpriteFrameName("right-mask");
+	UIImageView* maskR = UIImageView::create();
+	maskR->loadTexture("right-mask", UI_TEX_TYPE_PLIST);
 	maskR->setScaleY(960);
 	maskR->setAnchorPoint(CCPoint(1, 0));
 	maskR->setPosition(CCPoint(640, 0));
 	mMask->addChild(maskR);
 
-	CCSprite* maskD = CCSprite::createWithSpriteFrameName("down-mask");
+	UIImageView* maskD = UIImageView::create();
+	maskD->loadTexture("down-mask", UI_TEX_TYPE_PLIST);
 	maskD->setScaleX(640);
 	maskD->setAnchorPoint(CCPoint(0, 0));
 	mMask->addChild(maskD);
 
-	addChild(mMask);
+	addWidget(mMask);
 
 	mDashBoard = UILayout::create();
 
@@ -49,21 +56,25 @@ bool PVEUI::init()
 
 	mBtnLeft = UIButton::create();
 	mBtnLeft->loadTextures("left-button", "left-button", "left-button",UI_TEX_TYPE_PLIST);
+	mBtnLeft->setPosition(CCPoint(70,57));
 	mDashBoard->addChild(mBtnLeft);
 
 	mBtnForward = UIButton::create();
 	mBtnForward->loadTextures("forward-button", "forward-button", "forward-button", UI_TEX_TYPE_PLIST);
+	mBtnForward->setPosition(CCPoint(232, 54));
 	mDashBoard->addChild(mBtnForward);
 
 	mBtnBackward = UIButton::create();
 	mBtnBackward->loadTextures("backward-button", "backward-button", "backward-button", UI_TEX_TYPE_PLIST);
+	mBtnBackward->setPosition(CCPoint(405,52));
 	mDashBoard->addChild(mBtnBackward);
 
 	mBtnRight = UIButton::create();
 	mBtnRight->loadTextures("right-button", "right-button", "right-button", UI_TEX_TYPE_PLIST);
+	mBtnRight->setPosition(CCPoint(568, 55));
 	mDashBoard->addChild(mBtnRight);
 
-	addChild(mDashBoard);
+	addWidget(mDashBoard);
 	//UIButton
 	return true;
 }
@@ -86,10 +97,10 @@ void PVEUI::onEnter()
 {
 	TouchGroup::onEnter();
 	//CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(mController,1,false);
-	//getWidgetByName("leftward")->addTouchEventListener(this, toucheventselector(PVEUI::onLeftTouched));
-	//getWidgetByName("forward")->addTouchEventListener(this, toucheventselector(PVEUI::onForwardTouched));
-	//getWidgetByName("backward")->addTouchEventListener(this, toucheventselector(PVEUI::onBackwardTouched));
-	//getWidgetByName("rightward")->addTouchEventListener(this, toucheventselector(PVEUI::onRightwardTouched));
+	mBtnLeft->addTouchEventListener(this, toucheventselector(PVEUI::onLeftTouched));
+	mBtnForward->addTouchEventListener(this, toucheventselector(PVEUI::onForwardTouched));
+	mBtnBackward->addTouchEventListener(this, toucheventselector(PVEUI::onBackwardTouched));
+	mBtnRight->addTouchEventListener(this, toucheventselector(PVEUI::onRightwardTouched));
 	//System::bag->addEventListener(Bag::BAG_GOLD_CHANGE, this, EventListener(&Scene::onUnitFlop))
 }
 
