@@ -20,7 +20,8 @@ public:
 private:
 	void onUnitSpriteComplete(CCObject* tex);
 	void onMapSpriteComplete(CCObject* tex);
-	void onSkillSprite(CCObject* tex);
+	void onSkillSpriteComplete(CCObject* tex);
+	void onUISpriteComplete(CCObject* tex);
 	void onAllComplete();
 };
 #endif

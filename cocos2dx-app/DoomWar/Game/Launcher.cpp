@@ -23,10 +23,10 @@ void Launcher::onUnitSpriteComplete(CCObject* tex)
 {
 	CCTexture2D* texUnits = (CCTexture2D*)tex;
 	ResourceManager::instance()->addSpriteFramePack("./Data/units.plist", texUnits);
-	ResourceManager::instance()->loadTexture("./Data/skills.png", this, callfuncO_selector(Launcher::onSkillSprite));
+	ResourceManager::instance()->loadTexture("./Data/skills.png", this, callfuncO_selector(Launcher::onSkillSpriteComplete));
 }
 
-void Launcher::onSkillSprite(CCObject* tex)
+void Launcher::onSkillSpriteComplete(CCObject* tex)
 {
 	CCTexture2D* skills = (CCTexture2D*)tex;
 	ResourceManager::instance()->addSpriteFramePack("./Data/skills.plist", skills);
@@ -83,6 +83,14 @@ void Launcher::onSkillSprite(CCObject* tex)
 	ResourceManager::instance()->loadXML("./Data/buffs.xml", Config::skill, (Config::OnConfigLoaded)&SkillConfig::onBuffConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/items.xml", Config::item, (Config::OnConfigLoaded)&ItemConfig::onItemConfigLoaded);
 
+	ResourceManager::instance()->loadTexture("./Data/ui.png", this, callfuncO_selector(Launcher::onUISpriteComplete));
+	
+}
+
+void Launcher::onUISpriteComplete(CCObject* tex)
+{
+	CCTexture2D* texUnits = (CCTexture2D*)tex;
+	ResourceManager::instance()->addSpriteFramePack("./Data/ui.plist", texUnits);
 	onMapSpriteComplete(NULL);
 }
 

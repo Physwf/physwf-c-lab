@@ -10,13 +10,14 @@ using namespace ui;
 
 class PVEUIController;
 
-class PVEUI : public TouchGroup
+class PVEUI : public UILayer
 {
 public:
 	static PVEUI* create(CCLayer* pve);
 
 	virtual void onEnter();
 	virtual void onExit();
+	virtual bool init();
 private:
 	PVEUI();
 	~PVEUI();
@@ -33,6 +34,14 @@ private:
 private:
 	CCSprite* mFrame;
 	CCLayer* mPVEBattle;
+
+	CCSprite* mMask;
+	UILayout* mDashBoard;
+	UIButton* mBtnLeft;
+	UIButton* mBtnForward;
+	UIButton* mBtnBackward;
+	UIButton* mBtnRight;
+
 };
 
 /*PVEUIController*/
