@@ -36,12 +36,18 @@ private:
 	CCLayer* mPVEBattle;
 
 	UILayout* mMask;
+
 	UILayout* mDashBoard;
 	UIButton* mBtnLeft;
 	UIButton* mBtnForward;
 	UIButton* mBtnBackward;
 	UIButton* mBtnRight;
 
+	UILayout* mStepCounter;
+	UILabelBMFont* mLblStep;
+
+	UILayout* mCoin;
+	UILabelBMFont* mLblCoin;
 };
 
 /*PVEUIController*/

@@ -75,6 +75,32 @@ bool PVEUI::init()
 	mDashBoard->addChild(mBtnRight);
 
 	addWidget(mDashBoard);
+
+	mStepCounter = UILayout::create();
+	UIImageView* scBg = UIImageView::create();
+	scBg->loadTexture("step", UI_TEX_TYPE_PLIST);
+	mStepCounter->addChild(scBg);
+	mLblStep = UILabelBMFont::create();
+	mLblStep->setFntFile("./Data/step-font.fnt");
+	mLblStep->setText("0");
+	mLblStep->setPosition(CCPoint(40, -3));
+	mStepCounter->addChild(mLblStep);
+	mStepCounter->setPosition(CCPoint(162, 915));
+	addWidget(mStepCounter);
+
+	mCoin = UILayout::create();
+	UIImageView* coinBg = UIImageView::create();
+	coinBg->loadTexture("earn", UI_TEX_TYPE_PLIST);
+	mCoin->addChild(coinBg);
+	mLblCoin = UILabelBMFont::create();
+	mLblCoin->setFntFile("./Data/step-font.fnt");
+	mLblCoin->setText("0");
+	mLblCoin->setScale(0.5);
+	mLblCoin->setPosition(CCPoint(20, -3));
+	mCoin->addChild(mLblCoin);
+	mCoin->setPosition(CCPoint(447, 921));
+
+	addWidget(mCoin);
 	//UIButton
 	return true;
 }

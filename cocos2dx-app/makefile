@@ -84,6 +84,8 @@ DWcpy:
 	@cp $(DIR_DW)/Data/items.xml $(BIN)/Data/items.xml
 	@cp $(DIR_DW)/Data/ui.png $(BIN)/Data/ui.png
 	@cp $(DIR_DW)/Data/ui.plist $(BIN)/Data/ui.plist
+	@cp $(DIR_DW)/Data/step-font.fnt $(BIN)/Data/step-font.fnt
+	@cp $(DIR_DW)/Data/step-font.png $(BIN)/Data/step-font.png 
 	@cp -R $(DIR_DW)/Data//UIPVE/Export/UIPVE_1/ $(BIN)/Data/
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
