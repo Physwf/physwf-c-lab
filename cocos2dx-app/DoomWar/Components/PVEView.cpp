@@ -27,7 +27,7 @@ bool PVEView::init()
 	this->addChild(mLayerUI);
 
 	CCTMXTiledMap* map = CCTMXTiledMap::create("./Data/MAPPVE.tmx");
-	map->setPosition(-69, 0);
+	map->setPosition(-65, 0);
 	mLayerMap->addChild(map);
 
 	mPVEUI = PVEUI::create(this);
@@ -116,7 +116,7 @@ void PVEView::onExit()
 bool PVEView::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	CCLog("x:%f,y:%f\n", touch->getLocation().x, touch->getLocation().y);
-	mCurDrag = Engine::world->getActorByGrid(touch->getLocation() - getPosition());
+	mCurDrag = Engine::world->getActorByGrid(touch->getLocation() - mLayerActor->getPosition());
 	if (mCurDrag != NULL)
 	{
 		mRangeSprite->updateData(mCurDrag->getData());
@@ -135,8 +135,8 @@ void PVEView::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
 	if (mCurDrag && mCurDrag->isHero())
 	{
-		mCurDrag->sprite()->setPosition(touch->getLocation() - getPosition());
-		mRangeSprite->setPosition(touch->getLocation() - getPosition());
+		mCurDrag->sprite()->setPosition(touch->getLocation() - mLayerActor->getPosition());
+		mRangeSprite->setPosition(touch->getLocation() - mLayerActor->getPosition());
 	}
 }
 
@@ -145,8 +145,8 @@ void PVEView::ccTouchEnded(CCTouch* touch, CCEvent* event)
 	if (mCurDrag && mCurDrag->isHero())
 	{
 
-		int x = floor((touch->getLocation().x - getPositionX()- X_MARGIN) / GRID_SIZE);
-		int y = floor((touch->getLocation().y - getPositionY()) / GRID_SIZE);
+		int x = floor((touch->getLocation().x - mLayerActor->getPositionX() - X_MARGIN) / GRID_SIZE);
+		int y = floor((touch->getLocation().y - mLayerActor->getPositionY()) / GRID_SIZE);
 		mRangeSprite->setPosition(ccp(x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, y * GRID_SIZE + GRID_SIZE / 2));
 		mCurDrag->sprite()->setPosition(ccp(x * GRID_SIZE + X_MARGIN + GRID_SIZE / 2, y * GRID_SIZE + GRID_SIZE / 2));
 		System::pve->moveHero(mCurDrag->getData()->iid, x, y);
