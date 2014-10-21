@@ -181,9 +181,10 @@ CommandMove::CommandMove(Actor* actor)
 	mActor = actor;
 	mMove = CCMoveTo::create(0.2f, mPos);
 	mMove->retain();
-	//mDelay = CCDelayTime::create(0.2f);
-	//mAction = CCSequence::create(mDelay, mMove);
-	//mAction->retain();
+	mDelay = CCDelayTime::create(0.2f);
+	mDelay->retain();
+	mAction = CCSequence::createWithTwoActions(mDelay, mMove);
+	mAction->retain();
 }
 
 CommandMove::~CommandMove()
@@ -195,22 +196,24 @@ CommandMove::~CommandMove()
 
 bool CommandMove::tick(float delta)
 {
-	return mMove->isDone();
+	return mAction->isDone();
 }
 
 void CommandMove::trigger()
 {
-	mActor->sprite()->runAction(mMove);
+	mActor->sprite()->runAction(mAction);
 }
 
 CommandMove* CommandMove::create(Actor* actor)
 {
 	CommandMove* move = new CommandMove(actor);
 	move->mPos = *actor->position();
-	srand(time(NULL));
-	//move->mDelay->initWithDuration(0.2 * (rand()%10/10.0));
+	srand(time(NULL) / (rand() % time(NULL)));
+	float delay = 0.1 * ((float)(rand() % 10) / 10.0)+0.1;
+	CCLog("delay:%f\n",delay);
+	move->mDelay->initWithDuration(delay);
 	move->mMove->initWithDuration(0.2f, move->mPos);
-	//move->mAction->initWithTwoActions(move->mDelay, move->mMove);
+	move->mAction->initWithTwoActions(move->mDelay, move->mMove);
 	return move;
 }
 
@@ -323,6 +326,40 @@ bool CommandPVEScroll::tick(float delta)
 void CommandPVEScroll::trigger()
 {
 	mScrollCmds->trigger();
+}
+
+CommandDashBoard::CommandDashBoard()
+{
+
+}
+
+CommandDashBoard::~CommandDashBoard()
+{
+
+}
+
+CommandDashBoard* CommandDashBoard::create(DashBehavior behavior)
+{
+	CommandDashBoard* pCmd = new CommandDashBoard();
+	pCmd->mBehavior = behavior;
+	return pCmd;
+}
+
+void CommandDashBoard::trigger()
+{
+	if (mBehavior == HIDE)
+	{
+		Engine::world->pve()->ui()->hideDashBoard();
+	}
+	else if (mBehavior == SHOW)
+	{
+		Engine::world->pve()->ui()->showDashBoard();
+	}
+}
+
+bool CommandDashBoard::tick(float delta)
+{
+	return true;
 }
 
 CommandDie::CommandDie(Actor* actor)

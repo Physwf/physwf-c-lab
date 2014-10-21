@@ -92,6 +92,25 @@ private:
 	CommandParallel* mScrollCmds;
 };
 
+enum DashBehavior
+{
+	HIDE,
+	SHOW
+};
+
+class CommandDashBoard : public Command
+{
+public:
+	static CommandDashBoard* create(DashBehavior behavior);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandDashBoard();
+	~CommandDashBoard();
+private:
+	DashBehavior mBehavior;
+};
+
 class CommandSkill : public Command
 {
 public:

@@ -20,7 +20,7 @@ public:
 	CCSprite* layerProp();
 	CCSprite* layerActor();
 	CCSprite* layerEffect();
-	CCSprite* layerUI();
+	PVEUI* ui();
 
 	virtual void onEnter();
 	virtual void onExit();
@@ -36,7 +36,6 @@ private:
 private:
 	CCSprite* mTempMap;
 	CCScene* mScene;
-	PVEUI* mPVEUI;
 
 	CommandSequence* mMainThread;
 
@@ -44,7 +43,8 @@ private:
 	CCSprite* mLayerProp;
 	CCSprite* mLayerActor;
 	CCSprite* mLayerEffect;
-	CCSprite* mLayerUI;
+	PVEUI* mUI;
+
 	ColorSprite* mRangeSprite;
 	Actor* mCurDrag;
 };

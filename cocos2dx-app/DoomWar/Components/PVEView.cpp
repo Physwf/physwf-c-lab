@@ -18,21 +18,18 @@ bool PVEView::init()
 	mLayerProp = CCSprite::create();
 	mLayerActor = CCSprite::create();
 	mLayerEffect = CCSprite::create();
-	mLayerUI = CCSprite::create();
+	mUI = PVEUI::create(this);
+	mUI->setTouchEnabled(true);
 
 	this->addChild(mLayerMap);
 	this->addChild(mLayerProp);
 	this->addChild(mLayerActor);
 	this->addChild(mLayerEffect);
-	this->addChild(mLayerUI);
+	this->addChild(mUI);
 
 	CCTMXTiledMap* map = CCTMXTiledMap::create("./Data/MAPPVE.tmx");
 	map->setPosition(-65, 0);
 	mLayerMap->addChild(map);
-
-	mPVEUI = PVEUI::create(this);
-	mPVEUI->setTouchEnabled(true);
-	mLayerUI->addChild(mPVEUI);
 
 	mMainThread = CommandSequence::create();
 
@@ -98,9 +95,9 @@ CCSprite* PVEView::layerEffect()
 	return mLayerEffect;
 }
 
-CCSprite* PVEView::layerUI()
+PVEUI* PVEView::ui()
 {
-	return mLayerUI;
+	return mUI;
 }
 
 void PVEView::onEnter()

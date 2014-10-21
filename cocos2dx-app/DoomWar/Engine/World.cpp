@@ -72,14 +72,19 @@ void World::onEnterPVEBattle(Event* event)
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_HERO_SUCESS, this, EventListener(&World::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_MOVE_FAILED, this, EventListener(&World::onBattleMoveResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&World::onBattleAttakResult));
+	System::pve->addEventListener(PVEBattle::BATTLE_STEP_CLEAR, this, EventListener(&World::onBattleStepClear));
 	System::pve->addEventListener(PVEBattle::BATTLE_UNIT_FLOP, this, EventListener(&World::onUnitFlop));
 }
 
 void World::onBattleMoveResult(Event *event)
 {
+	
 	if (event->type == PVEBattle::BATTLE_MOVE_SUCCESS)
 	{
 		MoveResult* result = (MoveResult*)event->data;
+		CommandDashBoard* hide = CommandDashBoard::create(HIDE);
+		mPVEView->addCommand(hide);
+
 		CommandParallel* cmds = CommandParallel::create();
 		int i = 0;
 		ID iid;
@@ -108,6 +113,7 @@ void World::onBattleMoveResult(Event *event)
 			i++;
 		}
 		mPVEView->addCommand(cmds);
+		
 		i = 0;
 		while (iid = result->comeIntoView[i])
 		{
@@ -150,6 +156,9 @@ void World::onBattleMoveResult(Event *event)
 	}
 	else if (event->type == PVEBattle::BATTLE_MOVE_HERO_SUCESS)
 	{
+		CommandDashBoard* hide = CommandDashBoard::create(HIDE);
+		mPVEView->addCommand(hide);
+
 		MoveResult *result = (MoveResult *)event->data;
 		ID iid = result->moveUnits[0];
 		(*mActors)[iid]->updatePosition();
@@ -227,6 +236,13 @@ void World::onBattleAttakResult(Event* event)
 		}
 		aResults++;
 	}
+	CommandDashBoard* show = CommandDashBoard::create(SHOW);
+	mPVEView->addCommand(show);
+}
+void World::onBattleStepClear(Event* event)
+{
+	CommandDashBoard* show = CommandDashBoard::create(SHOW);
+	mPVEView->addCommand(show);
 }
 
 void World::onUnitFlop(Event* e)

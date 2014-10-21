@@ -18,6 +18,9 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool init();
+
+	void hideDashBoard(float duration = 0.2);
+	void showDashBoard(float duration = 0.2);
 private:
 	PVEUI();
 	~PVEUI();

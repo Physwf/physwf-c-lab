@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProjectDir>E:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE</ProjectDir>
+  <ProjectDir>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE</ProjectDir>
   <Version>1.6.0.0</Version>
-  <Resources>E:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE\Resources</Resources>
+  <Resources>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE\Resources</Resources>
   <Name>UIPVE</Name>
   <JsonFileName>UIPVE.json</JsonFileName>
-  <JsonFolder>E:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE\Json</JsonFolder>
+  <JsonFolder>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE\Json</JsonFolder>
   <JsonList>
     <string>UIPVE_1.json</string>
   </JsonList>
@@ -13,7 +13,7 @@
     <Width>640</Width>
     <Height>960</Height>
   </CanvasSize>
-  <filePath>E:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE\UIPVE.xml.ui</filePath>
+  <filePath>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UIPVE\UIPVE.xml.ui</filePath>
   <ProjectType>UIProject</ProjectType>
   <ResRelativePath />
   <imageFileList>
@@ -21,5 +21,5 @@
   </imageFileList>
   <imagePngList />
   <JsonSuffix>.json</JsonSuffix>
-  <CurrentUIJson>UIPVE_1.json</CurrentUIJson>
+  <CurrentUIJson />
 </UIProject>

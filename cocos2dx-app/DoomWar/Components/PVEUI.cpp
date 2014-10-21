@@ -52,6 +52,7 @@ bool PVEUI::init()
 	UIImageView* frame = UIImageView::create();
 	frame->loadTexture("frame",UI_TEX_TYPE_PLIST);
 	frame->setAnchorPoint(CCPoint(0, 0));
+	mDashBoard->setSize(frame->getContentSize());
 	mDashBoard->addChild(frame);
 
 	mBtnLeft = UIButton::create();
@@ -134,6 +135,20 @@ void PVEUI::onExit()
 {
 	TouchGroup::onExit();
 	//CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(mController);
+}
+
+void PVEUI::hideDashBoard(float duration)
+{
+	CCPoint delta = CCPoint(0,-mDashBoard->getContentSize().height);
+	CCMoveBy* move = CCMoveBy::create(duration, delta);
+	mDashBoard->runAction(move);
+}
+
+void PVEUI::showDashBoard(float duration)
+{
+	CCPoint delta = CCPoint(0,mDashBoard->getContentSize().height);
+	CCMoveBy* move = CCMoveBy::create(duration, delta);
+	mDashBoard->runAction(move);
 }
 
 void PVEUI::onLeftTouched(CCObject* object, TouchEventType type)
