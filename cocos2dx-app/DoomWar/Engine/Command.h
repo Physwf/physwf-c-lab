@@ -92,7 +92,7 @@ private:
 	CommandParallel* mScrollCmds;
 };
 
-enum DashBehavior
+enum UIBehavior
 {
 	HIDE,
 	SHOW
@@ -101,14 +101,27 @@ enum DashBehavior
 class CommandDashBoard : public Command
 {
 public:
-	static CommandDashBoard* create(DashBehavior behavior);
+	static CommandDashBoard* create(UIBehavior behavior);
 	virtual bool tick(float delta);
 	virtual void trigger();
 private:
 	CommandDashBoard();
 	~CommandDashBoard();
 private:
-	DashBehavior mBehavior;
+	UIBehavior mBehavior;
+};
+
+class CommandSumary : public Command
+{
+public:
+	static CommandSumary* create(UIBehavior behavior);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandSumary();
+	~CommandSumary();
+private:
+	UIBehavior mBehavior;
 };
 
 class CommandSkill : public Command

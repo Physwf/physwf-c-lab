@@ -93,8 +93,8 @@ typedef struct unit_t
 	Range view;//йср╟
 } Unit;
 
-#define ITEM_TYPE_BLOOD 1
-#define ITEM_TYPE_GOLD	2
+#define ITEM_TYPE_GOLD	1
+#define ITEM_TYPE_BLOOD 2
 #define ITEM_TYPE_EGG	3
 
 #define ITEM_PICK_TYPE_STEP 1

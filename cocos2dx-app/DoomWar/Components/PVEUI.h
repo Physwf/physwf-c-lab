@@ -8,8 +8,6 @@ using namespace cocos2d;
 using namespace cocos2d::extension;
 using namespace ui;
 
-class PVEUIController;
-
 class PVEUI : public UILayer
 {
 public:
@@ -21,6 +19,11 @@ public:
 
 	void hideDashBoard(float duration = 0.2);
 	void showDashBoard(float duration = 0.2);
+	void setStarLevel(char level);
+
+	UILabelBMFont* labelGold() const;
+	UILabelBMFont* labelStep() const;
+	UILayout* panelSumary() const;
 private:
 	PVEUI();
 	~PVEUI();
@@ -51,22 +54,11 @@ private:
 
 	UILayout* mCoin;
 	UILabelBMFont* mLblCoin;
+
+	UILayout* mSumary;
+	UIButton* mSumOk;
+
 };
 
-/*PVEUIController*/
-class PVEUIController : public CCTouchDelegate, public CCObject
-{
-public:
-	PVEUIController(PVEUI* view);
-	~PVEUIController();
 
-	static PVEUIController* create(PVEUI* view);
-
-	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
-	virtual void ccTouchMoved(CCTouch* touch, CCEvent* event);
-	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
-	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);
-private:
-	PVEUI* mView;
-};
 #endif

@@ -74,6 +74,9 @@ void World::onEnterPVEBattle(Event* event)
 	System::pve->addEventListener(PVEBattle::BATTLE_ATTACK_RESULT, this, EventListener(&World::onBattleAttakResult));
 	System::pve->addEventListener(PVEBattle::BATTLE_STEP_CLEAR, this, EventListener(&World::onBattleStepClear));
 	System::pve->addEventListener(PVEBattle::BATTLE_UNIT_FLOP, this, EventListener(&World::onUnitFlop));
+	System::bag->addEventListener(Bag::BAG_GOLD_CHANGE, this, EventListener(&World::onGoldChange));
+	System::pve->addEventListener(PVEBattle::BATTLE_STEP, this, EventListener(&World::onPVEStep));
+	System::pve->addEventListener(PVEBattle::BATTLE_SUCCESS, this, EventListener(&World::onBattleSuccess));
 }
 
 void World::onBattleMoveResult(Event *event)
@@ -255,6 +258,23 @@ void World::onUnitFlop(Event* e)
 	if (actor->isBarrier()) actor->hideBlood();
 	(*mActors)[actor->iid()] = actor;
 }
+
+void World::onGoldChange(Event* event)
+{
+	mPVEView->updateGold(System::bag->getGold());
+}
+
+void World::onPVEStep(Event* event)
+{
+	mPVEView->updateStep(System::pve->step());
+}
+
+void World::onBattleSuccess(Event* event)
+{
+	CommandSumary *pSum = CommandSumary::create(SHOW);
+	mPVEView->addCommand(pSum);
+}
+
 
 void World::leavePVEView()
 {

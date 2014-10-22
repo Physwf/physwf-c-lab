@@ -2,7 +2,7 @@
 
 EType const Bag::BAG_GOLD_CHANGE = "bag_gold_change";
 
-Bag::Bag()
+Bag::Bag(): mGold(0)
 {
 
 }

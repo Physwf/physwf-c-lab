@@ -22,6 +22,11 @@ public:
 	CCSprite* layerEffect();
 	PVEUI* ui();
 
+	void updateGold(int gold);
+	void updateStep(int step);
+
+	void showSumary();
+
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);

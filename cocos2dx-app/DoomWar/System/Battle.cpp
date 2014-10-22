@@ -27,6 +27,9 @@ EType const PVEBattle::BATTLE_MOVE_FAILED = "battle_move_failed";
 EType const PVEBattle::BATTLE_ATTACK_RESULT = "battle_attack_result";
 EType const PVEBattle::BATTLE_MOVE_HERO_SUCESS = "battle_move_hero_sucess";
 EType const PVEBattle::BATTLE_UNIT_FLOP = "battle_unit_flop";
+EType const PVEBattle::BATTLE_STEP = "battle_step";
+EType const PVEBattle::BATTLE_SUCCESS = "battle_success";
+EType const PVEBattle::BATTLE_FAILED = "battle_failed";
 
 void PVEBattle::initialize()
 {
@@ -43,7 +46,7 @@ void PVEBattle::initialize()
 	mBarriers->clear();
 	mLoots->clear();
 
-	mRound = 0;
+	mStep = 0;
 	mStarLevel = MAX_STAR_LEVEL;
 	mGolds = 0;
 	
@@ -98,6 +101,18 @@ void PVEBattle::end()
 
 }
 
+int PVEBattle::step() const
+{
+	return mStep;
+}
+
+void PVEBattle::updateStep()
+{
+	mStep++;
+	Event e = { BATTLE_STEP, NULL };
+	dispatchEvent(&e);
+}
+
 void PVEBattle::addUnit(Unit* unit)
 {
 	int index = (unit->positon.x) + ((unit->positon.y) - mBackLine) * NUM_GRIDS_ROW;
@@ -122,6 +137,8 @@ void PVEBattle::step(StepDirection dir)
 	calculateRoundResult();
 
 	refreshGrids();
+
+	updateStep();
 }
 
 void PVEBattle::moveHero(ID iid, int x, int y)
@@ -144,7 +161,7 @@ void PVEBattle::moveHero(ID iid, int x, int y)
 	{
 		Item* loot = getItem(x, y);
 		mResult.pick[0] = loot->iid;
-		mLoots->erase(mLoots->find(loot->iid));
+		//mLoots->erase(mLoots->find(loot->iid));
 	}
 
 	mResult.moveUnits[0] = iid;
@@ -158,6 +175,8 @@ void PVEBattle::moveHero(ID iid, int x, int y)
 	calculateRoundResult();
 
 	refreshGrids();
+
+	updateStep();
 }
 
 void PVEBattle::refreshGrids()
@@ -271,7 +290,7 @@ bool PVEBattle::calculateHerosMovement(StepDirection dir)
 			result.pick[pick_count] = loot->iid;
 			result.picker[pick_count] = who->iid;
 			pick_count++;
-			mLoots->erase(mLoots->find(loot->iid));
+			//mLoots->erase(mLoots->find(loot->iid));
 		}
 
 		int j = 0;
@@ -792,6 +811,12 @@ void PVEBattle::pickItem(ID iid,ID who)
 			dispatchEvent(&e);
 		}
 		mLoots->erase(it);
+		refreshGrids();
+		if (mEnemys->size() == 0 && mLoots->size() == 0)
+		{
+			Event e = { BATTLE_SUCCESS, NULL };
+			dispatchEvent(&e);
+		}
 	}
 }
 

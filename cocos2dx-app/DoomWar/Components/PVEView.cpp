@@ -1,6 +1,7 @@
 #include "PVEView.h"
 #include "Engine.h"
 #include "System.h"
+#include <stdio.h>
 
 CCScene* PVEView::scene() const
 {
@@ -98,6 +99,29 @@ CCSprite* PVEView::layerEffect()
 PVEUI* PVEView::ui()
 {
 	return mUI;
+}
+
+void PVEView::updateGold(int gold)
+{
+	char sGold[8] = { 0 };
+	sprintf(sGold, "%d", gold);
+	mUI->labelGold()->setText(sGold);
+}
+
+void PVEView::updateStep(int step)
+{
+	char sStep[8] = { 0 };
+	sprintf(sStep, "%d", step);
+	mUI->labelStep()->setText(sStep);
+}
+
+void PVEView::showSumary()
+{
+	mUI->panelSumary()->setScale(0.5);
+	mUI->addWidget(mUI->panelSumary());
+	mUI->setStarLevel(2);
+	CCScaleTo* scale = CCScaleTo::create(0.1, 1.0);
+	mUI->panelSumary()->runAction(CCEaseIn::create(scale,0.1));
 }
 
 void PVEView::onEnter()

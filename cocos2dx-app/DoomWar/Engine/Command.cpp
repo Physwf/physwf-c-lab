@@ -338,7 +338,7 @@ CommandDashBoard::~CommandDashBoard()
 
 }
 
-CommandDashBoard* CommandDashBoard::create(DashBehavior behavior)
+CommandDashBoard* CommandDashBoard::create(UIBehavior behavior)
 {
 	CommandDashBoard* pCmd = new CommandDashBoard();
 	pCmd->mBehavior = behavior;
@@ -358,6 +358,41 @@ void CommandDashBoard::trigger()
 }
 
 bool CommandDashBoard::tick(float delta)
+{
+	return true;
+}
+
+
+CommandSumary::CommandSumary()
+{
+
+}
+
+CommandSumary::~CommandSumary()
+{
+
+}
+
+CommandSumary* CommandSumary::create(UIBehavior behavior)
+{
+	CommandSumary* pCmd = new CommandSumary();
+	pCmd->mBehavior = behavior;
+	return pCmd;
+}
+
+void CommandSumary::trigger()
+{
+	if (mBehavior == HIDE)
+	{
+		//Engine::world->pve()->showSumary();
+	}
+	else if (mBehavior == SHOW)
+	{
+		Engine::world->pve()->showSumary();
+	}
+}
+
+bool CommandSumary::tick(float delta)
 {
 	return true;
 }

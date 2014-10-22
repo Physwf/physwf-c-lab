@@ -98,8 +98,10 @@ public:
 	void pickItem(ID iid, ID who);
 	ID mapid() const;
 	int convertToIndex(int x, int y);
+	int step() const;
 private:
 	void updateStarLevel();
+	void updateStep();
 	void addUnit(Unit* unit);
 	
 	void refreshGrids();
@@ -130,6 +132,9 @@ public:
 	static const EType BATTLE_ATTACK_RESULT;
 	static const EType BATTLE_MOVE_HERO_SUCESS;
 	static const EType BATTLE_UNIT_FLOP;
+	static const EType BATTLE_STEP;
+	static const EType BATTLE_SUCCESS;
+	static const EType BATTLE_FAILED;
 private:
 	char mGrids[MAX_SCREEN_GRID];
 	
@@ -139,13 +144,11 @@ private:
 	std::map<ID, Item*>* mLoots;
 	PVEMapData* mMap;
 
-	int mRound;//回合
+	int mStep;//回合
 	int mStarLevel;//星级
 	int mGolds;
 	int mFrontLine;
 	int mBackLine;
-
-	
 };
 
 class PVPBattle

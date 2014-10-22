@@ -33,6 +33,9 @@ private:
 	void onBattleAttakResult(Event* event);
 	void onBattleStepClear(Event* event);
 	void onUnitFlop(Event* event);
+	void onGoldChange(Event* event);
+	void onPVEStep(Event* event);
+	void onBattleSuccess(Event* event);
 private:
 	std::map<ID, Actor*> *mActors;
 	std::map<ID, Prop*> *mProps;

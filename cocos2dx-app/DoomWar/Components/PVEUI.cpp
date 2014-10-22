@@ -39,11 +39,11 @@ bool PVEUI::init()
 	maskR->setPosition(CCPoint(640, 0));
 	mMask->addChild(maskR);
 
-	UIImageView* maskD = UIImageView::create();
-	maskD->loadTexture("down-mask", UI_TEX_TYPE_PLIST);
-	maskD->setScaleX(640);
-	maskD->setAnchorPoint(CCPoint(0, 0));
-	mMask->addChild(maskD);
+	//UIImageView* maskD = UIImageView::create();
+	//maskD->loadTexture("down-mask", UI_TEX_TYPE_PLIST);
+	//maskD->setScaleX(640);
+	//maskD->setAnchorPoint(CCPoint(0, 0));
+	//mMask->addChild(maskD);
 
 	addWidget(mMask);
 
@@ -102,6 +102,33 @@ bool PVEUI::init()
 	mCoin->setPosition(CCPoint(447, 921));
 
 	addWidget(mCoin);
+
+	mSumary = UILayout::create();
+	mSumary->setPosition(CCPoint(320,480));
+	mSumary->setTouchEnabled(true);
+
+	UIImageView* bg = UIImageView::create();
+	bg->loadTexture("sum_bg",UI_TEX_TYPE_PLIST);
+	mSumary->addChild(bg);
+
+	UIImageView* title = UIImageView::create();
+	title->loadTexture("sum_title", UI_TEX_TYPE_PLIST);
+	title->setPosition(CCPoint(0,247));
+	mSumary->addChild(title);
+
+	UIImageView* okBg = UIImageView::create();
+	okBg->loadTexture("sum_cfrm_bg", UI_TEX_TYPE_PLIST);
+	okBg->setPosition(CCPoint(0, -227));
+	mSumary->addChild(okBg);
+	
+	mSumOk = UIButton::create();
+	mSumOk->loadTextures("sum_cfrm_fg", "sum_cfrm_fg", "sum_cfrm_fg",UI_TEX_TYPE_PLIST);
+	mSumOk->setPosition(CCPoint(0, -227));
+	mSumary->addChild(mSumOk);
+
+	mSumary->retain();
+	//addWidget(mSumary);
+	//setStarLevel(2);
 	//UIButton
 	return true;
 }
@@ -149,6 +176,39 @@ void PVEUI::showDashBoard(float duration)
 	CCPoint delta = CCPoint(0,mDashBoard->getContentSize().height);
 	CCMoveBy* move = CCMoveBy::create(duration, delta);
 	mDashBoard->runAction(move);
+}
+
+UILabelBMFont* PVEUI::labelGold() const
+{
+	return mLblCoin;
+}
+
+UILabelBMFont* PVEUI::labelStep() const
+{
+	return mLblStep;
+}
+
+UILayout* PVEUI::panelSumary() const
+{
+	return mSumary;
+}
+
+void PVEUI::setStarLevel(char level)
+{
+	for (int i = 0; i < level; i++)
+	{
+		UIImageView* star = UIImageView::create();
+		star->loadTexture("sum_star", UI_TEX_TYPE_PLIST);
+		star->setPosition(CCPoint(-100+i*100,100));
+		mSumary->addChild(star);
+	}
+	for (int i = level; i < 3; i++)
+	{
+		UIImageView* star = UIImageView::create();
+		star->loadTexture("sum_empty_star",UI_TEX_TYPE_PLIST);
+		star->setPosition(CCPoint(-100 + i * 100, 100));
+		mSumary->addChild(star);
+	}
 }
 
 void PVEUI::onLeftTouched(CCObject* object, TouchEventType type)
@@ -209,41 +269,4 @@ void PVEUI::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 	TouchGroup::ccTouchCancelled(touch, event);
 }
 
-/*PVEUIController*/
 
-
-PVEUIController::PVEUIController(PVEUI* view)
-{
-	mView = view;
-}
-
-PVEUIController::~PVEUIController()
-{
-
-}
-
-PVEUIController* PVEUIController::create(PVEUI* view)
-{
-	PVEUIController* controller = new PVEUIController(view);
-	return NULL;
-}
-
-bool PVEUIController::ccTouchBegan(CCTouch* touch, CCEvent* event)
-{
-	return true;
-}
-
-void PVEUIController::ccTouchMoved(CCTouch* touch, CCEvent* event)
-{
-
-}
-
-void PVEUIController::ccTouchEnded(CCTouch* touch, CCEvent* event)
-{
-
-}
-
-void PVEUIController::ccTouchCancelled(CCTouch* touch, CCEvent* event)
-{
-
-}
