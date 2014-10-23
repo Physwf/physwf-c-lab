@@ -361,6 +361,7 @@
             <filename>UI/PVE/forward-button.png</filename>
             <filename>UI/PVE/backward-button.png</filename>
             <filename>UI/PVE/forward-button.png</filename>
+            <filename>UI/sumary/sum_bg.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

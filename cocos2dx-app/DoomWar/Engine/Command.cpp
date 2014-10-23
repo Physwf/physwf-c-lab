@@ -511,3 +511,41 @@ bool CommandPick::tick(float delta)
 {
 	return true;
 }
+
+CommandShakeScreen::CommandShakeScreen() :mTime(0.0f), mOrigin(CCPoint())
+{
+
+}
+
+CommandShakeScreen::~CommandShakeScreen()
+{
+
+}
+
+CommandShakeScreen* CommandShakeScreen::create(float am)
+{
+	CommandShakeScreen* pCmd = new CommandShakeScreen();
+	pCmd->mAmp = am;
+	return pCmd;
+}
+
+bool CommandShakeScreen::tick(float delta)
+{
+	float e = (1 + mTime + mTime*mTime / 2 + mTime*mTime*mTime / 6);
+	float aX = mAmp * sin(mTime * 100) / e;
+	float aY = mAmp * cos(mTime * 100) / e;
+	CCLog("%f,%f,%f", aX, aY, mTime);
+	Engine::world->pve()->layerMap()->setPosition(ccp(mOrigin.x+aX, mOrigin.y+aY));
+	mTime += delta;
+	if (mTime > 0.1)
+	{
+		Engine::world->pve()->layerMap()->setPosition(mOrigin);
+		return true;
+	}
+	return false;
+}
+
+void CommandShakeScreen::trigger()
+{
+	mOrigin = Engine::world->pve()->layerMap()->getPosition();
+}

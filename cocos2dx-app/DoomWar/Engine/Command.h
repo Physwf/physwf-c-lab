@@ -209,4 +209,19 @@ private:
 	Prop* mProp;
 	ID mPicker;
 };
+/*CommandScreen*/
+class CommandShakeScreen : public Command
+{
+public:
+	static CommandShakeScreen* create(float a);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandShakeScreen();
+	~CommandShakeScreen();
+private:
+	float mAmp;
+	float mTime;
+	CCPoint& mOrigin;
+};
 #endif

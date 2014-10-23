@@ -205,6 +205,8 @@ void World::onBattleAttakResult(Event* event)
 			SkillResult* sResult = aResults->results + i;
 			Command* attack = CommandSkill::create(sResult);
 			mPVEView->addCommand(attack);
+			Command* shake = CommandShakeScreen::create(5.0f);
+			mPVEView->addCommand(shake);
 			Actor* victim = getActor(sResult->recipient);
 			//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
 			//mPVEScene->addCommand(progress);
