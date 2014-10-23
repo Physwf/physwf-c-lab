@@ -222,6 +222,6 @@ private:
 private:
 	float mAmp;
 	float mTime;
-	CCPoint& mOrigin;
+	CCPoint* mOrigin;
 };
 #endif

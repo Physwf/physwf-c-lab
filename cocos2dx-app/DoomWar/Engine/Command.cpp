@@ -512,9 +512,9 @@ bool CommandPick::tick(float delta)
 	return true;
 }
 
-CommandShakeScreen::CommandShakeScreen() :mTime(0.0f), mOrigin(CCPoint())
+CommandShakeScreen::CommandShakeScreen() :mTime(0.0f)
 {
-
+	mOrigin = new CCPoint();
 }
 
 CommandShakeScreen::~CommandShakeScreen()
@@ -535,11 +535,13 @@ bool CommandShakeScreen::tick(float delta)
 	float aX = mAmp * sin(mTime * 100) / e;
 	float aY = mAmp * cos(mTime * 100) / e;
 	CCLog("%f,%f,%f", aX, aY, mTime);
-	Engine::world->pve()->layerMap()->setPosition(ccp(mOrigin.x+aX, mOrigin.y+aY));
+	Engine::world->pve()->layerMap()->setPosition(ccp(mOrigin->x+aX, mOrigin->y+aY));
+	CCLog("x:%f,y:%f", mOrigin->x + aX, mOrigin->y + aY);
 	mTime += delta;
-	if (mTime > 0.1)
+	if (mTime > 0.06)
 	{
-		Engine::world->pve()->layerMap()->setPosition(mOrigin);
+		Engine::world->pve()->layerMap()->setPosition(*mOrigin);
+		CCLog("zx:%f,zy:%f", mOrigin->x, mOrigin->y);
 		return true;
 	}
 	return false;
@@ -547,5 +549,6 @@ bool CommandShakeScreen::tick(float delta)
 
 void CommandShakeScreen::trigger()
 {
-	mOrigin = Engine::world->pve()->layerMap()->getPosition();
+	*mOrigin = Engine::world->pve()->layerMap()->getPosition();
+	CCLog("ox:%f,oy:%f",mOrigin->x,mOrigin->y);
 }
