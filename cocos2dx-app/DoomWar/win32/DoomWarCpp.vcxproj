@@ -138,6 +138,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Components\EventDispatcher.cpp" />
     <ClCompile Include="..\Components\EventDispatcher.h" />
     <ClCompile Include="..\Components\Heap.cpp" />
+    <ClCompile Include="..\Components\PartileEmitter.cpp" />
     <ClCompile Include="..\Components\PropSprite.cpp" />
     <ClCompile Include="..\Components\PVEView.cpp" />
     <ClCompile Include="..\Components\PVEUI.cpp" />
@@ -168,6 +169,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Components\dwtype.h" />
     <ClInclude Include="..\Components\Effect.h" />
     <ClInclude Include="..\Components\Heap.h" />
+    <ClInclude Include="..\Components\PartileEmitter.h" />
     <ClInclude Include="..\Components\PropSprite.h" />
     <ClInclude Include="..\Components\PVEView.h" />
     <ClInclude Include="..\Components\PVEUI.h" />

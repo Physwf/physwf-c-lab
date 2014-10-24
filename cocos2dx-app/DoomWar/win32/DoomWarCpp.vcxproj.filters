@@ -108,6 +108,9 @@
     <ClCompile Include="..\Components\DWLoading.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Components\PartileEmitter.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -186,6 +189,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Components\DWLoading.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PartileEmitter.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

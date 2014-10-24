@@ -7,6 +7,7 @@
 #include "Prop.h"
 #include "Battle.h"
 #include "Effect.h"
+#include "PartileEmitter.h"
 
 class Command
 {
@@ -137,6 +138,7 @@ private:
 	float mDuration;
 	float mNow;
 	Effect* mEffect;
+	CCParticleSystemQuad* mEmitter;
 };
 
 class CommandBuff : public Command

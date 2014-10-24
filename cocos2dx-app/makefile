@@ -52,6 +52,7 @@ DWObjs= $(DIR_DW)/Classes/AppDelegate.obj\
 		$(DIR_DW)/Components/PVEView.obj\
 		$(DIR_DW)/Components/PVEUI.obj\
 		$(DIR_DW)/Components/Effect.obj\
+		$(DIR_DW)/Components/PartileEmitter.obj\
 		$(DIR_DW)/Components/PropSprite.obj\
 		$(DIR_DW)/Config/Config.obj\
 		$(DIR_DW)/Engine/Engine.obj\
@@ -86,6 +87,7 @@ DWcpy:
 	@cp $(DIR_DW)/Data/ui.plist $(BIN)/Data/ui.plist
 	@cp $(DIR_DW)/Data/step-font.fnt $(BIN)/Data/step-font.fnt
 	@cp $(DIR_DW)/Data/step-font.png $(BIN)/Data/step-font.png 
+	@cp $(DIR_DW)/Data/fire.png $(BIN)/Data/fire.png 
 	@cp -R $(DIR_DW)/Data//UIPVE/Export/UIPVE_1/ $(BIN)/Data/
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"

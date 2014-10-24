@@ -76,6 +76,7 @@ CommandSkill::CommandSkill()
 {
 	mDuration = 2.0;
 	mNow = 0;
+	mEmitter = NULL;
 }
 
 CommandSkill::~CommandSkill()
@@ -90,12 +91,14 @@ bool CommandSkill::tick(float delta)
 	{
 		return true;
 	}
+	if (mEmitter) mEmitter->setPosition(mEffect->getPosition());
 	return false;
 }
 
 void CommandSkill::trigger()
 {
 	mEffect->fire();
+	if (mEmitter) mEmitter->setPosition(mEffect->getPosition());
 }
 
 Command* CommandSkill::create(SkillResult* result)
@@ -109,6 +112,8 @@ Command* CommandSkill::create(SkillResult* result)
 	else if (result->skill.track == SKILL_TRACK_BULLET)
 	{
 		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
+		cmd->mEmitter = ParticleTraceEmiter::create();
+
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{
