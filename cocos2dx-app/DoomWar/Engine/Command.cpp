@@ -538,7 +538,7 @@ bool CommandShakeScreen::tick(float delta)
 	Engine::world->pve()->layerMap()->setPosition(ccp(mOrigin->x+aX, mOrigin->y+aY));
 	CCLog("x:%f,y:%f", mOrigin->x + aX, mOrigin->y + aY);
 	mTime += delta;
-	if (mTime > 0.06)
+	if (mTime > 0.03)
 	{
 		Engine::world->pve()->layerMap()->setPosition(*mOrigin);
 		CCLog("zx:%f,zy:%f", mOrigin->x, mOrigin->y);
