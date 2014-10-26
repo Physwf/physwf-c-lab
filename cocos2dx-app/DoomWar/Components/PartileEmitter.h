@@ -5,15 +5,28 @@
 
 USING_NS_CC;
 
-class ParticleTraceEmiter : public CCParticleSystemQuad
+class ParticleTraceEmitter : public CCParticleSystemQuad
 {
 public:
-	ParticleTraceEmiter(CCSprite* layer);
-	~ParticleTraceEmiter();
+	ParticleTraceEmitter(CCSprite* layer);
+	~ParticleTraceEmitter();
 public:
 	bool init() { return initWithTotalParticles(100); };
 	virtual bool initWithTotalParticles(unsigned int numberOfPartiles);
-	static ParticleTraceEmiter* create();
+	static ParticleTraceEmitter* create();
+private:
+	CCSprite* mLayer;
+};
+
+class ParticleHitEmitter : public CCParticleSystemQuad
+{
+public:
+	ParticleHitEmitter(CCSprite* layer);
+	~ParticleHitEmitter();
+public:
+	bool init() { return initWithTotalParticles(1000); };
+	virtual bool initWithTotalParticles(unsigned int numberOfPartiles);
+	static ParticleHitEmitter* create();
 private:
 	CCSprite* mLayer;
 };

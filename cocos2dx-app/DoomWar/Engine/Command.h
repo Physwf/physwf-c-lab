@@ -137,8 +137,10 @@ private:
 private:
 	float mDuration;
 	float mNow;
+	ID mTarget;
 	Effect* mEffect;
 	CCParticleSystemQuad* mEmitter;
+	CCParticleSystemQuad* mHitEmitter;
 };
 
 class CommandBuff : public Command

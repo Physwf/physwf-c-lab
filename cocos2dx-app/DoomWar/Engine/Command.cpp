@@ -77,6 +77,7 @@ CommandSkill::CommandSkill()
 	mDuration = 2.0;
 	mNow = 0;
 	mEmitter = NULL;
+	mHitEmitter = NULL;
 }
 
 CommandSkill::~CommandSkill()
@@ -90,6 +91,7 @@ bool CommandSkill::tick(float delta)
 	if (mEffect->tick(delta))
 	{
 		if (mEmitter) mEmitter->stopSystem();
+		if (mHitEmitter) mHitEmitter->resetSystem();
 		return true;
 	}
 	if (mEmitter) mEmitter->setPosition(mEffect->getPosition());
@@ -106,6 +108,11 @@ Command* CommandSkill::create(SkillResult* result)
 {
 	CommandSequence * seq = CommandSequence::create();
 	CommandSkill* cmd = new CommandSkill();
+	cmd->mHitEmitter = ParticleHitEmitter::create();
+	Actor* target = Engine::world->getActor(result->recipient);
+	cmd->mHitEmitter->setPosition(*target->position());
+	cmd->mHitEmitter->stopSystem();
+
 	if (result->skill.track == SKILL_TRACK_HACK)
 	{
 		cmd->mEffect = HackEffect::create(result->skill.effect, result->giver, result->recipient);
@@ -113,8 +120,7 @@ Command* CommandSkill::create(SkillResult* result)
 	else if (result->skill.track == SKILL_TRACK_BULLET)
 	{
 		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
-		cmd->mEmitter = ParticleTraceEmiter::create();
-
+		cmd->mEmitter = ParticleTraceEmitter::create();
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{

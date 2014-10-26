@@ -222,7 +222,7 @@ void ArcEffect::onExit()
 void ArcEffect::draw()
 {
 	ccDrawColor4B(255, 255, 255, 255);
-	glLineWidth(1);
+	glLineWidth(3);
 	CCPoint aPos = mAttacker->sprite()->getPosition();
 	CCPoint vPos = mVictim->sprite()->getPosition();
 	setPosition(aPos);
