@@ -89,6 +89,7 @@ bool CommandSkill::tick(float delta)
 	mNow += delta;
 	if (mEffect->tick(delta))
 	{
+		if (mEmitter) mEmitter->stopSystem();
 		return true;
 	}
 	if (mEmitter) mEmitter->setPosition(mEffect->getPosition());

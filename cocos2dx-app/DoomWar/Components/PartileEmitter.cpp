@@ -32,6 +32,8 @@ bool ParticleTraceEmiter::initWithTotalParticles(unsigned int numberOfPartiles)
 		// Gravity Mode
 		this->m_nEmitterMode = kCCParticleModeGravity;
 
+		this->m_ePositionType = kCCPositionTypeFree;
+
 		// Gravity Mode: gravity
 		this->modeA.gravity = ccp(0, 0);
 
@@ -53,31 +55,31 @@ bool ParticleTraceEmiter::initWithTotalParticles(unsigned int numberOfPartiles)
 		//this->m_tPosVar = ccp(40, 20);
 
 		// life of particles
-		m_fLife = 3;
-		m_fLifeVar = 0.25f;
+		m_fLife = 1;
+		m_fLifeVar = 0.0f;
 
 
 		// size, in pixels
-		m_fStartSize = 54.0f;
-		m_fStartSizeVar = 54.0f;
+		m_fStartSize = 30.0f;
+		//m_fStartSizeVar = 54.0f;
 		m_fEndSize = kCCParticleStartSizeEqualToEndSize;
 
 		// emits per frame
-		m_fEmissionRate = 10;
-
+		m_fEmissionRate = 40.0f;
+		//m_uTotalParticles = 50;
 		// color of particles
-		m_tStartColor.r = 0.76f;
-		m_tStartColor.g = 0.25f;
-		m_tStartColor.b = 0.12f;
+		m_tStartColor.r = 1.0f;
+		m_tStartColor.g = 1.0f;
+		m_tStartColor.b = 1.0f;
 		m_tStartColor.a = 1.0f;
 		m_tStartColorVar.r = 0.0f;
 		m_tStartColorVar.g = 0.0f;
 		m_tStartColorVar.b = 0.0f;
 		m_tStartColorVar.a = 0.0f;
-		m_tEndColor.r = 0.0f;
-		m_tEndColor.g = 0.0f;
-		m_tEndColor.b = 0.0f;
-		m_tEndColor.a = 1.0f;
+		m_tEndColor.r = 1.0f;
+		m_tEndColor.g = 1.0f;
+		m_tEndColor.b = 1.0f;
+		m_tEndColor.a = 0.0f;
 		m_tEndColorVar.r = 0.0f;
 		m_tEndColorVar.g = 0.0f;
 		m_tEndColorVar.b = 0.0f;

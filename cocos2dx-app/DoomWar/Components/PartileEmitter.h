@@ -11,7 +11,7 @@ public:
 	ParticleTraceEmiter(CCSprite* layer);
 	~ParticleTraceEmiter();
 public:
-	bool init() { return initWithTotalParticles(10); };
+	bool init() { return initWithTotalParticles(100); };
 	virtual bool initWithTotalParticles(unsigned int numberOfPartiles);
 	static ParticleTraceEmiter* create();
 private:
