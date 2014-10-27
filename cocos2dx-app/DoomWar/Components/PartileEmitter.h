@@ -24,9 +24,22 @@ public:
 	ParticleHitEmitter(CCSprite* layer);
 	~ParticleHitEmitter();
 public:
-	bool init() { return initWithTotalParticles(1000); };
+	bool init() { return initWithTotalParticles(10); };
 	virtual bool initWithTotalParticles(unsigned int numberOfPartiles);
 	static ParticleHitEmitter* create();
+private:
+	CCSprite* mLayer;
+};
+
+class ParticleIceBallEmitter : public CCParticleSystemQuad
+{
+public:
+	ParticleIceBallEmitter(CCSprite* layer);
+	~ParticleIceBallEmitter();
+public:
+	bool init() { return initWithTotalParticles(10); };
+	virtual bool initWithTotalParticles(unsigned int numberOfPartiles);
+	static ParticleIceBallEmitter* create();
 private:
 	CCSprite* mLayer;
 };

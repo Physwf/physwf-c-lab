@@ -129,11 +129,11 @@ bool ParticleHitEmitter::initWithTotalParticles(unsigned int numberOfPartiles)
 		setGravity(ccp(0, 0));
 
 		// Gravity Mode: speed of particles
-		setSpeed(500);
-		setSpeedVar(100);
+		setSpeed(0);
+		setSpeedVar(0);
 
 		// Gravity Mode: radial
-		setRadialAccel(-500);
+		setRadialAccel(0);
 		setRadialAccelVar(0);
 
 		// Gravity Mode: tangential
@@ -150,13 +150,13 @@ bool ParticleHitEmitter::initWithTotalParticles(unsigned int numberOfPartiles)
 		setPosVar(CCPointZero);
 
 		// life of particles
-		m_fLife = 0.3f;
+		m_fLife = 0.1f;
 		m_fLifeVar = 0;
 
 		// size, in pixels
-		m_fStartSize = 10;
+		m_fStartSize = 100;
 		m_fStartSizeVar = 0.0f;
-		m_fEndSize = kCCParticleStartSizeEqualToEndSize;
+		m_fEndSize = 300;
 
 		// emits per second
 		m_fEmissionRate = m_uTotalParticles / m_fDuration;
