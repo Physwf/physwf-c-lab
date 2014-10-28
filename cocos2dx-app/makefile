@@ -89,6 +89,11 @@ DWcpy:
 	@cp $(DIR_DW)/Data/step-font.png $(BIN)/Data/step-font.png 
 	@cp $(DIR_DW)/Data/fire.png $(BIN)/Data/fire.png 
 	@cp -R $(DIR_DW)/Data//UIPVE/Export/UIPVE_1/ $(BIN)/Data/
+	@cp $(DIR_DW)/Data/trace.xml $(BIN)/Data/trace.xml
+	@cp $(DIR_DW)/Data/hit.xml $(BIN)/Data/hit.xml
+DWpe:
+	PE.py expo ./Data/trace
+	PE.py expo ./Data/hit
 %.obj : %.cpp
 	@$(CL) $(INCLUDE) $(OPTION) $< -Fd$(BIN)/ -Fo$(BIN)/$(DWOBJ_DIR) /Fd"./bin/DoomWar.pdb"
 %.xml : %.xml

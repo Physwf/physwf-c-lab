@@ -22,6 +22,9 @@
     <Filter Include="Config">
       <UniqueIdentifier>{ee0097f4-24bb-4aba-a183-65a6c8c6e01f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{aa30495d-3b35-4cd7-b204-ac35ff86a655}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -194,5 +197,13 @@
     <ClInclude Include="..\Components\PartileEmitter.h">
       <Filter>Components</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Data\trace.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\Data\hit.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
