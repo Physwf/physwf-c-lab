@@ -21,7 +21,7 @@ finishParticleSize:300
 finishParticleSizeVariance:0
 gravityx:0
 gravityy:0
-maxParticles:250
+maxParticles:10
 maxRadius:0
 maxRadiusVariance:0
 minRadius:0
@@ -32,9 +32,9 @@ radialAccelVariance:0
 radialAcceleration:0
 rotatePerSecond:0
 rotatePerSecondVariance:0
-sourcePositionVariancex:40
-sourcePositionVariancey:20
-sourcePositionx:20
+sourcePositionVariancex:0
+sourcePositionVariancey:0
+sourcePositionx:0
 sourcePositiony:0
 speed:0
 speedVariance:0

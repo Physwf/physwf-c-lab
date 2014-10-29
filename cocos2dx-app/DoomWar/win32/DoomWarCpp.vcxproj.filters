@@ -205,5 +205,8 @@
     <Text Include="..\Data\hit.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="..\Data\fireball.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

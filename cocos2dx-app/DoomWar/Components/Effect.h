@@ -36,6 +36,26 @@ private:
 	CCPoint mDir;
 };
 
+class FrisbeeEffect : public Effect
+{
+public:
+	virtual bool tick(float delta);
+	virtual void fire();
+	virtual void onEnter();
+	virtual void onExit();
+	static FrisbeeEffect* create(ID cid, ID attacker);
+private:
+	FrisbeeEffect(CCSprite* layer);
+	~FrisbeeEffect();
+
+	void getFrameNameByCID(ID cid, char* name);
+private:
+	CCAction* mAction;
+	CCPoint* mTarget;
+	float mSpeed;
+	CCPoint mDir;
+};
+
 class HackEffect : public Effect
 {
 public:

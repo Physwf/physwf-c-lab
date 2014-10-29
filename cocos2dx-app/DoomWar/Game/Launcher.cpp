@@ -34,7 +34,7 @@ void Launcher::onSkillSpriteComplete(CCObject* tex)
 	CCArray *frames = CCArray::create();
 	for (int i = 1; i < 28; i++)
 	{
-		CCString* name = CCString::createWithFormat("ice%04d.png", i);
+		CCString* name = CCString::createWithFormat("ice%04d", i);
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
 		frames->addObject(frame);
 	}
@@ -43,7 +43,7 @@ void Launcher::onSkillSpriteComplete(CCObject* tex)
 	frames->removeAllObjects();
 	for (int i = 2; i < 19; i++)
 	{
-		CCString* name = CCString::createWithFormat("fuzi%04d.png", i);
+		CCString* name = CCString::createWithFormat("fuzi%04d", i);
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
 		frames->addObject(frame);
 	}
@@ -52,7 +52,7 @@ void Launcher::onSkillSpriteComplete(CCObject* tex)
 	frames->removeAllObjects();
 	for (int i = 1; i < 46; i++)
 	{
-		CCString* name = CCString::createWithFormat("heal%04d.png", i);
+		CCString* name = CCString::createWithFormat("heal%04d", i);
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
 		frames->addObject(frame);
 	}
@@ -61,7 +61,7 @@ void Launcher::onSkillSpriteComplete(CCObject* tex)
 	frames->removeAllObjects();
 	for (int i = 1; i < 7; i++)
 	{
-		CCString* name = CCString::createWithFormat("dagger%04d.png", i);
+		CCString* name = CCString::createWithFormat("dagger%04d", i);
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
 		frames->addObject(frame);
 	}
@@ -70,11 +70,19 @@ void Launcher::onSkillSpriteComplete(CCObject* tex)
 	frames->removeAllObjects();
 	for (int i = 1; i < 7; i++)
 	{
-		CCString* name = CCString::createWithFormat("arrow%04d.png", i);
+		CCString* name = CCString::createWithFormat("arrow%04d", i);
 		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame(name->getCString());
 		frames->addObject(frame);
 	}
 	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "arrow");
+	//fireball
+	frames->removeAllObjects();
+	for (int i = 1; i < 7; i++)
+	{
+		CCSpriteFrame* frame = ResourceManager::instance()->getSpriteFrame("fireball");
+		frames->addObject(frame);
+	}
+	ResourceManager::instance()->addAnimation(CCAnimation::createWithSpriteFrames(frames, 0.02f), "fireball");
 
 	ResourceManager::instance()->loadXML("./Data/heros.xml", Config::hero, (Config::OnConfigLoaded)&HeroConfig::onHeroConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/monsters.xml", Config::monster, (Config::OnConfigLoaded)&MonsterConfig::onMonsterConfigLoaded);

@@ -42,6 +42,7 @@ typedef struct range_t
 #define SKILL_EFFECT_ARROW			2L
 #define SKILL_EFFECT_DAGGER			3L
 #define SKILL_EFFECT_ICE			4L
+#define SKILL_EFFECT_FIREBALL		5L
 
 #define BUFF_TYPE_HEAL				1L
 

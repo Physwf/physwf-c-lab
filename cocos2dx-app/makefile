@@ -88,9 +88,10 @@ DWcpy:
 	@cp $(DIR_DW)/Data/step-font.fnt $(BIN)/Data/step-font.fnt
 	@cp $(DIR_DW)/Data/step-font.png $(BIN)/Data/step-font.png 
 	@cp $(DIR_DW)/Data/fire.png $(BIN)/Data/fire.png 
-	@cp -R $(DIR_DW)/Data//UIPVE/Export/UIPVE_1/ $(BIN)/Data/
 	@cp $(DIR_DW)/Data/trace.xml $(BIN)/Data/trace.xml
 	@cp $(DIR_DW)/Data/hit.xml $(BIN)/Data/hit.xml
+	@cp $(DIR_DW)/Data/skills.plist $(BIN)/Data/skills.plist
+	@cp $(DIR_DW)/Data/skills.png $(BIN)/Data/skills.png
 DWpe:
 	PE.py expo ./Data/trace
 	PE.py expo ./Data/hit

@@ -104,8 +104,58 @@ void BulletEffect::getFrameNameByCID(ID cid, char* name)
 	{
 		sprintf(name, "%s", "dagger");
 	}
+	else if (cid == SKILL_EFFECT_FIREBALL)
+	{
+		sprintf(name, "%s", "fireball");
+	}
+}
+/*MissileEffect*/
+FrisbeeEffect::FrisbeeEffect(CCSprite* layer)
+{
+	mLayer = layer;
 }
 
+FrisbeeEffect::~FrisbeeEffect()
+{
+	
+}
+
+bool FrisbeeEffect::tick(float delta)
+{
+	return true;
+}
+
+void FrisbeeEffect::FrisbeeEffect::fire()
+{
+
+}
+
+FrisbeeEffect* FrisbeeEffect::create(ID cid, ID attacker)
+{
+	CCSprite* layer = Engine::world->pve()->layerEffect();
+	FrisbeeEffect* effect = new FrisbeeEffect(layer);
+	if (effect && effect->init())
+	{
+		effect->autorelease();
+		effect->retain();
+		effect->setPosition(*Engine::world->getActor(attacker)->position());
+		char szName[10] = { 0 };
+		effect->getFrameNameByCID(cid, szName);
+		CCAnimation* anim = ResourceManager::instance()->getAnimation(szName);
+		effect->mAction = CCAnimate::create(anim);
+		effect->mAction->retain();
+		return effect;
+	}
+	return NULL;
+}
+
+void BulletEffect::getFrameNameByCID(ID cid, char* name)
+{
+	if (cid == SKILL_EFFECT_FIREBALL)
+	{
+		sprintf(name, "%s", "fireball");
+	}
+}
 HackEffect::HackEffect(CCSprite* layer)
 {
 	mLayer = layer;

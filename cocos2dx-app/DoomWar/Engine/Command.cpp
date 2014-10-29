@@ -110,6 +110,9 @@ Command* CommandSkill::create(SkillResult* result)
 	CommandSkill* cmd = new CommandSkill();
 	cmd->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");
 	Engine::world->pve()->layerEffect()->addChild(cmd->mHitEmitter);
+	
+	//cmd->mHitEmitter = ParticleHitEmitter::create();
+
 	Actor* target = Engine::world->getActor(result->recipient);
 	cmd->mHitEmitter->setPosition(*target->position());
 	cmd->mHitEmitter->stopSystem();
@@ -122,8 +125,9 @@ Command* CommandSkill::create(SkillResult* result)
 	{
 		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
 		cmd->mEmitter = CCParticleSystemQuad::create("Data/trace.xml");
-		cmd->mEmitter->setPositionType(kPositionTypeFree);
+		cmd->mEmitter->setEmissionRate(40);
 		Engine::world->pve()->layerEffect()->addChild(cmd->mEmitter);
+		//cmd->mEmitter = ParticleTraceEmitter::create();
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{

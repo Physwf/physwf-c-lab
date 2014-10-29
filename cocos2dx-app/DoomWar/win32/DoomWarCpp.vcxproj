@@ -209,6 +209,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\Data\fireball.txt" />
     <Text Include="..\Data\hit.txt" />
     <Text Include="..\Data\trace.txt" />
   </ItemGroup>

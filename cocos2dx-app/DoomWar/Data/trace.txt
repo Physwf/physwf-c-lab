@@ -34,7 +34,7 @@ rotatePerSecond:0
 rotatePerSecondVariance:0
 sourcePositionVariancex:0
 sourcePositionVariancey:0
-sourcePositionx:20
+sourcePositionx:0
 sourcePositiony:0
 speed:0
 speedVariance:0
