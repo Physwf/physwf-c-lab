@@ -125,9 +125,23 @@ bool FrisbeeEffect::tick(float delta)
 	return true;
 }
 
-void FrisbeeEffect::FrisbeeEffect::fire()
+void FrisbeeEffect::fire()
 {
 
+}
+
+void FrisbeeEffect::onEnter()
+{
+	CCSprite::onEnter();
+	runAction(mAction);
+}
+
+void FrisbeeEffect::onExit()
+{
+	CCSprite::onExit();
+	stopAction(mAction);
+	mAction->release();
+	release();
 }
 
 FrisbeeEffect* FrisbeeEffect::create(ID cid, ID attacker)
@@ -149,13 +163,14 @@ FrisbeeEffect* FrisbeeEffect::create(ID cid, ID attacker)
 	return NULL;
 }
 
-void BulletEffect::getFrameNameByCID(ID cid, char* name)
+void FrisbeeEffect::getFrameNameByCID(ID cid, char* name)
 {
 	if (cid == SKILL_EFFECT_FIREBALL)
 	{
 		sprintf(name, "%s", "fireball");
 	}
 }
+
 HackEffect::HackEffect(CCSprite* layer)
 {
 	mLayer = layer;
