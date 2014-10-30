@@ -43,7 +43,7 @@ public:
 	virtual void fire();
 	virtual void onEnter();
 	virtual void onExit();
-	static FrisbeeEffect* create(ID cid, Path* path);
+	static FrisbeeEffect* create(ID cid, Path* path, Position* origin);
 private:
 	FrisbeeEffect(CCSprite* layer);
 	~FrisbeeEffect();
@@ -52,8 +52,9 @@ private:
 private:
 	CCAction* mAction;
 	float mSpeed;
+	Position* mOrigin;
 	CCPoint mDir;
-	Path* mPath;
+	Path mPath;
 	char mCurNode;
 };
 

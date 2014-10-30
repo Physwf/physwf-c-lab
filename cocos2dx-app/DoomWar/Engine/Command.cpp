@@ -134,7 +134,8 @@ Command* CommandSkill::create(SkillResult* result)
 		for (int i = 0; i < result->skill.paths->numPaths; i++)
 		{
 			Path *path = &result->skill.paths->paths[i];
-			cmd->mEffect = FrisbeeEffect::create(result->skill.effect, path);
+			Actor* attacker = Engine::world->getActor(result->giver);
+			cmd->mEffect = FrisbeeEffect::create(result->skill.effect, path, &attacker->getData()->positon);
 		}
 	}
 	else if (result->skill.track == SKILL_TRACK_ARC)

@@ -320,15 +320,14 @@ void Config::constructPathWithXML(PathGroup* paths, xmlNodePtr node)
 		assert(count < 3);
 		part = strtok(NULL, ";");
 	}
-	count = 0;
 	while (parts[paths->numPaths])
 	{
 		char* coord = strtok(parts[paths->numPaths], ",");
 		int index = 0;
 		while (coord != NULL)
 		{
-			paths->paths[count].nodes[index] = atoi(coord);
-			paths->paths[count].numNodes = (index+1)/2;
+			paths->paths[paths->numPaths].nodes[index] = atoi(coord);
+			paths->paths[paths->numPaths].numNodes = (index + 1) / 2;
 			index++;
 			coord = strtok(NULL, ",");
 		}
