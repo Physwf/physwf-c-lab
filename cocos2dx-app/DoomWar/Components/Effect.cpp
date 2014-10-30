@@ -122,12 +122,41 @@ FrisbeeEffect::~FrisbeeEffect()
 
 bool FrisbeeEffect::tick(float delta)
 {
-	return true;
+	char nodeX = mPath->nodes[mCurNode * 2 + 0];
+	char nodeY = mPath->nodes[mCurNode * 2 + 1];
+	char nextX = mPath->nodes[mCurNode * 2 + 2];
+	char nextY = mPath->nodes[mCurNode * 2 + 3];
+	char dx = nextX - nodeX;
+	char dy = nextY - nodeY;
+	float nextPosX = getPositionX() + mSpeed*mDir.x;
+	float nextPosY = getPositionY() + mSpeed*mDir.y;
+	mDir.x = nextPosX - nodeX * GRID_SIZE;
+	mDir.y = nextPosY - nodeY * GRID_SIZE;
+	if (dx*mDir.x + dy*mDir.y < 0)
+	{
+		nextPosX = nextX * GRID_SIZE;
+		nextPosY = nextY * GRID_SIZE;
+		mCurNode++;
+	}
+
+	if (mCurNode>mPath->numNodes)
+	{
+		return true;
+	}
+
+	setPosition(ccp(nextPosX, nextPosY));
+
+	float dist = sqrt(mDir.x*mDir.x + mDir.y*mDir.y);
+	mDir.x = mDir.x / dist;
+	mDir.y = mDir.y / dist;
+
+	return false;
 }
 
 void FrisbeeEffect::fire()
 {
-
+	mCurNode = 0;
+	mLayer->addChild(this);
 }
 
 void FrisbeeEffect::onEnter()
@@ -144,7 +173,7 @@ void FrisbeeEffect::onExit()
 	release();
 }
 
-FrisbeeEffect* FrisbeeEffect::create(ID cid, ID attacker)
+FrisbeeEffect* FrisbeeEffect::create(ID cid, Path* path)
 {
 	CCSprite* layer = Engine::world->pve()->layerEffect();
 	FrisbeeEffect* effect = new FrisbeeEffect(layer);
@@ -152,7 +181,8 @@ FrisbeeEffect* FrisbeeEffect::create(ID cid, ID attacker)
 	{
 		effect->autorelease();
 		effect->retain();
-		effect->setPosition(*Engine::world->getActor(attacker)->position());
+		//effect->setPosition(*Engine::world->getActor(attacker)->position());
+		effect->mPath = path;
 		char szName[10] = { 0 };
 		effect->getFrameNameByCID(cid, szName);
 		CCAnimation* anim = ResourceManager::instance()->getAnimation(szName);

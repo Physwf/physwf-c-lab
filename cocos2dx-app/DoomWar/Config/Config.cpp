@@ -102,6 +102,10 @@ void SkillConfig::fill(Skill* skill, ID cid)
 {
 	Skill* master = mSkills[cid];
 	memcpy(skill, master, sizeof Skill);
+	if (mPaths.find(skill->track) != mPaths.end())
+	{
+		skill->paths = mPaths[skill->track];
+	}
 }
 
 void SkillConfig::onBuffConfigLoaded(xmlNodePtr root)
@@ -123,6 +127,21 @@ void SkillConfig::fill(Buff* buff, ID cid)
 {
 	Buff* master = mBuffs[cid];
 	memcpy(buff, master, sizeof Buff);
+}
+
+void SkillConfig::onPathConfigLoaded(xmlNodePtr root)
+{
+	xmlNodePtr child = root->children;
+	while (child)
+	{
+		if (child->type != XML_TEXT_NODE && child->type != XML_COMMENT_NODE && child->type != XML_DTD_NODE)
+		{
+			PathGroup* paths = new PathGroup();
+			constructPathWithXML(paths, child);
+			mPaths[paths->track] = paths;
+		}
+		child = child->next;
+	}
 }
 
 Item* ItemConfig::create(ID cid)
@@ -239,6 +258,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
 	xmlChar* szCast = xmlGetProp(node, BAD_CAST"cast");
 	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
+	//xmlChar* szPath = xmlGetProp(node, BAD_CAST"path");
 	xmlChar* szEffect = xmlGetProp(node, BAD_CAST"effect");
 	xmlChar* szLevel = xmlGetProp(node, BAD_CAST"level");
 	xmlChar* szCondition = xmlGetProp(node, BAD_CAST"condition");
@@ -284,4 +304,34 @@ void Config::constructItemWithXML(Item* item, xmlNodePtr node)
 	item->type = atoi((const char*)szType);
 	item->pick = atoi((const char*)szPick);
 	item->value = atoi((const char*)szValue);
+}
+
+void Config::constructPathWithXML(PathGroup* paths, xmlNodePtr node)
+{
+	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
+	paths->track = atoi((const char*)szTrack);
+	xmlChar* szPath = xmlGetProp(node, BAD_CAST"value");
+	char* part = strtok((char*)szPath, ";");
+	char* parts[3] = { 0 };
+	int count = 0;
+	while (part != NULL)
+	{
+		parts[count++] = part;
+		assert(count < 3);
+		part = strtok(NULL, ";");
+	}
+	count = 0;
+	while (parts[paths->numPaths])
+	{
+		char* coord = strtok(parts[paths->numPaths], ",");
+		int index = 0;
+		while (coord != NULL)
+		{
+			paths->paths[count].nodes[index] = atoi(coord);
+			paths->paths[count].numNodes = (index+1)/2;
+			index++;
+			coord = strtok(NULL, ",");
+		}
+		paths->numPaths++;
+	}
 }

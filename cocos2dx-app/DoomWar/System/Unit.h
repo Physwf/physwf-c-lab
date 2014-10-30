@@ -46,6 +46,20 @@ typedef struct range_t
 
 #define BUFF_TYPE_HEAL				1L
 
+
+typedef struct path_t
+{
+	char numNodes;
+	char nodes[12];
+} Path;
+
+typedef struct path_grop_t
+{
+	ID track;
+	char numPaths;
+	Path paths[4];
+} PathGroup;
+
 typedef struct skill_t
 {
 	char* name;
@@ -53,6 +67,7 @@ typedef struct skill_t
 	ID type;
 	ID cast;
 	ID track;
+	PathGroup* paths;
 	ID effect;
 	int level;
 	int value;

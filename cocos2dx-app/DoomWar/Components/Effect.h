@@ -43,7 +43,7 @@ public:
 	virtual void fire();
 	virtual void onEnter();
 	virtual void onExit();
-	static FrisbeeEffect* create(ID cid, ID attacker);
+	static FrisbeeEffect* create(ID cid, Path* path);
 private:
 	FrisbeeEffect(CCSprite* layer);
 	~FrisbeeEffect();
@@ -51,9 +51,10 @@ private:
 	void getFrameNameByCID(ID cid, char* name);
 private:
 	CCAction* mAction;
-	CCPoint* mTarget;
 	float mSpeed;
 	CCPoint mDir;
+	Path* mPath;
+	char mCurNode;
 };
 
 class HackEffect : public Effect

@@ -131,7 +131,11 @@ Command* CommandSkill::create(SkillResult* result)
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{
-
+		for (int i = 0; i < result->skill.paths->numPaths; i++)
+		{
+			Path *path = &result->skill.paths->paths[i];
+			cmd->mEffect = FrisbeeEffect::create(result->skill.effect, path);
+		}
 	}
 	else if (result->skill.track == SKILL_TRACK_ARC)
 	{

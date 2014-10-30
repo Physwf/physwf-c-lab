@@ -31,6 +31,7 @@ protected:
 	void constructSkillWithXML(Skill* skill, xmlNodePtr node);
 	void constructBuffWithXML(Buff* buff, xmlNodePtr node);
 	void constructItemWithXML(Item* item, xmlNodePtr node);
+	void constructPathWithXML(PathGroup* path, xmlNodePtr node);
 };
 
 class HeroConfig : public Config
@@ -67,9 +68,11 @@ public:
 	void fill(Buff* buff, ID cid);
 	void onSkillConfigLoaded(xmlNodePtr root);
 	void onBuffConfigLoaded(xmlNodePtr root);
+	void onPathConfigLoaded(xmlNodePtr root);
 private:
 	std::map<ID, Skill*> mSkills;
 	std::map<ID, Buff*> mBuffs;
+	std::map<ID, PathGroup*> mPaths;
 };
 
 class ItemConfig :public Config
