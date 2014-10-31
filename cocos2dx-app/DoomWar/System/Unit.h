@@ -46,7 +46,7 @@ typedef struct range_t
 
 #define BUFF_TYPE_HEAL				1L
 
-
+#define MAX_NUM_PATHS				4L
 typedef struct path_t
 {
 	char numNodes;
@@ -57,7 +57,7 @@ typedef struct path_grop_t
 {
 	ID track;
 	char numPaths;
-	Path paths[4];
+	Path paths[MAX_NUM_PATHS];
 } PathGroup;
 
 typedef struct skill_t

@@ -139,7 +139,6 @@ private:
 	float mNow;
 	ID mTarget;
 	Effect* mEffect;
-	CCParticleSystemQuad* mEmitter;
 	CCParticleSystemQuad* mHitEmitter;
 };
 

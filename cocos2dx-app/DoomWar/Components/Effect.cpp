@@ -23,7 +23,7 @@ bool BulletEffect::tick(float delta)
 		return true;
 	}
 	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
-	
+	mTrace->setPosition(getPosition());
 	return false;
 }
 
@@ -59,12 +59,15 @@ void BulletEffect::fire()
 void BulletEffect::onEnter()
 {
 	CCSprite::onEnter();
+	mLayer->addChild(mTrace);
 	runAction(mAction);
 }
 
 void BulletEffect::onExit()
 {
 	CCSprite::onExit();
+	//mLayer->removeChild(mTrace,true);
+	mTrace->stopSystem();//need remove from parent and recycle
 	stopAction(mAction);
 	mAction->release();
 	release();
@@ -85,6 +88,10 @@ BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 		CCAnimation* anim = ResourceManager::instance()->getAnimation(szName);
 		effect->mAction = CCRepeatForever::create(CCAnimate::create(anim));
 		effect->mAction->retain();
+		effect->mTrace = CCParticleSystemQuad::create("Data/trace.xml");
+		effect->mTrace->retain();
+		effect->mTrace->setPosition(effect->getPosition());
+		effect->mTrace->setEmissionRate(40);
 		return effect;
 	}
 	return NULL;
@@ -113,7 +120,7 @@ void BulletEffect::getFrameNameByCID(ID cid, char* name)
 FrisbeeEffect::FrisbeeEffect(CCSprite* layer)
 {
 	mLayer = layer;
-	mSpeed = 1;
+	mSpeed = 10;
 }
 
 FrisbeeEffect::~FrisbeeEffect()
@@ -123,71 +130,94 @@ FrisbeeEffect::~FrisbeeEffect()
 
 bool FrisbeeEffect::tick(float delta)
 {
-	char nodeX = mPath.nodes[mCurNode * 2 + 0];
-	char nodeY = mPath.nodes[mCurNode * 2 + 1];
-	char nextX = mPath.nodes[mCurNode * 2 + 2];
-	char nextY = mPath.nodes[mCurNode * 2 + 3];
-	
-	float nextPosX = getPositionX() + mSpeed*mDir.x;
-	float nextPosY = getPositionY() + mSpeed*mDir.y;
-
-	mDir.x = nextX - nodeX;
-	mDir.y = nextY - nodeY;
-	
-	int dx = nextPosX - nextX * GRID_SIZE - mOrigin->x * GRID_SIZE;
-	int dy = nextPosY - nextX * GRID_SIZE - mOrigin->y * GRID_SIZE;
-	if (dx*mDir.x + dy*mDir.y > 0)
+	for (char i = 0; i < mNumPaths; i++)
 	{
-		nextPosX = nextX * GRID_SIZE + mOrigin->x * GRID_SIZE;
-		nextPosY = nextY * GRID_SIZE + mOrigin->y * GRID_SIZE;
-		mCurNode++;
-	}
+		Path path = mPath->paths[i];
 
-	if (mCurNode>mPath.numNodes)
-	{
-		return true;
+		char nodeX = path.nodes[mCurNode[i] * 2 + 0];
+		char nodeY = path.nodes[mCurNode[i] * 2 + 1];
+		char nextX = path.nodes[mCurNode[i] * 2 + 2];
+		char nextY = path.nodes[mCurNode[i] * 2 + 3];
+
+		float nextPosX = mFrisbee[i]->getPositionX() + mSpeed*mDir[i]->x;
+		float nextPosY = mFrisbee[i]->getPositionY() + mSpeed*mDir[i]->y;
+
+		mDir[i]->x = nextX - nodeX;
+		mDir[i]->y = nextY - nodeY;
+
+		int dx = nextPosX - nextX * GRID_SIZE;
+		int dy = nextPosY - nextY * GRID_SIZE;
+		if (dx*mDir[i]->x + dy*mDir[i]->y > 0)
+		{
+			nextPosX = nextX * GRID_SIZE;
+			nextPosY = nextY * GRID_SIZE;
+			mCurNode[i]++;
+		}
+
+		if (mCurNode[i] + 1 >= path.numNodes)
+		{
+			mLayer->removeChild(this, true);
+			return true;
+		}
+
+		mFrisbee[i]->setPosition(ccp(nextPosX, nextPosY));
+		mTraces[i]->setPosition(mFrisbee[i]->getPosition()+*mOrigin);
+
+		float dist = sqrt(mDir[i]->x*mDir[i]->x + mDir[i]->y*mDir[i]->y);
+		mDir[i]->x = mDir[i]->x / dist;
+		mDir[i]->y = mDir[i]->y / dist;
 	}
 	
-	CCLog("x:%f,y:%f", getPositionX(), getPositionY());
-	setPosition(ccp( nextPosX, nextPosY));
-
-	float dist = sqrt(mDir.x*mDir.x + mDir.y*mDir.y);
-	mDir.x = mDir.x / dist;
-	mDir.y = mDir.y / dist;
-	CCLog("DirX:%f,DirY:%f", mDir.x, mDir.y);
 	return false;
 }
 
 void FrisbeeEffect::fire()
 {
-	mCurNode = 0;
-	char nodeX = mPath.nodes[mCurNode * 2 + 0];
-	char nodeY = mPath.nodes[mCurNode * 2 + 1];
-	char nextX = mPath.nodes[mCurNode * 2 + 2];
-	char nextY = mPath.nodes[mCurNode * 2 + 3];
-	mDir.x = nextX - nodeX;
-	mDir.y = nextY - nodeY;
-	float dist = sqrt(mDir.x*mDir.x + mDir.y*mDir.y);
-	mDir.x = mDir.x / dist;
-	mDir.y = mDir.y / dist;
+	for (char i = 0; i < mNumPaths; i++)
+	{
+		mCurNode[i] = 0;
+		Path path = mPath->paths[i];
+
+		char nodeX = path.nodes[mCurNode[i] * 2 + 0];
+		char nodeY = path.nodes[mCurNode[i] * 2 + 1];
+		char nextX = path.nodes[mCurNode[i] * 2 + 2];
+		char nextY = path.nodes[mCurNode[i] * 2 + 3];
+		mDir[i] = new CCPoint(nextX - nodeX, nextY - nodeY);
+		float dist = sqrt(mDir[i]->x*mDir[i]->x + mDir[i]->y*mDir[i]->y);
+		mDir[i]->x = mDir[i]->x / dist;
+		mDir[i]->y = mDir[i]->y / dist;
+	}
 	mLayer->addChild(this);
 }
 
 void FrisbeeEffect::onEnter()
 {
 	CCSprite::onEnter();
-	runAction(mAction);
+	for (char i = 0; i < mNumPaths; i++)
+	{
+		addChild(mFrisbee[i]);
+		mFrisbee[i]->runAction(mActions[i]);
+		mLayer->addChild(mTraces[i]);
+	}
+	
 }
 
 void FrisbeeEffect::onExit()
 {
 	CCSprite::onExit();
-	stopAction(mAction);
-	mAction->release();
+	for (char i = 0; i < mNumPaths; i++)
+	{
+		mFrisbee[i]->stopAction(mActions[i]);
+		mActions[i]->release();
+		mFrisbee[i]->removeFromParent();
+		mFrisbee[i]->release();
+		mTraces[i]->stopSystem();
+	}
+	
 	release();
 }
 
-FrisbeeEffect* FrisbeeEffect::create(ID cid, Path* path, Position* origin)
+FrisbeeEffect* FrisbeeEffect::create(ID cid, PathGroup* path, const CCPoint* origin)
 {
 	CCSprite* layer = Engine::world->pve()->layerEffect();
 	FrisbeeEffect* effect = new FrisbeeEffect(layer);
@@ -195,14 +225,23 @@ FrisbeeEffect* FrisbeeEffect::create(ID cid, Path* path, Position* origin)
 	{
 		effect->autorelease();
 		effect->retain();
-		effect->setPosition(CCPoint(origin->x*GRID_SIZE, origin->y*GRID_SIZE));
+		effect->setPosition(*origin);
 		effect->mOrigin = origin;
-		effect->mPath = *path;
+		effect->mPath = path;
+		effect->mNumPaths = path->numPaths;
 		char szName[10] = { 0 };
 		effect->getFrameNameByCID(cid, szName);
-		CCAnimation* anim = ResourceManager::instance()->getAnimation(szName);
-		effect->mAction = CCAnimate::create(anim);
-		effect->mAction->retain();
+		
+		for (char i = 0; i < effect->mNumPaths; i++)
+		{
+			effect->mActions[i] = CCAnimate::create(ResourceManager::instance()->getAnimation(szName));
+			effect->mActions[i]->retain();
+			effect->mFrisbee[i] = CCSprite::create();
+			effect->mFrisbee[i]->retain();
+			effect->mTraces[i] = CCParticleSystemQuad::create("Data/fireball.xml");
+			effect->mTraces[i]->retain();
+		}
+		
 		return effect;
 	}
 	return NULL;

@@ -76,7 +76,6 @@ CommandSkill::CommandSkill()
 {
 	mDuration = 2.0;
 	mNow = 0;
-	mEmitter = NULL;
 	mHitEmitter = NULL;
 }
 
@@ -90,18 +89,15 @@ bool CommandSkill::tick(float delta)
 	mNow += delta;
 	if (mEffect->tick(delta))
 	{
-		if (mEmitter) mEmitter->stopSystem();
 		if (mHitEmitter) mHitEmitter->resetSystem();
 		return true;
 	}
-	if (mEmitter) mEmitter->setPosition(mEffect->getPosition());
 	return false;
 }
 
 void CommandSkill::trigger()
 {
 	mEffect->fire();
-	if (mEmitter) mEmitter->setPosition(mEffect->getPosition());
 }
 
 Command* CommandSkill::create(SkillResult* result)
@@ -124,18 +120,15 @@ Command* CommandSkill::create(SkillResult* result)
 	else if (result->skill.track == SKILL_TRACK_BULLET)
 	{
 		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
-		cmd->mEmitter = CCParticleSystemQuad::create("Data/trace.xml");
-		cmd->mEmitter->setEmissionRate(40);
-		Engine::world->pve()->layerEffect()->addChild(cmd->mEmitter);
-		//cmd->mEmitter = ParticleTraceEmitter::create();
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{
 		for (int i = 0; i < result->skill.paths->numPaths; i++)
 		{
-			Path *path = &result->skill.paths->paths[i];
+			PathGroup *paths = result->skill.paths;
 			Actor* attacker = Engine::world->getActor(result->giver);
-			cmd->mEffect = FrisbeeEffect::create(result->skill.effect, path, &attacker->getData()->positon);
+			cmd->mEffect = FrisbeeEffect::create(result->skill.effect, paths, attacker->position());
+			//cmd->mEmitter = CCParticleSystemQuad::create("Data/fireball.xml");
 		}
 	}
 	else if (result->skill.track == SKILL_TRACK_ARC)

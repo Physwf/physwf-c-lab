@@ -34,6 +34,7 @@ private:
 	CCPoint* mTarget;
 	float mSpeed;
 	CCPoint mDir;
+	CCParticleSystemQuad* mTrace;
 };
 
 class FrisbeeEffect : public Effect
@@ -43,19 +44,22 @@ public:
 	virtual void fire();
 	virtual void onEnter();
 	virtual void onExit();
-	static FrisbeeEffect* create(ID cid, Path* path, Position* origin);
+	static FrisbeeEffect* create(ID cid, PathGroup* path, const CCPoint* origin);
 private:
 	FrisbeeEffect(CCSprite* layer);
 	~FrisbeeEffect();
 
 	void getFrameNameByCID(ID cid, char* name);
 private:
-	CCAction* mAction;
+	CCParticleSystemQuad* mTraces[MAX_NUM_PATHS];
+	CCSprite* mFrisbee[MAX_NUM_PATHS];
+	CCAnimate* mActions[MAX_NUM_PATHS];
 	float mSpeed;
-	Position* mOrigin;
-	CCPoint mDir;
-	Path mPath;
-	char mCurNode;
+	const CCPoint* mOrigin;
+	CCPoint* mDir[MAX_NUM_PATHS];
+	PathGroup* mPath;
+	char mCurNode[MAX_NUM_PATHS];
+	char mNumPaths;
 };
 
 class HackEffect : public Effect

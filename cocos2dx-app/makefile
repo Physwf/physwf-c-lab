@@ -91,6 +91,7 @@ DWcpy:
 	@cp $(DIR_DW)/Data/fire.png $(BIN)/Data/fire.png 
 	@cp $(DIR_DW)/Data/trace.xml $(BIN)/Data/trace.xml
 	@cp $(DIR_DW)/Data/hit.xml $(BIN)/Data/hit.xml
+	@cp $(DIR_DW)/Data/fireball.xml $(BIN)/Data/fireball.xml
 	@cp $(DIR_DW)/Data/skills.plist $(BIN)/Data/skills.plist
 	@cp $(DIR_DW)/Data/skills.png $(BIN)/Data/skills.png
 DWpe:
