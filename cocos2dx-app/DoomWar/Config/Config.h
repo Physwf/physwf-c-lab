@@ -25,7 +25,7 @@ public:
 	static ItemConfig* item;
 protected:
 	void constructUnitWithXML(Unit* unit, xmlNodePtr node);
-	void parseRange(Unit* unit, xmlChar* szRange);
+	void parseRange(Skill* skill, xmlChar* szRange);
 	void parseView(Unit* unit, xmlChar* szView);
 	void parseSkills(Unit* unit,xmlChar* szSkills);
 	void constructSkillWithXML(Skill* skill, xmlNodePtr node);

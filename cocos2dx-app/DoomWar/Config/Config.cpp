@@ -179,7 +179,6 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 	xmlChar* szAgility = xmlGetProp(node, BAD_CAST"agility");
 	xmlChar* szSkills = xmlGetProp(node, BAD_CAST"skills");
 	xmlChar* szAttackFreq = xmlGetProp(node, BAD_CAST"attackFreq");
-	xmlChar* szAttackRange = xmlGetProp(node, BAD_CAST"attackRange");
 	xmlChar *szView = xmlGetProp(node, BAD_CAST"view");
 
 	unit->cid = atoi((const char*)szid);
@@ -191,7 +190,7 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 
 	parseSkills(unit,szSkills);
 	unit->attackFreq = atoi((const char*)szAttackFreq);
-	parseRange(unit, szAttackRange);
+	//parseRange(unit, szAttackRange);
 	parseView(unit, szView);
 }
 
@@ -206,7 +205,7 @@ void Config::parseSkills(Unit* unit, xmlChar* szSkills)
 	}
 }
 
-void Config::parseRange(Unit* unit, xmlChar* szRange)
+void Config::parseRange(Skill* skill, xmlChar* szRange)
 {
 	char* coord = strtok((char*)szRange, ",;");
 	int count = 0;
@@ -214,13 +213,13 @@ void Config::parseRange(Unit* unit, xmlChar* szRange)
 	{
 		int dir = count % 2;
 		int index = count / 2;
-		if (dir == 0) unit->attackRange.offsets[index].x = atoi(coord);
-		else unit->attackRange.offsets[index].y = atoi(coord);
+		if (dir == 0) skill->range.offsets[index].x = atoi(coord);
+		else skill->range.offsets[index].y = atoi(coord);
 		count++;
 		coord = strtok(NULL, ",;");
 	}
 	CCAssert(count % 2 == 0, "Must be even!");
-	unit->attackRange.numGrids = count / 2;
+	skill->range.numGrids = count / 2;
 }
 
 void Config::parseView(Unit* unit, xmlChar* szView)
@@ -258,7 +257,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
 	xmlChar* szCast = xmlGetProp(node, BAD_CAST"cast");
 	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
-	//xmlChar* szPath = xmlGetProp(node, BAD_CAST"path");
+	xmlChar* szRange = xmlGetProp(node, BAD_CAST"range");
 	xmlChar* szEffect = xmlGetProp(node, BAD_CAST"effect");
 	xmlChar* szLevel = xmlGetProp(node, BAD_CAST"level");
 	xmlChar* szCondition = xmlGetProp(node, BAD_CAST"condition");
@@ -270,6 +269,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	skill->type = atoi((const char*)szType);
 	skill->cast = atoi((const char*)szCast);
 	skill->track = atoi((const char*)szTrack);
+	parseRange(skill, szRange);
 	skill->effect = atoi((const char*)szEffect);
 	skill->level = atoi((const char*)szLevel);
 	skill->condition = atoi((const char*)szCondition);

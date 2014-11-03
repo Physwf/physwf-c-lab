@@ -67,6 +67,7 @@ typedef struct skill_t
 	ID type;
 	ID cast;
 	ID track;
+	Range range;
 	PathGroup* paths;
 	ID effect;
 	int level;
