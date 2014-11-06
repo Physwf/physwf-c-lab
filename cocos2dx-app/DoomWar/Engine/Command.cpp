@@ -86,6 +86,7 @@ CommandSkill::~CommandSkill()
 bool CommandSkill::tick(float delta)
 {
 	mNow += delta;
+	/*
 	for (std::vector<Effect*>::iterator it = mEffects.begin(); it != mEffects.end(); it++)
 	{
 		if ((*it)->tick(delta))
@@ -94,6 +95,11 @@ bool CommandSkill::tick(float delta)
 		}
 	}
 	if (mEffects.size() == 0) return true;
+	*/
+	if (mEffect->tick(delta))
+	{
+		return true;
+	}
 	return false;
 }
 
@@ -104,20 +110,73 @@ void CommandSkill::trigger()
 
 Command* CommandSkill::create(SkillResult* result)
 {
-	CommandSequence * seq = CommandSequence::create();
-	CommandSkill* cmd = new CommandSkill();
 	
-	//cmd->mHitEmitter = ParticleHitEmitter::create();
+	CommandSequence * ret = CommandSequence::create();
+	
+	
+	for (int i = 0; i < result->numRecipients; i++)
+	{
+		CommandParallel* cmds = CommandParallel::create();
+		CommandSequence * seq = CommandSequence::create();
+		CommandSkill* cmd = new CommandSkill();
+		if (result->skill.track == SKILL_TRACK_HACK)
+		{
+			cmd->mEffect = HackEffect::create(result->skill.effect, result->giver, result->recipients[i]);
+		}
+		else if (result->skill.track == SKILL_TRACK_BULLET)
+		{
+			cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipients[i]);
+		}
+		else if (result->skill.track == SKILL_TRACK_FIXXED)
+		{
 
-	Actor* target = Engine::world->getActor(result->recipient);
+		}
+		else if (result->skill.track == SKILL_TRACK_ARC)
+		{
+			cmd->mEffect = ArcEffect::create(result->skill.effect, result->giver, result->recipients[i]);
+		}
+		seq->push(cmd, false);
+		if (result->value != 0)
+		{
+			Actor* victim = Engine::world->getActor(result->recipients[i]);
+			CommandProgress* progress = CommandProgress::create(result->value, victim);
+			seq->push(progress, false);
+		}
+		cmds->addCommand(seq);
+		ret->push(cmds,false);
+	}
+	//Actor* target = Engine::world->getActor(result->recipient);
 
 	if (result->skill.track == SKILL_TRACK_HACK)
 	{
-		cmd->mEffect = HackEffect::create(result->skill.effect, result->giver, result->recipient);
+		for (int i = 0; i < result->numRecipients; i++)
+		{
+			
+			
+
+			if (result->value != 0)
+			{
+				Actor* victim = Engine::world->getActor(result->recipients[i]);
+				CommandProgress* progress = CommandProgress::create(result->value, victim);
+				cmds->addCommand(progress);
+			}
+		}
 	}
 	else if (result->skill.track == SKILL_TRACK_BULLET)
 	{
-		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
+		for (int i = 0; i < result->numRecipients; i++)
+		{
+			CommandSkill* cmd = new CommandSkill();
+			cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipients[i]);
+			cmds->addCommand(cmd);
+			if (result->value != 0)
+			{
+				Actor* victim = Engine::world->getActor(result->recipients[i]);
+				CommandProgress* progress = CommandProgress::create(result->value, victim);
+				cmds->addCommand(progress);
+			}
+			seq->push(cmds, false);
+		}
 	}
 	else if (result->skill.track == SKILL_TRACK_FIXXED)
 	{

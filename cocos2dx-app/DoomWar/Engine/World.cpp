@@ -207,15 +207,20 @@ void World::onBattleAttakResult(Event* event)
 			mPVEView->addCommand(attack);
 			Command* shake = CommandShakeScreen::create(16.0f);
 			mPVEView->addCommand(shake);
-			Actor* victim = getActor(sResult->recipient);
-			//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
-			//mPVEScene->addCommand(progress);
-			if (sResult->healthLeft <= 0)
+			CommandParallel* dies = CommandParallel::create();
+			for (int j = 0; j < sResult->numRecipients; j++)
 			{
-				CommandDie* die = CommandDie::create(victim);
-				mPVEView->addCommand(die);
-				mActors->erase(mActors->find(sResult->recipient));
+				Actor* victim = getActor(sResult->recipients[j]);
+				//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
+				//mPVEScene->addCommand(progress);
+				if (sResult->healthLeft <= 0)
+				{
+					CommandDie* die = CommandDie::create(victim);
+					dies->addCommand(die);
+					mActors->erase(mActors->find(sResult->recipients[j]));
+				}
 			}
+			mPVEView->addCommand(dies);
 			i++;
 		}
 		i = 0;
