@@ -76,7 +76,6 @@ CommandSkill::CommandSkill()
 {
 	mDuration = 2.0;
 	mNow = 0;
-	mHitEmitter = NULL;
 }
 
 CommandSkill::~CommandSkill()
@@ -87,11 +86,14 @@ CommandSkill::~CommandSkill()
 bool CommandSkill::tick(float delta)
 {
 	mNow += delta;
-	if (mEffect->tick(delta))
+	for (std::vector<Effect*>::iterator it = mEffects.begin(); it != mEffects.end(); it++)
 	{
-		if (mHitEmitter) mHitEmitter->resetSystem();
-		return true;
+		if ((*it)->tick(delta))
+		{
+			it = mEffects.erase(it);
+		}
 	}
+	if (mEffects.size() == 0) return true;
 	return false;
 }
 
@@ -104,14 +106,10 @@ Command* CommandSkill::create(SkillResult* result)
 {
 	CommandSequence * seq = CommandSequence::create();
 	CommandSkill* cmd = new CommandSkill();
-	cmd->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");
-	Engine::world->pve()->layerEffect()->addChild(cmd->mHitEmitter);
 	
 	//cmd->mHitEmitter = ParticleHitEmitter::create();
 
 	Actor* target = Engine::world->getActor(result->recipient);
-	cmd->mHitEmitter->setPosition(*target->position());
-	cmd->mHitEmitter->stopSystem();
 
 	if (result->skill.track == SKILL_TRACK_HACK)
 	{

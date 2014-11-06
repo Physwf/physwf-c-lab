@@ -138,8 +138,8 @@ private:
 	float mDuration;
 	float mNow;
 	ID mTarget;
+	std::vector<Effect*> mEffects;
 	Effect* mEffect;
-	CCParticleSystemQuad* mHitEmitter;
 };
 
 class CommandBuff : public Command

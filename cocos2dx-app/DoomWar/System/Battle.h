@@ -12,6 +12,7 @@
 #define MAX_SCREEN_BARRIERS 10
 #define MAX_SCREEN_GRID 60
 #define MAX_SKILL_RESULTS 5
+#define MAX_SKILL_RECIPIENT 10
 #define MAX_LOOT_RESULT 4
 #define MAX_STAR_LEVEL 3
 
@@ -42,7 +43,8 @@ typedef struct buff_result_t
 typedef struct skill_result_t
 {
 	ID giver;
-	ID recipient;
+	char numRecipients;
+	ID recipients[MAX_SKILL_RECIPIENT];
 	ID type;//physical or magical or what
 	int value;
 	int healthLeft;

@@ -20,6 +20,9 @@ bool BulletEffect::tick(float delta)
 	if (dist <= mSpeed)
 	{
 		Engine::world->pve()->layerEffect()->removeChild(this, false);
+		Engine::world->pve()->layerEffect()->addChild(mHitEmitter);
+		mHitEmitter->setPosition(getPosition());
+		mHitEmitter->resetSystem();
 		return true;
 	}
 	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
@@ -68,6 +71,7 @@ void BulletEffect::onExit()
 	CCSprite::onExit();
 	//mLayer->removeChild(mTrace,true);
 	mTrace->stopSystem();//need remove from parent and recycle
+	mHitEmitter->stopSystem();
 	stopAction(mAction);
 	mAction->release();
 	release();
@@ -92,6 +96,9 @@ BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 		effect->mTrace->retain();
 		effect->mTrace->setPosition(effect->getPosition());
 		effect->mTrace->setEmissionRate(40);
+		effect->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");
+		effect->mHitEmitter->retain();
+		effect->mHitEmitter->stopSystem();
 		return effect;
 	}
 	return NULL;

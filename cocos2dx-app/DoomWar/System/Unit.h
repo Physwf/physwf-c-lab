@@ -72,6 +72,7 @@ typedef struct skill_t
 	ID effect;
 	int level;
 	int value;
+	char maxNumOfTargets;
 	int condition;
 } Skill;
 

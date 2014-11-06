@@ -609,7 +609,8 @@ bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 {
 	if (skill->condition != condition) return false;
 	result->giver = attacker->iid;
-	result->recipient = victim->iid;
+	result->recipients[result->numRecipients] = victim->iid;
+	result->numRecipients++;
 	result->skill = *skill;
 	switch (skill->type)
 	{
@@ -682,10 +683,12 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 {
 	//first, check if in attack grids
-	for (int i = 0; i < attacker->attackRange.numGrids; i++)
+	Skill skill;
+	Config::skill->fill(&skill, attacker->skills[0]);
+	for (int i = 0; i < skill.range.numGrids; i++)
 	{
-		if (attacker->attackRange.offsets[i].x + attacker->positon.x == victim->positon.x &&
-			attacker->attackRange.offsets[i].y + attacker->positon.y == victim->positon.y)
+		if (skill.range.offsets[i].x + attacker->positon.x == victim->positon.x &&
+			skill.range.offsets[i].y + attacker->positon.y == victim->positon.y)
 		{
 			return true;
 		}

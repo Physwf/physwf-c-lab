@@ -157,7 +157,9 @@ void ColorSprite::updateData(Unit* unit)
 	{
 		mSprites[i]->removeFromParent();
 	}
-	for (i=0; i < unit->attackRange.numGrids; i++)
+	Skill skill;
+	Config::skill->fill(&skill, unit->skills[0]);
+	for (i = 0; i < skill.range.numGrids; i++)
 	{
 		CCSprite* tile;
 		if (i<size)
@@ -169,7 +171,7 @@ void ColorSprite::updateData(Unit* unit)
 			mSprites.push_back(tile);
 		}		
 		addChild(tile);
-		tile->setPosition(ccp(unit->attackRange.offsets[i].x * GRID_SIZE, unit->attackRange.offsets[i].y * GRID_SIZE));
+		tile->setPosition(ccp(skill.range.offsets[i].x * GRID_SIZE, skill.range.offsets[i].y * GRID_SIZE));
 	}
 	for (i; i < size; i++)
 	{
