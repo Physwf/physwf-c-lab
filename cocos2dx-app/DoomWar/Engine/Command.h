@@ -129,8 +129,13 @@ class CommandSkill : public Command
 {
 public:
 	static Command* create(SkillResult* result);
+	static Command* createHack(SkillResult* result);
+	static Command* createBullet(SkillResult* result);
+	static Command* createFixed(SkillResult* result);
+	static Command* createArc(SkillResult* result);
 	virtual bool tick(float delta);
 	virtual void trigger();
+	void addEffect(Effect* effect);
 private:
 	CommandSkill();
 	~CommandSkill();
