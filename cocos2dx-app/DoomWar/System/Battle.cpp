@@ -580,7 +580,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 			Unit* barrier = (*mBarriers)[idBarrier];
 			Skill main;
 			Config::skill->fill(&main, attacker->skills[0]);
-			if (calculateSkillResult(&main, attacker, barrier, result->results, SKILL_CONDITION_AFTER_MOVE))
+			if (calculateSkillResult(&main, attacker, candidates, result->results, SKILL_CONDITION_AFTER_MOVE))
 			{
 				result->count++;
 			}
@@ -593,7 +593,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 			{
 				Skill skill;
 				Config::skill->fill(&skill, attacker->skills[i]);
-				if (calculateSkillResult(&skill, attacker, victim, result->results + result->count, SKILL_CONDITION_AFTER_MOVE))
+				if (calculateSkillResult(&skill, attacker, candidates, result->results + result->count, SKILL_CONDITION_AFTER_MOVE))
 					result->count++;
 				calculateLootResult(victim,result);
 				i++;
@@ -605,7 +605,7 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 	return false;
 }
 
-bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition)
+bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
 {
 	if (skill->condition != condition) return false;
 	result->giver = attacker->iid;

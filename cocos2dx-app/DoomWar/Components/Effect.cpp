@@ -1,6 +1,7 @@
 #include "Effect.h"
 #include "ResourceManager.h"
 #include "Engine.h"
+#include <algorithm>
 
 BulletEffect::BulletEffect(CCSprite* layer)
 {
@@ -123,11 +124,13 @@ void BulletEffect::getFrameNameByCID(ID cid, char* name)
 		sprintf(name, "%s", "fireball");
 	}
 }
+
 /*MissileEffect*/
 FrisbeeEffect::FrisbeeEffect(CCSprite* layer)
 {
 	mLayer = layer;
 	mSpeed = 10;
+	mTargets = { NULL };
 }
 
 FrisbeeEffect::~FrisbeeEffect()
@@ -154,10 +157,18 @@ bool FrisbeeEffect::tick(float delta)
 
 		int dx = nextPosX - nextX * GRID_SIZE;
 		int dy = nextPosY - nextY * GRID_SIZE;
+		
+		Actor* actor = Engine::world->getActorByGrid(*mOrigin + ccp(nextPosX, nextPosY));
+		if (std::find(mTargets.begin(), mTargets.end(), actor) != mTargets.end())
+		{
+			CommandHit *hit = CommandHit::create(actor->iid());
+			hit->trigger();
+		}
 		if (dx*mDir[i]->x + dy*mDir[i]->y > 0)
 		{
 			nextPosX = nextX * GRID_SIZE;
 			nextPosY = nextY * GRID_SIZE;
+			
 			mCurNode[i]++;
 		}
 
@@ -168,7 +179,7 @@ bool FrisbeeEffect::tick(float delta)
 		}
 
 		mFrisbee[i]->setPosition(ccp(nextPosX, nextPosY));
-		mTraces[i]->setPosition(mFrisbee[i]->getPosition()+*mOrigin);
+		mTraces[i]->setPosition(mFrisbee[i]->getPosition() + *mOrigin);
 
 		float dist = sqrt(mDir[i]->x*mDir[i]->x + mDir[i]->y*mDir[i]->y);
 		mDir[i]->x = mDir[i]->x / dist;
@@ -196,6 +207,11 @@ void FrisbeeEffect::fire()
 	}
 	mLayer->addChild(this);
 }
+void FrisbeeEffect::addTarget(ID iid)
+{
+	Actor* actor = Engine::world->getActor(iid);
+	mTargets.push_back(actor);
+}
 
 void FrisbeeEffect::onEnter()
 {
@@ -206,7 +222,6 @@ void FrisbeeEffect::onEnter()
 		mFrisbee[i]->runAction(mActions[i]);
 		mLayer->addChild(mTraces[i]);
 	}
-	
 }
 
 void FrisbeeEffect::onExit()
@@ -232,7 +247,7 @@ FrisbeeEffect* FrisbeeEffect::create(ID cid, PathGroup* path, const CCPoint* ori
 	{
 		effect->autorelease();
 		effect->retain();
-		effect->setPosition(*origin);
+		effect->setPosition(CCPoint(origin->x*GRID_SIZE, origin->y*GRID_SIZE));
 		effect->mOrigin = origin;
 		effect->mPath = path;
 		effect->mNumPaths = path->numPaths;

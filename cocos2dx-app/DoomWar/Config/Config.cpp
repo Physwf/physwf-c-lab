@@ -102,11 +102,14 @@ void SkillConfig::fill(Skill* skill, ID cid)
 {
 	Skill* master = mSkills[cid];
 	memcpy(skill, master, sizeof Skill);
-	if (mPaths.find(skill->track) != mPaths.end())
-	{
-		skill->paths = mPaths[skill->track];
-	}
 }
+
+void SkillConfig::fill(PathGroup* paths, ID track)
+{
+	PathGroup* master = mPaths[track];
+	memcpy(paths, master, sizeof PathGroup);
+}
+
 
 void SkillConfig::onBuffConfigLoaded(xmlNodePtr root)
 {
@@ -257,6 +260,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
 	xmlChar* szCast = xmlGetProp(node, BAD_CAST"cast");
 	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
+	xmlChar* szAttack = xmlGetProp(node, BAD_CAST"attack");
 	xmlChar* szRange = xmlGetProp(node, BAD_CAST"range");
 	xmlChar* szEffect = xmlGetProp(node, BAD_CAST"effect");
 	xmlChar* szMaxTarget = xmlGetProp(node, BAD_CAST"max_targets");
@@ -270,6 +274,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	skill->type = atoi((const char*)szType);
 	skill->cast = atoi((const char*)szCast);
 	skill->track = atoi((const char*)szTrack);
+	skill->attack = atoi((const char*)szAttack);
 	parseRange(skill, szRange);
 	skill->effect = atoi((const char*)szEffect);
 	skill->maxNumOfTargets = atoi((const char*)szMaxTarget);

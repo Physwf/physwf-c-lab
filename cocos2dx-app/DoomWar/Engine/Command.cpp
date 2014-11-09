@@ -106,7 +106,11 @@ bool CommandSkill::tick(float delta)
 
 void CommandSkill::trigger()
 {
-	mEffect->fire();
+	//mEffect->fire();
+	for (std::vector<Effect*>::iterator it = mEffects.begin(); it != mEffects.end(); it++)
+	{
+		(*it)->fire();
+	}
 }
 
 void CommandSkill::addEffect(Effect* effect)
@@ -132,99 +136,7 @@ Command* CommandSkill::create(SkillResult* result)
 	{
 		return createArc(result);
 	}
-	CommandSequence * ret = CommandSequence::create();
-	
-	
-	for (int i = 0; i < result->numRecipients; i++)
-	{
-		CommandParallel* cmds = CommandParallel::create();
-		CommandSequence * seq = CommandSequence::create();
-		CommandSkill* cmd = new CommandSkill();
-		if (result->skill.track == SKILL_TRACK_HACK)
-		{
-			cmd->mEffect = HackEffect::create(result->skill.effect, result->giver, result->recipients[i]);
-		}
-		else if (result->skill.track == SKILL_TRACK_BULLET)
-		{
-			cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipients[i]);
-		}
-		else if (result->skill.track == SKILL_TRACK_FIXXED)
-		{
-
-		}
-		else if (result->skill.track == SKILL_TRACK_ARC)
-		{
-			cmd->mEffect = ArcEffect::create(result->skill.effect, result->giver, result->recipients[i]);
-		}
-		seq->push(cmd, false);
-		if (result->value != 0)
-		{
-			Actor* victim = Engine::world->getActor(result->recipients[i]);
-			CommandProgress* progress = CommandProgress::create(result->value, victim);
-			seq->push(progress, false);
-		}
-		cmds->addCommand(seq);
-		ret->push(cmds,false);
-	}
-	//Actor* target = Engine::world->getActor(result->recipient);
-
-	if (result->skill.track == SKILL_TRACK_HACK)
-	{
-		for (int i = 0; i < result->numRecipients; i++)
-		{
-			
-			
-
-			if (result->value != 0)
-			{
-				Actor* victim = Engine::world->getActor(result->recipients[i]);
-				CommandProgress* progress = CommandProgress::create(result->value, victim);
-				cmds->addCommand(progress);
-			}
-		}
-	}
-	else if (result->skill.track == SKILL_TRACK_BULLET)
-	{
-		for (int i = 0; i < result->numRecipients; i++)
-		{
-			CommandSkill* cmd = new CommandSkill();
-			cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipients[i]);
-			cmds->addCommand(cmd);
-			if (result->value != 0)
-			{
-				Actor* victim = Engine::world->getActor(result->recipients[i]);
-				CommandProgress* progress = CommandProgress::create(result->value, victim);
-				cmds->addCommand(progress);
-			}
-			seq->push(cmds, false);
-		}
-	}
-	else if (result->skill.track == SKILL_TRACK_FIXXED)
-	{
-		for (int i = 0; i < result->skill.paths->numPaths; i++)
-		{
-			PathGroup *paths = result->skill.paths;
-			Actor* attacker = Engine::world->getActor(result->giver);
-			cmd->mEffect = FrisbeeEffect::create(result->skill.effect, paths, attacker->position());
-			//cmd->mEmitter = CCParticleSystemQuad::create("Data/fireball.xml");
-		}
-	}
-	else if (result->skill.track == SKILL_TRACK_ARC)
-	{
-		cmd->mEffect = ArcEffect::create(result->skill.effect, result->giver, result->recipient);
-	}
-	else
-	{
-		cmd->mEffect = BulletEffect::create(result->skill.effect, result->giver, result->recipient);
-	}
-	seq->push(cmd,false);
-	if (result->value != 0)
-	{
-		Actor* victim = Engine::world->getActor(result->recipient);
-		CommandProgress* progress = CommandProgress::create(result->value, victim);
-		seq->push(progress, false);
-	}
-	return seq;
+	return NULL;
 }
 
 Command* CommandSkill::createHack(SkillResult* result)
@@ -244,7 +156,9 @@ Command* CommandSkill::createBullet(SkillResult* result)
 		CommandSequence * seq = CommandSequence::create();
 		CommandSkill* skill = new CommandSkill();
 		skill->addEffect(BulletEffect::create(result->skill.effect, result->giver, result->recipients[i]));
-
+		seq->push(skill, false);
+		CommandHit* hit = CommandHit::create(result->recipients[i]);
+		seq->push(hit, false);
 		if (result->value != 0)
 		{
 			Actor* victim = Engine::world->getActor(result->recipients[i]);
@@ -259,13 +173,14 @@ Command* CommandSkill::createBullet(SkillResult* result)
 Command* CommandSkill::createFixed(SkillResult* result)
 {
 	CommandSkill* skill = new CommandSkill();
-	PathGroup *paths = result->skill.paths;
+	PathGroup paths;
+	Config::skill->fill(&paths,result->skill.track);
 	Actor* attacker = Engine::world->getActor(result->giver);
-	FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, paths, attacker->position());
+	FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, &paths, attacker->position());
 	skill->addEffect(fEffect);
 	for (int i = 0; i < result->numRecipients; i++)
 	{
-		
+		fEffect->addTarget(result->recipients[i]);
 	}
 	return skill;
 }
@@ -273,20 +188,98 @@ Command* CommandSkill::createFixed(SkillResult* result)
 Command* CommandSkill::createArc(SkillResult* result)
 {
 	CommandParallel * cmds = CommandParallel::create();
-	CommandSkill* skill = new CommandSkill();
-	cmds->addCommand(skill);
 	for (int i = 0; i < result->numRecipients; i++)
 	{
+		CommandSequence* seq = CommandSequence::create();
+		CommandSkill* skill = new CommandSkill();
 		skill->addEffect(ArcEffect::create(result->skill.effect, result->giver, result->recipients[i]));
+		seq->push(skill, false);
+		CommandHeal* heal = CommandHeal::create(result->recipients[i]);
+		seq->push(heal, false);
 		if (result->value != 0)
 		{
 			Actor* victim = Engine::world->getActor(result->recipients[i]);
 			CommandProgress* progress = CommandProgress::create(result->value, victim);
-			cmds->addCommand(progress);
+			seq->push(progress,false);
 		}
+		cmds->addCommand(seq);
 	}
 	return cmds;
 }
+
+/*CommandHit*/
+CommandHit::CommandHit()
+{
+
+}
+
+CommandHit::~CommandHit()
+{
+
+}
+
+bool CommandHit::tick(float delta)
+{
+	return mTint->isDone();
+}
+
+void CommandHit::trigger()
+{
+	mActorSprite->runAction(mTint);
+	mHitEmitter->setPosition(mActorSprite->getPosition());
+	Engine::world->pve()->layerEffect()->addChild(mHitEmitter);
+}
+
+CommandHit* CommandHit::create(ID iid)
+{
+	CommandHit* hit = new CommandHit();
+	Actor* actor = Engine::world->getActor(iid);
+	hit->mActorSprite = actor->sprite();
+	CCTintTo* tintTo = CCTintTo::create(0.1, 50, 0, 0);
+	CCReverseTime *tintBack = CCReverseTime::create(tintTo);
+	hit->mTint = CCSequence::create(tintTo, tintBack);
+	hit->mTint->retain();
+	hit->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");
+	hit->mHitEmitter->retain();
+	return hit;
+}
+
+/*CommandHeal*/
+
+CommandHeal::CommandHeal()
+{
+
+}
+
+CommandHeal::~CommandHeal()
+{
+
+}
+
+bool CommandHeal::tick(float delta)
+{
+	return mAction->isDone();
+}
+
+void CommandHeal::trigger()
+{
+	Engine::world->pve()->layerEffect()->addChild(mAnimSprite);
+	mAnimSprite->runAction(mAction);
+}
+
+CommandHeal* CommandHeal::create(ID iid)
+{
+	CommandHeal* heal = new CommandHeal();
+	Actor* actor = Engine::world->getActor(iid);
+	CCAnimation* anim = ResourceManager::instance()->getAnimation("heal");
+	heal->mAction = CCAnimate::create(anim);
+	heal->mAction->retain();
+	heal->mAnimSprite = CCSprite::create();
+	heal->mAnimSprite->setPosition(actor->sprite()->getPosition());
+	heal->mAnimSprite->retain();
+	return heal;
+}
+
 /*CommandProgress*/
 
 CommandProgress::CommandProgress(int delta)

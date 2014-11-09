@@ -147,6 +147,35 @@ private:
 	Effect* mEffect;
 };
 
+class CommandHit : public Command
+{
+public:
+	static CommandHit* create(ID iid);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandHit();
+	~CommandHit();
+private:
+	CCSprite* mActorSprite;
+	CCParticleSystemQuad* mHitEmitter;
+	CCSequence* mTint;
+};
+
+class CommandHeal : public Command
+{
+public:
+	static CommandHeal* create(ID iid);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandHeal();
+	~CommandHeal();
+private:
+	CCAnimate* mAction;
+	CCSprite* mAnimSprite;
+};
+
 class CommandBuff : public Command
 {
 public:

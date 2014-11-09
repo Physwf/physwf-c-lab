@@ -66,6 +66,7 @@ class SkillConfig : public Config
 public:
 	void fill(Skill* skill,ID cid);
 	void fill(Buff* buff, ID cid);
+	void fill(PathGroup* paths, ID track);
 	void onSkillConfigLoaded(xmlNodePtr root);
 	void onBuffConfigLoaded(xmlNodePtr root);
 	void onPathConfigLoaded(xmlNodePtr root);

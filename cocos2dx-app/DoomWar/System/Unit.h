@@ -38,6 +38,9 @@ typedef struct range_t
 #define SKILL_TRACK_FIXXED			2L
 #define SKILL_TRACK_ARC				3L
 
+#define SKILL_ATTACK_BY_RANGE		1L
+#define SKILL_ATTACK_BY_GRID		2L
+
 #define SKILL_EFFECT_AXE			1L
 #define SKILL_EFFECT_ARROW			2L
 #define SKILL_EFFECT_DAGGER			3L
@@ -46,11 +49,12 @@ typedef struct range_t
 
 #define BUFF_TYPE_HEAL				1L
 
+#define MAX_NUM_NODES				5L
 #define MAX_NUM_PATHS				4L
 typedef struct path_t
 {
 	char numNodes;
-	char nodes[12];
+	char nodes[MAX_NUM_NODES];
 } Path;
 
 typedef struct path_grop_t
@@ -64,23 +68,23 @@ typedef struct skill_t
 {
 	char* name;
 	ID cid;
-	ID type;
-	ID cast;
-	ID track;
+	char type;
+	char cast;
+	char attack;
+	char track;
 	Range range;
-	PathGroup* paths;
-	ID effect;
-	int level;
+	char effect;
+	char level;
 	int value;
 	char maxNumOfTargets;
-	int condition;
+	char condition;
 } Skill;
 
 typedef struct  buff_t
 {
 	char* name;
 	ID cid;
-	ID type;
+	char type;
 	char condition;
 	int value;
 } Buff;
@@ -102,9 +106,9 @@ typedef struct unit_t
 	ID buffs[MAX_NUM_BUFFS];
 	Skill skill;
 	int agility;
-	ID ai;
-	ID alignment;
-	ID armor;
+	char ai;
+	char alignment;
+	char armor;
 	unsigned short attackFreq;//attacks per turn
 	Position positon;
 	Range attackRange;

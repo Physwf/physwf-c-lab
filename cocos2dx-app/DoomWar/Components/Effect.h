@@ -45,6 +45,7 @@ public:
 	virtual void fire();
 	virtual void onEnter();
 	virtual void onExit();
+	void addTarget(ID iid);
 	static FrisbeeEffect* create(ID cid, PathGroup* path, const CCPoint* origin);
 private:
 	FrisbeeEffect(CCSprite* layer);
@@ -61,6 +62,7 @@ private:
 	PathGroup* mPath;
 	char mCurNode[MAX_NUM_PATHS];
 	char mNumPaths;
+	std::vector<Actor*> mTargets;
 };
 
 class HackEffect : public Effect
