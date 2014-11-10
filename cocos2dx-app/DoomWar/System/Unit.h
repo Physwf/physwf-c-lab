@@ -17,6 +17,19 @@ typedef enum {
 	RIGHTWARD
 } StepDirection;
 
+typedef struct grid_t
+{
+	int x;
+	int y;
+} Grid;
+
+typedef struct grid_set_t
+{
+	char id;
+	Grid *elements;
+	int numElements;
+} GSet;
+
 typedef struct position_t
 {
 	int x;
@@ -72,6 +85,7 @@ typedef struct skill_t
 	char cast;
 	char attack;
 	char track;
+	char ranges[2];
 	Range range;
 	char effect;
 	char level;
