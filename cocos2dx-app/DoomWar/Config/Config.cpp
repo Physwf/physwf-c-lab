@@ -291,7 +291,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	xmlChar* szAttack = xmlGetProp(node, BAD_CAST"attack");
 	xmlChar* szRange = xmlGetProp(node, BAD_CAST"range");
 	xmlChar* szEffect = xmlGetProp(node, BAD_CAST"effect");
-	xmlChar* szMaxTarget = xmlGetProp(node, BAD_CAST"max_targets");
+	xmlChar* szLimit = xmlGetProp(node, BAD_CAST"limit");
 	xmlChar* szLevel = xmlGetProp(node, BAD_CAST"level");
 	xmlChar* szCondition = xmlGetProp(node, BAD_CAST"condition");
 	xmlChar* szValue = xmlGetProp(node, BAD_CAST"value");
@@ -305,7 +305,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	skill->attack = atoi((const char*)szAttack);
 	parseRange2(skill, szRange);
 	skill->effect = atoi((const char*)szEffect);
-	skill->maxNumOfTargets = atoi((const char*)szMaxTarget);
+	skill->limit = atoi((const char*)szLimit);
 	skill->level = atoi((const char*)szLevel);
 	skill->condition = atoi((const char*)szCondition);
 	skill->value = atoi((const char*)szValue);

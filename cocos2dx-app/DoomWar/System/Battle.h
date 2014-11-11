@@ -68,8 +68,8 @@ typedef struct move_result_t
 
 typedef struct attack_result_t
 {
-	char count;
 	SkillResult results[MAX_SKILL_RESULTS];
+	char count;
 	ID loots[MAX_LOOT_RESULT];
 	char numLoot;
 	ID unearthing[MAX_LOOT_RESULT];
@@ -118,7 +118,9 @@ private:
 	bool calculateHeroAttackResult(Unit* hero, AttackResult* result);
 	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
 	bool calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result);
-	bool calculateSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition);
+	bool calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition);
+	bool calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition);
+	bool calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition);
 	void calculateLootResult(Unit* victim, AttackResult* result);
 	bool isInRange(Unit* attacker, Unit* victim);
 	bool isInView(Unit* attacker, Unit* victim);

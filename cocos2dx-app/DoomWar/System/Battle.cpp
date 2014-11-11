@@ -563,6 +563,24 @@ bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
 
 bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result)
 {
+	Skill main;
+	Config::skill->fill(&main, attacker->skills[0]);
+	bool ret;
+	switch (main.attack)
+	{
+	case SKILL_ATTACK_BY_RANGE:
+		result->count++;
+		ret = calculateRangeSkillResult(&main, attacker, candidates, result->results, SKILL_CONDITION_AFTER_MOVE);
+		break;
+	case SKILL_ATTACK_BY_GRID:
+		result->count++;
+		ret = calculatePathSkillResult(&main, attacker, candidates, result->results, SKILL_CONDITION_AFTER_MOVE);
+		break;
+	}
+	
+
+	return false;
+
 	int i = 0;
 	while (i < attacker->attackFreq && candidates->size())
 	{
@@ -601,13 +619,41 @@ bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, Attac
 	return false;
 }
 
-bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
+bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
+{
+	int i = 0;
+	while (i < skill->limit && candidates->size())
+	{
+		i++;
+		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
+		Unit* victim = wraper->unit();
+		ID idBarrier = 0;
+		if (checkBarrier(attacker->positon, victim->positon, &idBarrier))
+		{
+			result->giver = attacker->iid;
+			result->recipients[result->numRecipients] = victim->iid;
+			result->numRecipients++;
+			result->skill = *skill;
+			if (calculateSkillResult(skill, attacker, victim, result, condition))
+			{
+				//calculateLootResult(victim, result);
+			}
+		}
+	}
+}
+
+bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
+{
+
+}
+
+bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition)
 {
 	if (skill->condition != condition) return false;
-	result->giver = attacker->iid;
-	result->recipients[result->numRecipients] = victim->iid;
-	result->numRecipients++;
-	result->skill = *skill;
+	//result->giver = attacker->iid;
+	//result->recipients[result->numRecipients] = victim->iid;
+	//result->numRecipients++;
+	//result->skill = *skill;
 	switch (skill->type)
 	{
 		case SKILL_TYPE_HARM_PHYSICAL:

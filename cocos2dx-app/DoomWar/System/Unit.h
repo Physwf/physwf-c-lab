@@ -99,7 +99,7 @@ typedef struct skill_t
 	char effect;
 	char level;
 	int value;
-	char maxNumOfTargets;
+	char limit;
 	char condition;
 } Skill;
 
