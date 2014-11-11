@@ -399,11 +399,7 @@ void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
 	//find weakest
 	Skill heal;
 	Config::skill->fill(&heal, hero->skills[0]);
-	for (int i = 0; i < hero->attackFreq; i++)
-	{
-		UnitWraper* wraper = (UnitWraper*)heap.Dequeue();
-		calculateSkillResult(&heal, hero, wraper->unit(), result, SKILL_CONDITION_WHEN_MOVING);
-	}
+	calculateSkillResult(&heal, hero, &heap, result, SKILL_CONDITION_WHEN_MOVING);
 }
 
 int PVEBattle::calculateNextGrid(int index, StepDirection dir)
@@ -685,6 +681,20 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 	//first, check if in attack grids
 	Skill skill;
 	Config::skill->fill(&skill, attacker->skills[0]);
+	for (int i = 0; i < skill.range2.numGSets; i++)
+	{
+		ID cid = skill.range2.gSets[i];
+		GSet set;
+		Config::skill->fill(&set, cid);
+		for (int j = 0; j < set.numElements; j++)
+		{
+			if (set.elements[j].x + attacker->positon.x == victim->positon.x && set.elements[j].y + attacker->positon.y == victim->positon.y)
+			{
+				return true;
+			}
+		}
+	}
+	/*
 	for (int i = 0; i < skill.range.numGrids; i++)
 	{
 		if (skill.range.offsets[i].x + attacker->positon.x == victim->positon.x &&
@@ -693,7 +703,7 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 			return true;
 		}
 	}
-
+	*/
 	//second, check if be blocked, to do
 	return false;
 }

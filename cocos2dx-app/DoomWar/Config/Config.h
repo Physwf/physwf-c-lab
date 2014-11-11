@@ -25,13 +25,17 @@ public:
 	static ItemConfig* item;
 protected:
 	void constructUnitWithXML(Unit* unit, xmlNodePtr node);
+	void parseGSet(GSet* set, xmlChar* szGset);
 	void parseRange(Skill* skill, xmlChar* szRange);
+	void parseRange2(Skill* skill, xmlChar* szRange);
 	void parseView(Unit* unit, xmlChar* szView);
 	void parseSkills(Unit* unit,xmlChar* szSkills);
 	void constructSkillWithXML(Skill* skill, xmlNodePtr node);
 	void constructBuffWithXML(Buff* buff, xmlNodePtr node);
 	void constructItemWithXML(Item* item, xmlNodePtr node);
-	void constructPathWithXML(PathGroup* path, xmlNodePtr node);
+	void constructGSetWithXML(GSet* set, xmlNodePtr node);
+private:
+	Grid* mGBuffer;
 };
 
 class HeroConfig : public Config
@@ -66,14 +70,14 @@ class SkillConfig : public Config
 public:
 	void fill(Skill* skill,ID cid);
 	void fill(Buff* buff, ID cid);
-	void fill(PathGroup* paths, ID track);
+	void fill(GSet* range, ID cid);
 	void onSkillConfigLoaded(xmlNodePtr root);
 	void onBuffConfigLoaded(xmlNodePtr root);
-	void onPathConfigLoaded(xmlNodePtr root);
+	void onGSetConfigLoaded(xmlNodePtr root);
 private:
 	std::map<ID, Skill*> mSkills;
 	std::map<ID, Buff*> mBuffs;
-	std::map<ID, PathGroup*> mPaths;
+	std::map<ID, GSet*> mGSet;
 };
 
 class ItemConfig :public Config

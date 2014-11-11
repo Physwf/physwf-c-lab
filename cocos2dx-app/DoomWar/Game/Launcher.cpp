@@ -87,9 +87,9 @@ void Launcher::onSkillSpriteComplete(CCObject* tex)
 	ResourceManager::instance()->loadXML("./Data/heros.xml", Config::hero, (Config::OnConfigLoaded)&HeroConfig::onHeroConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/monsters.xml", Config::monster, (Config::OnConfigLoaded)&MonsterConfig::onMonsterConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/barriers.xml", Config::barrier, (Config::OnConfigLoaded)&BarrierConfig::onBarrierConfigLoaded);
+	ResourceManager::instance()->loadXML("./Data/gset.xml", Config::skill, (Config::OnConfigLoaded)&SkillConfig::onGSetConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/skills.xml", Config::skill, (Config::OnConfigLoaded)&SkillConfig::onSkillConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/buffs.xml", Config::skill, (Config::OnConfigLoaded)&SkillConfig::onBuffConfigLoaded);
-	ResourceManager::instance()->loadXML("./Data/path.xml", Config::skill, (Config::OnConfigLoaded)&SkillConfig::onPathConfigLoaded);
 	ResourceManager::instance()->loadXML("./Data/items.xml", Config::item, (Config::OnConfigLoaded)&ItemConfig::onItemConfigLoaded);
 
 	ResourceManager::instance()->loadTexture("./Data/ui.png", this, callfuncO_selector(Launcher::onUISpriteComplete));

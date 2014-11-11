@@ -25,7 +25,9 @@ typedef struct grid_t
 
 typedef struct grid_set_t
 {
-	char id;
+	char cid;
+	char* name;
+	char type;
 	Grid *elements;
 	int numElements;
 } GSet;
@@ -41,6 +43,12 @@ typedef struct range_t
 	Position offsets[MAX_ATTACK_GRIDS];
 	int numGrids;
 } Range;
+
+typedef struct range2_t
+{
+	char numGSets;
+	ID gSets[2];
+} Range2;
 
 #define SKILL_TYPE_HARM_PHYSICAL	1L
 #define SKILL_TYPE_HARM_MAGICAL		2L
@@ -64,6 +72,7 @@ typedef struct range_t
 
 #define MAX_NUM_NODES				5L
 #define MAX_NUM_PATHS				4L
+
 typedef struct path_t
 {
 	char numNodes;
@@ -85,7 +94,7 @@ typedef struct skill_t
 	char cast;
 	char attack;
 	char track;
-	char ranges[2];
+	Range2 range2;
 	Range range;
 	char effect;
 	char level;

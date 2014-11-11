@@ -104,10 +104,11 @@ void SkillConfig::fill(Skill* skill, ID cid)
 	memcpy(skill, master, sizeof Skill);
 }
 
-void SkillConfig::fill(PathGroup* paths, ID track)
+void SkillConfig::fill(GSet* set, ID cid)
 {
-	PathGroup* master = mPaths[track];
-	memcpy(paths, master, sizeof PathGroup);
+	assert(mGSet.find(cid) != mGSet.end());
+	GSet* master = mGSet[cid];
+	memcpy(set, master, sizeof GSet);
 }
 
 
@@ -126,26 +127,27 @@ void SkillConfig::onBuffConfigLoaded(xmlNodePtr root)
 	}
 }
 
-void SkillConfig::fill(Buff* buff, ID cid)
-{
-	Buff* master = mBuffs[cid];
-	memcpy(buff, master, sizeof Buff);
-}
-
-void SkillConfig::onPathConfigLoaded(xmlNodePtr root)
+void SkillConfig::onGSetConfigLoaded(xmlNodePtr root)
 {
 	xmlNodePtr child = root->children;
 	while (child)
 	{
 		if (child->type != XML_TEXT_NODE && child->type != XML_COMMENT_NODE && child->type != XML_DTD_NODE)
 		{
-			PathGroup* paths = new PathGroup();
-			constructPathWithXML(paths, child);
-			mPaths[paths->track] = paths;
+			GSet* set = new GSet();
+			constructGSetWithXML(set, child);
+			mGSet[set->cid] = set;
 		}
 		child = child->next;
 	}
 }
+
+void SkillConfig::fill(Buff* buff, ID cid)
+{
+	Buff* master = mBuffs[cid];
+	memcpy(buff, master, sizeof Buff);
+}
+
 
 Item* ItemConfig::create(ID cid)
 {
@@ -193,7 +195,6 @@ void Config::constructUnitWithXML(Unit* unit, xmlNodePtr node)
 
 	parseSkills(unit,szSkills);
 	unit->attackFreq = atoi((const char*)szAttackFreq);
-	//parseRange(unit, szAttackRange);
 	parseView(unit, szView);
 }
 
@@ -206,6 +207,22 @@ void Config::parseSkills(Unit* unit, xmlChar* szSkills)
 		unit->skills[count++] = atoi(skill);
 		skill = strtok(NULL, ",");
 	}
+}
+
+void Config::parseGSet(GSet* set, xmlChar* szGset)
+{
+	char* coord = strtok((char*)szGset, ",;");
+	int count = 0;
+	int tempBuffer[255] = {0};
+	while (coord != NULL)
+	{
+		tempBuffer[count] = atoi(coord);
+		count++;
+		coord = strtok(NULL, ",;");
+	}
+	Grid* eles = (Grid*)malloc(count * (sizeof(int)) );
+	set->elements = eles;
+	set->numElements = count;
 }
 
 void Config::parseRange(Skill* skill, xmlChar* szRange)
@@ -223,6 +240,17 @@ void Config::parseRange(Skill* skill, xmlChar* szRange)
 	}
 	CCAssert(count % 2 == 0, "Must be even!");
 	skill->range.numGrids = count / 2;
+}
+
+void Config::parseRange2(Skill* skill, xmlChar* szRange)
+{
+	char* id = strtok((char*)szRange, ",");
+	while (id != NULL)
+	{
+		skill->range2.gSets[skill->range2.numGSets] = atoi(id);
+		skill->range2.numGSets++;
+		strtok(NULL, ",");
+	}
 }
 
 void Config::parseView(Unit* unit, xmlChar* szView)
@@ -275,7 +303,7 @@ void Config::constructSkillWithXML(Skill* skill, xmlNodePtr node)
 	skill->cast = atoi((const char*)szCast);
 	skill->track = atoi((const char*)szTrack);
 	skill->attack = atoi((const char*)szAttack);
-	parseRange(skill, szRange);
+	parseRange2(skill, szRange);
 	skill->effect = atoi((const char*)szEffect);
 	skill->maxNumOfTargets = atoi((const char*)szMaxTarget);
 	skill->level = atoi((const char*)szLevel);
@@ -313,31 +341,15 @@ void Config::constructItemWithXML(Item* item, xmlNodePtr node)
 	item->value = atoi((const char*)szValue);
 }
 
-void Config::constructPathWithXML(PathGroup* paths, xmlNodePtr node)
+void Config::constructGSetWithXML(GSet* set, xmlNodePtr node)
 {
-	xmlChar* szTrack = xmlGetProp(node, BAD_CAST"track");
-	paths->track = atoi((const char*)szTrack);
-	xmlChar* szPath = xmlGetProp(node, BAD_CAST"value");
-	char* part = strtok((char*)szPath, ";");
-	char* parts[3] = { 0 };
-	int count = 0;
-	while (part != NULL)
-	{
-		parts[count++] = part;
-		assert(count < 3);
-		part = strtok(NULL, ";");
-	}
-	while (parts[paths->numPaths])
-	{
-		char* coord = strtok(parts[paths->numPaths], ",");
-		int index = 0;
-		while (coord != NULL)
-		{
-			paths->paths[paths->numPaths].nodes[index] = atoi(coord);
-			paths->paths[paths->numPaths].numNodes = (index + 1) / 2;
-			index++;
-			coord = strtok(NULL, ",");
-		}
-		paths->numPaths++;
-	}
+	xmlChar* szid = xmlGetProp(node, BAD_CAST"id");
+	xmlChar* szname = xmlGetProp(node, BAD_CAST"name");
+	xmlChar* szType = xmlGetProp(node, BAD_CAST"type");
+	xmlChar* szElements = xmlGetProp(node, BAD_CAST"elements");
+
+	set->cid = atoi((const char*)szid);
+	set->name = (char*)szname;
+	set->type = atoi((const char*)szType);
+	parseGSet(set,szElements);
 }
