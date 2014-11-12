@@ -144,7 +144,7 @@ bool FrisbeeEffect::tick(float delta)
 	char nodeX = mPath.elements[mCurNode + 0].x;
 	char nodeY = mPath.elements[mCurNode + 0].y;
 	char nextX = mPath.elements[mCurNode + 1].x;
-	char nextY = mPath.elements[mCurNode + 1].x;
+	char nextY = mPath.elements[mCurNode + 1].y;
 
 	float nextPosX = mFrisbee->getPositionX() + mSpeed*mDir->x;
 	float nextPosY = mFrisbee->getPositionY() + mSpeed*mDir->y;
@@ -162,7 +162,7 @@ bool FrisbeeEffect::tick(float delta)
 		hit->trigger();
 	}
 	*/
-	if (dx*mDir->x + dy*mDir->y > 0)
+	if (dx * mDir->x + dy * mDir->y > 0)
 	{
 		nextPosX = nextX * GRID_SIZE;
 		nextPosY = nextY * GRID_SIZE;
