@@ -399,7 +399,7 @@ void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
 	//find weakest
 	Skill heal;
 	Config::skill->fill(&heal, hero->skills[0]);
-	calculateSkillResult(&heal, hero, &heap, result, SKILL_CONDITION_WHEN_MOVING);
+	calculateRangeSkillResult(&heal, hero, &heap, result, SKILL_CONDITION_WHEN_MOVING);
 }
 
 int PVEBattle::calculateNextGrid(int index, StepDirection dir)
@@ -442,13 +442,14 @@ void PVEBattle::calculateRoundResult()
 	}
 	//AttackResult* results = new AttackResult[MAX_SCREEN_HEROS];
 	AttackResult results[MAX_SCREEN_HEROS+MAX_SCREEN_ENYMYS] = { 0 };
-	int count = 0;
+	RoundResult rResult = {0};
+	//int count = 0;
 	while (heros.size())
 	{
 		UnitWraper *wraper = (UnitWraper*)heros.Dequeue();
 		Unit* hero = wraper->unit();
 		delete wraper;
-		if (calculateHeroAttackResult(hero, &results[count])) count++;
+		if (calculateHeroAttackResult(hero, &rResult.results[rResult.count])) rResult.count++;
 	}
 	
 	//step 5, enemys round, attack heros in aligity order
@@ -470,12 +471,12 @@ void PVEBattle::calculateRoundResult()
 		UnitWraper *wraper = (UnitWraper*)enemys.Dequeue();
 		Unit* enemy = wraper->unit();
 		delete wraper;
-		if (calculateEnemyAttackResult(enemy, &results[count])) count++;
+		if (calculateEnemyAttackResult(enemy, &rResult.results[rResult.count])) rResult.count++;
 	}
 
-	if (count)
+	if (rResult.count)
 	{
-		Event e = { BATTLE_ATTACK_RESULT, (char*)results };
+		Event e = { BATTLE_ATTACK_RESULT, (char*)&rResult };
 		dispatchEvent(&e);
 	}
 	else
@@ -528,7 +529,7 @@ bool PVEBattle::calculateBuffResult(Unit* who, BuffResult* result, int condition
 	return false;
 }
 
-bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
+bool PVEBattle::calculateHeroAttackResult(Unit* hero, SkillResult* result)
 {
 	MinHeap nearEneymeys = MinHeap(mEnemys->size());
 	for (std::map<ID, Unit*>::iterator it = mEnemys->begin(); it != mEnemys->end(); it++)
@@ -545,7 +546,7 @@ bool PVEBattle::calculateHeroAttackResult(Unit* hero, AttackResult* result)
 }
 
 
-bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
+bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, SkillResult* result)
 {
 	MinHeap nearHeros = MinHeap(mHeros->size());
 	for (std::map<ID, Unit*>::iterator it = mHeros->begin(); it != mHeros->end(); it++)
@@ -561,66 +562,28 @@ bool PVEBattle::calculateEnemyAttackResult(Unit* enemy, AttackResult* result)
 	return false;
 }
 
-bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result)
+bool PVEBattle::calculateAttackResult(Unit* attacker, MinHeap* candidates, SkillResult* result)
 {
 	Skill main;
 	Config::skill->fill(&main, attacker->skills[0]);
+	result->giver = attacker->iid;
+	result->skill = main;
 	bool ret;
 	switch (main.attack)
 	{
 	case SKILL_ATTACK_BY_RANGE:
-		result->count++;
-		ret = calculateRangeSkillResult(&main, attacker, candidates, result->results, SKILL_CONDITION_AFTER_MOVE);
+		return calculateRangeSkillResult(&main, attacker, candidates, result, SKILL_CONDITION_AFTER_MOVE);
 		break;
 	case SKILL_ATTACK_BY_GRID:
-		result->count++;
-		ret = calculatePathSkillResult(&main, attacker, candidates, result->results, SKILL_CONDITION_AFTER_MOVE);
+		return calculatePathSkillResult(&main, attacker, candidates, result, SKILL_CONDITION_AFTER_MOVE);
 		break;
 	}
-	
-
-	return false;
-
-	int i = 0;
-	while (i < attacker->attackFreq && candidates->size())
-	{
-		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
-		Unit* victim = wraper->unit();
-		i++;
-
-		ID idBarrier = 0;
-		if (checkBarrier(attacker->positon, victim->positon, &idBarrier))
-		{
-			Unit* barrier = (*mBarriers)[idBarrier];
-			Skill main;
-			Config::skill->fill(&main, attacker->skills[0]);
-			if (calculateSkillResult(&main, attacker, candidates, result->results, SKILL_CONDITION_AFTER_MOVE))
-			{
-				result->count++;
-			}
-			calculateLootResult(barrier, result);
-		}
-		else
-		{
-			int i = 0;
-			while (attacker->skills[i])
-			{
-				Skill skill;
-				Config::skill->fill(&skill, attacker->skills[i]);
-				if (calculateSkillResult(&skill, attacker, candidates, result->results + result->count, SKILL_CONDITION_AFTER_MOVE))
-					result->count++;
-				calculateLootResult(victim,result);
-				i++;
-			}
-		}
-	}
-	
-	if (result->count) return true;
 	return false;
 }
 
 bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
 {
+	if (skill->condition != condition) return false;
 	int i = 0;
 	while (i < skill->limit && candidates->size())
 	{
@@ -628,32 +591,69 @@ bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap*
 		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
 		Unit* victim = wraper->unit();
 		ID idBarrier = 0;
+		
 		if (checkBarrier(attacker->positon, victim->positon, &idBarrier))
 		{
-			result->giver = attacker->iid;
-			result->recipients[result->numRecipients] = victim->iid;
-			result->numRecipients++;
-			result->skill = *skill;
-			if (calculateSkillResult(skill, attacker, victim, result, condition))
+			Unit* barrier = (*mBarriers)[idBarrier];
+			if (calculateSkillResult(skill, attacker, barrier, result, condition))
 			{
-				//calculateLootResult(victim, result);
+				result->recipients[result->numRecipients] = barrier->iid;
+				result->numRecipients++;
+				calculateLootResult(victim, result);
 			}
 		}
+		else
+		{
+			if (calculateSkillResult(skill, attacker, victim, result, condition))
+			{
+				result->recipients[result->numRecipients] = victim->iid;
+				result->numRecipients++;
+				calculateLootResult(victim, result);
+			}
+		}
+		return true;
 	}
+	return false;
 }
 
 bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
 {
-
+	if (skill->condition != condition) return false;
+	
+	while (candidates->size())
+	{
+		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
+		Unit* victim = wraper->unit();
+		for (int i = 0; i < skill->range2.numGSets; i++)
+		{
+			ID cid = skill->range2.gSets[i];
+			GSet set = { 0 };
+			Config::skill->fill(&set, cid);
+			for (int j = 0; j < set.numElements; j++)
+			{
+				Grid grid = set.elements[j];
+				grid.x += attacker->positon.x;
+				grid.y += attacker->positon.y;
+				int index = grid.x + (grid.y - mBackLine) * NUM_GRIDS_ROW;
+				if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER) break;
+				if (victim->positon.x == grid.x && victim->positon.y == grid.y)
+				{
+					if (calculateSkillResult(skill, attacker, victim, result, condition))
+					{
+						result->recipients[result->numRecipients] = victim->iid;
+						result->numRecipients++;
+						calculateLootResult(victim, result);
+					}
+				}
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition)
 {
-	if (skill->condition != condition) return false;
-	//result->giver = attacker->iid;
-	//result->recipients[result->numRecipients] = victim->iid;
-	//result->numRecipients++;
-	//result->skill = *skill;
 	switch (skill->type)
 	{
 		case SKILL_TYPE_HARM_PHYSICAL:
@@ -682,7 +682,7 @@ bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 	return true;
 }
 
-void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
+void PVEBattle::calculateLootResult(Unit* victim, SkillResult* result)
 {
 	std::map<ID, Unit*>::iterator it;
 	if (victim->health > 0) return;
@@ -697,7 +697,8 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 		Item* item = Config::item->create(4001);
 		item->position = victim->positon;
 		(*mLoots)[item->iid] = item;
-		result->loots[result->numLoot++] = item->iid;
+		result->loots[result->numLoots] = item->iid;
+		result->numLoots++;
 		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
 		mGrids[index] = GRID_OCCUPY_TYPE_PROPS;
 	}
@@ -708,17 +709,8 @@ void PVEBattle::calculateLootResult(Unit* victim, AttackResult* result)
 		
 		(*mLoots)[item->iid] = item;
 		item->position = victim->positon;
-		result->loots[result->numLoot++] = item->iid;
-
-		//ID cid = item->value;
-		//Unit* monster = Config::monster->create(cid);
-		//monster->health = monster->maxHealth;
-		//monster->positon = victim->positon;
-		//addUnit(monster);
-
-		//result->unearthing[result->numUnearth++] = monster->iid;
-		//Event e = {BATTLE_UNIT_FLOP,(char*)&monster->iid};
-		//dispatchEvent(&e);
+		result->loots[result->numLoots] = item->iid;
+		result->numLoots++;
 	}
 }
 
@@ -740,16 +732,6 @@ bool PVEBattle::isInRange(Unit* attacker, Unit* victim)
 			}
 		}
 	}
-	/*
-	for (int i = 0; i < skill.range.numGrids; i++)
-	{
-		if (skill.range.offsets[i].x + attacker->positon.x == victim->positon.x &&
-			skill.range.offsets[i].y + attacker->positon.y == victim->positon.y)
-		{
-			return true;
-		}
-	}
-	*/
 	//second, check if be blocked, to do
 	return false;
 }

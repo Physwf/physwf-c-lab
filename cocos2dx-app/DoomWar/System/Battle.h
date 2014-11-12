@@ -49,6 +49,8 @@ typedef struct skill_result_t
 	int value;
 	int healthLeft;
 	Skill skill;
+	ID loots[MAX_LOOT_RESULT];
+	char numLoots;
 } SkillResult;
 
 typedef struct move_result_t
@@ -72,9 +74,13 @@ typedef struct attack_result_t
 	char count;
 	ID loots[MAX_LOOT_RESULT];
 	char numLoot;
-	ID unearthing[MAX_LOOT_RESULT];
-	char numUnearth;
 } AttackResult;
+
+typedef struct round_result_t
+{
+	SkillResult results[MAX_SCREEN_HEROS + MAX_SCREEN_ENYMYS];
+	int count;
+} RoundResult;
 
 class PVEBattle :public EventDispather
 {
@@ -115,13 +121,13 @@ private:
 	bool calculateHeroBuffResult(int condition);
 	bool calculateEnemyBuffResult(int condition);
 	bool calculateBuffResult(Unit* who, BuffResult* result,int condition);
-	bool calculateHeroAttackResult(Unit* hero, AttackResult* result);
-	bool calculateEnemyAttackResult(Unit* enemy, AttackResult* result);
-	bool calculateAttackResult(Unit* attacker, MinHeap* candidates, AttackResult* result);
+	bool calculateHeroAttackResult(Unit* hero, SkillResult* result);
+	bool calculateEnemyAttackResult(Unit* enemy, SkillResult* result);
+	bool calculateAttackResult(Unit* attacker, MinHeap* candidates, SkillResult* result);
 	bool calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition);
 	bool calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition);
 	bool calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition);
-	void calculateLootResult(Unit* victim, AttackResult* result);
+	void calculateLootResult(Unit* victim, SkillResult* result);
 	bool isInRange(Unit* attacker, Unit* victim);
 	bool isInView(Unit* attacker, Unit* victim);
 	bool checkBarrier(Position grid1, Position grid2, ID* iid);

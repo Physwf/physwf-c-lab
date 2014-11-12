@@ -82,7 +82,7 @@ DWcpy:
 	@cp $(DIR_DW)/Data/barriers.xml $(BIN)/Data/barriers.xml
 	@cp $(DIR_DW)/Data/skills.xml $(BIN)/Data/skills.xml
 	@cp $(DIR_DW)/Data/buffs.xml $(BIN)/Data/buffs.xml
-	@cp $(DIR_DW)/Data/path.xml $(BIN)/Data/path.xml
+	@cp $(DIR_DW)/Data/gset.xml $(BIN)/Data/gset.xml
 	@cp $(DIR_DW)/Data/items.xml $(BIN)/Data/items.xml
 	@cp $(DIR_DW)/Data/ui.png $(BIN)/Data/ui.png
 	@cp $(DIR_DW)/Data/ui.plist $(BIN)/Data/ui.plist

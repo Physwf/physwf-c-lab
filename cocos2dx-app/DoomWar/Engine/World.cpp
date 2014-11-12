@@ -195,56 +195,56 @@ void World::onBattleMoveResult(Event *event)
 
 void World::onBattleAttakResult(Event* event)
 {
-	AttackResult* aResults = (AttackResult*)event->data;
+	RoundResult* rResults = (RoundResult*)event->data;
 	
-	while (aResults->count)
+	int i = 0;
+	while (i < rResults->count)
 	{
-		int i = 0;
-		while (i < aResults->count)
+		SkillResult* sResult = rResults->results + i;
+		CommandParallel* skills = CommandParallel::create();
+		Command* attack = CommandSkill::create(sResult);
+		skills->addCommand(attack);
+		Command* shake = CommandShakeScreen::create(16.0f);
+		skills->addCommand(shake);
+		mPVEView->addCommand(skills);
+
+		CommandParallel* dies = CommandParallel::create();
+		for (int j = 0; j < sResult->numRecipients; j++)
 		{
-			SkillResult* sResult = aResults->results + i;
-			Command* attack = CommandSkill::create(sResult);
-			mPVEView->addCommand(attack);
-			Command* shake = CommandShakeScreen::create(16.0f);
-			mPVEView->addCommand(shake);
-			CommandParallel* dies = CommandParallel::create();
-			for (int j = 0; j < sResult->numRecipients; j++)
+			Actor* victim = getActor(sResult->recipients[j]);
+			//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
+			//mPVEScene->addCommand(progress);
+			if (sResult->healthLeft <= 0)
 			{
-				Actor* victim = getActor(sResult->recipients[j]);
-				//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
-				//mPVEScene->addCommand(progress);
-				if (sResult->healthLeft <= 0)
-				{
-					CommandDie* die = CommandDie::create(victim);
-					dies->addCommand(die);
-					mActors->erase(mActors->find(sResult->recipients[j]));
-				}
+				CommandDie* die = CommandDie::create(victim);
+				dies->addCommand(die);
+				mActors->erase(mActors->find(sResult->recipients[j]));
 			}
-			mPVEView->addCommand(dies);
-			i++;
 		}
-		i = 0;
-		while (i < aResults->numLoot)
+		mPVEView->addCommand(dies);
+
+		CommandParallel* loots = CommandParallel::create();
+		for (int j = 0; j < sResult->numLoots; j++)
 		{
-			Item* loot = System::pve->getItem(aResults->loots[i]);
+			Item* loot = System::pve->getItem(sResult->loots[i]);
 			if (loot->pick == ITEM_PICK_TYPE_STEP)
 			{
 				Prop* prop = new Prop(mPVEView->layerProp());
 				prop->bindData(loot);
 				(*mProps)[loot->iid] = prop;
 				CommandDrop* drop = CommandDrop::create(prop);
-				mPVEView->addCommand(drop);
+				loots->addCommand(drop);
 			}
 			else if (loot->pick == ITEM_PICK_TYPE_AUTO)
 			{
 				Prop* prop = new Prop(mPVEView->layerProp());
 				prop->bindData(loot);
 				CommandPick* pCmd = CommandPick::create(prop, 0);
-				mPVEView->addCommand(pCmd);
+				loots->addCommand(pCmd);
 			}
-			i++;
 		}
-		aResults++;
+		mPVEView->addCommand(loots);
+		i++;
 	}
 	CommandDashBoard* show = CommandDashBoard::create(SHOW);
 	mPVEView->addCommand(show);

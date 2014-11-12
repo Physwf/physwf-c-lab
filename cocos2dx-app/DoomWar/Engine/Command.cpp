@@ -87,11 +87,15 @@ bool CommandSkill::tick(float delta)
 {
 	mNow += delta;
 	
-	for (std::vector<Effect*>::iterator it = mEffects.begin(); it != mEffects.end(); it++)
+	for (std::vector<Effect*>::iterator it = mEffects.begin(); it != mEffects.end(); )
 	{
 		if ((*it)->tick(delta))
 		{
 			it = mEffects.erase(it);
+		}
+		else
+		{
+			it++;
 		}
 	}
 	if (mEffects.size() == 0) return true;
@@ -173,14 +177,23 @@ Command* CommandSkill::createBullet(SkillResult* result)
 Command* CommandSkill::createFixed(SkillResult* result)
 {
 	CommandSkill* skill = new CommandSkill();
-	PathGroup paths;
-	Config::skill->fill(&paths,result->skill.track);
+	
 	Actor* attacker = Engine::world->getActor(result->giver);
-	FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, &paths, attacker->position());
-	skill->addEffect(fEffect);
-	for (int i = 0; i < result->numRecipients; i++)
+	for (int i = 0; i < result->skill.range2.numGSets; i++)
 	{
-		fEffect->addTarget(result->recipients[i]);
+		ID cid = result->skill.range2.gSets[i];
+		GSet path;
+		Config::skill->fill(&path, cid);
+		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, path, attacker->position());
+		for (int j = 0; j < path.numElements; j++)
+		{
+			path.elements[j];
+			for (int i = 0; i < result->numRecipients; i++)
+			{
+				fEffect->addTarget(result->recipients[i]);
+			}
+		}
+		skill->addEffect(fEffect);
 	}
 	return skill;
 }
@@ -236,7 +249,9 @@ CommandHit* CommandHit::create(ID iid)
 	Actor* actor = Engine::world->getActor(iid);
 	hit->mActorSprite = actor->sprite();
 	CCTintTo* tintTo = CCTintTo::create(0.1, 50, 0, 0);
+	tintTo->retain();
 	CCReverseTime *tintBack = CCReverseTime::create(tintTo);
+	tintBack->retain();
 	hit->mTint = CCSequence::create(tintTo, tintBack);
 	hit->mTint->retain();
 	hit->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");

@@ -220,9 +220,11 @@ void Config::parseGSet(GSet* set, xmlChar* szGset)
 		count++;
 		coord = strtok(NULL, ",;");
 	}
+	CCAssert(count % 2 == 0, "Must be even!");
 	Grid* eles = (Grid*)malloc(count * (sizeof(int)) );
 	set->elements = eles;
-	set->numElements = count;
+	memcpy(eles, tempBuffer, count * sizeof(int));
+	set->numElements = count/2;
 }
 
 void Config::parseRange(Skill* skill, xmlChar* szRange)
@@ -249,7 +251,7 @@ void Config::parseRange2(Skill* skill, xmlChar* szRange)
 	{
 		skill->range2.gSets[skill->range2.numGSets] = atoi(id);
 		skill->range2.numGSets++;
-		strtok(NULL, ",");
+		id = strtok(NULL, ",");
 	}
 }
 

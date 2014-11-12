@@ -46,22 +46,21 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 	void addTarget(ID iid);
-	static FrisbeeEffect* create(ID cid, PathGroup* path, const CCPoint* origin);
+	static FrisbeeEffect* create(ID cid, GSet path, const CCPoint* origin);
 private:
 	FrisbeeEffect(CCSprite* layer);
 	~FrisbeeEffect();
 
 	void getFrameNameByCID(ID cid, char* name);
 private:
-	CCParticleSystemQuad* mTraces[MAX_NUM_PATHS];
-	CCSprite* mFrisbee[MAX_NUM_PATHS];
-	CCAnimate* mActions[MAX_NUM_PATHS];
+	CCParticleSystemQuad* mTrace;
+	CCSprite* mFrisbee;
+	CCAnimate* mAction;
 	float mSpeed;
 	const CCPoint* mOrigin;
-	CCPoint* mDir[MAX_NUM_PATHS];
-	PathGroup* mPath;
-	char mCurNode[MAX_NUM_PATHS];
-	char mNumPaths;
+	CCPoint* mDir;
+	GSet mPath;
+	char mCurNode;
 	std::vector<Actor*> mTargets;
 };
 
