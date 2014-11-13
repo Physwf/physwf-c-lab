@@ -160,22 +160,26 @@ bool FrisbeeEffect::tick(float delta)
 		mLayer->removeChild(this, false);
 		return true;
 	}
-	Actor* actor = Engine::world->getActorByGrid(*mOrigin + ccp(nextPosX, nextPosY));
-	if (actor != NULL && std::find(mTargets.begin(), mTargets.end(), actor) != mTargets.end())
-	{
-		CommandHit *hit = CommandHit::create(actor->iid());
-		hit->trigger();
-		if (actor->isBarrier())
-		{
-			mLayer->removeChild(this, false);
-			return true;
-		}
-	}
+	
 	
 	if (dx * mDir->x + dy * mDir->y > 0)
 	{
 		nextPosX = nextX * GRID_SIZE;
 		nextPosY = nextY * GRID_SIZE;
+
+		Actor* actor = Engine::world->getActorByGrid(*mOrigin + ccp(nextPosX, nextPosY));
+		if (actor != NULL && std::find(mTargets.begin(), mTargets.end(), actor) != mTargets.end())
+		{
+			CommandHit *hit = CommandHit::create(actor->iid());
+			Engine::world->pve()->addCommand(hit);
+			CommandProgress* progress = CommandProgress::create(-10, actor);
+			Engine::world->pve()->addCommand(progress);
+			if (actor->isBarrier())
+			{
+				mLayer->removeChild(this, false);
+				return true;
+			}
+		}
 
 		mCurNode++;
 	}

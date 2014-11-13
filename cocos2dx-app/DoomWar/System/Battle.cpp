@@ -609,6 +609,7 @@ bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap*
 				result->recipients[result->numRecipients] = barrier->iid;
 				result->numRecipients++;
 				calculateLootResult(barrier, result);
+				return true;
 			}
 		}
 		else
@@ -620,9 +621,8 @@ bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap*
 				calculateLootResult(victim, result);
 			}
 		}
-		return true;
 	}
-	return false;
+	return result->numRecipients>0;
 }
 
 bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
@@ -633,7 +633,7 @@ bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* 
 	{
 		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
 		Unit* victim = wraper->unit();
-		range:for (int i = 0; i < skill->range2.numGSets; i++)
+		for (int i = 0; i < skill->range2.numGSets; i++)
 		{
 			ID cid = skill->range2.gSets[i];
 			GSet set = { 0 };
@@ -655,7 +655,7 @@ bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* 
 					{
 						result->recipients[result->numRecipients] = barrier->iid;
 						result->numRecipients++;
-						calculateLootResult(victim, result);
+						calculateLootResult(barrier, result);
 					}
 					break;
 				}
@@ -730,7 +730,8 @@ void PVEBattle::calculateLootResult(Unit* victim, SkillResult* result)
 	{
 		mBarriers->erase(it);
 		Item* item = Config::item->create(4003);
-		
+		int index = (victim->positon.x) + ((victim->positon.y) - mBackLine) * NUM_GRIDS_ROW;
+		mGrids[index] = GRID_OCCUPY_TYPE_NONE;
 		(*mLoots)[item->iid] = item;
 		item->position = victim->positon;
 		result->loots[result->numLoots] = item->iid;

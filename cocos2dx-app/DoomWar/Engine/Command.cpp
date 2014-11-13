@@ -149,7 +149,15 @@ Command* CommandSkill::createHack(SkillResult* result)
 	CommandSkill* skill = new CommandSkill();
 	skill->addEffect(HackEffect::create(result->skill.effect, result->giver, result->recipients[0]));
 	seq->push(skill, false);
-	return skill;
+	CommandHit* hit = CommandHit::create(result->recipients[0]);
+	seq->push(hit, false);
+	if (result->value != 0)
+	{
+		Actor* victim = Engine::world->getActor(result->recipients[0]);
+		CommandProgress* progress = CommandProgress::create(result->value, victim);
+		seq->push(progress, false);
+	}
+	return seq;
 }
 
 Command* CommandSkill::createBullet(SkillResult* result)
