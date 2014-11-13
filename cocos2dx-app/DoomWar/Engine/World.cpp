@@ -226,7 +226,7 @@ void World::onBattleAttakResult(Event* event)
 		CommandParallel* loots = CommandParallel::create();
 		for (int j = 0; j < sResult->numLoots; j++)
 		{
-			Item* loot = System::pve->getItem(sResult->loots[i]);
+			Item* loot = System::pve->getItem(sResult->loots[j]);
 			if (loot->pick == ITEM_PICK_TYPE_STEP)
 			{
 				Prop* prop = new Prop(mPVEView->layerProp());
