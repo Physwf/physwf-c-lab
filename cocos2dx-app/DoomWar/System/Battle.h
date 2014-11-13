@@ -101,6 +101,7 @@ public:
 	std::map<ID, Unit*>* enemys() const;
 	std::map<ID, Unit*>* barriers() const;
 	Unit* getUnit(ID iid) const;
+	Unit* getUnit(int x, int y) const;
 	Item* getItem(ID iid) const;
 	Item* getItem(int x, int y) const;
 	void pickItem(ID iid, ID who);
@@ -147,7 +148,7 @@ public:
 	static const EType BATTLE_FAILED;
 private:
 	char mGrids[MAX_SCREEN_GRID];
-	
+	ID mOccupy[MAX_SCREEN_GRID];
 	std::map<ID, Unit*>* mHeros;
 	std::map<ID, Unit*>* mEnemys;
 	std::map<ID, Unit*>* mBarriers;

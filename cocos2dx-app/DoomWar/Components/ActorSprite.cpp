@@ -152,6 +152,7 @@ ColorSprite* ColorSprite::create(unsigned int color)
 void ColorSprite::updateData(Unit* unit)
 {
 	int i = 0;
+	int count = 0;
 	int size = mSprites.size();
 	for (i; i < mSprites.size(); i++)
 	{
@@ -159,22 +160,31 @@ void ColorSprite::updateData(Unit* unit)
 	}
 	Skill skill;
 	Config::skill->fill(&skill, unit->skills[0]);
-	for (i = 0; i < skill.range.numGrids; i++)
+	for (i = 0; i < skill.range2.numGSets; i++)
 	{
-		CCSprite* tile;
-		if (i<size)
-			tile = mSprites[i];
-		else
+
+		ID cid = skill.range2.gSets[i];
+		GSet set;
+		Config::skill->fill(&set, cid);
+		for (int j = 0; j < set.numElements; j++)
 		{
-			tile = CCSprite::createWithTexture(mColorTex);
-			tile->retain();
-			mSprites.push_back(tile);
-		}		
-		addChild(tile);
-		tile->setPosition(ccp(skill.range.offsets[i].x * GRID_SIZE, skill.range.offsets[i].y * GRID_SIZE));
+			CCSprite* tile;
+			if (count<size)
+				tile = mSprites[count];
+			else
+			{
+				tile = CCSprite::createWithTexture(mColorTex);
+				tile->retain();
+				mSprites.push_back(tile);
+			}
+			addChild(tile);
+			tile->setPosition(ccp(set.elements[j].x * GRID_SIZE, set.elements[j].y * GRID_SIZE));
+			count++;
+		}
+		for (count; count < size; count++)
+		{
+			mSprites[count]->removeFromParent();
+		}
 	}
-	for (i; i < size; i++)
-	{
-		mSprites[i]->removeFromParent();
-	}
+
 }

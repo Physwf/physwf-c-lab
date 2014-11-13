@@ -185,13 +185,13 @@ Command* CommandSkill::createFixed(SkillResult* result)
 		GSet path;
 		Config::skill->fill(&path, cid);
 		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, path, attacker->position());
+		for (int i = 0; i < result->numRecipients; i++)
+		{
+			fEffect->addTarget(result->recipients[i]);
+		}
 		for (int j = 0; j < path.numElements; j++)
 		{
-			path.elements[j];
-			for (int i = 0; i < result->numRecipients; i++)
-			{
-				fEffect->addTarget(result->recipients[i]);
-			}
+
 		}
 		skill->addEffect(fEffect);
 	}
@@ -252,7 +252,7 @@ CommandHit* CommandHit::create(ID iid)
 	tintTo->retain();
 	CCReverseTime *tintBack = CCReverseTime::create(tintTo);
 	tintBack->retain();
-	hit->mTint = CCSequence::create(tintTo, tintBack);
+	hit->mTint = CCSequence::createWithTwoActions(tintTo, tintBack);
 	hit->mTint->retain();
 	hit->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");
 	hit->mHitEmitter->retain();

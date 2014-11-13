@@ -34,8 +34,9 @@ private:
 	CCPoint* mTarget;
 	float mSpeed;
 	CCPoint mDir;
-	CCParticleSystemQuad* mTrace;
 	CCParticleSystemQuad* mHitEmitter;
+	CCParticleSystemQuad* mTrace;
+	
 };
 
 class FrisbeeEffect : public Effect

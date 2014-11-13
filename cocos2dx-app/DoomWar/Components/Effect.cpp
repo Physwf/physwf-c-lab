@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "Engine.h"
 #include <algorithm>
+#include "Game.h"
 
 BulletEffect::BulletEffect(CCSprite* layer)
 {
@@ -20,10 +21,10 @@ bool BulletEffect::tick(float delta)
 	float dist = pos.getDistance(*mTarget);
 	if (dist <= mSpeed)
 	{
-		Engine::world->pve()->layerEffect()->removeChild(this, false);
 		Engine::world->pve()->layerEffect()->addChild(mHitEmitter);
 		mHitEmitter->setPosition(getPosition());
 		mHitEmitter->resetSystem();
+		Engine::world->pve()->layerEffect()->removeChild(this, false);
 		return true;
 	}
 	setPosition(ccp(pos.x + mSpeed*mDir.x, pos.y + mSpeed*mDir.y));
@@ -75,7 +76,7 @@ void BulletEffect::onExit()
 	mHitEmitter->stopSystem();
 	stopAction(mAction);
 	mAction->release();
-	release();
+	//release();
 }
 
 BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
@@ -99,7 +100,7 @@ BulletEffect* BulletEffect::create(ID cid, ID attacker, ID victim)
 		effect->mTrace->setEmissionRate(40);
 		effect->mHitEmitter = CCParticleSystemQuad::create("Data/hit.xml");
 		effect->mHitEmitter->retain();
-		effect->mHitEmitter->stopSystem();
+		//effect->mHitEmitter->stopSystem();
 		return effect;
 	}
 	return NULL;
@@ -154,14 +155,23 @@ bool FrisbeeEffect::tick(float delta)
 
 	int dx = nextPosX - nextX * GRID_SIZE;
 	int dy = nextPosY - nextY * GRID_SIZE;
-	/*
+	if (nextPosX+mOrigin->x > GAME_WIDTH)
+	{
+		mLayer->removeChild(this, false);
+		return true;
+	}
 	Actor* actor = Engine::world->getActorByGrid(*mOrigin + ccp(nextPosX, nextPosY));
-	if (std::find(mTargets.begin(), mTargets.end(), actor) != mTargets.end())
+	if (actor != NULL && std::find(mTargets.begin(), mTargets.end(), actor) != mTargets.end())
 	{
 		CommandHit *hit = CommandHit::create(actor->iid());
 		hit->trigger();
+		if (actor->isBarrier())
+		{
+			mLayer->removeChild(this, false);
+			return true;
+		}
 	}
-	*/
+	
 	if (dx * mDir->x + dy * mDir->y > 0)
 	{
 		nextPosX = nextX * GRID_SIZE;

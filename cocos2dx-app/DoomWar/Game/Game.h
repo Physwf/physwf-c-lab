@@ -5,6 +5,9 @@
 #include <cocoa\CCObject.h>
 #include "Launcher.h"
 
+#define GAME_WIDTH 640
+#define GAME_HEIGHT 960
+
 class Game
 {
 public:
