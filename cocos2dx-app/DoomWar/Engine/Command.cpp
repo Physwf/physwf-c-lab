@@ -184,8 +184,10 @@ Command* CommandSkill::createBullet(SkillResult* result)
 
 Command* CommandSkill::createFixed(SkillResult* result)
 {
+
 	CommandSkill* skill = new CommandSkill();
 	
+
 	Actor* attacker = Engine::world->getActor(result->giver);
 	for (int i = 0; i < result->skill.range2.numGSets; i++)
 	{
@@ -193,13 +195,31 @@ Command* CommandSkill::createFixed(SkillResult* result)
 		GSet path;
 		Config::skill->fill(&path, cid);
 		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, path, attacker->position());
-		for (int i = 0; i < result->numRecipients; i++)
-		{
-			fEffect->addTarget(result->recipients[i]);
-		}
+		CommandSequence* seq = CommandSequence::create();
 		for (int j = 0; j < path.numElements; j++)
 		{
-
+			float interval = 0;
+			char ox = path.elements[j].x; 
+			char oy = path.elements[j].y;
+			bool needbreak = false;
+			Actor* actor = Engine::world->getActorByGrid(ccp(ox*GRID_SIZE + attacker->position()->x, oy*GRID_SIZE + attacker->position()->y));
+			for (int k = 0; k < result->numRecipients; k++)
+			{
+				if (actor != NULL && result->recipients[k] == actor->iid())
+				{
+					if (actor->isBarrier())
+					{
+						fEffect->addNode(ox, oy);
+						interval += 0.1;
+						needbreak = true;
+					}
+					
+				}
+			}
+			if (needbreak) break;
+			if (attacker->getData()->positon.x + ox > NUM_GRIDS_ROW) break;
+			if (attacker->getData()->positon.x + ox < 0) break;
+ 			fEffect->addNode(ox, oy);
 		}
 		skill->addEffect(fEffect);
 	}
@@ -722,4 +742,31 @@ void CommandShakeScreen::trigger()
 {
 	*mOrigin = Engine::world->pve()->layerMap()->getPosition();
 	CCLog("ox:%f,oy:%f",mOrigin->x,mOrigin->y);
+}
+/*CommandWait*/
+CommandWait::CommandWait() :mDuration(0.0f)
+{
+
+}
+
+CommandWait::~CommandWait()
+{
+
+}
+
+CommandWait* CommandWait::create(float duration)
+{
+	CommandWait* wait = new CommandWait();
+	wait->mDuration = duration;
+}
+
+bool CommandWait::tick(float delta)
+{
+	mDuration -= delta;
+	if (mDuration <= 0) return true;
+}
+
+void CommandWait::trigger()
+{
+
 }

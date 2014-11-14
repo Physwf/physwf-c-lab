@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "dwtype.h"
 #include "Actor.h"
+#include <deque>
 
 using namespace cocos2d;
 
@@ -47,6 +48,7 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 	void addTarget(ID iid);
+	void addNode(int x, int y);
 	static FrisbeeEffect* create(ID cid, GSet path, const CCPoint* origin);
 private:
 	FrisbeeEffect(CCSprite* layer);
@@ -63,6 +65,14 @@ private:
 	GSet mPath;
 	char mCurNode;
 	std::vector<Actor*> mTargets;
+	std::deque<CCPoint*> mNodes;
+	CCMoveTo* mMoveTo;
+
+	std::deque<CCPoint*> mFrisbeePath;
+	std::deque<CCPoint*> mTracePath;
+	CCSpawn* mMoveAndAnim;
+	CCMoveTo* mCurMove;
+	CCAnimate* mAnim;
 };
 
 class HackEffect : public Effect

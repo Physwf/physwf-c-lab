@@ -261,4 +261,17 @@ private:
 	float mTime;
 	CCPoint* mOrigin;
 };
+/*CommandWait*/
+class CommandWait : public Command
+{
+public:
+	static CommandWait* create(float duration);
+	virtual bool tick(float delta);
+	virtual void trigger();
+private:
+	CommandWait();
+	~CommandWait();
+private:
+	float mDuration;
+};
 #endif

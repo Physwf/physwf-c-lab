@@ -141,6 +141,28 @@ FrisbeeEffect::~FrisbeeEffect()
 
 bool FrisbeeEffect::tick(float delta)
 {
+	mTrace->setPosition(getPosition());
+	return false;
+	if (mCurMove->isDone())
+	{
+		if (mFrisbeePath.size())
+		{
+			CCPoint* fnode = mFrisbeePath.front();
+			CCPoint* tnode = mTracePath.front();
+			mFrisbeePath.pop_front();
+			mTracePath.pop_front();
+			mCurMove = CCMoveTo::create(0.1, *fnode);
+			mCurMove->retain();
+			mFrisbee->runAction(mCurMove);
+			mTrace->runAction(CCMoveTo::create(0.1, *tnode));
+		}
+		else
+		{
+			mLayer->removeChild(this, true);
+			return true;
+		}
+	}
+	return false;
 
 	char nodeX = mPath.elements[mCurNode + 0].x;
 	char nodeY = mPath.elements[mCurNode + 0].y;
@@ -202,6 +224,16 @@ bool FrisbeeEffect::tick(float delta)
 
 void FrisbeeEffect::fire()
 {
+	CCPoint* fnode = mFrisbeePath.front();
+	CCPoint* tnode = mTracePath.front();
+	mFrisbeePath.pop_front();
+	mTracePath.pop_front();
+	mCurMove = CCMoveTo::create(0.1, *fnode);
+	mCurMove->retain();
+	mFrisbee->runAction(mCurMove);
+	mTrace->runAction(CCMoveTo::create(0.1, *tnode));
+	mLayer->addChild(this);
+	return;
 	mCurNode = 0;
 
 	char nodeX = mPath.elements[mCurNode].x;
@@ -213,11 +245,19 @@ void FrisbeeEffect::fire()
 	mDir->x = mDir->x / dist;
 	mDir->y = mDir->y / dist;
 	mLayer->addChild(this);
+
 }
 void FrisbeeEffect::addTarget(ID iid)
 {
 	Actor* actor = Engine::world->getActor(iid);
 	mTargets.push_back(actor);
+}
+
+void FrisbeeEffect::addNode(int x, int y)
+{
+	//CCLog("addNode: %f,%f,",pos->x,pos->y);
+	mFrisbeePath.push_back(new CCPoint(x*GRID_SIZE, y*GRID_SIZE));
+	mTracePath.push_back(new CCPoint(x*GRID_SIZE + mOrigin->x, y*GRID_SIZE + mOrigin->y));
 }
 
 void FrisbeeEffect::onEnter()
@@ -260,7 +300,7 @@ FrisbeeEffect* FrisbeeEffect::create(ID cid, GSet path, const CCPoint* origin)
 		effect->mFrisbee->retain();
 		effect->mTrace = CCParticleSystemQuad::create("Data/fireball.xml");
 		effect->mTrace->retain();
-		
+		effect->mTrace->setPosition(CCPoint(origin->x*GRID_SIZE, origin->y*GRID_SIZE));
 		return effect;
 	}
 	return NULL;
