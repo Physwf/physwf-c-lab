@@ -141,8 +141,6 @@ FrisbeeEffect::~FrisbeeEffect()
 
 bool FrisbeeEffect::tick(float delta)
 {
-	mTrace->setPosition(getPosition());
-	return false;
 	if (mCurMove->isDone())
 	{
 		if (mFrisbeePath.size())

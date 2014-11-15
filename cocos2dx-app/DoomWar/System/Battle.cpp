@@ -670,9 +670,8 @@ bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* 
 				}
 			}
 		}
-		return true;
 	}
-	return false;
+	return result->numRecipients>0;
 }
 
 bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim, SkillResult* result, int condition)
@@ -682,21 +681,21 @@ bool PVEBattle::calculateSkillResult(Skill* skill, Unit* attacker, Unit* victim,
 		case SKILL_TYPE_HARM_PHYSICAL:
 		{
 			result->type = SKILL_TYPE_HARM_PHYSICAL;
-			result->value = skill->value;//to be detailed
-			victim->health += result->value;
-			result->healthLeft = victim->health;
+			result->value[result->numRecipients] = skill->value;//to be detailed
+			victim->health += result->value[result->numRecipients];
+			result->healthLeft[result->numRecipients] = victim->health;
 		}
 		break;
 		case SKILL_TYPE_HARM_MAGICAL:
 		{
 			result->type = SKILL_TYPE_HARM_MAGICAL;
-			result->value = skill->value;//to be detailed
+			result->value[result->numRecipients] = skill->value;//to be detailed
 		}
 		break;
 		case SKILL_TYPE_HEAL:
 		{
 			result->type = SKILL_TYPE_HEAL;
-			result->value = skill->value;//to be detailed
+			result->value[result->numRecipients]  = skill->value;//to be detailed
 			victim->health += skill->value;
 			victim->health = victim->health > victim->maxHealth ? victim->maxHealth : victim->health;
 		}

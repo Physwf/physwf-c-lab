@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "ResourceManager.h"
 #include "System.h"
+#include <set>
 
 Command::Command()
 {
@@ -151,12 +152,19 @@ Command* CommandSkill::createHack(SkillResult* result)
 	seq->push(skill, false);
 	CommandHit* hit = CommandHit::create(result->recipients[0]);
 	seq->push(hit, false);
+	Actor* victim = Engine::world->getActor(result->recipients[0]);
 	if (result->value != 0)
 	{
-		Actor* victim = Engine::world->getActor(result->recipients[0]);
-		CommandProgress* progress = CommandProgress::create(result->value, victim);
+		CommandProgress* progress = CommandProgress::create(result->value[0], victim);
 		seq->push(progress, false);
 	}
+	
+	if (result->healthLeft[0] <= 0)
+	{
+		CommandDie* die = CommandDie::create(victim);
+		seq->push(die, false);
+	}
+	
 	return seq;
 }
 
@@ -171,59 +179,96 @@ Command* CommandSkill::createBullet(SkillResult* result)
 		seq->push(skill, false);
 		CommandHit* hit = CommandHit::create(result->recipients[i]);
 		seq->push(hit, false);
-		if (result->value != 0)
+		Actor* victim = Engine::world->getActor(result->recipients[i]);
+		if (result->value[i] != 0)
 		{
-			Actor* victim = Engine::world->getActor(result->recipients[i]);
-			CommandProgress* progress = CommandProgress::create(result->value, victim);
+			CommandProgress* progress = CommandProgress::create(result->value[i], victim);
 			seq->push(progress, false);
 		}
+		
+		if (result->healthLeft[i] <= 0)
+		{
+			CommandDie* die = CommandDie::create(victim);
+			seq->push(die, false);
+		}
 		cmds->addCommand(seq);
+		
 	}
 	return cmds;
 }
 
 Command* CommandSkill::createFixed(SkillResult* result)
 {
+	CommandParallel* cmds = CommandParallel::create();
 
 	CommandSkill* skill = new CommandSkill();
 	
 
 	Actor* attacker = Engine::world->getActor(result->giver);
+	std::set<ID> dead;
 	for (int i = 0; i < result->skill.range2.numGSets; i++)
 	{
 		ID cid = result->skill.range2.gSets[i];
 		GSet path;
 		Config::skill->fill(&path, cid);
 		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, path, attacker->position());
+		bool flag = false;
 		CommandSequence* seq = CommandSequence::create();
+		float interval = 0;
+		
 		for (int j = 0; j < path.numElements; j++)
 		{
-			float interval = 0;
 			char ox = path.elements[j].x; 
 			char oy = path.elements[j].y;
 			bool needbreak = false;
+			interval += .1f;
 			Actor* actor = Engine::world->getActorByGrid(ccp(ox*GRID_SIZE + attacker->position()->x, oy*GRID_SIZE + attacker->position()->y));
 			for (int k = 0; k < result->numRecipients; k++)
 			{
 				if (actor != NULL && result->recipients[k] == actor->iid())
 				{
+					flag = true;
 					if (actor->isBarrier())
 					{
+						CommandWait* wait = CommandWait::create(interval);
+						CommandHit* hit = CommandHit::create(actor->iid());
+						seq->push(wait, false);
+						seq->push(hit, false);
 						fEffect->addNode(ox, oy);
-						interval += 0.1;
 						needbreak = true;
 					}
-					
+					else
+					{
+						CommandWait* wait = CommandWait::create(interval);
+						interval = 0;
+						CommandHit* hit = CommandHit::create(actor->iid());
+						seq->push(wait,false);
+						seq->push(hit, false);
+						CommandProgress* progress = CommandProgress::create(result->value[k], actor);
+						seq->push(progress, false);
+					}
+
+					if (result->healthLeft[k] <= 0)
+					{
+						if (dead.find(actor->iid()) == dead.end())
+						{
+							dead.insert(actor->iid());
+							CommandDie* die = CommandDie::create(actor);
+							seq->push(die, false);
+						}
+					}
 				}
 			}
+			if (attacker->getData()->positon.x + ox > NUM_GRIDS_ROW) needbreak = true;
+			if (attacker->getData()->positon.x + ox < 0) needbreak = true;
 			if (needbreak) break;
-			if (attacker->getData()->positon.x + ox > NUM_GRIDS_ROW) break;
-			if (attacker->getData()->positon.x + ox < 0) break;
  			fEffect->addNode(ox, oy);
 		}
 		skill->addEffect(fEffect);
+		if (flag) cmds->addCommand(seq);
 	}
-	return skill;
+	cmds->addCommand(skill);
+	return cmds;
 }
 
 Command* CommandSkill::createArc(SkillResult* result)
@@ -240,7 +285,7 @@ Command* CommandSkill::createArc(SkillResult* result)
 		if (result->value != 0)
 		{
 			Actor* victim = Engine::world->getActor(result->recipients[i]);
-			CommandProgress* progress = CommandProgress::create(result->value, victim);
+			CommandProgress* progress = CommandProgress::create(result->value[i], victim);
 			seq->push(progress,false);
 		}
 		cmds->addCommand(seq);
@@ -758,12 +803,14 @@ CommandWait* CommandWait::create(float duration)
 {
 	CommandWait* wait = new CommandWait();
 	wait->mDuration = duration;
+	return wait;
 }
 
 bool CommandWait::tick(float delta)
 {
 	mDuration -= delta;
 	if (mDuration <= 0) return true;
+	return false;
 }
 
 void CommandWait::trigger()
