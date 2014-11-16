@@ -208,21 +208,6 @@ void World::onBattleAttakResult(Event* event)
 		skills->addCommand(shake);
 		mPVEView->addCommand(skills);
 
-		//CommandParallel* dies = CommandParallel::create();
-		for (int j = 0; j < sResult->numRecipients; j++)
-		{
-			Actor* victim = getActor(sResult->recipients[j]);
-			//CommandProgress* progress = CommandProgress::create(sResult->value, victim);
-			//mPVEScene->addCommand(progress);
-			if (sResult->healthLeft[j] <= 0)
-			{
-				//CommandDie* die = CommandDie::create(victim);
-				//dies->addCommand(die);
-				mActors->erase(mActors->find(sResult->recipients[j]));
-			}
-		}
-		//mPVEView->addCommand(dies);
-
 		CommandParallel* loots = CommandParallel::create();
 		for (int j = 0; j < sResult->numLoots; j++)
 		{
@@ -315,4 +300,9 @@ Actor* World::getActorByGrid(const CCPoint &pos)
 	return NULL;
 }
 
-
+void World::removeActor(ID iid)
+{
+	std::map<ID, Actor*>::iterator it = mActors->find(iid);
+	assert(it != mActors->end());
+	mActors->erase(it);
+}

@@ -25,6 +25,7 @@ public:
 
 	Actor* getActor(ID iid);
 	Actor* getActorByGrid(const CCPoint &pos);
+	void removeActor(ID iid);
 
 	PVEView* pve();
 private:

@@ -163,6 +163,7 @@ Command* CommandSkill::createHack(SkillResult* result)
 	{
 		CommandDie* die = CommandDie::create(victim);
 		seq->push(die, false);
+		Engine::world->removeActor(result->recipients[0]);
 	}
 	
 	return seq;
@@ -190,6 +191,7 @@ Command* CommandSkill::createBullet(SkillResult* result)
 		{
 			CommandDie* die = CommandDie::create(victim);
 			seq->push(die, false);
+			Engine::world->removeActor(result->recipients[i]);
 		}
 		cmds->addCommand(seq);
 		
@@ -213,7 +215,7 @@ Command* CommandSkill::createFixed(SkillResult* result)
 		Config::skill->fill(&path, cid);
 		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, path, attacker->position());
 		bool flag = false;
-		CommandSequence* seq = CommandSequence::create();
+		CommandSequence* seq = NULL;
 		float interval = 0;
 		
 		for (int j = 0; j < path.numElements; j++)
@@ -230,6 +232,7 @@ Command* CommandSkill::createFixed(SkillResult* result)
 					flag = true;
 					if (actor->isBarrier())
 					{
+						seq = CommandSequence::create();
 						CommandWait* wait = CommandWait::create(interval);
 						CommandHit* hit = CommandHit::create(actor->iid());
 						seq->push(wait, false);
@@ -239,24 +242,27 @@ Command* CommandSkill::createFixed(SkillResult* result)
 					}
 					else
 					{
+						seq = CommandSequence::create();
 						CommandWait* wait = CommandWait::create(interval);
-						interval = 0;
 						CommandHit* hit = CommandHit::create(actor->iid());
-						seq->push(wait,false);
+						seq->push(wait, false);
 						seq->push(hit, false);
 						CommandProgress* progress = CommandProgress::create(result->value[k], actor);
 						seq->push(progress, false);
 					}
 
-					if (result->healthLeft[k] <= 0)
+					if (result->healthLeft[k] <= 0 && i+1 == result->skill.range2.numGSets)
 					{
 						if (dead.find(actor->iid()) == dead.end())
 						{
 							dead.insert(actor->iid());
 							CommandDie* die = CommandDie::create(actor);
 							seq->push(die, false);
+							Engine::world->removeActor(actor->iid());
 						}
 					}
+
+					if(seq) cmds->addCommand(seq);
 				}
 			}
 			if (attacker->getData()->positon.x + ox > NUM_GRIDS_ROW) needbreak = true;
@@ -265,7 +271,7 @@ Command* CommandSkill::createFixed(SkillResult* result)
  			fEffect->addNode(ox, oy);
 		}
 		skill->addEffect(fEffect);
-		if (flag) cmds->addCommand(seq);
+		
 	}
 	cmds->addCommand(skill);
 	return cmds;

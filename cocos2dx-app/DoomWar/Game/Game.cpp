@@ -51,14 +51,14 @@ void Game::initWorld()
 	System::pub->initialize();
 	Engine::world->initialize();
 	//temp 
-	Unit* heros[5];
-	heros[0] = System::pub->getHero(1001);
-	heros[1] = System::pub->getHero(1002);
-	heros[2] = System::pub->getHero(1003);
-	heros[3] = System::pub->getHero(1004);
-	heros[4] = System::pub->getHero(1005);
+	Unit* heros[1];
+	//heros[0] = System::pub->getHero(1001);
+	//heros[1] = System::pub->getHero(1002);
+	//heros[2] = System::pub->getHero(1003);
+	//heros[3] = System::pub->getHero(1004);
+	heros[0] = System::pub->getHero(1005);
 
-	Engine::world->enterPVEView(0, heros, 5);
+	Engine::world->enterPVEView(0, heros, 1);
 }
 
 void Game::replaceView(CCLayer* view)

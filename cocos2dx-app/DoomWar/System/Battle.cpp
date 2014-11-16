@@ -4,6 +4,7 @@
 #include "dwtype.h"
 #include <assert.h>
 #include "System.h"
+#include <set>
 
 PVEBattle::PVEBattle()
 {
@@ -628,11 +629,13 @@ bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap*
 bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
 {
 	if (skill->condition != condition) return false;
-	
+	char blockFlag = 0;
+	std::set<Unit*> victims;
 	while (candidates->size())
 	{
 		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
 		Unit* victim = wraper->unit();
+		
 		for (int i = 0; i < skill->range2.numGSets; i++)
 		{
 			ID cid = skill->range2.gSets[i];
@@ -643,8 +646,9 @@ bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* 
 				Grid grid = set.elements[j];
 				grid.x += attacker->positon.x;
 				grid.y += attacker->positon.y;
-				if (grid.x > NUM_GRIDS_ROW)
+				if (grid.x > NUM_GRIDS_ROW || grid.x < 0)
 				{
+					blockFlag += 1;
 					break;
 				}
 				int index = grid.x + (grid.y - mBackLine) * NUM_GRIDS_ROW;
@@ -655,8 +659,10 @@ bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* 
 					{
 						result->recipients[result->numRecipients] = barrier->iid;
 						result->numRecipients++;
-						calculateLootResult(barrier, result);
+						victims.insert(barrier);
+						//calculateLootResult(barrier, result);
 					}
+					blockFlag +=1;
 					break;
 				}
 				if (victim->positon.x == grid.x && victim->positon.y == grid.y)
@@ -665,11 +671,18 @@ bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* 
 					{
 						result->recipients[result->numRecipients] = victim->iid;
 						result->numRecipients++;
-						calculateLootResult(victim, result);
+						victims.insert(victim);
+						//calculateLootResult(victim, result);
 					}
 				}
 			}
+			
 		}
+		if (blockFlag >= 2) break;
+	}
+	for (std::set<Unit*>::iterator it = victims.begin(); it != victims.end(); it++)
+	{
+		calculateLootResult(*it, result);
 	}
 	return result->numRecipients>0;
 }
