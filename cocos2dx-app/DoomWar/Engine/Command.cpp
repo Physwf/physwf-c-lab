@@ -163,7 +163,6 @@ Command* CommandSkill::createHack(SkillResult* result)
 	{
 		CommandDie* die = CommandDie::create(victim);
 		seq->push(die, false);
-		Engine::world->removeActor(result->recipients[0]);
 	}
 	
 	return seq;
@@ -191,7 +190,6 @@ Command* CommandSkill::createBullet(SkillResult* result)
 		{
 			CommandDie* die = CommandDie::create(victim);
 			seq->push(die, false);
-			Engine::world->removeActor(result->recipients[i]);
 		}
 		cmds->addCommand(seq);
 		
@@ -321,7 +319,7 @@ CommandHit* CommandHit::create(ID iid)
 	CommandHit* hit = new CommandHit();
 	Actor* actor = Engine::world->getActor(iid);
 	hit->mActorSprite = actor->sprite();
-	CCTintTo* tintTo = CCTintTo::create(0.1, 50, 0, 0);
+	CCTintTo* tintTo = CCTintTo::create(0.1f, 50, 0, 0);
 	tintTo->retain();
 	CCReverseTime *tintBack = CCReverseTime::create(tintTo);
 	tintBack->retain();

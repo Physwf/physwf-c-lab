@@ -629,62 +629,53 @@ bool PVEBattle::calculateRangeSkillResult(Skill* skill, Unit* attacker, MinHeap*
 bool PVEBattle::calculatePathSkillResult(Skill* skill, Unit* attacker, MinHeap* candidates, SkillResult* result, int condition)
 {
 	if (skill->condition != condition) return false;
-	char blockFlag = 0;
-	std::set<Unit*> victims;
+
+	std::map<ID,Unit*> enemys;
 	while (candidates->size())
 	{
 		UnitWraper* wraper = (UnitWraper*)candidates->Dequeue();
 		Unit* victim = wraper->unit();
+		enemys[victim->iid] = victim;
+	}
 		
-		for (int i = 0; i < skill->range2.numGSets; i++)
+	for (int i = 0; i < skill->range2.numGSets; i++)
+	{
+		ID cid = skill->range2.gSets[i];
+		GSet set = { 0 };
+		Config::skill->fill(&set, cid);
+		for (int j = 0; j < set.numElements; j++)
 		{
-			ID cid = skill->range2.gSets[i];
-			GSet set = { 0 };
-			Config::skill->fill(&set, cid);
-			for (int j = 0; j < set.numElements; j++)
+			Grid grid = set.elements[j];
+			grid.x += attacker->positon.x;
+			grid.y += attacker->positon.y;
+			if (grid.x > NUM_GRIDS_ROW || grid.x < 0) break;
+
+			Unit* unit = getUnit(grid.x, grid.y);
+			if (unit == NULL) continue;
+			int index = grid.x + (grid.y - mBackLine) * NUM_GRIDS_ROW;
+			if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER)
 			{
-				Grid grid = set.elements[j];
-				grid.x += attacker->positon.x;
-				grid.y += attacker->positon.y;
-				if (grid.x > NUM_GRIDS_ROW || grid.x < 0)
+				if (calculateSkillResult(skill, attacker, unit, result, condition))
 				{
-					blockFlag += 1;
-					break;
+					result->recipients[result->numRecipients] = unit->iid;
+					result->set[result->numRecipients] = i;
+					result->numRecipients++;
+					calculateLootResult(unit, result);
 				}
-				int index = grid.x + (grid.y - mBackLine) * NUM_GRIDS_ROW;
-				if (mGrids[index] == GRID_OCCUPY_TYPE_BARRIER)
+				break;
+			}
+			if (enemys.find(unit->iid) != enemys.end())
+			{
+				if (calculateSkillResult(skill, attacker, unit, result, condition))
 				{
-					Unit* barrier = getUnit(grid.x, grid.y);
-					if (calculateSkillResult(skill, attacker, barrier, result, condition))
-					{
-						result->recipients[result->numRecipients] = barrier->iid;
-						result->set[result->numRecipients] = i;
-						result->numRecipients++;
-						victims.insert(barrier);
-						//calculateLootResult(barrier, result);
-					}
-					blockFlag +=1;
-					break;
-				}
-				if (victim->positon.x == grid.x && victim->positon.y == grid.y)
-				{
-					if (calculateSkillResult(skill, attacker, victim, result, condition))
-					{
-						result->recipients[result->numRecipients] = victim->iid;
-						result->set[result->numRecipients] = i;
-						result->numRecipients++;
-						victims.insert(victim);
-						//calculateLootResult(victim, result);
-					}
+					result->recipients[result->numRecipients] = unit->iid;
+					result->set[result->numRecipients] = i;
+					result->numRecipients++;
+					calculateLootResult(unit, result);
 				}
 			}
-			
 		}
-		if (blockFlag >= 2) break;
-	}
-	for (std::set<Unit*>::iterator it = victims.begin(); it != victims.end(); it++)
-	{
-		calculateLootResult(*it, result);
+			
 	}
 	return result->numRecipients>0;
 }

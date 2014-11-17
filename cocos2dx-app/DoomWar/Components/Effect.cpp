@@ -149,10 +149,10 @@ bool FrisbeeEffect::tick(float delta)
 			CCPoint* tnode = mTracePath.front();
 			mFrisbeePath.pop_front();
 			mTracePath.pop_front();
-			mCurMove = CCMoveTo::create(0.1, *fnode);
+			mCurMove = CCMoveTo::create(0.1f, *fnode);
 			mCurMove->retain();
 			mFrisbee->runAction(mCurMove);
-			mTrace->runAction(CCMoveTo::create(0.1, *tnode));
+			mTrace->runAction(CCMoveTo::create(0.1f, *tnode));
 		}
 		else
 		{
@@ -169,10 +169,10 @@ void FrisbeeEffect::fire()
 	CCPoint* tnode = mTracePath.front();
 	mFrisbeePath.pop_front();
 	mTracePath.pop_front();
-	mCurMove = CCMoveTo::create(0.1, *fnode);
+	mCurMove = CCMoveTo::create(0.1f, *fnode);
 	mCurMove->retain();
 	mFrisbee->runAction(mCurMove);
-	mTrace->runAction(CCMoveTo::create(0.1, *tnode));
+	mTrace->runAction(CCMoveTo::create(0.1f, *tnode));
 	mLayer->addChild(this);
 	return;
 }

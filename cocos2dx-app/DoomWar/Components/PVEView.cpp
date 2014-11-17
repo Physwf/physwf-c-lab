@@ -138,7 +138,7 @@ bool PVEView::ccTouchBegan(CCTouch* touch, CCEvent* event)
 {
 	CCLog("x:%f,y:%f\n", touch->getLocation().x, touch->getLocation().y);
 	mCurDrag = Engine::world->getActor(touch->getLocation() - mLayerActor->getPosition());
-	if (mCurDrag != NULL)
+	if (mCurDrag != NULL && !mCurDrag->isBarrier())
 	{
 		mRangeSprite->updateData(mCurDrag->getData());
 		const Position pos = mCurDrag->getData()->positon;
