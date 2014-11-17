@@ -24,7 +24,7 @@ public:
 	void leavePVPMap();
 
 	Actor* getActor(ID iid);
-	Actor* getActorByGrid(const CCPoint &pos);
+	Actor* getActor(const CCPoint &pos);
 	void removeActor(ID iid);
 
 	PVEView* pve();

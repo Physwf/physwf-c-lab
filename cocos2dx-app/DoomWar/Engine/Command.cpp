@@ -205,15 +205,14 @@ Command* CommandSkill::createFixed(SkillResult* result)
 
 	CommandSkill* skill = new CommandSkill();
 	
-
 	Actor* attacker = Engine::world->getActor(result->giver);
-	std::set<ID> dead;
+
 	for (int i = 0; i < result->skill.range2.numGSets; i++)
 	{
 		ID cid = result->skill.range2.gSets[i];
 		GSet path;
 		Config::skill->fill(&path, cid);
-		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, path, attacker->position());
+		FrisbeeEffect* fEffect = FrisbeeEffect::create(result->skill.effect, attacker->position());
 		bool flag = false;
 		CommandSequence* seq = NULL;
 		float interval = 0;
@@ -222,12 +221,13 @@ Command* CommandSkill::createFixed(SkillResult* result)
 		{
 			char ox = path.elements[j].x; 
 			char oy = path.elements[j].y;
+			
 			bool needbreak = false;
 			interval += .1f;
-			Actor* actor = Engine::world->getActorByGrid(ccp(ox*GRID_SIZE + attacker->position()->x, oy*GRID_SIZE + attacker->position()->y));
+			Actor* actor = Engine::world->getActor(ccp(ox * GRID_SIZE + attacker->position()->x, oy * GRID_SIZE + attacker->position()->y));
 			for (int k = 0; k < result->numRecipients; k++)
 			{
-				if (actor != NULL && result->recipients[k] == actor->iid())
+				if (actor != NULL && result->recipients[k] == actor->iid() && result->set[k] == i)
 				{
 					flag = true;
 					if (actor->isBarrier())
@@ -251,27 +251,21 @@ Command* CommandSkill::createFixed(SkillResult* result)
 						seq->push(progress, false);
 					}
 
-					if (result->healthLeft[k] <= 0 && i+1 == result->skill.range2.numGSets)
+					if (result->healthLeft[k] <= 0)
 					{
-						if (dead.find(actor->iid()) == dead.end())
-						{
-							dead.insert(actor->iid());
-							CommandDie* die = CommandDie::create(actor);
-							seq->push(die, false);
-							Engine::world->removeActor(actor->iid());
-						}
+						CommandDie* die = CommandDie::create(actor);
+						seq->push(die, false);
 					}
 
-					if(seq) cmds->addCommand(seq);
+					cmds->addCommand(seq);
 				}
 			}
 			if (attacker->getData()->positon.x + ox > NUM_GRIDS_ROW) needbreak = true;
 			if (attacker->getData()->positon.x + ox < 0) needbreak = true;
 			if (needbreak) break;
- 			fEffect->addNode(ox, oy);
+			fEffect->addNode(ox, oy);
 		}
 		skill->addEffect(fEffect);
-		
 	}
 	cmds->addCommand(skill);
 	return cmds;
@@ -663,6 +657,7 @@ bool CommandDie::tick(float delta)
 void CommandDie::trigger()
 {
 	mActor->sprite()->removeFromParent();
+	Engine::world->removeActor(mActor->iid());
 }
 
 /*CommandBuff*/

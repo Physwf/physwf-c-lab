@@ -285,7 +285,7 @@ PVEView* World::pve()
 	return mPVEView;
 }
 
-Actor* World::getActorByGrid(const CCPoint &pos)
+Actor* World::getActor(const CCPoint &pos)
 {
 	CCRect bounds;
 	for (std::map<ID, Actor*>::iterator it = mActors->begin(); it != mActors->end(); it++)

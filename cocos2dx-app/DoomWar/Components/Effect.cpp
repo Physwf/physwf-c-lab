@@ -161,63 +161,6 @@ bool FrisbeeEffect::tick(float delta)
 		}
 	}
 	return false;
-
-	char nodeX = mPath.elements[mCurNode + 0].x;
-	char nodeY = mPath.elements[mCurNode + 0].y;
-	char nextX = mPath.elements[mCurNode + 1].x;
-	char nextY = mPath.elements[mCurNode + 1].y;
-
-	float nextPosX = mFrisbee->getPositionX() + mSpeed*mDir->x;
-	float nextPosY = mFrisbee->getPositionY() + mSpeed*mDir->y;
-
-	mDir->x = nextX - nodeX;
-	mDir->y = nextY - nodeY;
-
-	int dx = nextPosX - nextX * GRID_SIZE;
-	int dy = nextPosY - nextY * GRID_SIZE;
-	if (nextPosX+mOrigin->x > GAME_WIDTH)
-	{
-		mLayer->removeChild(this, false);
-		return true;
-	}
-	
-	
-	if (dx * mDir->x + dy * mDir->y > 0)
-	{
-		nextPosX = nextX * GRID_SIZE;
-		nextPosY = nextY * GRID_SIZE;
-
-		Actor* actor = Engine::world->getActorByGrid(*mOrigin + ccp(nextPosX, nextPosY));
-		if (actor != NULL && std::find(mTargets.begin(), mTargets.end(), actor) != mTargets.end())
-		{
-			CommandHit *hit = CommandHit::create(actor->iid());
-			Engine::world->pve()->addCommand(hit);
-			CommandProgress* progress = CommandProgress::create(-10, actor);
-			Engine::world->pve()->addCommand(progress);
-			if (actor->isBarrier())
-			{
-				mLayer->removeChild(this, false);
-				return true;
-			}
-		}
-
-		mCurNode++;
-	}
-
-	if (mCurNode + 1 >= mPath.numElements)
-	{
-		mLayer->removeChild(this, true);
-		return true;
-	}
-
-	mFrisbee->setPosition(ccp(nextPosX, nextPosY));
-	mTrace->setPosition(mFrisbee->getPosition() + *mOrigin);
-
-	float dist = sqrt(mDir->x*mDir->x + mDir->y*mDir->y);
-	mDir->x = mDir->x / dist;
-	mDir->y = mDir->y / dist;
-	
-	return false;
 }
 
 void FrisbeeEffect::fire()
@@ -232,23 +175,6 @@ void FrisbeeEffect::fire()
 	mTrace->runAction(CCMoveTo::create(0.1, *tnode));
 	mLayer->addChild(this);
 	return;
-	mCurNode = 0;
-
-	char nodeX = mPath.elements[mCurNode].x;
-	char nodeY = mPath.elements[mCurNode].y;
-	char nextX = mPath.elements[mCurNode + 1].x;
-	char nextY = mPath.elements[mCurNode + 1].y;
-	mDir = new CCPoint(nextX - nodeX, nextY - nodeY);
-	float dist = sqrt(mDir->x*mDir->x + mDir->y*mDir->y);
-	mDir->x = mDir->x / dist;
-	mDir->y = mDir->y / dist;
-	mLayer->addChild(this);
-
-}
-void FrisbeeEffect::addTarget(ID iid)
-{
-	Actor* actor = Engine::world->getActor(iid);
-	mTargets.push_back(actor);
 }
 
 void FrisbeeEffect::addNode(int x, int y)
@@ -262,15 +188,12 @@ void FrisbeeEffect::onEnter()
 {
 	CCSprite::onEnter();
 	addChild(mFrisbee);
-	mFrisbee->runAction(mAction);
 	mLayer->addChild(mTrace);
 }
 
 void FrisbeeEffect::onExit()
 {
 	CCSprite::onExit();
-	mFrisbee->stopAction(mAction);
-	mAction->release();
 	mFrisbee->removeFromParent();
 	mFrisbee->release();
 	mTrace->stopSystem();
@@ -278,7 +201,7 @@ void FrisbeeEffect::onExit()
 	release();
 }
 
-FrisbeeEffect* FrisbeeEffect::create(ID cid, GSet path, const CCPoint* origin)
+FrisbeeEffect* FrisbeeEffect::create(ID cid, const CCPoint* origin)
 {
 	CCSprite* layer = Engine::world->pve()->layerEffect();
 	FrisbeeEffect* effect = new FrisbeeEffect(layer);
@@ -288,12 +211,9 @@ FrisbeeEffect* FrisbeeEffect::create(ID cid, GSet path, const CCPoint* origin)
 		effect->retain();
 		effect->setPosition(CCPoint(origin->x*GRID_SIZE, origin->y*GRID_SIZE));
 		effect->mOrigin = origin;
-		effect->mPath = path;
 
 		char szName[10] = { 0 };
 		effect->getFrameNameByCID(cid, szName);
-		effect->mAction = CCAnimate::create(ResourceManager::instance()->getAnimation(szName));
-		effect->mAction->retain();
 		effect->mFrisbee = CCSprite::create();
 		effect->mFrisbee->retain();
 		effect->mTrace = CCParticleSystemQuad::create("Data/fireball.xml");

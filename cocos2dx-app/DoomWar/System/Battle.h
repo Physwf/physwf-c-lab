@@ -48,6 +48,7 @@ typedef struct skill_result_t
 	ID type;//physical or magical or what
 	int value[MAX_SKILL_RECIPIENT];
 	int healthLeft[MAX_SKILL_RECIPIENT];
+	int set[MAX_SKILL_RECIPIENT];
 	Skill skill;
 	ID loots[MAX_LOOT_RESULT];
 	char numLoots;

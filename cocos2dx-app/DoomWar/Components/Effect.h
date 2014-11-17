@@ -47,9 +47,8 @@ public:
 	virtual void fire();
 	virtual void onEnter();
 	virtual void onExit();
-	void addTarget(ID iid);
 	void addNode(int x, int y);
-	static FrisbeeEffect* create(ID cid, GSet path, const CCPoint* origin);
+	static FrisbeeEffect* create(ID cid	, const CCPoint* origin);
 private:
 	FrisbeeEffect(CCSprite* layer);
 	~FrisbeeEffect();
@@ -58,15 +57,9 @@ private:
 private:
 	CCParticleSystemQuad* mTrace;
 	CCSprite* mFrisbee;
-	CCAnimate* mAction;
 	float mSpeed;
 	const CCPoint* mOrigin;
-	CCPoint* mDir;
-	GSet mPath;
-	char mCurNode;
 	std::vector<Actor*> mTargets;
-	std::deque<CCPoint*> mNodes;
-	CCMoveTo* mMoveTo;
 
 	std::deque<CCPoint*> mFrisbeePath;
 	std::deque<CCPoint*> mTracePath;
