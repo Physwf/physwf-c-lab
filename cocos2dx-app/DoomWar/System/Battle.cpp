@@ -409,6 +409,8 @@ void PVEBattle::calculateHeroHealResult(Unit* hero, SkillResult* result)
 	//find weakest
 	Skill heal;
 	Config::skill->fill(&heal, hero->skills[0]);
+	result->giver = hero->iid;
+	result->skill = heal;
 	calculateRangeSkillResult(&heal, hero, &heap, result, SKILL_CONDITION_WHEN_MOVING);
 }
 

@@ -172,6 +172,7 @@ private:
 	CommandHeal();
 	~CommandHeal();
 private:
+	Actor* mActor;
 	CCAnimate* mAction;
 	CCSprite* mAnimSprite;
 };

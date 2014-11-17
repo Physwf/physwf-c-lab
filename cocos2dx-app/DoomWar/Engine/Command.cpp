@@ -344,6 +344,7 @@ CommandHeal::~CommandHeal()
 
 bool CommandHeal::tick(float delta)
 {
+	mAnimSprite->setPosition(mActor->sprite()->getPosition());
 	return mAction->isDone();
 }
 
@@ -356,12 +357,12 @@ void CommandHeal::trigger()
 CommandHeal* CommandHeal::create(ID iid)
 {
 	CommandHeal* heal = new CommandHeal();
-	Actor* actor = Engine::world->getActor(iid);
+	heal->mActor = Engine::world->getActor(iid);
 	CCAnimation* anim = ResourceManager::instance()->getAnimation("heal");
 	heal->mAction = CCAnimate::create(anim);
 	heal->mAction->retain();
 	heal->mAnimSprite = CCSprite::create();
-	heal->mAnimSprite->setPosition(actor->sprite()->getPosition());
+	heal->mAnimSprite->setPosition(heal->mActor->sprite()->getPosition());
 	heal->mAnimSprite->retain();
 	return heal;
 }
