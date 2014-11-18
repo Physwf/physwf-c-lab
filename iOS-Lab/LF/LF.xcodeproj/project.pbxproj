@@ -21,6 +21,7 @@
 		D8155D781976C0F400231F6B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8155D5A1976C0F400231F6B /* UIKit.framework */; };
 		D8155D801976C0F400231F6B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D8155D7E1976C0F400231F6B /* InfoPlist.strings */; };
 		D8155D821976C0F400231F6B /* LFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D8155D811976C0F400231F6B /* LFTests.m */; };
+		D86A30AF197C13B1002F6FB3 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D86A30AE197C13B1002F6FB3 /* ViewController.xib */; };
 		D8ADBB29197ABC86008D211B /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8ADBB28197ABC86008D211B /* MAMapKit.framework */; };
 		D8ADBB2B197ABCC3008D211B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8ADBB2A197ABCC3008D211B /* QuartzCore.framework */; };
 		D8ADBB2D197ABCD5008D211B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8ADBB2C197ABCD5008D211B /* CoreLocation.framework */; };
@@ -63,6 +64,7 @@
 		D8155D7D1976C0F400231F6B /* LFTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LFTests-Info.plist"; sourceTree = "<group>"; };
 		D8155D7F1976C0F400231F6B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D8155D811976C0F400231F6B /* LFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LFTests.m; sourceTree = "<group>"; };
+		D86A30AE197C13B1002F6FB3 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		D8ADBB28197ABC86008D211B /* MAMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MAMapKit.framework; path = ../../../AMap_iOS_API_Lib_V2.2.1/2D/MAMapKit.framework; sourceTree = "<group>"; };
 		D8ADBB2A197ABCC3008D211B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D8ADBB2C197ABCD5008D211B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -156,6 +158,7 @@
 				D8155D681976C0F400231F6B /* Main.storyboard */,
 				D8155D6B1976C0F400231F6B /* ViewController.h */,
 				D8155D6C1976C0F400231F6B /* ViewController.m */,
+				D86A30AE197C13B1002F6FB3 /* ViewController.xib */,
 				D8155D6E1976C0F400231F6B /* Images.xcassets */,
 				D8155D5D1976C0F400231F6B /* Supporting Files */,
 			);
@@ -269,6 +272,7 @@
 			files = (
 				D8155D6F1976C0F400231F6B /* Images.xcassets in Resources */,
 				D8155D611976C0F400231F6B /* InfoPlist.strings in Resources */,
+				D86A30AF197C13B1002F6FB3 /* ViewController.xib in Resources */,
 				D8155D6A1976C0F400231F6B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
