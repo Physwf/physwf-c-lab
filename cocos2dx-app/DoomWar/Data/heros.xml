@@ -1,0 +1,8 @@
+<heros>
+  <hero id="1001" name="soldier" level="1" ai="1" alignment="1" maxHealth="100" agility="2" skills="101" attackFreq="1" view=""/>
+  <hero id="1002" name="archer" level="1" ai="1" alignment="1" maxHealth="100" agility="2" skills="102" attackFreq="1"  view=""/>
+  <hero id="1003" name="warlock" level="1" ai="1" alignment="1" maxHealth="100" agility="2" skills="103" attackFreq="1"  view=""/>
+  <hero id="1004" name="assassin" level="1" ai="1" alignment="1" maxHealth="100" agility="2" skills="104" attackFreq="2" view=""/>
+  <hero id="1005" name="wizard" level="1" ai="1" alignment="1" maxHealth="100" agility="2" skills="105" attackFreq="1" view=""/>
+  <hero id="1006" name="oxe" level="1" ai="1" alignment="1" maxHealth="100" agility="2" skills="106" attackFreq="1" view=""/>
+</heros>

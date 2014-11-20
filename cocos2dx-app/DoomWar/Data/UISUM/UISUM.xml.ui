@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectDir>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UISUM</ProjectDir>
+  <Version>1.6.0.0</Version>
+  <Resources>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UISUM\Resources</Resources>
+  <Name>UISUM</Name>
+  <JsonFileName>UISUM.json</JsonFileName>
+  <JsonFolder>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UISUM\Json</JsonFolder>
+  <JsonList>
+    <string>UISUM.json</string>
+  </JsonList>
+  <CanvasSize>
+    <Width>0</Width>
+    <Height>0</Height>
+  </CanvasSize>
+  <filePath>D:\physwf-c-lab\cocos2dx-app\DoomWar\Data\UISUM\UISUM.xml.ui</filePath>
+  <ProjectType>UIProject</ProjectType>
+  <ResRelativePath />
+  <imageFileList>
+    <string>UISUM0.plist</string>
+  </imageFileList>
+  <imagePngList>
+    <string>UISUM0.png</string>
+  </imagePngList>
+  <JsonSuffix>.json</JsonSuffix>
+  <CurrentUIJson>UISUM.json</CurrentUIJson>
+</UIProject>

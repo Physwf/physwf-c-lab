@@ -1,1 +1,5 @@
-/OpenGL/bin
+/OpenGL/bin/
+/Win32/bin/
+/OpenGL_ES/bin/
+/cocos2dx-app/bin/
+/shared/lib/obj

@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StormLib", "StormLib.vcproj", "{A86141D8-F372-4104-BA30-4814D45840DE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test.vcproj", "{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Ansi Dynamic|Win32 = Debug Ansi Dynamic|Win32
+		Debug Ansi Static|Win32 = Debug Ansi Static|Win32
+		Release Ansi Dynamic|Win32 = Release Ansi Dynamic|Win32
+		Release Ansi Static|Win32 = Release Ansi Static|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Debug Ansi Dynamic|Win32.ActiveCfg = Debug Ansi Dynamic|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Debug Ansi Dynamic|Win32.Build.0 = Debug Ansi Dynamic|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Debug Ansi Static|Win32.ActiveCfg = Debug Ansi Static|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Debug Ansi Static|Win32.Build.0 = Debug Ansi Static|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Release Ansi Dynamic|Win32.ActiveCfg = Release Ansi Dynamic|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Release Ansi Dynamic|Win32.Build.0 = Release Ansi Dynamic|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Release Ansi Static|Win32.ActiveCfg = Release Ansi Static|Win32
+		{A86141D8-F372-4104-BA30-4814D45840DE}.Release Ansi Static|Win32.Build.0 = Release Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Debug Ansi Dynamic|Win32.ActiveCfg = Debug Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Debug Ansi Dynamic|Win32.Build.0 = Debug Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Debug Ansi Static|Win32.ActiveCfg = Debug Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Debug Ansi Static|Win32.Build.0 = Debug Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Release Ansi Dynamic|Win32.ActiveCfg = Release Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Release Ansi Dynamic|Win32.Build.0 = Release Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Release Ansi Static|Win32.ActiveCfg = Release Ansi Static|Win32
+		{A22DEC27-4BA6-479F-AF9C-0229ACFD7E3A}.Release Ansi Static|Win32.Build.0 = Release Ansi Static|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

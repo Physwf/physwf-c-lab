@@ -1,0 +1,3 @@
+<monsters>
+  <monster id="2001" name="gnome" 	level="1" ai="1" alignment="2" maxHealth="100" agility="2" skills="107" attackFreq="1" view="-2,-2,2,2"/>
+</monsters>

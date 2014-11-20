@@ -40,8 +40,8 @@ DIR_CHAPTER_2=/chapter_2
 
 rb8.c1.utils:utils.obj
 	$(LINK) $(BIN)/utils.obj $(LINKOUT)$(BIN)/utils$(OUTSUFFIX)
-rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj textfile.obj copy
-	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(BIN)/textfile.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
+rb8.c1.triangles:triangles.obj  LoadShaders.obj utils.obj  copy
+	$(LINK) $(BIN)/triangles.obj $(BIN)/LoadShaders.obj $(LIBS) $(BIN)/utils.obj $(LINKOUT)$(BIN)/triangles$(OUTSUFFIX)
 
 copy:$(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.frag
 	cp $(DIR_RB8)$(DIR_CHAPTER_1)/triangles.vert $(BIN)/triangles.vert
@@ -62,8 +62,8 @@ draw.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/draw.cpp
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw.cpp $(CLOUT)$(BIN)/draw.obj
 draw2.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp 
 	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/draw2.cpp $(CLOUT)$(BIN)/draw2.obj
-random.obj:$(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp 
-	$(CL) $(DIR_RB7)$(DIR_CHAPTER_2)/random.cpp $(CLOUT)$(BIN)/random.obj
+random.obj:$(DIR_L)/random.cpp 
+	$(CL) $(DIR_L)/random.cpp $(CLOUT)$(BIN)/random.obj $(INCLUDE)
 
 rb7.c2.botest:buffer_object_test.obj
 	$(LINK) $(BIN)/buffer_object_test.obj $(LINKOUT)$(BIN)/buffer_object_test$(OUTSUFFIX)
@@ -78,6 +78,19 @@ ogl3.obj:
 	$(CL) $(DIR_OGL)/ogl3.cpp $(CLOUT)$(BIN)/ogl3.obj
 textfile.obj:
 	$(CL) $(DIR_OGL)/textfile.cpp $(CLOUT)$(BIN)/textfile.obj
+
+DIR_GAMES=./games
+DIR_TETRIS=/Tetris
+tetris:TetrisMain.obj TetrisView.obj TetrisData.obj random.obj utils.obj 
+	$(LINK) $(BIN)/TetrisMain.obj $(BIN)/TetrisView.obj $(BIN)/TetrisData.obj $(BIN)/random.obj $(BIN)/utils.obj $(LINKOUT)$(BIN)/tetris$(OUTSUFFIX)
+	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.vert $(BIN)/tetris.vert
+	cp $(DIR_GAMES)$(DIR_TETRIS)/tetris.frag $(BIN)/tetris.frag
+TetrisMain.obj:$(DIR_GAMES)$(DIR_TETRIS)/main.cpp
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/main.cpp $(CLOUT)$(BIN)/TetrisMain.obj $(INCLUDE)
+TetrisView.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisView.cpp
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisView.cpp $(CLOUT)$(BIN)/TetrisView.obj $(INCLUDE)
+TetrisData.obj:$(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp 
+	$(CL) $(DIR_GAMES)$(DIR_TETRIS)/TetrisData.cpp $(CLOUT)$(BIN)/TetrisData.obj $(INCLUDE)
 
 clean:
 	-rm $(BIN)/*.obj $(BIN)/*.exe $(BIN)/*.pdb $(BIN)/*.idb $(BIN)/*.manifest $(BIN)/*.ilk  

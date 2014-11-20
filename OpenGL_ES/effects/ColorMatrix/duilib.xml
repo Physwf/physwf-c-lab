@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="500,400">
+<HorizontalLayout name="HSV" float="true" bkcolor="#FF00FF00" width="200" height="100" visible="true" pos="100,100,123,100">
+	<Slider name="Hue" float="true" pos="0,0,123,18" height="18" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
+	<Slider name="Sat" float="true" pos="0,18,123,18" height="18" bkimage="./Data/Controls/Slider/bk.png" thumbsize="18,18" thumbimage="./Data/Controls/Slider/thumb.png"/>
+</HorizontalLayout>
+</Window>

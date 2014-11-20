@@ -1,0 +1,10 @@
+<skills>
+	<!-- type: 1 physical -->
+<skill id="101" name="soldier" 	type="1" cast="1" attack="1" limit="1" track="0" effect="1" level="1" value="-40" condition="2" range="1"/>
+<skill id="102" name="archer" 	type="1" cast="1" attack="1" limit="1" track="1" effect="2" level="1" value="-100" condition="2" range="2"/>
+<skill id="103" name="warlock" 	type="3" cast="2" attack="1" limit="1" track="3" effect="4" level="1" value="15" condition="1" range="2"/>
+<skill id="104" name="assassin" type="1" cast="1" attack="1" limit="2" track="1" effect="3" level="1" value="-100" condition="2" range="1"/>
+<skill id="105" name="wizard" 	type="1" cast="2" attack="2" limit="100" track="2" effect="5" level="1" value="-40" condition="2" range="4,5"/>
+<skill id="106" name="oxe" 		type="1" cast="1" attack="1" limit="1" track="0" effect="1" level="1" value="-40" condition="2" range="1"/>
+<skill id="107" name="gnome" 	type="1" cast="1" attack="1" limit="1" track="0" effect="1" level="1" value="-40" condition="2" range="1"/>
+</skills>

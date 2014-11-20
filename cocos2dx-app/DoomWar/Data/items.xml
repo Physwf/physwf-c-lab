@@ -1,0 +1,5 @@
+<items>
+	<item id="4001" name="gold" type="1" pick= "1" level="1" ai="0" value="100"/>
+	<item id="4002" name="blood" type="2" pick= "1" level="1" ai="0" value="100"/>
+	<item id="4003" name="egg"	type="3" pick= "2" level="1" ai="0" value="2001"/>
+</items>

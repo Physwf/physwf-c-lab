@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{4991830c-0b62-4504-8765-82b7abf60eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{6781319a-3339-40fc-b461-da11c9d1fbaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{dd41decc-ad55-4a0a-9c2c-e830f50858f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{d7cfc136-0ea2-4d4c-a4d9-dc599792dccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{ee0097f4-24bb-4aba-a183-65a6c8c6e01f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{aa30495d-3b35-4cd7-b204-ac35ff86a655}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Battle.h">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Battle.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\System.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Map.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\Heap.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\EventDispatcher.h">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\EventDispatcher.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Unit.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\ResourceManager.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Game\Game.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\ActorSprite.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Actor.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\HeroPub.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Config\Config.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Command.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\Effect.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PropSprite.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\Prop.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\System\Bag.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Game\Launcher.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Engine\World.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PVEView.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\WorldView.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PVEUI.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\DWLoading.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Components\PartileEmitter.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Unit.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Map.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\System.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Heap.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\ResourceManager.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Game\Game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Engine.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\ActorSprite.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Actor.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\HeroPub.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Config\Config.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\dwtype.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Command.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\Effect.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppMacros.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PropSprite.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\Prop.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\System\Bag.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Game\Launcher.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Engine\World.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PVEView.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\WorldView.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PVEUI.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\DWLoading.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Components\PartileEmitter.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Data\trace.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\Data\hit.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="..\Data\fireball.txt">
+      <Filter>Data</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
