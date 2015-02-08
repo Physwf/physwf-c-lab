@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 #include <libxml/parser.h>
+#include "platform/CCFileUtils.h"
+#include <string>
 
 ResourceManager::ResourceManager()
 {
@@ -45,7 +47,8 @@ void ResourceManager::loadXML(const char* pszFile, DWObject* object, Config::OnC
 {
 	xmlDocPtr pDoc;
 	xmlNodePtr pRoot;
-	pDoc = xmlReadFile(pszFile, "utf-8", XML_PARSE_RECOVER);
+    std::string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(pszFile);
+	pDoc = xmlReadFile(fullPath.c_str() ,"utf-8", XML_PARSE_RECOVER);
 	CCAssert(pDoc != NULL, "Failed to read xml file!");
 	pRoot = xmlDocGetRootElement(pDoc);
 	(object->*onConfigLoaded)(pRoot);

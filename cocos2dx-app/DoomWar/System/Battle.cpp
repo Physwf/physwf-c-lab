@@ -225,10 +225,6 @@ void PVEBattle::refreshGrids()
 	}
 }
 
-void PVEBattle::update(unsigned int eclipse)
-{
-
-}
 
 bool PVEBattle::calculateHerosMovement(StepDirection dir)
 {

@@ -12,7 +12,7 @@ Unit* HeroConfig::create(ID cid)
 {
 	Unit *copy = new Unit();
 	Unit *master = mMaster[cid];
-	memcpy(copy, master, sizeof Unit);
+	memcpy(copy, master, sizeof (Unit));
 	copy->iid = (ID)copy;
 
 	return copy;
@@ -37,7 +37,7 @@ Unit* BarrierConfig::create(ID cid)
 {
 	Unit *copy = new Unit();
 	Unit *master = mMaster[cid];
-	memcpy(copy, master, sizeof Unit);
+	memcpy(copy, master, sizeof (Unit));
 	copy->iid = (ID)copy;
 	return copy;
 }
@@ -61,7 +61,7 @@ Unit* MonsterConfig::create(ID cid)
 {
 	Unit *copy = new Unit();
 	Unit *master = mMaster[cid];
-	memcpy(copy, master, sizeof Unit);
+	memcpy(copy, master, sizeof (Unit));
 	copy->iid = (ID)copy;
 
 	return copy;
@@ -101,14 +101,14 @@ void SkillConfig::onSkillConfigLoaded(xmlNodePtr root)
 void SkillConfig::fill(Skill* skill, ID cid)
 {
 	Skill* master = mSkills[cid];
-	memcpy(skill, master, sizeof Skill);
+	memcpy(skill, master, sizeof (Skill));
 }
 
 void SkillConfig::fill(GSet* set, ID cid)
 {
 	assert(mGSet.find(cid) != mGSet.end());
 	GSet* master = mGSet[cid];
-	memcpy(set, master, sizeof GSet);
+	memcpy(set, master, sizeof (GSet));
 }
 
 
@@ -145,7 +145,7 @@ void SkillConfig::onGSetConfigLoaded(xmlNodePtr root)
 void SkillConfig::fill(Buff* buff, ID cid)
 {
 	Buff* master = mBuffs[cid];
-	memcpy(buff, master, sizeof Buff);
+	memcpy(buff, master, sizeof (Buff));
 }
 
 
@@ -153,7 +153,7 @@ Item* ItemConfig::create(ID cid)
 {
 	Item *copy = new Item();
 	Item *master = mItems[cid];
-	memcpy(copy, master, sizeof Item);
+	memcpy(copy, master, sizeof (Item));
 	copy->iid = (ID)copy;
 	return copy;
 }

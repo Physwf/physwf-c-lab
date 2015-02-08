@@ -4,8 +4,8 @@
 #include "Unit.h"
 #include "dwtype.h"
 #include <map>
-#include <libxml\parser.h>
-#include <libxml\tree.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 class HeroConfig;
 class BarrierConfig;

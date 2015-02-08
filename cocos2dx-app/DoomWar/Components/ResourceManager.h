@@ -2,7 +2,7 @@
 #define _RESOURCEMANAGER_H
 
 #include "cocos2d.h"
-#include <cocoa\CCObject.h>
+#include <cocoa/CCObject.h>
 #include "dwtype.h"
 #include "Config.h"
 

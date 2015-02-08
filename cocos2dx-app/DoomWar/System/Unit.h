@@ -3,7 +3,7 @@
 
 #include "Heap.h"
 #include "dwtype.h"
-#include "libxml\parser.h"
+#include "libxml/parser.h"
 
 #define MAX_ATTACK_GRIDS 50
 #define MAX_NUM_SKILLS 10

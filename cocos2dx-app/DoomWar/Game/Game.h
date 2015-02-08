@@ -2,7 +2,7 @@
 #define _GAME_H
 
 #include "DWLoading.h"
-#include <cocoa\CCObject.h>
+#include <cocoa/CCObject.h>
 #include "Launcher.h"
 
 #define GAME_WIDTH 640

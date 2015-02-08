@@ -41,24 +41,15 @@ void BulletEffect::fire()
 
 	mDir.x = (mTarget->x - pos.x) / dist;
 	mDir.y = (mTarget->y - pos.y) / dist;
-	float angle = asin(abs(mDir.y))*180.0 / 3.14;
-	if (mDir.x >= 0 && -mDir.y > 0)//1
+	float angle = acosf(mDir.y)*180.0 / 3.14;
+	if ((mDir.x < 0 && mDir.y < 0) || (mDir.x < 0 && mDir.y >= 0))//1
 	{
-
+        angle = 360 - angle;
 	}
-	else if (mDir.x <= 0 && -mDir.y > 0)//2
-	{
-		angle = 180.0 - angle;
-	}
-	else if (mDir.x < 0 && -mDir.y <= 0)//3
-	{
-		angle = 180.0 + angle;
-	}
-	else if (mDir.x >= 0 && -mDir.y < 0)//4
-	{
-		angle = 360.0 - angle;
-	}
-	setRotation(angle + 90.0);
+	setRotation(angle);
+    CCLog("x:%f,y:%f",mDir.x,mDir.y);
+    CCLog("rotation:%f",angle+90.0f);
+    CCLog("angle:%f",angle);
 }
 
 void BulletEffect::onEnter()
@@ -131,7 +122,7 @@ FrisbeeEffect::FrisbeeEffect(CCSprite* layer)
 {
 	mLayer = layer;
 	mSpeed = 10;
-	mTargets = { NULL };
+	//mTargets = { NULL };
 }
 
 FrisbeeEffect::~FrisbeeEffect()

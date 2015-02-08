@@ -96,7 +96,7 @@ public:
 	void end();
 	void step(StepDirection dir);
 	void moveHero(ID iid, int x, int y);
-	void update(ID eclipse);
+	//void update(ID eclipse);
 
 	std::map<ID, Unit*>* heros() const;
 	std::map<ID, Unit*>* enemys() const;

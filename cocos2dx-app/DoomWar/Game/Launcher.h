@@ -3,7 +3,7 @@
 
 
 #include "EventDispatcher.h"
-#include <cocoa\CCObject.h>
+#include <cocoa/CCObject.h>
 #include "cocos2d.h"
 
 USING_NS_CC;

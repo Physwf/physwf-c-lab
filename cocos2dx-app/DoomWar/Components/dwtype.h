@@ -1,7 +1,7 @@
 #ifndef _DW_TYPE_H
 #define _DW_TYPE_H
 
-typedef unsigned int ID;
+typedef unsigned long ID;
 
 class DWObject
 {
