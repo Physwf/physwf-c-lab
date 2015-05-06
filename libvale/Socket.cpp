@@ -19,11 +19,10 @@ Socket::~Socket()
 	//nCounter--;
 }
 
-#ifdef WIN32
 Socket* Socket::create()
 {
 	Socket* result = new Socket();
-	SOCKET fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (fd == INVALID_SOCKET)
 	{
 #ifdef DEBUG
@@ -33,12 +32,6 @@ Socket* Socket::create()
 	result->nFd = fd;
 	return result;
 }
-#else
-int Socket::create()
-{
-
-}
-#endif
 
 int Socket::listen(short port)
 {

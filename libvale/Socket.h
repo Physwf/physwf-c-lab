@@ -14,18 +14,12 @@ class Socket
 public:
 	Socket(); 
 	~Socket();
-#ifdef WIN32
+
 	static Socket* create();
-#else
-	static int create();
-#endif
 
 public:
-#ifdef WIN32
-	SOCKET getFd() { return nFd; }
-#else
+
 	int getFd() { return nFd; }
-#endif
 	int listen(short port);
 	int accpet();
 	int connect(const char* addr, short port);
@@ -35,11 +29,7 @@ public:
 	int setNonBlock();
 
 private:
-#ifdef WIN32
-	SOCKET nFd;
-#else
 	int nFd;
-#endif
 	static int nCounter;
 
 };
