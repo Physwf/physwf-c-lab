@@ -1,7 +1,7 @@
 #include "Socket.h"
 
 
-Socket::Socket() : nFd(INVALID_SOCKET)
+Socket::Socket(int fd) : nFd(fd)
 { 
 #ifdef WIN32
 	if (!nCounter)
@@ -19,27 +19,21 @@ Socket::~Socket()
 	//nCounter--;
 }
 
-Socket* Socket::create()
+int Socket::create(int domain)
 {
-	Socket* result = new Socket();
-	int fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (fd == INVALID_SOCKET)
+	nFd = socket(domain, SOCK_STREAM, IPPROTO_TCP);
+	if (nFd == INVALID_SOCKET)
 	{
 #ifdef DEBUG
 		printf("Create Socket Error:%d!\n", WSAGetLastError());
 #endif
 	}
-	result->nFd = fd;
-	return result;
+	return nFd;
 }
 
-int Socket::listen(short port)
+int Socket::listen(sockaddr* addr,int len)
 {
-	sockaddr_in sa;
-	sa.sin_family = AF_INET;
-	sa.sin_addr.s_addr = inet_addr("127.0.0.1");
-	sa.sin_port = port;
-	int iResult = bind(nFd, (SOCKADDR*)&sa, sizeof sa);
+	int iResult = bind(nFd, (SOCKADDR*)addr, len);
 	if (iResult == SOCKET_ERROR)
 	{
 #ifdef DEBUG
@@ -57,7 +51,7 @@ int Socket::listen(short port)
 	return iResult;
 }
 
-int Socket::accpet()
+int Socket::accpet(struct sockaddr* addr, int len)
 {
 
 }
@@ -121,4 +115,23 @@ int Socket::close()
 		WSACleanup();
 	}
 #endif
+}
+
+int Socket::setNonBlock()
+{
+	
+#ifdef WIN32
+	unsigned long non_block = 1;
+	if (ioctlsocket(nFd, FIONBIO, &non_block) == SOCKET_ERROR)
+	{
+		return -1;
+	}
+#else
+	int flags;
+	if (flags = fcntl(nFd, F_GETFL) == -1)
+		return -1;
+	if (fcntl(nFd, F_SETFL, flags | O_NONBLOCK))
+		return -1;
+#endif
+	return 0;
 }
