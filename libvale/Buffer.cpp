@@ -14,10 +14,9 @@ Buffer::Buffer(size_t hint)
 	resize(hint);
 }
 
-Buffer::Buffer(const char* buf, size_t size)
+Buffer::Buffer(const char* buf, size_t hint):Buffer(hint)
 {
-	Buffer(size);
-	append(buf, size);
+	append(buf, hint);
 }
 
 Buffer::~Buffer()
@@ -27,7 +26,7 @@ Buffer::~Buffer()
 
 size_t Buffer::append(const char* buf, size_t size)
 {
-	int tailFree = nCapacity - nPosition;
+	size_t tailFree = nCapacity - nPosition;
 	if (tailFree < size)
 		resize(nSize + size);
 	nSize += size;

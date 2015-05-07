@@ -1,4 +1,5 @@
 #include "Server.h"
+#include <string.h>
 
 Server::Server(EventLoop* loop, int fd) :pLoop(loop), sSocket(fd)
 {
@@ -22,7 +23,7 @@ int Server::createTcpServer(int port)
 		return -1;
 	}
 	sockaddr_in sa;
-	memset(&sa, 0, sizeof sa);
+    memset(&sa, 0, sizeof sa);
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 	sa.sin_port = htons(port);

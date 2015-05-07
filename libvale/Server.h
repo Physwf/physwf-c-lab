@@ -3,6 +3,7 @@
 
 #include "EventLoop.h"
 #include "Socket.h"
+#include <string.h>
 
 class Server : public Object
 {

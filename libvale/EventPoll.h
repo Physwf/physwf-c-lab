@@ -23,7 +23,7 @@ class EventSelect : public IEventPoll
 {
 public:
 	EventSelect(EventLoop* loop);
-	~EventSelect() {};
+	~EventSelect();
 public:
 	virtual void add(int fd, int mask);
 	virtual void del(int fd, int mask);

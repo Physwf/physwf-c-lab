@@ -1,5 +1,6 @@
 #include "EventPoll.h"
 #include "EventLoop.h"
+#include <string.h>
 
 EventSelect::EventSelect(EventLoop* loop) :IEventPoll(loop)
 {

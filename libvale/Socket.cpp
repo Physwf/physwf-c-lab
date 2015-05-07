@@ -24,8 +24,10 @@ int Socket::create(int domain)
 	nFd = socket(domain, SOCK_STREAM, IPPROTO_TCP);
 	if (nFd == INVALID_SOCKET)
 	{
-#ifdef DEBUG
+#if (defined DEBUG) && (defined WIN32)
 		printf("Create Socket Error:%d!\n", WSAGetLastError());
+#else
+        printf("create socket error:%d!\n",errno);
 #endif
 	}
 	return nFd;
@@ -33,19 +35,23 @@ int Socket::create(int domain)
 
 int Socket::listen(sockaddr* addr,int len)
 {
-	int iResult = bind(nFd, (SOCKADDR*)addr, len);
+	int iResult = bind(nFd, (sockaddr*)addr, len);
 	if (iResult == SOCKET_ERROR)
 	{
-#ifdef DEBUG
-		printf("bind failed with error:%d!",WSAGetLastError());
+#if (defined DEBUG) && (defined WIN32)
+		printf("bind failed with error:%d!\n",WSAGetLastError());
+#else
+        printf("bind failed with error:%d!\n",errno);
 #endif
 		return iResult;
 	}
 	iResult = ::listen(nFd, SOMAXCONN);
 	if (iResult == SOCKET_ERROR)
 	{
-#ifdef DEBUG
+#if (defined DEBUG) && (defined WIN32)
 		printf("listen failed with error:%d!", WSAGetLastError());
+#else
+        printf("listen failed with error:%d!", errno);
 #endif
 	}
 	return iResult;
@@ -53,7 +59,7 @@ int Socket::listen(sockaddr* addr,int len)
 
 int Socket::accpet(struct sockaddr* addr, int len)
 {
-
+    return 0;
 }
 
 
@@ -63,11 +69,13 @@ int Socket::connect(const char* addr, short port)
 	sa.sin_family = AF_INET;
 	sa.sin_addr.s_addr = inet_addr(addr);
 	sa.sin_port = port;
-	int iResult = ::connect(nFd, (SOCKADDR*)&sa, sizeof sa);
+	int iResult = ::connect(nFd, (sockaddr*)&sa, sizeof sa);
 	if (iResult == SOCKET_ERROR)
 	{
-#ifdef DEBUG
-		printf("connect failed with error:%d!", WSAGetLastError());
+#if (defined DEBUG) && (defined WIN32)
+		printf("connect failed with error:%d!\n", WSAGetLastError());
+#ele
+        printf("connect failed with error:%d!\n", errno);
 #endif
 	}
 	return iResult;
@@ -85,7 +93,17 @@ int Socket::read(char* buffer, int len)
 	}
 	return iRecv;
 #else
-	//todo
+    int nread = ::read(nFd,buffer,len);
+    if (nread == -1) {
+        if (errno == EAGAIN) {
+            return 0;
+        }
+        return SOCKET_ERROR;
+    }else if(nread == 0){
+        return SOCKET_ERROR;
+    }
+    return nread;
+    
 #endif
 }
 
@@ -101,7 +119,13 @@ int Socket::write(const char* buffer, int len)
 	}
 	return iSend;
 #else
-	//todo
+    int nwrite = ::write(nFd, buffer, len);
+    if (nwrite == -1) {
+        return SOCKET_ERROR;
+    }else if(nwrite == 0){
+        return SOCKET_ERROR;
+    }
+    return nwrite;
 #endif
 }
 
@@ -114,7 +138,10 @@ int Socket::close()
 	{
 		WSACleanup();
 	}
+#else
+    ::close(nFd);
 #endif
+    return SOCKET_OK;
 }
 
 int Socket::setNonBlock()
@@ -128,10 +155,20 @@ int Socket::setNonBlock()
 	}
 #else
 	int flags;
-	if (flags = fcntl(nFd, F_GETFL) == -1)
+	if ((flags = fcntl(nFd, F_GETFL) == -1))
 		return -1;
 	if (fcntl(nFd, F_SETFL, flags | O_NONBLOCK))
 		return -1;
 #endif
 	return 0;
+}
+
+int Socket::setNonDelay()
+{
+    return SOCKET_OK;
+}
+
+int Socket::setReuseAddr()
+{
+    return SOCKET_OK;
 }
