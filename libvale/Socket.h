@@ -46,6 +46,7 @@ public:
 	int setNonBlock();
     int setReuseAddr();
     int setNonDelay();
+	int setKeepAlive();
 	bool isValid() { return nFd == INVALID_SOCKET; }
 private:
 	int nFd;

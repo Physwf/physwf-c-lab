@@ -168,6 +168,12 @@ int Socket::setNonDelay()
     return SOCKET_OK;
 }
 
+
+int Socket::setKeepAlive()
+{
+	return SOCKET_OK;
+}
+
 int Socket::setReuseAddr()
 {
     return SOCKET_OK;

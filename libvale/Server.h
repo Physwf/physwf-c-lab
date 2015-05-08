@@ -8,10 +8,11 @@
 class Server : public Object
 {
 public:
-	Server(EventLoop* loop,int fd);
+	Server(EventLoop* loop,int fd=INVALID_SOCKET);
 	~Server();
 public:
 	int createTcpServer(int port);
+	void setConnectionHandler(const IOEventHandler &cb) { cbConnection = cb; }
 	void start();
 	void stop();
 	Socket& getSocket();

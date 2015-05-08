@@ -19,6 +19,7 @@ public:
 	char* data() { return pBuffer + nPosition; };
 	void clear() { nPosition = nSize = 0; }
 	size_t position(size_t pos) { return nPosition; }
+	size_t seek(size_t pos);
 	size_t bytesAvaliable() { return nSize - nPosition; }
 	size_t size() { return nSize; }
 

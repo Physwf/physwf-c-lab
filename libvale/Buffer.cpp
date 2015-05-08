@@ -34,6 +34,20 @@ size_t Buffer::append(const char* buf, size_t size)
 	return nSize;
 }
 
+
+size_t Buffer::seek(size_t pos)
+{
+	if (pos > nSize)
+	{
+		nPosition = nSize;
+	}
+	else
+	{
+		nPosition = pos;
+	}
+	return bytesAvaliable();
+}
+
 void Buffer::resize(size_t newsize)
 {
 	int newCapacity = 64;

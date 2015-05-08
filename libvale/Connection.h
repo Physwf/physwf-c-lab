@@ -16,6 +16,10 @@ public:
 	int send(Buffer& buf);
 	void close();
 	Socket& getSocket() { return sSocket; }
+	void setReadHandler(const EventHandler &cb) { cbReadHandler = cb; }
+	void setCloseHandler(const EventHandler &cb) { cbCloseHandler = cb; }
+	void setConnectHandler(const EventHandler &cb) { cbConnectHandler = cb; }
+	void setWriteCompleteHandler(const EventHandler &cb) { cbWriteCompleteHandler = cb; }
 private:
 	void onConnect(int fd, int event, void* data);
 	void onRead(int fd, int event, void* data);
@@ -27,5 +31,9 @@ private:
 	Buffer bufWrite;
 	Buffer bufRead;
 	bool bWriting;
+	EventHandler cbReadHandler;
+	EventHandler cbCloseHandler;
+	EventHandler cbConnectHandler;
+	EventHandler cbWriteCompleteHandler;
 };
 #endif
