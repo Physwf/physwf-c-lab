@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _EVENT_POLL_H
 #define _EVENT_POLL_H
 

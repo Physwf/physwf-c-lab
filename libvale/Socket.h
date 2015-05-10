@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _SOCKET_H
 #define _SOCKET_H
 
@@ -38,7 +39,7 @@ public:
 public:
 	int getFd() { return nFd; }
 	int listen(struct sockaddr* addr,int len);
-	int accpet(struct sockaddr* addr, int len);
+	int accpet(struct sockaddr* addr, int *len);
 	int connect(const char* addr, short port);
 	int read(char* buffer,int size_t);
 	int write(const char* buffer, int size_t);

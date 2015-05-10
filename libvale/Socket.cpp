@@ -57,9 +57,21 @@ int Socket::listen(sockaddr* addr,int len)
 	return iResult;
 }
 
-int Socket::accpet(struct sockaddr* addr, int len)
+int Socket::accpet(struct sockaddr* addr, int *len)
 {
-    return 0;
+    int conn;
+    while (true) {
+        conn = ::accept(nFd, addr, (socklen_t*)len);
+        if (conn == -1) {
+            if (errno == EINTR) {
+                continue;
+            }else{
+                return SOCKET_ERROR;
+            }
+            break;
+        }
+    }
+    return conn;
 }
 
 

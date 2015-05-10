@@ -56,7 +56,7 @@ void Server::onConnection(int fd, int event, void* data)
 {
 	sockaddr_in sa;
 	int len = sizeof sa;
-	int conn = sSocket.accpet((sockaddr*)&sa, len);
+	int conn = sSocket.accpet((sockaddr*)&sa, &len);
 	if (conn == SOCKET_ERROR)
 	{
 #ifdef DEBUG

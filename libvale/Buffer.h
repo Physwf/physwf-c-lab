@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _BUFFER_H
 #define _BUFFER_H
 
@@ -16,9 +17,9 @@ public:
 	//size_t append(const char* data) { return append(data, sizeof()) }
 	size_t append(Buffer &buf) { return append(buf.data(), buf.size()); }
 	size_t append(Buffer *buf) { return append(buf->data(), buf->size()); }
-	char* data() { return pBuffer + nPosition; };
+	char* data() { return pBuffer + nPosition; }
 	void clear() { nPosition = nSize = 0; }
-	size_t position(size_t pos) { return nPosition; }
+	size_t position() { return nPosition; }
 	size_t seek(size_t pos);
 	size_t bytesAvaliable() { return nSize - nPosition; }
 	size_t size() { return nSize; }

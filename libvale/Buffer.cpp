@@ -50,7 +50,7 @@ size_t Buffer::seek(size_t pos)
 
 void Buffer::resize(size_t newsize)
 {
-	int newCapacity = 64;
+	size_t newCapacity = 64;
 	while (newCapacity < newsize)
 		newCapacity *= 2;
 	if (newCapacity > nCapacity)

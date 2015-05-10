@@ -28,7 +28,7 @@ void EventSelect::del(int fd, int mask)
 int EventSelect::poll()
 {
 	memcpy(&_rfds, &rfds, sizeof(rfds));
-	memcpy(&_wfds, &wfds, sizeof(rfds));
+	memcpy(&_wfds, &wfds, sizeof(wfds));
 
 	int numEvents = 0;
 	int retval = select(pLoop->nMaxfd, &_rfds, &_wfds, NULL, 0);

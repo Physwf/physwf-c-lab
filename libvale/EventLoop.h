@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _EVENT_LOOP_H
 #define _EVENT_LOOP_H
 
