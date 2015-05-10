@@ -29,9 +29,11 @@ int EventSelect::poll()
 {
 	memcpy(&_rfds, &rfds, sizeof(rfds));
 	memcpy(&_wfds, &wfds, sizeof(wfds));
-
+    timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 500;
 	int numEvents = 0;
-	int retval = select(pLoop->nMaxfd, &_rfds, &_wfds, NULL, 0);
+	int retval = select(pLoop->nMaxfd +1 , &_rfds, &_wfds, NULL, &tv);
 	if (retval > 0)
 	{
 		for (int j = 0; j <= pLoop->nMaxfd; j++)
