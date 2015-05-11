@@ -1,6 +1,8 @@
 #include "Socket.h"
 
-
+#ifdef WIN32
+int Socket::nCounter = 0;
+#endif
 Socket::Socket(int fd) : nFd(fd)
 { 
 #ifdef WIN32
@@ -63,12 +65,17 @@ int Socket::accpet(struct sockaddr* addr, int *len)
     while (true) {
         conn = ::accept(nFd, addr, (socklen_t*)len);
         if (conn == -1) {
+#ifdef WIN32
+			return SOCKET_ERROR;
+#else
             if (errno == EINTR) {
-                continue;
-            }else{
-                return SOCKET_ERROR;
-            }
-            break;
+				continue;
+			}
+			else{
+				return SOCKET_ERROR;
+			}
+			break;
+#endif
         }
     }
     return conn;
@@ -79,7 +86,13 @@ int Socket::connect(const char* addr, short port)
 {
 	sockaddr_in sa;
 	sa.sin_family = AF_INET;
+#ifdef WIN32
+	//sa.sin_addr.s_addr = inet_pton(AF_INET, addr, new IN_ADDR);
 	sa.sin_addr.s_addr = inet_addr(addr);
+#else
+	sa.sin_addr.s_addr = inet_addr(addr);
+#endif // WIN32
+
 	sa.sin_port = port;
 	int iResult = ::connect(nFd, (sockaddr*)&sa, sizeof sa);
 	if (iResult == SOCKET_ERROR)

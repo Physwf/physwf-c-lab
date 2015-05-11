@@ -2,12 +2,16 @@
 #ifndef _SOCKET_H
 #define _SOCKET_H
 
+
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 
 #ifdef WIN32
+#include <Ws2tcpip.h>
 #include <WinSock2.h>
+typedef int socklen_t;
+
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -19,13 +23,15 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
+
+#define SOCKET_ERROR -1
 #endif
 
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET -1
 #endif
 
-#define SOCKET_ERROR -1
+
 #define SOCKET_OK 0
 
 class Socket
@@ -51,7 +57,9 @@ public:
 	bool isValid() { return nFd == INVALID_SOCKET; }
 private:
 	int nFd;
+#ifdef WIN32
 	static int nCounter;
+#endif
 };
 
 #endif

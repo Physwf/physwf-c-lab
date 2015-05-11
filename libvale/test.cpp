@@ -17,7 +17,7 @@ public:
         pLoop->run();
         printf("2\n");
     }
-private:
+public:
     void onConnect(int fd, int event,void* data)
     {
         printf("connected!\n");
