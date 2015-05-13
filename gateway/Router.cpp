@@ -14,3 +14,8 @@ void Router::onConnection(int fd, int event, void* data)
 {
 
 }
+
+void Router::onClose(Connection* conn)
+{
+
+}

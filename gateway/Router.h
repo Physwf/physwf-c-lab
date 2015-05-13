@@ -15,6 +15,8 @@ private:
 	void onConnection(int fd, int event, void* data);
 	void onMessage(Connection* conn);
 	void onClose(Connection* conn);
+private:
+	Connection* pAllClients;
 
 private:
 	EventLoop *pLoop;
