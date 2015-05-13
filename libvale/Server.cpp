@@ -61,6 +61,7 @@ void Server::onConnection(int fd, int event, void* data)
 	{
 #ifdef DEBUG
 		printf("accept failed with error\n");
+        return;
 #endif
 	}
 	EV_INVOKE(cbConnection, conn,fd,data);

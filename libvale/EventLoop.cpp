@@ -65,7 +65,7 @@ int EventLoop::procIOEvent()
 	{
 		int mask = pFireds[j].mask;
 		int fd = pFireds[j].fd;
-		IOEvent* ev = pEvents + j;
+		IOEvent* ev = pEvents + fd;
 		if (ev->mask & mask & EV_IO_READ)
 			EV_INVOKE(ev->cbRead, fd, mask, ev->data);
 		if (ev->mask & mask & EV_IO_WRITE)

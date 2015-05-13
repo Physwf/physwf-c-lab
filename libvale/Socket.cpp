@@ -74,9 +74,9 @@ int Socket::accpet(struct sockaddr* addr, int *len)
 			else{
 				return SOCKET_ERROR;
 			}
-			break;
 #endif
         }
+        break;
     }
     return conn;
 }
