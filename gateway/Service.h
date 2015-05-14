@@ -1,5 +1,5 @@
 #ifndef _SERVICE_H
-#define _SERVER_H
+#define _SERVICE_H
 
 #include "Connection.h"
 
@@ -9,9 +9,13 @@ public:
 	Service();
 	~Service();
 public:
-	void launch();
+	void connect();
 	void call();
-	void close();
+	void disconnect();
+private:
+    void onConnected();
+    void onCallResponse();
+    void onBroadcast();
 private:
 	Connection* pConnection;
 };
