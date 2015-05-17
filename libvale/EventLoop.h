@@ -12,7 +12,7 @@
 #define EV_IO_ALL (EV_IO_READ | EV_IO_WRITE)
 
 #define EV_CB_INIT(_cb) _cb.object = NULL; _cb.method = NULL
-#define EV_CB(_obj,_func) EventHandler{_obj,&_func}
+#define EV_CB(_obj,_func) EventHandler{_obj,(EventCallBack)&_func}
 #define EV_IO_CB(_obj,_func) IOEventHandler {_obj,(IOEventCallBack)&_func}
 #define EV_INVOKE(_cb,...) do{\
 		if(_cb.object && _cb.method) {\

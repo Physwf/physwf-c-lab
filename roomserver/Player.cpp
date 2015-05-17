@@ -5,10 +5,6 @@ Player::Player()
 
 }
 
-Player::Player(Connection* con) : pConnection(con)
-{
-
-}
 
 Player::~Player()
 {

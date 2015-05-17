@@ -17,6 +17,7 @@ public:
 	int send(Buffer& buf);
 	void close();
 	Socket& getSocket() { return sSocket; }
+	Buffer* const getBuffer() { return &bufRead; }
 	void setReadHandler(const EventHandler &cb) { cbReadHandler = cb; }
 	void setCloseHandler(const EventHandler &cb) { cbCloseHandler = cb; }
 	void setConnectHandler(const EventHandler &cb) { cbConnectHandler = cb; }

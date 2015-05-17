@@ -24,6 +24,8 @@ public:
 	size_t bytesAvaliable() { return nSize - nPosition; }
 	size_t size() { return nSize; }
 
+	int readBytes(Buffer* buffer,size_t start,size_t len);
+	int tight();
 private:
 	void resize(size_t newsize);
 

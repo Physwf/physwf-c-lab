@@ -34,6 +34,26 @@ size_t Buffer::append(const char* buf, size_t size)
 	return nSize;
 }
 
+int Buffer::readBytes(Buffer* buff, size_t start, size_t len)
+{
+	nPosition = start;
+	if (bytesAvaliable() > len)
+	{
+		buff->append(pBuffer, len);
+		nPosition += len;
+		return len;
+	}
+	//EOF
+	return -1;
+}
+
+int Buffer::tight()
+{
+	memcpy(pBuffer, pBuffer + nPosition, bytesAvaliable());
+	nSize = bytesAvaliable();
+	nPosition = 0;
+	return nSize;
+}
 
 size_t Buffer::seek(size_t pos)
 {

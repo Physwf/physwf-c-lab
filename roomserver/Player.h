@@ -7,9 +7,8 @@ class Player
 {
 public:
 	Player();
-	Player(Connection* con);
 	~Player();
 private:
-	Connection *pConnection;
+	unsigned long nId;
 };
 #endif
