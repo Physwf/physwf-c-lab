@@ -21,14 +21,23 @@ void RPCConnection::connect(const char* host, short port)
 	pConnection->connect(host, port);
 }
 
-void RPCConnection::call()
+void RPCConnection::call(MID mid, char* data, size_t len)
 {
-
+	MSG_HEAD head = { mid, len };
+	wBuffer.append((char*)&head,HEAD_LENGTH);
+	wBuffer.append(data, len);
+	pConnection->send(wBuffer);
 }
 
 void RPCConnection::run()
 {
 	pLoop->run();
+}
+
+
+void RPCConnection::registerMsgHandler(MID mid, EventHandler handler)
+{
+	mCallbacks[mid] = handler;
 }
 
 void RPCConnection::onConnected()
@@ -46,10 +55,10 @@ void RPCConnection::onSocketData()
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			//gBuffer->seek(2);
-			buff->readBytes(&bBuffer, 2, head.length);
+			buff->readBytes(&rBuffer, 2, head.length);
 			buff->tight();
-			//call msg handler
-			bBuffer.clear();
+			EV_INVOKE(mCallbacks[head.id],rBuffer.data());
+			rBuffer.clear();
 		}
 	}
 }

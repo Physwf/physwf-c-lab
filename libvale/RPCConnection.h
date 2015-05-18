@@ -12,8 +12,9 @@ public:
 	~RPCConnection();
 public:
 	void connect(const char* host, short port);
-	void call();
+	void call(MID mid, char* data, size_t len);
 	void run();
+	void registerMsgHandler(MID mid,EventHandler handler);
 private:
 	void onConnected();
 	void onClose();
@@ -21,7 +22,8 @@ private:
 private:
 	EventLoop* pLoop;
 	Connection* pConnection;
-	Buffer bBuffer;
+	Buffer rBuffer;
+	Buffer wBuffer;
 	std::map<MID, EventHandler> mCallbacks;
 };
 

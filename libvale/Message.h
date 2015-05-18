@@ -3,7 +3,7 @@
 
 #define HEAD_LENGTH 2
 
-typedef unsigned int MID;
+#define MID unsigned int
 
 typedef struct meg_head
 {
