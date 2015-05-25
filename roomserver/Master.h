@@ -1,7 +1,7 @@
 #ifndef _MASTER_H
 #define _MASTER_H
 
-#include "RPCConnection.h"
+#include "SyncMsgConnection.h"
 
 class Master : public Object
 {
@@ -10,11 +10,18 @@ public:
 	~Master();
 public:
 	void start();
+	void connectGateWay();
+	void connectGame();
 	void run();
-private:
 
+	static SyncMsgConnection* gateway();
+	static SyncMsgConnection* game();
 private:
-	RPCConnection* pGateWay;
+	static SyncMsgConnection* pGateWay;
+	static SyncMsgConnection* pGame;
+private:
+	EventLoop* pLoop;
+	
 };
 
 #endif

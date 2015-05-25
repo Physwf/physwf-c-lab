@@ -3,12 +3,12 @@
 
 #define HEAD_LENGTH 2
 
-#define MID unsigned int
+typedef unsigned int mid_t;
 
 typedef struct meg_head
 {
 	unsigned short length;
-	MID id;
+	mid_t id;
 }MSG_HEAD;
 
 int read_head(char* buff, MSG_HEAD* head);
