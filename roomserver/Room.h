@@ -23,12 +23,16 @@ public:
 	Room();
 	~Room();
 public:
-	void add(Player* player);
-	void remove(Player* player);
 	int capacity();
 	int avaliable();
-
 	rid_t rid() { return nRid; }
+public:
+	err_t enterPlayer(Player* player);
+	err_t leavePlayer(Player* player);
+private:
+	inline void add(Player* player);
+	inline void remove(Player* player);
+	inline Player* find(pid_t pid);
 private:
 	rid_t nRid;
 	std::map<pid_t, Player*> mPlayers;
@@ -36,4 +40,7 @@ private:
 	std::map<tid_t, table_t*> mTables;
 
 };
+
+typedef std::map<rid_t, Room*> map_room;
+
 #endif

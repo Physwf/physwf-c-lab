@@ -1,4 +1,5 @@
 #include "Room.h"
+#include "Protocol.h"
 
 Room::Room()
 {
@@ -12,6 +13,31 @@ Room::Room()
 }
 
 Room::~Room()
+{
+
+}
+
+err_t Room::enterPlayer(Player* player)
+{
+	Player* old = find(player->pid());
+	if (!old)
+	{
+		add(player);
+		return 0;
+	}
+	else if (old == player)
+	{
+		return MSG_ERR_ALREADY_IN;
+	}
+	else//log in different places. to do
+	{
+		remove(old);
+		add(player);
+		return 0;
+	}
+}
+
+err_t Room::leavePlayer(Player* player)
 {
 
 }

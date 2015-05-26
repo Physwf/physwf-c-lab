@@ -43,7 +43,7 @@ void SyncMsgConnection<mid, MSG_HEAD>::onSocketData()
 			//gBuffer->seek(2);
 			buff->readBytes(&bufRead, 2, head.length);
 			buff->tight();
-			EV_INVOKE(mCallbacks[head.id], bufRead.data());
+			EV_INVOKE(mCallbacks[head.id], &head, bufRead.data());
 			bufRead.clear();
 		}
 	}

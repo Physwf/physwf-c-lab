@@ -9,6 +9,7 @@ class Player
 {
 public:
 	Player();
+	Player(pid_t id) :nId(id) { }
 	~Player();
 public:
 	void enterRoom(rid_t which);
@@ -26,4 +27,9 @@ private:
 	rid_t nRid;
 	rid_t nTid;
 };
+
+#include <map>
+
+typedef std::map<pid_t, Player*> map_player;
+
 #endif
