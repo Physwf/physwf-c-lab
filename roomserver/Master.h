@@ -14,11 +14,11 @@ public:
 	void connectGame();
 	void run();
 
-	static SyncMsgConnection* gateway();
-	static SyncMsgConnection* game();
+	static SyncMsgConnection<mid_t, MSG_HEAD_ROOM>* gateway();
+	static SyncMsgConnection<mid_t, MSG_HEAD_ROOM>* game();
 private:
-	static SyncMsgConnection* pGateWay;
-	static SyncMsgConnection* pGame;
+	static SyncMsgConnection<mid_t, MSG_HEAD_ROOM>* pGateWay;
+	static SyncMsgConnection<mid_t, MSG_HEAD_ROOM>* pGame;
 private:
 	EventLoop* pLoop;
 	

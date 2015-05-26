@@ -9,12 +9,14 @@
 #include "type.h"
 
 #define TABLE_MAX_PLAYERS 5
+#define ROOM_MAX_TABLES 10
 
-typedef struct s_room
+typedef struct s_table
 {
-	rid_t rid;
+	rid_t tid;
 	pid_t players[TABLE_MAX_PLAYERS];
-} room_t;
+} table_t;
+
 class Room
 {
 public:
@@ -30,6 +32,8 @@ public:
 private:
 	rid_t nRid;
 	std::map<pid_t, Player*> mPlayers;
+	table_t* pTables;
+	std::map<tid_t, table_t*> mTables;
 
 };
 #endif

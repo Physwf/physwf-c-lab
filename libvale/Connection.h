@@ -27,7 +27,7 @@ private:
 	void onRead(int fd, int event, void* data);
 	void onWrite(int fd, int event, void* data);
 	void onClose();
-private:
+protected:
 	EventLoop* pLoop;
 	Socket sSocket;
 	Buffer bufWrite;

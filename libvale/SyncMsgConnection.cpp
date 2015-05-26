@@ -1,62 +1,56 @@
 #include "SyncMsgConnection.h"
-#include "Message.h"
 
-SyncMsgConnection::SyncMsgConnection(EventLoop* loop)
+template <typename mid, typename MSG_HEAD>
+SyncMsgConnection<mid, MSG_HEAD>::SyncMsgConnection(EventLoop* loop) :Connection(loop)
 {
-	pLoop = loop;
-	pConnection = new Connection(pLoop);
+	Connection::setReadHandler(EV_CB(this, SyncMsgConnection<mid, MSG_HEAD>::onSocketData));
 }
 
-SyncMsgConnection::~SyncMsgConnection()
+template <typename mid, typename MSG_HEAD>
+SyncMsgConnection<mid, MSG_HEAD>::~SyncMsgConnection()
 {
-	delete pConnection;
 }
 
-void SyncMsgConnection::connect(const char* host, short port)
+template <typename mid, typename MSG_HEAD>
+void SyncMsgConnection<mid, MSG_HEAD>::send(char* head, size_t head_len, char* body, size_t body_len)
 {
-	pConnection->setConnectHandler(EV_CB(this, SyncMsgConnection::onConnected));
-	pConnection->setReadHandler(EV_CB(this, SyncMsgConnection::onSocketData));
-	pConnection->setCloseHandler(EV_CB(this, SyncMsgConnection::onClose));
-	pConnection->connect(host, port);
+	Connection::send(head, head_len);
+	Connection::send(body, body_len);
 }
 
-void SyncMsgConnection::send(mid_t mid, char* data, size_t len)
-{
-	MSG_HEAD head = { mid, len };
-	wBuffer.append((char*)&head,HEAD_LENGTH);
-	wBuffer.append(data, len);
-	pConnection->send(wBuffer);
-}
-
-void SyncMsgConnection::registerMsgHandler(mid_t mid, EventHandler handler)
+template <typename mid, typename MSG_HEAD>
+void SyncMsgConnection<mid, MSG_HEAD>::registerMsgHandler(mid_t mid, EventHandler handler)
 {
 	mCallbacks[mid] = handler;
 }
 
-void SyncMsgConnection::onConnected()
+template <typename mid, typename MSG_HEAD>
+void SyncMsgConnection<mid, MSG_HEAD>::onConnected()
 {
 
 }
 
-void SyncMsgConnection::onSocketData()
+template <typename mid, typename MSG_HEAD>
+void SyncMsgConnection<mid, MSG_HEAD>::onSocketData()
 {
-	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() > HEAD_LENGTH)
+	Buffer* buff = getBuffer();
+	if (buff->bytesAvaliable() > sizeof(MSG_HEAD))
 	{
 		MSG_HEAD head;
 		read_head(buff->data(), &head);
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			//gBuffer->seek(2);
-			buff->readBytes(&rBuffer, 2, head.length);
+			buff->readBytes(&bufRead, 2, head.length);
 			buff->tight();
-			EV_INVOKE(mCallbacks[head.id],rBuffer.data());
-			rBuffer.clear();
+			EV_INVOKE(mCallbacks[head.id], bufRead.data());
+			bufRead.clear();
 		}
 	}
 }
 
-void SyncMsgConnection::onClose()
+template <typename mid, typename MSG_HEAD>
+void SyncMsgConnection<mid, MSG_HEAD>::onClose()
 {
 
 }

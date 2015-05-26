@@ -2,9 +2,6 @@
 #define _PLAYER_H
 
 #include "Connection.h"
-#include "Room.h"
-
-class Room;
 
 #include "type.h"
 
@@ -13,6 +10,11 @@ class Player
 public:
 	Player();
 	~Player();
+public:
+	void enterRoom(rid_t which);
+	void leaveRoom();
+	void joinGame(tid_t which);
+	void leaveGame();
 public:
 	rid_t setRoomId(rid_t rid) { nRid = rid; }
 	rid_t getRoomId() { return nRid; }

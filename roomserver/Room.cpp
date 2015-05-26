@@ -2,7 +2,13 @@
 
 Room::Room()
 {
-
+	pTables = (table_t*)malloc(sizeof(table_t)*ROOM_MAX_TABLES);
+	memset(pTables, 0, sizeof(table_t)*ROOM_MAX_TABLES);
+	for (int i = 0; i < ROOM_MAX_TABLES;i++)
+	{
+		pTables[i].tid = i;
+		mTables.insert(std::map<tid_t, table_t*>::value_type(pTables[i].tid, &pTables[i]));
+	}
 }
 
 Room::~Room()

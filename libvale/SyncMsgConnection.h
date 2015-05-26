@@ -2,27 +2,22 @@
 #define _SYNC_MSG_CONNECTION_H
 
 #include "Connection.h"
-#include "Message.h"
 #include <map>
 
-class SyncMsgConnection : public Object
+template <typename mid, typename MSG_HEAD>
+class SyncMsgConnection : public Connection
 {
 public:
 	SyncMsgConnection(EventLoop* loop);
 	~SyncMsgConnection();
 public:
-	void connect(const char* host, short port);
-	void send(mid_t mid, char* data, size_t len);
-	void registerMsgHandler(mid_t mid, EventHandler handler);
+	void send(char* head, size_t head_len, char* body, size_t body_len);
+	void registerMsgHandler(mid mid, EventHandler handler);
 private:
 	void onConnected();
 	void onClose();
 	void onSocketData();
 private:
-	EventLoop* pLoop;
-	Connection* pConnection;
-	Buffer rBuffer;
-	Buffer wBuffer;
 	std::map<mid_t, EventHandler> mCallbacks;
 };
 
