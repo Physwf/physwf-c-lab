@@ -1,7 +1,7 @@
 #include "SyncMsgConnection.h"
 
 template <typename mid, typename MSG_HEAD>
-SyncMsgConnection<mid, MSG_HEAD>::SyncMsgConnection(EventLoop* loop) :Connection(loop)
+SyncMsgConnection<mid, MSG_HEAD>::SyncMsgConnection(EventLoop* loop, int fd) :Connection(loop,fd)
 {
 	Connection::setReadHandler(EV_CB(this, SyncMsgConnection<mid, MSG_HEAD>::onSocketData));
 }

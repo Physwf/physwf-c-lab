@@ -7,4 +7,7 @@ typedef unsigned short tid_t;
 
 typedef unsigned int mid_t;
 typedef unsigned int err_t;
+
+typedef unsigned short cid_t;//chanel id
+
 #endif

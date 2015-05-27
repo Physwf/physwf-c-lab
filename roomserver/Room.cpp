@@ -19,27 +19,40 @@ Room::~Room()
 
 err_t Room::enterPlayer(Player* player)
 {
-	Player* old = find(player->pid());
+	Player* old = findAndRemove(player->pid());
+	err_t err = 0;
 	if (!old)
 	{
 		add(player);
-		return 0;
 	}
 	else if (old == player)
 	{
-		return MSG_ERR_ALREADY_IN;
+		err = MSG_ERR_ALREADY_IN;
 	}
 	else//log in different places. to do
 	{
-		remove(old);
 		add(player);
-		return 0;
+		old;//to do something;
 	}
+	return err;
 }
 
 err_t Room::leavePlayer(Player* player)
 {
-
+	Player* old = findAndRemove(player->pid());
+	err_t err = 0;
+	if (!old)
+	{
+		err = MSG_ERR_NOT_IN_ROOM;
+	}
+	else if (old != player)
+	{
+		//??
+	}
+	else
+	{
+	}
+	return err;
 }
 
 void Room::add(Player* player)
@@ -55,6 +68,24 @@ void Room::remove(Player* player)
 	{
 		mPlayers.erase(target);
 	}
+}
+
+
+Player* Room::find(pid_t pid)
+{
+
+}
+
+
+Player* Room::findAndRemove(pid_t pid)
+{
+	std::map<pid_t, Player*>::iterator target = mPlayers.find(pid);
+	if (target != mPlayers.end())
+	{
+		mPlayers.erase(target);
+		return target->second;
+	}
+	return NULL;
 }
 
 int Room::capacity()

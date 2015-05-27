@@ -45,6 +45,7 @@ void Connection::close()
 	if (sSocket.isValid()) return;
 	pLoop->removeEventListener(sSocket.getFd(), EV_IO_ALL);
 	sSocket.close();
+	EV_INVOKE(cbCloseHandler, this);
 	//to do??
 }
 

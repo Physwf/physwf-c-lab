@@ -33,6 +33,7 @@ private:
 	inline void add(Player* player);
 	inline void remove(Player* player);
 	inline Player* find(pid_t pid);
+	inline Player* findAndRemove(pid_t pid);
 private:
 	rid_t nRid;
 	std::map<pid_t, Player*> mPlayers;

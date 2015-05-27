@@ -2,7 +2,7 @@
 #define _ROUTER_H
 
 #include "Server.h"
-#include "Connection.h"
+#include "Gate.h"
 
 class Router : public Object
 {
@@ -10,16 +10,11 @@ public:
 	Router();
 	~Router();
 public:
-	void start();
+	void addToAuth(FrontConnection* front);
+	void addToService(FrontConnection* front);
 private:
-	void onConnection(int fd, int event, void* data);
-	void onMessage(Connection* conn);
-	void onClose(Connection* conn);
 private:
-	Connection* pAllClients;
 
 private:
-	EventLoop *pLoop;
-	Server* pServer;
 };
 #endif
