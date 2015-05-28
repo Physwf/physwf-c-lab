@@ -14,10 +14,12 @@ public:
 	void removeClient(ClientConnection* client);
 	void removeService(ServiceConnection* service);
 	
-	void setClientAuthResultHandler(ClientConnection* client,bool success);
-	void setServiceAuthResultHandler(ServiceConnection* client, bool success);
+	void setClientAuthResultHandler(EventHandler &cb) { cbClientAuthHandler = cb; }
+	void setServiceAuthResultHandler(EventHandler &cb) { cbServiceAuthHandler = cb; }
 private:
 	ClientBuffer cBuffer;
 	ServiceBuffer sBuffer;
+	EventHandler cbClientAuthHandler;
+	EventHandler cbServiceAuthHandler;
 };
 #endif

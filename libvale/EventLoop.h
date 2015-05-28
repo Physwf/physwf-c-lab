@@ -14,7 +14,7 @@
 #define EV_CB_INIT(_cb) _cb.object = NULL; _cb.method = NULL
 #define EV_CB(_obj,_func) EventHandler{_obj,(EventCallBack)&_func}
 #define EV_IO_CB(_obj,_func) IOEventHandler {_obj,(IOEventCallBack)&_func}
-#define EV_INVOKE(_cb,...) do{\
+#define EV_INVOKE(_cb,...) do{ \
 		if(_cb.object && _cb.method) {\
 			(_cb.object->*_cb.method)(__VA_ARGS__);\
 			}\
@@ -22,7 +22,7 @@
 
 
 
-typedef void(Object::*EventCallBack)(void*);
+typedef void(Object::*EventCallBack)(...);
 typedef void(Object::*IOEventCallBack)(int, int, void*);
 
 typedef struct {

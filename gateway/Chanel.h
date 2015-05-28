@@ -13,10 +13,10 @@ public:
 	~Chanel();
 public:
 	void broadcast();
-	void addClient(FrontConnection* front);
+	void addClient(ClientConnection* front);
 private:
 	cid_t nCid;
-	std::map <cid_t, FrontConnection*> mFronts;
+	std::map <cid_t, ClientConnection*> mFronts;
 };
 
 #endif

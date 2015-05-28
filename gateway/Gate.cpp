@@ -24,7 +24,9 @@ void Gate::start()
 	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onBackConnect));
 
 	pAuth = new Auth();
+	pAuth->setClientAuthResultHandler(EV_CB(this, Gate::onClientAuthResult));
 	pRouter = new Router();
+	pAuth->setServiceAuthResultHandler(EV_CB(this, Gate::onServiceAuthResult));
 
 	pFront->start();
 	if (nMode & MODE_NEGATIVE)
@@ -40,6 +42,7 @@ void Gate::onFrontConnect(int fd, int event, void* data)
 {
 	ClientConnection* fCon = new ClientConnection(pLoop, fd);
 	pAuth->addClientForAuth(fCon);
+	
 }
 
 void Gate::onFrontClose(ClientConnection* con)
