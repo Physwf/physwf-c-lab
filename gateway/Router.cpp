@@ -11,12 +11,13 @@ Router::~Router()
 
 }
 
-void Router::addToAuth(FrontConnection* front)
+void Router::addClientForRoute(ClientConnection* client)
 {
 
 }
 
-void Router::addToService(FrontConnection* front)
+void Router::addServiceForRoute(ServiceConnection* service)
 {
 
 }
+

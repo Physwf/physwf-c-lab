@@ -1,8 +1,7 @@
 #ifndef _ROUTER_H
 #define _ROUTER_H
 
-#include "Server.h"
-#include "Gate.h"
+#include "Message.h"
 
 class Router : public Object
 {
@@ -10,8 +9,8 @@ public:
 	Router();
 	~Router();
 public:
-	void addToAuth(FrontConnection* front);
-	void addToService(FrontConnection* front);
+	void addClientForRoute(ClientConnection* client);
+	void addServiceForRoute(ServiceConnection* service);
 private:
 private:
 

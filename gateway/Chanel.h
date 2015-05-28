@@ -6,8 +6,6 @@
 
 #include <map>
 
-typedef SyncMsgConnection<mid_t, MSG_HEAD_GATE> FrontConnection;
-
 class Chanel
 {
 public:

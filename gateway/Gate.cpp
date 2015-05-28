@@ -23,38 +23,51 @@ void Gate::start()
 	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onFrontConnect));
 	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onBackConnect));
 
+	pAuth = new Auth();
+	pRouter = new Router();
+
 	pFront->start();
 	if (nMode & MODE_NEGATIVE)
 		pBack->start();
 	else
 	{
-		pRoom = new BackConnection(pLoop);
-		pAuth = new BackConnection(pLoop);
+		pRoomService = new ServiceConnection(pLoop);
+		pAuthService = new ServiceConnection(pLoop);
 	}
 }
 
 void Gate::onFrontConnect(int fd, int event, void* data)
 {
-	FrontConnection* fCon = new FrontConnection(pLoop, fd);
-	fBuffer.insert(fCon);
+	ClientConnection* fCon = new ClientConnection(pLoop, fd);
+	pAuth->addClientForAuth(fCon);
 }
 
-void Gate::onFrontClose(FrontConnection* con)
+void Gate::onFrontClose(ClientConnection* con)
 {
-	fBuffer.erase(con);
+	pAuth->removeClient(con);
 	delete con;
 	con = NULL;
 }
 
 void Gate::onBackConnect(int fd, int event, void* data)
 {
-	BackConnection* bCon = new BackConnection(pLoop, fd);
-	bBuffer.insert(bCon);
+	ServiceConnection* bCon = new ServiceConnection(pLoop, fd);
+	pAuth->addServiceForAuth(bCon);
 }
 
-void Gate::onBackClose(BackConnection* con)
+void Gate::onBackClose(ServiceConnection* con)
 {
-	bBuffer.erase(con);
+	pAuth->removeService(con);
 	delete con;
 	con = NULL;
+}
+
+void Gate::onClientAuthResult(ClientConnection* client, bool success)
+{
+	pRouter->addClientForRoute(client);
+}
+
+void Gate::onServiceAuthResult(ServiceConnection* service, bool success)
+{
+	pRouter->addServiceForRoute(service);
 }

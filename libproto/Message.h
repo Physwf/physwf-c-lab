@@ -19,4 +19,11 @@ typedef struct s_msg_head_gate
 
 int read_head(char* buff, MSG_HEAD_BACK* head);
 
+#include "SyncMsgConnection.h"
+#include <set>
+typedef SyncMsgConnection<mid_t, MSG_HEAD_GATE> ClientConnection;
+typedef SyncMsgConnection<mid_t, MSG_HEAD_BACK> ServiceConnection;
+typedef std::set<ClientConnection*> ClientBuffer;
+typedef std::set<ServiceConnection*> ServiceBuffer;
+
 #endif
