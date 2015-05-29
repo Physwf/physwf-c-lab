@@ -37,6 +37,8 @@ struct MSG_REQ_LEAVE_ROOM_1001
 	rid_t room_id;
 };
 
+#include "Message.h"
+
 #define MSG_CONNECTED 
 #define MSG_NOTI_DEAL_RESULT_2001
 #define MSG_TURN_CALL_2002
@@ -62,10 +64,11 @@ struct MSG_REQ_LEAVE_ROOM_1001
 #define MSG_JOIN_SUCCESS_1000 
 
 
-struct MSG_NOTI_DEAL_RESULT
+struct MSG_NOTI_DEAL_RESULT : Message
 {
 	unsigned char count;
-	char cards[];
+	char* cards;
+	inline virtual void readBody(char* input);
 };
 //call
 struct MSG_TURN_CALL
