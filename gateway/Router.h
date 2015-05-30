@@ -2,7 +2,19 @@
 #define _ROUTER_H
 
 #include "Message.h"
+#include "Session.h"
 
+struct Client
+{
+	ClientConnection* connection;
+	Session* session;
+};
+
+struct Service
+{
+	ServiceConnection* connection;
+	char type;
+};
 class Router : public Object
 {
 public:
@@ -12,6 +24,7 @@ public:
 	void addClientForRoute(ClientConnection* client);
 	void addServiceForRoute(ServiceConnection* service);
 private:
+	void doRoute(char* head, char* body);
 private:
 
 private:

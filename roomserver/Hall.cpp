@@ -34,7 +34,7 @@ void Hall::onDestroyPlayer(void* head, void* body)
 
 void Hall::onReqEnterRoom(void* head, void* body)
 {
-	MSG_HEAD_ROOM* hd = (MSG_HEAD_ROOM*)head;
+	MSG_HEAD_BACK* hd = (MSG_HEAD_BACK*)head;
 	MSG_REQ_ENTER_ROOM_1000* msg = (MSG_REQ_ENTER_ROOM_1000*)body;
 	Player* player = findPlayer(msg->player_id);
 	tryEnterRoom(msg->room_id,player);
@@ -80,7 +80,7 @@ void Hall::tryLeaveRoom(rid_t rid, Player* player)
 
 void Hall::onReqLeaveRoom(void* head, void* body)
 {
-	MSG_HEAD_ROOM* hd = (MSG_HEAD_ROOM*)head;
+	MSG_HEAD_BACK* hd = (MSG_HEAD_BACK*)head;
 	MSG_REQ_LEAVE_ROOM_1001* msg = (MSG_REQ_LEAVE_ROOM_1001*)body;
 }
 

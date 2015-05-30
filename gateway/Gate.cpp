@@ -14,6 +14,19 @@ Gate::~Gate()
 void Gate::start()
 {
 	pLoop = new EventLoop();
+
+	ServiceConnection* authService = new ServiceConnection(pLoop);
+	authService->setConnectHandler(EV_CB(this, Gate::onAuthConnected));
+
+	pLoop->run();
+}
+
+void Gate::onAuthConnected(ServiceConnection* con)
+{
+	pAuth = new Auth(con);
+	pAuth->setClientAuthResultHandler(EV_CB(this, Gate::onClientAuthResult));
+	pAuth->setServiceAuthResultHandler(EV_CB(this, Gate::onServiceAuthResult));
+
 	pFront = new Server(pLoop);
 	pBack = new Server(pLoop);
 
@@ -21,28 +34,18 @@ void Gate::start()
 	pBack->createTcpServer(1234);
 
 	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onFrontConnect));
-	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onBackConnect));
-
-	pAuth = new Auth();
-	pAuth->setClientAuthResultHandler(EV_CB(this, Gate::onClientAuthResult));
-	pRouter = new Router();
-	pAuth->setServiceAuthResultHandler(EV_CB(this, Gate::onServiceAuthResult));
+	pBack->setConnectionHandler(EV_IO_CB(this, Gate::onBackConnect));
 
 	pFront->start();
-	if (nMode & MODE_NEGATIVE)
-		pBack->start();
-	else
-	{
-		pRoomService = new ServiceConnection(pLoop);
-		pAuthService = new ServiceConnection(pLoop);
-	}
+	pBack->start();
+
+	pRouter = new Router();
 }
 
 void Gate::onFrontConnect(int fd, int event, void* data)
 {
 	ClientConnection* fCon = new ClientConnection(pLoop, fd);
 	pAuth->addClientForAuth(fCon);
-	
 }
 
 void Gate::onFrontClose(ClientConnection* con)

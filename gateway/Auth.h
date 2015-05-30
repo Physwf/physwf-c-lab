@@ -3,10 +3,10 @@
 
 #include "Message.h"
 
-class Auth
+class Auth : public Object
 {
 public:
-	Auth();
+	Auth(ServiceConnection* service):pAuthService(service) {}
 	~Auth();
 public:
 	void addClientForAuth(ClientConnection* client);
@@ -17,9 +17,14 @@ public:
 	void setClientAuthResultHandler(EventHandler &cb) { cbClientAuthHandler = cb; }
 	void setServiceAuthResultHandler(EventHandler &cb) { cbServiceAuthHandler = cb; }
 private:
+	void doClientAuth(char* head,char*body);
+private:
+	ServiceConnection* pAuthService;
+
 	ClientBuffer cBuffer;
 	ServiceBuffer sBuffer;
 	EventHandler cbClientAuthHandler;
 	EventHandler cbServiceAuthHandler;
+	
 };
 #endif

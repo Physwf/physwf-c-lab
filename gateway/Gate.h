@@ -24,6 +24,8 @@ private:
 	void onFrontClose(ClientConnection* con);
 	void onBackConnect(int fd, int event, void* data);
 	void onBackClose(ServiceConnection* con);
+	void onAuthConnected(ServiceConnection* con);
+
 	void onClientAuthResult(ClientConnection* client, bool success);
 	void onServiceAuthResult(ServiceConnection* service, bool success);
 
@@ -32,12 +34,12 @@ private:
 	Server* pFront;
 	Server* pBack;
 	ServiceConnection* pRoomService;
-	ServiceConnection* pAuthService;
 
 	Auth* pAuth;
 	Router* pRouter;
 
 	int nMode;
+	
 };
 
 #endif
