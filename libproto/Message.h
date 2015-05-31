@@ -9,13 +9,13 @@ typedef struct s_msg_head_back
 	mid_t id;
 } MSG_HEAD_BACK;
 
-typedef struct s_msg_head_gate
+struct MSG_HEAD_GATE
 {
 	unsigned short length;
 	mid_t id;
 	pid_t pid;
 	err_t err;
-} MSG_HEAD_GATE;
+};
 
 
 int read_head(char* buff, MSG_HEAD_BACK* head);

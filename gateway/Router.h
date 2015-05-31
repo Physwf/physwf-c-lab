@@ -15,18 +15,20 @@ struct Service
 	ServiceConnection* connection;
 	char type;
 };
+
 class Router : public Object
 {
 public:
-	Router();
+	Router(ServiceConnection* service);
 	~Router();
 public:
 	void addClientForRoute(ClientConnection* client);
 	void addServiceForRoute(ServiceConnection* service);
 private:
-	void doRoute(char* head, char* body);
+	void doRoute(mid_t mid, char* head, size_t hsize, char* body, size_t bsize);
 private:
-
+	ServiceConnection* pMaster;
+	Buffer* pBuffer;
 private:
 };
 #endif

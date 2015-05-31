@@ -135,6 +135,7 @@ void MSG_REQ_LOGIN::readBody(char* input, size_t size)
 	Message::readBody(input, size);
 	accout_length = readUnsignedByte(input);
 	accout = readBytes(input, accout_length*C_SIZE);
+	readBytes()
 }
 
 void MSG_REQ_LOGIN::writeBody(char* output, size_t* size)

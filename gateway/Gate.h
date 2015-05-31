@@ -20,8 +20,12 @@ public:
 	void start();
 	void setMode(int mode) { nMode &= mode; }
 private:
+	void connectMaster();
+	void connectAuth();
+private:
 	void onFrontConnect(int fd, int event,void* data);
 	void onFrontClose(ClientConnection* con);
+	void onMasterConnect(ServiceConnection* con);
 	void onBackConnect(int fd, int event, void* data);
 	void onBackClose(ServiceConnection* con);
 	void onAuthConnected(ServiceConnection* con);
@@ -33,7 +37,8 @@ private:
 	EventLoop* pLoop;
 	Server* pFront;
 	Server* pBack;
-	ServiceConnection* pRoomService;
+
+	ServiceConnection* pMaster;
 
 	Auth* pAuth;
 	Router* pRouter;

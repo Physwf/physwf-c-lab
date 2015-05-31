@@ -19,12 +19,6 @@ void SyncMsgConnection<mid, MSG_HEAD>::send(char* head, size_t head_len, char* b
 }
 
 template <typename mid, typename MSG_HEAD>
-void SyncMsgConnection<mid, MSG_HEAD>::registerMsgHandler(mid_t mid, EventHandler handler)
-{
-	mCallbacks[mid] = handler;
-}
-
-template <typename mid, typename MSG_HEAD>
 void SyncMsgConnection<mid, MSG_HEAD>::onConnected()
 {
 
@@ -38,12 +32,13 @@ void SyncMsgConnection<mid, MSG_HEAD>::onSocketData()
 	{
 		MSG_HEAD head;
 		read_head(buff->data(), &head);
+		if (head.length < 0 || head.length > 512) close();
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			//gBuffer->seek(2);
 			buff->readBytes(&bufRead, 2, head.length);
 			buff->tight();
-			EV_INVOKE(mCallbacks[head.id], &head, bufRead.data());
+			EV_INVOKE(onMessage, head.id, &head, sizeof(MSG_HEAD),bufRead.data(),head.length);
 			bufRead.clear();
 		}
 	}

@@ -1,9 +1,10 @@
 #include "Router.h"
 #include "Protocol.h"
 
-Router::Router()
-{
 
+Router::Router(ServiceConnection* service) :pMaster(service)
+{
+	pBuffer = new Buffer(1024 * 1024);
 }
 
 Router::~Router()
@@ -13,10 +14,7 @@ Router::~Router()
 
 void Router::addClientForRoute(ClientConnection* client)
 {
-	client->registerMsgHandler(MSG_REQ_ENTER_ROOM_1000, EV_CB(this, Router::doRoute));
-	client->registerMsgHandler(MSG_REQ_LEAVE_ROOM_1001, EV_CB(this, Router::doRoute));
-	client->registerMsgHandler(MSG_REQ_JOIN_GAME_1002, EV_CB(this, Router::doRoute));
-	client->registerMsgHandler(MSG_REQ_LEAVE_GAME_1003, EV_CB(this, Router::doRoute));
+	client->setMessageHandler(EV_CB(this, Router::doRoute));
 }
 
 void Router::addServiceForRoute(ServiceConnection* service)
@@ -24,8 +22,13 @@ void Router::addServiceForRoute(ServiceConnection* service)
 
 }
 
-void Router::doRoute(char* head, char* body)
+void Router::doRoute(mid_t mid, char* head, size_t hsize, char* body, size_t bsize)
 {
-
+	//pBuffer->append(head, hsize);
+	//pBuffer->append(body, bsize);
+	//
+	pMaster->send(head, hsize, body, bsize);
+	//pMaster->send(pBuffer->data(), pBuffer->bytesAvaliable());
+	//pMaster->send();
 }
 

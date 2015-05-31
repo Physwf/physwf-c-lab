@@ -12,13 +12,13 @@ public:
 	~SyncMsgConnection();
 public:
 	void send(char* head, size_t head_len, char* body, size_t body_len);
-	void registerMsgHandler(mid mid, EventHandler handler);
+	void setMessageHandler(EventHandler &handler) { onMessage = handler; }
 private:
 	void onConnected();
 	void onClose();
 	void onSocketData();
 private:
-	std::map<mid_t, EventHandler> mCallbacks;
+	EventHandler onMessage;
 };
 
 #endif
