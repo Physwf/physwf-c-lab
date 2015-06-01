@@ -16,7 +16,7 @@ public:
 private:
 	void onConnected();
 	void onClose();
-	void onSocketData();
+	void onSocketData(Connection* conn);
 private:
 	EventHandler onMessage;
 };

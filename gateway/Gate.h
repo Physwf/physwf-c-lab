@@ -23,9 +23,10 @@ private:
 	void connectMaster();
 	void connectAuth();
 private:
-	void onFrontConnect(int fd, int event,void* data);
-	void onFrontClose(ClientConnection* con);
+	void onClientConnect(int fd, int event,void* data);
+	void onClientClose(ClientConnection* con);
 	void onMasterConnect(ServiceConnection* con);
+
 	void onBackConnect(int fd, int event, void* data);
 	void onBackClose(ServiceConnection* con);
 	void onAuthConnected(ServiceConnection* con);

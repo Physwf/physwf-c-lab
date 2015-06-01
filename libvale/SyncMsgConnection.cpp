@@ -25,7 +25,7 @@ void SyncMsgConnection<mid, MSG_HEAD>::onConnected()
 }
 
 template <typename mid, typename MSG_HEAD>
-void SyncMsgConnection<mid, MSG_HEAD>::onSocketData()
+void SyncMsgConnection<mid, MSG_HEAD>::onSocketData(Connection* conn)
 {
 	Buffer* buff = getBuffer();
 	if (buff->bytesAvaliable() > sizeof(MSG_HEAD))

@@ -52,22 +52,23 @@ void Gate::onAuthConnected(ServiceConnection* con)
 	pFront->createTcpServer(2345);
 	//pBack->createTcpServer(1234);
 
-	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onFrontConnect));
+	pFront->setConnectionHandler(EV_IO_CB(this, Gate::onClientConnect));
 	//pBack->setConnectionHandler(EV_IO_CB(this, Gate::onBackConnect));
 
 	pFront->start();
 	//pBack->start();
 
-	pRouter = new Router();
+	pRouter = new Router(con);
+	pRouter->addServiceForRoute(pMaster);
 }
 
-void Gate::onFrontConnect(int fd, int event, void* data)
+void Gate::onClientConnect(int fd, int event, void* data)
 {
 	ClientConnection* fCon = new ClientConnection(pLoop, fd);
 	pAuth->addClientForAuth(fCon);
 }
 
-void Gate::onFrontClose(ClientConnection* con)
+void Gate::onClientClose(ClientConnection* con)
 {
 	pAuth->removeClient(con);
 	delete con;

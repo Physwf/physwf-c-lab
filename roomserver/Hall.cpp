@@ -15,29 +15,35 @@ Hall::~Hall()
 
 void Hall::initialize()
 {
-	Master::gateway()->registerMsgHandler(MSG_REQ_ENTER_ROOM, EV_CB(this, Hall::onReqEnterRoom));
-	Master::gateway()->registerMsgHandler(MSG_REQ_LEAVE_ROOM, EV_CB(this, Hall::onReqLeaveRoom));
+	
+}
+
+
+void Hall::addGateWay(ServiceConnection* conn)
+{
+	conn->setMessageHandler(EV_CB(this, Hall::onReqEnterRoom));
+	conn->setMessageHandler(EV_CB(this, Hall::onReqLeaveRoom));
 }
 
 void Hall::onNewPlayer(void* head, void* body)
 {
-	MSG_NEW_PLAYER_100* msg = (MSG_NEW_PLAYER_100*)body;
-	Player* player = new Player(msg->player_id);
+	MSG_NEW_PLAYER* msg = (MSG_NEW_PLAYER*)body;
+	Player* player = new Player(msg->pid);
 	addPlayer(player->pid(), player);
 }
 
 void Hall::onDestroyPlayer(void* head, void* body)
 {
-	MSG_DESTROY_PLAYER_101* msg = (MSG_DESTROY_PLAYER_101*)body;
-	Player* player = removePlayer(msg->player_id);
+	MSG_DESTROY_PLAYER* msg = (MSG_DESTROY_PLAYER*)body;
+	Player* player = removePlayer(msg->pid);
 }
 
 void Hall::onReqEnterRoom(void* head, void* body)
 {
 	MSG_HEAD_BACK* hd = (MSG_HEAD_BACK*)head;
-	MSG_REQ_ENTER_ROOM_1000* msg = (MSG_REQ_ENTER_ROOM_1000*)body;
-	Player* player = findPlayer(msg->player_id);
-	tryEnterRoom(msg->room_id,player);
+	MSG_REQ_ENTER_ROOM* msg = (MSG_REQ_ENTER_ROOM*)body;
+	Player* player = findPlayer(msg->pid);
+	tryEnterRoom(msg->rid,player);
 }
 
 void Hall::tryEnterRoom(rid_t rid, Player* player)
@@ -45,11 +51,11 @@ void Hall::tryEnterRoom(rid_t rid, Player* player)
 	Room* room = findRoom(rid);
 	if (!room)
 	{
-		enterRoomFailed(player->pid(), MSG_ERR_ROOM_NOT_EXIST);
+		enterRoomFailed(player->pid(), MSG_ERR_ROOM_NOT_EXIST_1000);
 	}
 	else if (!room->avaliable())
 	{
-		enterRoomFailed(player->pid(), MSG_ERR_ROOM_FULL);
+		enterRoomFailed(player->pid(), MSG_ERR_ROOM_FULL_1001);
 	}
 	else
 	{
@@ -66,7 +72,7 @@ void Hall::tryLeaveRoom(rid_t rid, Player* player)
 	Room* room = findRoom(rid);
 	if (!room)
 	{
-		leaveRoomFailed(player->pid(), MSG_ERR_ROOM_NOT_EXIST);
+		leaveRoomFailed(player->pid(), MSG_ERR_ROOM_NOT_EXIST_1000);
 	}
 	else
 	{
@@ -81,7 +87,7 @@ void Hall::tryLeaveRoom(rid_t rid, Player* player)
 void Hall::onReqLeaveRoom(void* head, void* body)
 {
 	MSG_HEAD_BACK* hd = (MSG_HEAD_BACK*)head;
-	MSG_REQ_LEAVE_ROOM_1001* msg = (MSG_REQ_LEAVE_ROOM_1001*)body;
+	MSG_REQ_LEAVE_ROOM* msg = (MSG_REQ_LEAVE_ROOM*)body;
 }
 
 Room* Hall::findRoom(rid_t rid)

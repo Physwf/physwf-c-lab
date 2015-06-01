@@ -14,6 +14,7 @@ public:
 	~Hall();
 public:
 	void initialize();
+	void addGateWay(ServiceConnection* conn);
 private:
 	void onNewPlayer(void* head, void* body);
 	void onDestroyPlayer(void* head, void* body);
