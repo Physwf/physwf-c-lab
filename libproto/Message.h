@@ -7,13 +7,17 @@ typedef struct s_msg_head_back
 {
 	unsigned short length;
 	mid_t id;
+	rid_t rid;
+	tid_t tid;
+	pid_t pid;
+	cid_t cid;
+	err_t err;
 } MSG_HEAD_BACK;
 
 struct MSG_HEAD_GATE
 {
 	unsigned short length;
 	mid_t id;
-	pid_t pid;
 	err_t err;
 };
 

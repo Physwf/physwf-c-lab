@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "Player.h"
+#include "Zone.h"
 
 #include "type.h"
 
@@ -17,10 +18,10 @@ typedef struct s_table
 	pid_t players[TABLE_MAX_PLAYERS];
 } table_t;
 
-class Room
+class Room : public Zone
 {
 public:
-	Room();
+	Room(ServiceConnection* game);
 	~Room();
 public:
 	int capacity();
@@ -29,6 +30,8 @@ public:
 public:
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
+	err_t startNewGame();
+	err_t destroyGame();
 private:
 	inline void add(Player* player);
 	inline void remove(Player* player);
@@ -36,10 +39,10 @@ private:
 	inline Player* findAndRemove(pid_t pid);
 private:
 	rid_t nRid;
+	cid_t nCid;
 	std::map<pid_t, Player*> mPlayers;
 	table_t* pTables;
 	std::map<tid_t, table_t*> mTables;
-
 };
 
 typedef std::map<rid_t, Room*> map_room;

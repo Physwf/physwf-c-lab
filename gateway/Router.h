@@ -3,18 +3,13 @@
 
 #include "Message.h"
 #include "Session.h"
+#include "Auth.h"
+#include "Chanel.h"
 
-struct Client
-{
-	ClientConnection* connection;
-	Session* session;
-};
+#include <map>
 
-struct Service
-{
-	ServiceConnection* connection;
-	char type;
-};
+typedef std::map<ClientConnection*, Client*> map_client;
+typedef std::map<cid_t, Chanel*> map_chanel;
 
 class Router : public Object
 {
@@ -22,13 +17,25 @@ public:
 	Router(ServiceConnection* service);
 	~Router();
 public:
-	void addClientForRoute(ClientConnection* client);
+	void addClientForRoute(Client* client);
 	void addServiceForRoute(ServiceConnection* service);
 private:
-	void doRoute(mid_t mid, char* head, size_t hsize, char* body, size_t bsize);
+	inline Client* addClient(Client* client);
+	inline Client* findClient(ClientConnection* conn);
+	inline Client* findClient(pid_t pid);
+	inline Client* removeClient(ClientConnection* conn);
+	inline Chanel* createChanel(cid_t cid);
+	inline Chanel* addToChanel(cid_t cid);
+	inline Chanel* findChanel(cid_t cid);
+private:
+	void doClientRoute(ClientConnection* conn, char* head, char* body);
+	void onMasterMessage(ServiceConnection* conn, char* head, char* body);
+	void doServiceRoute(ServiceConnection* conn, char* head, char* body);
 private:
 	ServiceConnection* pMaster;
 	Buffer* pBuffer;
 private:
+	map_client mClients;
+	map_chanel mChanels;
 };
 #endif

@@ -1,7 +1,7 @@
-#include "Room.h"
 #include "Protocol.h"
+#include "Room.h"
 
-Room::Room()
+Room::Room(ServiceConnection* game) :nCid(0), Zone(game)
 {
 	pTables = (table_t*)malloc(sizeof(table_t)*ROOM_MAX_TABLES);
 	memset(pTables, 0, sizeof(table_t)*ROOM_MAX_TABLES);
@@ -27,13 +27,15 @@ err_t Room::enterPlayer(Player* player)
 	}
 	else if (old == player)
 	{
-		err = MSG_ERR_ALREADY_IN;
+		err = MSG_ERR_ALREADY_IN_1002;
 	}
 	else//log in different places. to do
 	{
 		add(player);
 		old;//to do something;
 	}
+	if (!err)
+		tryCreate();
 	return err;
 }
 
@@ -43,7 +45,7 @@ err_t Room::leavePlayer(Player* player)
 	err_t err = 0;
 	if (!old)
 	{
-		err = MSG_ERR_NOT_IN_ROOM;
+		err = MSG_ERR_NOT_IN_ROOM_1003;
 	}
 	else if (old != player)
 	{

@@ -5,13 +5,15 @@
 
 #define MSG_REQ_LOGIN_0001				0001
 
-#define MSG_NEW_PLAYER_1000				1000
-#define MSG_DESTROY_PLAYER_1001			1001
+#define MSG_REQ_CREATE_PLAYER_1000		1000
+#define MSG_REQ_DESTROY_PLAYER_1001		1001
 
 #define MSG_REQ_ENTER_ROOM_1002			1002
 #define MSG_REQ_LEAVE_ROOM_1003			1003
 #define MSG_REQ_JOIN_GAME_1004			1004
 #define MSG_REQ_LEAVE_GAME_1005			1005
+
+#define MSG_CREATE_CHANEL_100			0100
 
 #define MSG_ERR_ROOM_NOT_EXIST_1000		1000
 #define MSG_ERR_ROOM_FULL_1001			1001
@@ -30,7 +32,7 @@ struct MSG_REQ_LOGIN : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_NEW_PLAYER : Message
+struct MSG_REQ_CREATE_PLAYER : Message
 {
 	pid_t pid;
 
@@ -38,7 +40,7 @@ struct MSG_NEW_PLAYER : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_DESTROY_PLAYER : Message
+struct MSG_REQ_DESTROY_PLAYER : Message
 {
 	pid_t pid;
 	inline virtual void readBody(char* input, size_t size);
@@ -78,6 +80,14 @@ struct MSG_REQ_LEAVE_GAME : Message
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
+
+struct MSG_CREATE_CHANEL : Message
+{
+	cid_t cid;
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
 /*
 #include "Message.h"
 

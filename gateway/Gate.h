@@ -31,7 +31,7 @@ private:
 	void onBackClose(ServiceConnection* con);
 	void onAuthConnected(ServiceConnection* con);
 
-	void onClientAuthResult(ClientConnection* client, bool success);
+	void onClientAuthResult(Client* client, bool success);
 	void onServiceAuthResult(ServiceConnection* service, bool success);
 
 private:

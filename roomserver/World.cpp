@@ -1,44 +1,44 @@
-#include "Hall.h"
+#include "World.h"
 #include "Master.h"
 #include "Protocol.h"
 #include "Message.h"
 
-Hall::Hall()
+World::World(ServiceConnection* game) :Zone(game), nCid(0)
 {
 
 }
 
-Hall::~Hall()
+World::~World()
 {
 
 }
 
-void Hall::initialize()
+void World::initialize()
 {
-	
+	tryCreate();
 }
 
 
-void Hall::addGateWay(ServiceConnection* conn)
+void World::addGateWay(ServiceConnection* conn)
 {
-	conn->setMessageHandler(EV_CB(this, Hall::onReqEnterRoom));
-	conn->setMessageHandler(EV_CB(this, Hall::onReqLeaveRoom));
+	conn->setMessageHandler(EV_CB(this, World::onReqEnterRoom));
+	conn->setMessageHandler(EV_CB(this, World::onReqLeaveRoom));
 }
 
-void Hall::onNewPlayer(void* head, void* body)
+void World::onNewPlayer(ServiceConnection* conn,void* head, void* body)
 {
 	MSG_NEW_PLAYER* msg = (MSG_NEW_PLAYER*)body;
 	Player* player = new Player(msg->pid);
 	addPlayer(player->pid(), player);
 }
 
-void Hall::onDestroyPlayer(void* head, void* body)
+void World::onDestroyPlayer(ServiceConnection* conn, void* head, void* body)
 {
 	MSG_DESTROY_PLAYER* msg = (MSG_DESTROY_PLAYER*)body;
 	Player* player = removePlayer(msg->pid);
 }
 
-void Hall::onReqEnterRoom(void* head, void* body)
+void World::onReqEnterRoom(ServiceConnection* conn, void* head, void* body)
 {
 	MSG_HEAD_BACK* hd = (MSG_HEAD_BACK*)head;
 	MSG_REQ_ENTER_ROOM* msg = (MSG_REQ_ENTER_ROOM*)body;
@@ -46,7 +46,7 @@ void Hall::onReqEnterRoom(void* head, void* body)
 	tryEnterRoom(msg->rid,player);
 }
 
-void Hall::tryEnterRoom(rid_t rid, Player* player)
+void World::tryEnterRoom(rid_t rid, Player* player)
 {
 	Room* room = findRoom(rid);
 	if (!room)
@@ -67,7 +67,7 @@ void Hall::tryEnterRoom(rid_t rid, Player* player)
 	}
 }
 
-void Hall::tryLeaveRoom(rid_t rid, Player* player)
+void World::tryLeaveRoom(rid_t rid, Player* player)
 {
 	Room* room = findRoom(rid);
 	if (!room)
@@ -84,13 +84,13 @@ void Hall::tryLeaveRoom(rid_t rid, Player* player)
 	}
 }
 
-void Hall::onReqLeaveRoom(void* head, void* body)
+void World::onReqLeaveRoom(ServiceConnection* conn, void* head, void* body)
 {
 	MSG_HEAD_BACK* hd = (MSG_HEAD_BACK*)head;
 	MSG_REQ_LEAVE_ROOM* msg = (MSG_REQ_LEAVE_ROOM*)body;
 }
 
-Room* Hall::findRoom(rid_t rid)
+Room* World::findRoom(rid_t rid)
 {
 	map_room::iterator it = mRooms.find(rid);
 	if (it != mRooms.end())
@@ -100,12 +100,12 @@ Room* Hall::findRoom(rid_t rid)
 	return NULL;
 }
 
-Player* Hall::addPlayer(pid_t pid, Player* player)
+Player* World::addPlayer(pid_t pid, Player* player)
 {
 	mPlayers.insert(map_player::value_type(pid, player));
 }
 
-Player* Hall::findPlayer(pid_t pid)
+Player* World::findPlayer(pid_t pid)
 {
 	map_player::iterator it = mPlayers.find(pid);
 	if (it != mPlayers.end())
@@ -115,7 +115,7 @@ Player* Hall::findPlayer(pid_t pid)
 	return NULL;
 }
 
-Player* Hall::removePlayer(pid_t pid)
+Player* World::removePlayer(pid_t pid)
 {
 	map_player::iterator it = mPlayers.find(pid);
 	if (it != mPlayers.end())

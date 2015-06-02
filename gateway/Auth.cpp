@@ -8,8 +8,7 @@ Auth::~Auth()
 
 void Auth::addClientForAuth(ClientConnection* client)
 {
-	client->registerMsgHandler(MSG_REQ_LOGIN_0001, EV_CB(this, Auth::doClientAuth));
-	EV_INVOKE(cbClientAuthHandler,client,true);
+	client->setMessageHandler(EV_CB(this, Auth::doClientAuth));
 }
 
 void Auth::addServiceForAuth(ServiceConnection* service)
@@ -27,7 +26,10 @@ void Auth::removeService(ServiceConnection* service)
 
 }
 
-void Auth::doClientAuth(char* head, char*body)
+void Auth::doClientAuth(ClientConnection* conn,char* head, char*body)
 {
-	
+	Client* client = new Client();
+	client->connection = conn;
+	client->session = new Session();
+	EV_INVOKE(cbClientAuthHandler, client, true);
 }

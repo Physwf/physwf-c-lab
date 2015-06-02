@@ -3,7 +3,7 @@
 
 #include "Server.h"
 #include "SyncMsgConnection.h"
-#include "Hall.h"
+#include "World.h"
 
 class Master : public Object
 {
@@ -12,19 +12,16 @@ public:
 	~Master();
 public:
 	void start();
-	void connectGateWay();
-	void connectGame();
 	void run();
-
-	static SyncMsgConnection<mid_t, MSG_HEAD_BACK>* game();
 private:
 	void startServer();
 	void onGatewayConnected(int fd, int event, void* data);
+	void onGameMessage(ServiceConnection* conn, char* head, char* body);
 private:
 	Server* pServer;
 	EventLoop* pLoop;
-	static SyncMsgConnection<mid_t, MSG_HEAD_BACK>* pGame;
-	Hall* pHall;
+	SyncMsgConnection<mid_t, MSG_HEAD_BACK>* pGame;
+	World* pWorld;
 };
 
 #endif

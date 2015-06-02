@@ -2,6 +2,19 @@
 #define _AUTH_H
 
 #include "Message.h"
+#include "Session.h"
+
+struct Client
+{
+	ClientConnection* connection;
+	Session* session;
+};
+
+struct Service
+{
+	ServiceConnection* connection;
+	char type;
+};
 
 class Auth : public Object
 {
@@ -17,7 +30,7 @@ public:
 	void setClientAuthResultHandler(EventHandler &cb) { cbClientAuthHandler = cb; }
 	void setServiceAuthResultHandler(EventHandler &cb) { cbServiceAuthHandler = cb; }
 private:
-	void doClientAuth(char* head,char*body);
+	void doClientAuth(ClientConnection* conn, char* head, char*body);
 private:
 	ServiceConnection* pAuthService;
 

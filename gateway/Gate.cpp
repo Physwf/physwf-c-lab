@@ -26,6 +26,7 @@ void Gate::connectMaster()
 {
 	pMaster = new ServiceConnection(pLoop);
 	pMaster->setConnectHandler(EV_CB(this, Gate::onMasterConnect));
+	pRouter->addServiceForRoute(pMaster);
 }
 
 void Gate::onMasterConnect(ServiceConnection* con)
@@ -90,7 +91,7 @@ void Gate::onBackClose(ServiceConnection* con)
 	con = NULL;
 }
 
-void Gate::onClientAuthResult(ClientConnection* client, bool success)
+void Gate::onClientAuthResult(Client* client, bool success)
 {
 	pRouter->addClientForRoute(client);
 }

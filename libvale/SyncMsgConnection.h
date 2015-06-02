@@ -4,7 +4,7 @@
 #include "Connection.h"
 #include <map>
 
-template <typename mid, typename MSG_HEAD>
+template <typename TMID, typename TMSG_HEAD>
 class SyncMsgConnection : public Connection
 {
 public:

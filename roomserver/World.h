@@ -6,20 +6,21 @@
 #include "type.h"
 #include "Protocol.h"
 #include "Room.h"
+#include "Zone.h"
 
-class Hall : public Object
+class World : public Zone
 {
 public:
-	Hall();
-	~Hall();
+	World(ServiceConnection* game);
+	~World();
 public:
 	void initialize();
 	void addGateWay(ServiceConnection* conn);
 private:
-	void onNewPlayer(void* head, void* body);
-	void onDestroyPlayer(void* head, void* body);
-	void onReqEnterRoom(void* head, void* body);
-	void onReqLeaveRoom(void* head, void* body);
+	void onNewPlayer(ServiceConnection* conn, void* head, void* body);
+	void onDestroyPlayer(ServiceConnection* conn, void* head, void* body);
+	void onReqEnterRoom(ServiceConnection* conn, void* head, void* body);
+	void onReqLeaveRoom(ServiceConnection* conn, void* head, void* body);
 private:
 	void tryEnterRoom(rid_t rid,Player* player);
 	void enterRoomSuccess(pid_t pid,err_t reason);
@@ -33,6 +34,8 @@ private:
 	inline Player* findPlayer(pid_t pid);
 	inline Player* removePlayer(pid_t pid);
 private:
+	cid_t nCid;
+	ServiceConnection* pGame;
 	std::map<rid_t, Room*> mRooms;
 	std::map<pid_t, Player*> mPlayers;
 

@@ -16,7 +16,7 @@ public:
 	void addClient(ClientConnection* front);
 private:
 	cid_t nCid;
-	std::map <cid_t, ClientConnection*> mFronts;
+	std::map<cid_t, ClientConnection*> mFronts;
 };
 
 #endif
