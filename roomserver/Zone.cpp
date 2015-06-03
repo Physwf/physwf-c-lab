@@ -20,9 +20,9 @@ void Zone::tryCreate()
 		nCid = getNextId();
 		MSG_HEAD_BACK head;
 		head.id = MSG_CREATE_CHANEL_100;
-		head.pid = head.rid = head.tid = 0;
+		head.type = MSG_TYPE_CHANEL;
+		head.rid = head.tid = head.pid = 0;
 		head.err = 0;
-		head.cid = nCid;
 		MSG_CREATE_CHANEL body;
 		body.cid = nCid;
 		char data[4] = { 0 };
@@ -36,9 +36,9 @@ void Zone::broadcast(mid_t mid,char* body,size_t size)
 {
 	MSG_HEAD_BACK head;
 	head.id = mid;
-	head.pid = head.rid = head.tid = 0;
+	head.type = MSG_TYPE_BROADCAST;
 	head.err = 0;
-	head.cid = nCid;
+	char body[32];
 	pGame->send((char*)&head, sizeof(MSG_HEAD_BACK), body, size);
 }
 

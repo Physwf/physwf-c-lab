@@ -1,30 +1,30 @@
 #include "Protocol.h"
 
 
-void MSG_NEW_PLAYER::readBody(char* input, size_t size)
+void MSG_REQ_CREATE_PLAYER::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
 	pid = readUnsignedLong(input);
 }
 
-void MSG_NEW_PLAYER::writeBody(char* output, size_t* size)
+void MSG_REQ_CREATE_PLAYER::writeBody(char* output, size_t* size)
 {
 	writeUnsignedLong(pid);
 	Message::writeBody(output, size);
 }
 
-void MSG_DESTROY_PLAYER::readBody(char* input, size_t size)
+void MSG_REQ_DESTROY_PLAYER::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
 	pid = readUnsignedLong(input);
 }
 
-void MSG_DESTROY_PLAYER::writeBody(char* output, size_t* size)
+void MSG_REQ_DESTROY_PLAYER::writeBody(char* output, size_t* size)
 {
 	writeUnsignedLong(pid);
 	Message::writeBody(output, size);
 }
-
+/*
 void MSG_REQ_ENTER_ROOM::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
@@ -64,6 +64,7 @@ void MSG_REQ_LEAVE_GAME::writeBody(char* output, size_t* size)
 	writeUnsignedLong(pid);
 	Message::writeBody(output, size);
 }
+*/
 /*
 void MSG_NOTI_DEAL_RESULT::readBody(char* input, size_t size)
 {
@@ -141,4 +142,18 @@ void MSG_REQ_LOGIN::readBody(char* input, size_t size)
 void MSG_REQ_LOGIN::writeBody(char* output, size_t* size)
 {
 
+}
+
+void MSG_CHANEL_STATUS::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	status_type = readUnsignedByte(input);
+	value = readUnsignedLong(input);
+}
+
+void MSG_CHANEL_STATUS::writeBody(char* output, size_t* size)
+{
+	writeUnsigndByte(status_type);
+	writeUnsignedLong(value);
+	Message::writeBody(output, size);
 }

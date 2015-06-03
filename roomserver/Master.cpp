@@ -25,7 +25,7 @@ void Master::startServer()
 	pServer = new Server(pLoop);
 	pServer->start();
 	pServer->setConnectionHandler(EV_IO_CB(this,Master::onGatewayConnected));
-	pWorld = new World();
+	pWorld = new World(pGame);
 }
 
 

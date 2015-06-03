@@ -14,6 +14,7 @@
 #define MSG_REQ_LEAVE_GAME_1005			1005
 
 #define MSG_CREATE_CHANEL_100			0100
+#define MSG_CHANEL_STATUS_101			0101
 
 #define MSG_ERR_ROOM_NOT_EXIST_1000		1000
 #define MSG_ERR_ROOM_FULL_1001			1001
@@ -52,8 +53,8 @@ struct MSG_REQ_ENTER_ROOM : Message
 	pid_t pid;
 	rid_t rid;
 
-	inline virtual void readBody(char* input, size_t size);
-	inline virtual void writeBody(char* output, size_t* size);
+	inline virtual void readbody(char* input, size_t size);
+	inline virtual void writebody(char* output, size_t* size);
 };
 
 struct MSG_REQ_LEAVE_ROOM : Message
@@ -84,10 +85,22 @@ struct MSG_REQ_LEAVE_GAME : Message
 struct MSG_CREATE_CHANEL : Message
 {
 	cid_t cid;
+
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
+#define CHANEL_STATUS_ADD_PLAYER 1
+#define CHANEL_STATUS_RMV_PLAYER 2
+
+struct MSG_CHANEL_STATUS : Message
+{
+	unsigned char status_type;
+	unsigned long value;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
 /*
 #include "Message.h"
 

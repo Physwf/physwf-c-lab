@@ -25,12 +25,15 @@ private:
 	inline Client* findClient(pid_t pid);
 	inline Client* removeClient(ClientConnection* conn);
 	inline Chanel* createChanel(cid_t cid);
-	inline Chanel* addToChanel(cid_t cid);
+	inline Chanel* addToChanel(cid_t cid, Client* client);
+	inline Chanel* removeFromChanel(cid_t cid, Client* client);
 	inline Chanel* findChanel(cid_t cid);
 private:
 	void doClientRoute(ClientConnection* conn, char* head, char* body);
 	void onMasterMessage(ServiceConnection* conn, char* head, char* body);
-	void doServiceRoute(ServiceConnection* conn, char* head, char* body);
+	void doServiceRoute(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onBroadcastMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 private:
 	ServiceConnection* pMaster;
 	Buffer* pBuffer;

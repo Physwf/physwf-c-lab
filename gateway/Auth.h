@@ -8,6 +8,9 @@ struct Client
 {
 	ClientConnection* connection;
 	Session* session;
+	rid_t rid;
+	tid_t tid;
+	pid_t pid;
 };
 
 struct Service

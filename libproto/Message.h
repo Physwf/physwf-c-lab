@@ -3,10 +3,15 @@
 
 #include "type.h"
 
+union MyUnion
+{
+
+};
 typedef struct s_msg_head_back
 {
 	unsigned short length;
 	mid_t id;
+	unsigned char type;
 	rid_t rid;
 	tid_t tid;
 	pid_t pid;
@@ -21,6 +26,9 @@ struct MSG_HEAD_GATE
 	err_t err;
 };
 
+#define MSG_TYPE_PLAYER			1
+#define MSG_TYPE_CHANEL			2
+#define MSG_TYPE_BROADCAST		3
 
 int read_head(char* buff, MSG_HEAD_BACK* head);
 
@@ -69,11 +77,13 @@ protected:
 	char aBuffer[512];
 	size_t nOffset;
 };
+
 #include "SyncMsgConnection.h"
 #include <set>
 typedef SyncMsgConnection<mid_t, MSG_HEAD_GATE> ClientConnection;
 typedef SyncMsgConnection<mid_t, MSG_HEAD_BACK> ServiceConnection;
 typedef std::set<ClientConnection*> ClientBuffer;
 typedef std::set<ServiceConnection*> ServiceBuffer;
+
 
 #endif

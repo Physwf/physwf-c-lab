@@ -6,17 +6,20 @@
 
 #include <map>
 
+#include "Auth.h"
+
 class Chanel
 {
 public:
 	Chanel(cid_t id);
 	~Chanel();
 public:
-	void broadcast();
-	void addClient(ClientConnection* front);
+	void broadcast(MSG_HEAD_GATE* head,char* body);
+	void addClient(Client* front);
+	void removeClient(Client* front);
 private:
 	cid_t nCid;
-	std::map<cid_t, ClientConnection*> mFronts;
+	std::map<cid_t, Client*> mClients;
 };
 
 #endif

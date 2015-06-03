@@ -21,20 +21,25 @@ void World::initialize()
 
 void World::addGateWay(ServiceConnection* conn)
 {
-	conn->setMessageHandler(EV_CB(this, World::onReqEnterRoom));
-	conn->setMessageHandler(EV_CB(this, World::onReqLeaveRoom));
+	conn->setMessageHandler(EV_CB(this, World::onGatewayMessage));
 }
 
-void World::onNewPlayer(ServiceConnection* conn,void* head, void* body)
+
+void World::onGatewayMessage(ServiceConnection* conn, void* head, void* body)
 {
-	MSG_NEW_PLAYER* msg = (MSG_NEW_PLAYER*)body;
+
+}
+
+void World::onNewPlayer(ServiceConnection* conn, void* head, void* body)
+{
+	MSG_REQ_CREATE_PLAYER* msg = (MSG_REQ_CREATE_PLAYER*)body;
 	Player* player = new Player(msg->pid);
 	addPlayer(player->pid(), player);
 }
 
 void World::onDestroyPlayer(ServiceConnection* conn, void* head, void* body)
 {
-	MSG_DESTROY_PLAYER* msg = (MSG_DESTROY_PLAYER*)body;
+	MSG_REQ_DESTROY_PLAYER* msg = (MSG_REQ_DESTROY_PLAYER*)body;
 	Player* player = removePlayer(msg->pid);
 }
 
