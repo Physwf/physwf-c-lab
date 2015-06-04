@@ -17,18 +17,18 @@ public:
 	void initialize();
 	void addGateWay(ServiceConnection* conn);
 private:
-	void onGatewayMessage(ServiceConnection* conn, void* head, void* body);
-	void onNewPlayer(ServiceConnection* conn, void* head, void* body);
-	void onDestroyPlayer(ServiceConnection* conn, void* head, void* body);
-	void onReqEnterRoom(ServiceConnection* conn, void* head, void* body);
-	void onReqLeaveRoom(ServiceConnection* conn, void* head, void* body);
+	void onGatewayMessage(ServiceConnection* conn, char* head, char* body);
+	void onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onDestroyPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqEnterRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqLeaveRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 private:
-	void tryEnterRoom(rid_t rid,Player* player);
-	void enterRoomSuccess(pid_t pid,err_t reason);
-	void enterRoomFailed(pid_t pid, err_t reason);
-	void tryLeaveRoom(rid_t rid, Player* player);
-	void leaveRoomSuccess(pid_t pid, err_t reason);
-	void leaveRoomFailed(pid_t pid, err_t reason);
+	err_t tryEnterRoom(Room* room, Player* player);
+	void enterRoomSuccess(ServiceConnection* conn, Player* player, err_t reason);
+	void enterRoomFailed(ServiceConnection* conn, Player* player, err_t reason);
+	err_t tryLeaveRoom(Room* room, Player* player);
+	void leaveRoomSuccess(ServiceConnection* conn, Player* player, err_t reason);
+	void leaveRoomFailed(ServiceConnection* conn, Player* player, err_t reason);
 private:
 	inline Room* findRoom(rid_t rid);
 	inline Player* addPlayer(pid_t pid, Player* player);

@@ -35,7 +35,11 @@ err_t Room::enterPlayer(Player* player)
 		old;//to do something;
 	}
 	if (!err)
+	{
 		tryCreate();
+		player->setChanelId(nCid);
+	}
+		
 	return err;
 }
 

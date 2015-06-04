@@ -5,13 +5,13 @@
 
 #define MSG_REQ_LOGIN_0001				0001
 
-#define MSG_REQ_CREATE_PLAYER_1000		1000
-#define MSG_REQ_DESTROY_PLAYER_1001		1001
+#define MSG_CREATE_PLAYER_1000		1000
+#define MSG_DESTROY_PLAYER_1001		1001
 
-#define MSG_REQ_ENTER_ROOM_1002			1002
-#define MSG_REQ_LEAVE_ROOM_1003			1003
-#define MSG_REQ_JOIN_GAME_1004			1004
-#define MSG_REQ_LEAVE_GAME_1005			1005
+#define MSG_ENTER_ROOM_1002			1002
+#define MSG_LEAVE_ROOM_1003			1003
+#define MSG_JOIN_GAME_1004			1004
+#define MSG_LEAVE_GAME_1005			1005
 
 #define MSG_CREATE_CHANEL_100			0100
 #define MSG_CHANEL_STATUS_101			0101
@@ -41,7 +41,22 @@ struct MSG_REQ_CREATE_PLAYER : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
+struct MSG_RES_CREATE_PLAYER : Message
+{
+	pid_t pid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
 struct MSG_REQ_DESTROY_PLAYER : Message
+{
+	pid_t pid;
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct MSG_RES_DESTROY_PLAYER : Message
 {
 	pid_t pid;
 	inline virtual void readBody(char* input, size_t size);
@@ -50,7 +65,14 @@ struct MSG_REQ_DESTROY_PLAYER : Message
 
 struct MSG_REQ_ENTER_ROOM : Message
 {
-	pid_t pid;
+	rid_t rid;
+
+	inline virtual void readbody(char* input, size_t size);
+	inline virtual void writebody(char* output, size_t* size);
+};
+
+struct MSG_RES_ENTER_ROOM : Message
+{
 	rid_t rid;
 
 	inline virtual void readbody(char* input, size_t size);
@@ -59,7 +81,15 @@ struct MSG_REQ_ENTER_ROOM : Message
 
 struct MSG_REQ_LEAVE_ROOM : Message
 {
-	pid_t pid;
+	rid_t rid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct MSG_RES_LEAVE_ROOM : Message
+{
+	rid_t rid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -67,7 +97,14 @@ struct MSG_REQ_LEAVE_ROOM : Message
 
 struct MSG_REQ_JOIN_GAME : Message
 {
-	pid_t pid;
+	gid_t gid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct MSG_RES_JOIN_GAME : Message
+{
 	gid_t gid;
 
 	inline virtual void readBody(char* input, size_t size);
@@ -76,7 +113,15 @@ struct MSG_REQ_JOIN_GAME : Message
 
 struct MSG_REQ_LEAVE_GAME : Message
 {
-	pid_t pid;
+	gid_t gid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct MSG_RES_LEAVE_GAME : Message
+{
+	gid_t gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
