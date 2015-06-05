@@ -1,15 +1,9 @@
 #include "Protocol.h"
 #include "Room.h"
 
-Room::Room(ServiceConnection* game) :nCid(0), Zone(game)
+Room::Room(ServiceConnection* game) : Zone(game)
 {
-	pTables = (table_t*)malloc(sizeof(table_t)*ROOM_MAX_TABLES);
-	memset(pTables, 0, sizeof(table_t)*ROOM_MAX_TABLES);
-	for (int i = 0; i < ROOM_MAX_TABLES;i++)
-	{
-		pTables[i].tid = i;
-		mTables.insert(std::map<tid_t, table_t*>::value_type(pTables[i].tid, &pTables[i]));
-	}
+	
 }
 
 Room::~Room()
@@ -19,11 +13,11 @@ Room::~Room()
 
 err_t Room::enterPlayer(Player* player)
 {
-	Player* old = findAndRemove(player->pid());
+	Player* old = removePlayer(player->pid());
 	err_t err = 0;
 	if (!old)
 	{
-		add(player);
+		addPlayer(player->pid(),player);
 	}
 	else if (old == player)
 	{
@@ -31,7 +25,7 @@ err_t Room::enterPlayer(Player* player)
 	}
 	else//log in different places. to do
 	{
-		add(player);
+		addPlayer(player->pid(), player);
 		old;//to do something;
 	}
 	if (!err)
@@ -45,7 +39,7 @@ err_t Room::enterPlayer(Player* player)
 
 err_t Room::leavePlayer(Player* player)
 {
-	Player* old = findAndRemove(player->pid());
+	Player* old = removePlayer(player->pid());
 	err_t err = 0;
 	if (!old)
 	{
@@ -61,35 +55,35 @@ err_t Room::leavePlayer(Player* player)
 	return err;
 }
 
-void Room::add(Player* player)
-{
-	mPlayers.insert(std::map<pid_t, Player*>::value_type(player->pid(), player));
-	player->setRoomId(nRid);
-}
 
-void Room::remove(Player* player)
+err_t Room::tryEnterGame(gid_t tid, Player* player)
 {
-	std::map<pid_t, Player*>::iterator target = mPlayers.find(player->pid());
-	if (target != mPlayers.end())
+	Game* game = findGame(tid);
+	if (game == NULL)
 	{
-		mPlayers.erase(target);
+		return MSG_ERR_TABLE_FULL_1004;
 	}
+	return game->enterPlayer(player);
 }
 
 
-Player* Room::find(pid_t pid)
+err_t Room::tryLeaveGame(gid_t tid, Player* player)
 {
-
-}
-
-
-Player* Room::findAndRemove(pid_t pid)
-{
-	std::map<pid_t, Player*>::iterator target = mPlayers.find(pid);
-	if (target != mPlayers.end())
+	Game* game = findGame(tid);
+	if (game == NULL)
 	{
-		mPlayers.erase(target);
-		return target->second;
+		return MSG_ERR_TABLE_FULL_1004;
+	}
+	return game->leavePlayer(player);
+}
+
+
+Game* Room::findGame(gid_t gid)
+{
+	map_game::iterator it = mGames.find(gid);
+	if (it != mGames.end())
+	{
+		return it->second;
 	}
 	return NULL;
 }

@@ -22,6 +22,8 @@ private:
 	void onDestroyPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void onReqEnterRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void onReqLeaveRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqLeaveGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 private:
 	err_t tryEnterRoom(Room* room, Player* player);
 	void enterRoomSuccess(ServiceConnection* conn, Player* player, err_t reason);
@@ -29,16 +31,16 @@ private:
 	err_t tryLeaveRoom(Room* room, Player* player);
 	void leaveRoomSuccess(ServiceConnection* conn, Player* player, err_t reason);
 	void leaveRoomFailed(ServiceConnection* conn, Player* player, err_t reason);
+	void enterGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
+	void enterGameFailed(ServiceConnection* conn, Player* player, err_t reason);
+	void leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
+	void leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason);
 private:
 	inline Room* findRoom(rid_t rid);
-	inline Player* addPlayer(pid_t pid, Player* player);
-	inline Player* findPlayer(pid_t pid);
-	inline Player* removePlayer(pid_t pid);
 private:
-	cid_t nCid;
 	ServiceConnection* pGame;
 	std::map<rid_t, Room*> mRooms;
-	std::map<pid_t, Player*> mPlayers;
-
 };
+
+typedef std::map<rid_t, Room*> map_room;
 #endif

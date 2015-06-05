@@ -32,7 +32,69 @@ void Zone::tryCreate()
 	}
 }
 
-void Zone::broadcast(mid_t mid,char* body,size_t size)
+Player* Zone::addPlayer(pid_t pid, Player* player)
+{
+	mPlayers.insert(map_player::value_type(pid, player));
+}
+
+Player* Zone::findPlayer(pid_t pid)
+{
+	map_player::iterator it = mPlayers.find(pid);
+	if (it != mPlayers.end())
+	{
+		return it->second;
+	}
+	return NULL;
+}
+
+Player* Zone::removePlayer(pid_t pid)
+{
+	map_player::iterator it = mPlayers.find(pid);
+	if (it != mPlayers.end())
+	{
+		mPlayers.erase(it);
+		return it->second;
+	}
+	return NULL;
+}
+
+void Zone::enterZone(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_CHANEL_STATUS_101;
+	head.type = MSG_TYPE_CHANEL;
+	head.cid = nCid;
+	head.pid = player->pid();
+	head.rid = head.tid = 0;
+
+	MSG_CHANEL_STATUS msg;
+	msg.status_type = CHANEL_STATUS_ADD_PLAYER;
+	msg.value = player->pid(); 
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+	conn->send(buffer, size);
+}
+
+void Zone::leaveZone(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_CHANEL_STATUS_101;
+	head.type = MSG_TYPE_CHANEL;
+	head.cid = nCid;
+	head.pid = player->pid();
+	head.rid = head.tid = 0;
+
+	MSG_CHANEL_STATUS msg;
+	msg.status_type = CHANEL_STATUS_RMV_PLAYER;
+	msg.value = player->pid();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+	conn->send(buffer, size);
+}
+
+void Zone::broadcast(mid_t mid, char* body, size_t size)
 {
 	MSG_HEAD_BACK head;
 	head.id = mid;

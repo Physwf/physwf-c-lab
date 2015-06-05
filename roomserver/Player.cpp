@@ -21,7 +21,7 @@ void Player::leaveRoom()
 
 }
 
-void Player::joinGame(tid_t which)
+void Player::joinGame(gid_t which)
 {
 	setTableId(which);
 }

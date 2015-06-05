@@ -9,11 +9,11 @@ union MyUnion
 };
 typedef struct s_msg_head_back
 {
-	unsigned short length;
+	size_t length;
 	mid_t id;
-	unsigned char type;
+	unsigned short type;
 	rid_t rid;
-	tid_t tid;
+	gid_t tid;
 	pid_t pid;
 	cid_t cid;
 	err_t err;
@@ -30,7 +30,14 @@ struct MSG_HEAD_GATE
 #define MSG_TYPE_CHANEL			2
 #define MSG_TYPE_BROADCAST		3
 
-int read_head(char* buff, MSG_HEAD_BACK* head);
+inline int read_head_gate(char* buff, MSG_HEAD_GATE* head);
+inline int read_head_back(char* buff, MSG_HEAD_BACK* head);
+
+inline int write_head_gate(char* buff, MSG_HEAD_GATE* head);
+inline int write_head_back(char* buff, MSG_HEAD_BACK* head);
+
+inline int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
+inline int pack_gate_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
 
 #define C_SIZE sizeof(char)
 #define B_SIZE sizeof(bool)

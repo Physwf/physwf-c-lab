@@ -6,17 +6,9 @@
 
 #include "Player.h"
 #include "Zone.h"
+#include "Game.h"
 
 #include "type.h"
-
-#define TABLE_MAX_PLAYERS 5
-#define ROOM_MAX_TABLES 10
-
-typedef struct s_table
-{
-	rid_t tid;
-	pid_t players[TABLE_MAX_PLAYERS];
-} table_t;
 
 class Room : public Zone
 {
@@ -30,21 +22,17 @@ public:
 public:
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
+	err_t tryEnterGame(gid_t tid, Player* player);
+	err_t tryLeaveGame(gid_t tid, Player* player);
 	err_t startNewGame();
 	err_t destroyGame();
 private:
-	inline void add(Player* player);
-	inline void remove(Player* player);
-	inline Player* find(pid_t pid);
-	inline Player* findAndRemove(pid_t pid);
+	Game* findGame(gid_t gid);
 private:
 	rid_t nRid;
-	cid_t nCid;
-	std::map<pid_t, Player*> mPlayers;
-	table_t* pTables;
-	std::map<tid_t, table_t*> mTables;
+	std::map<gid_t, Game*> mGames;
 };
 
-typedef std::map<rid_t, Room*> map_room;
+typedef std::map<gid_t, Game*> map_game;
 
 #endif

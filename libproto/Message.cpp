@@ -142,3 +142,33 @@ void Message::writeBytes(char* bytes, size_t size)
 	memcpy(&aBuffer[nOffset], bytes, size);
 	nOffset += size;
 }
+
+int read_head_gate(char* buff, MSG_HEAD_GATE* head)
+{
+
+}
+
+int read_head_back(char* buff, MSG_HEAD_BACK* head)
+{
+
+}
+
+int write_head_gate(char* buff, MSG_HEAD_GATE* head)
+{
+
+}
+
+int write_head_back(char* buff, MSG_HEAD_BACK* head)
+{
+
+}
+
+int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
+{
+
+}
+
+int pack_gate_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
+{
+
+}

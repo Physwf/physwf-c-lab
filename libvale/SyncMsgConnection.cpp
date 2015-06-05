@@ -18,6 +18,14 @@ void SyncMsgConnection<TMID, TMSG_HEAD>::send(char* head, size_t head_len, char*
 	Connection::send(body, body_len);
 }
 
+
+template <typename TMID, typename TMSG_HEAD>
+void SyncMsgConnection<TMID, TMSG_HEAD>::send(char* data, size_t size)
+{
+	Connection::send(data, size);
+}
+
+
 template <typename TMID, typename TMSG_HEAD>
 void SyncMsgConnection<TMID, TMSG_HEAD>::onConnected()
 {
@@ -31,7 +39,7 @@ void SyncMsgConnection<TMID, TMSG_HEAD>::onSocketData(Connection* conn)
 	if (buff->bytesAvaliable() > sizeof(TMSG_HEAD))
 	{
 		TMSG_HEAD head;
-		read_head(buff->data(), &head);
+		read_head_back(buff->data(), &head);
 		if (head.length < 0 || head.length > 512) close();
 		if (buff->bytesAvaliable() >= head.length)
 		{

@@ -12,6 +12,7 @@ public:
 	~SyncMsgConnection();
 public:
 	void send(char* head, size_t head_len, char* body, size_t body_len);
+	void send(char* data, size_t size);
 	void setMessageHandler(EventHandler &handler) { onMessage = handler; }
 private:
 	void onConnected();
@@ -20,5 +21,6 @@ private:
 private:
 	EventHandler onMessage;
 };
+
 
 #endif
