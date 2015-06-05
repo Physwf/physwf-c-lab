@@ -43,8 +43,10 @@ void World::onGatewayMessage(ServiceConnection* conn, char* head, char* body)
 		onReqLeaveRoom(conn, pHead, body);
 		break;
 	case MSG_JOIN_GAME_1004:
+		onReqJoinGame(conn, pHead, body);
 		break;
 	case MSG_LEAVE_GAME_1005:
+		onReqLeaveGame(conn, pHead, body);
 		break;
 	default:
 		break;
