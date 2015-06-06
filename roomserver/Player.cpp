@@ -30,3 +30,8 @@ void Player::leaveGame()
 {
 
 }
+
+void Player::setGate(ServiceConnection* gate)
+{
+	pGate = gate;
+}

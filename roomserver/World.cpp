@@ -3,7 +3,7 @@
 #include "Protocol.h"
 #include "Message.h"
 
-World::World(ServiceConnection* game) :Zone(game)
+World::World(GameConnection* game) :Zone(game)
 {
 
 }
@@ -42,13 +42,8 @@ void World::onGatewayMessage(ServiceConnection* conn, char* head, char* body)
 	case MSG_LEAVE_ROOM_1003:
 		onReqLeaveRoom(conn, pHead, body);
 		break;
-	case MSG_JOIN_GAME_1004:
-		onReqJoinGame(conn, pHead, body);
-		break;
-	case MSG_LEAVE_GAME_1005:
-		onReqLeaveGame(conn, pHead, body);
-		break;
 	default:
+		doForword(conn, pHead, body);
 		break;
 	}
 }
@@ -57,6 +52,9 @@ void World::onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body
 {
 	MSG_REQ_CREATE_PLAYER* msg = (MSG_REQ_CREATE_PLAYER*)body;
 	Player* player = new Player(msg->pid);
+
+	player->setGate(conn);
+
 	addPlayer(player->pid(), player);
 	player->setChanelId(nCid);
 
@@ -189,96 +187,13 @@ void World::leaveRoomFailed(ServiceConnection* conn, Player* player, err_t reaso
 	conn->send(buffer, size);
 }
 
-
-void World::onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
+void World::doForword(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	Room* room = findRoom(head->rid);
-	Player* player = findPlayer(head->pid);
-	err_t err = room->tryEnterGame(head->tid, player);
-	if (err) enterGameFailed(conn,player,err);
-	else enterGameSuccess(conn, player, err);
-}
-
-
-void World::enterGameSuccess(ServiceConnection* conn, Player* player, err_t reason)
-{
-	MSG_HEAD_BACK head;
-	head.id = MSG_JOIN_GAME_1004;
-	head.type = MSG_TYPE_PLAYER;
-	head.rid = player->getRoomId();
-	head.tid = player->getTableId();
-	head.cid = player->getChanelId();
-
-	MSG_RES_JOIN_GAME msg;
-	msg.gid = player->getTableId();
-
-	char buffer[32] = { 0 };
-	int size = pack_back_msg(buffer, &head, &msg);
-
-	conn->send(buffer, size);
-}
-
-
-void World::enterGameFailed(ServiceConnection* conn, Player* player, err_t reason)
-{
-	MSG_HEAD_BACK head;
-	head.id = MSG_JOIN_GAME_1004;
-	head.type = MSG_TYPE_PLAYER;
-	head.rid = player->getRoomId();
-	head.tid = player->getTableId();
-	head.cid = player->getChanelId();
-	head.length = 0;
-
-	char buffer[sizeof MSG_HEAD_BACK] = { 0 };
-	int size = write_head_back(buffer, &head);
-	conn->send(buffer, size);
-}
-
-
-
-
-void World::onReqLeaveGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
-{
-	Room* room = findRoom(head->rid);
-	Player* player = findPlayer(head->pid);
-	err_t err = room->tryLeaveGame(head->tid, player);
-	if (err) leaveGameFailed(conn, player, err);
-	else leaveGameSuccess(conn, player, err);
-}
-
-
-void World::leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason)
-{
-	MSG_HEAD_BACK head;
-	head.id = MSG_JOIN_GAME_1004;
-	head.type = MSG_TYPE_PLAYER;
-	head.rid = player->getRoomId();
-	head.tid = player->getTableId();
-	head.cid = player->getChanelId();
-
-	MSG_RES_LEAVE_GAME msg;
-	msg.gid = player->getTableId();
-
-	char buffer[32] = { 0 };
-	int size = pack_back_msg(buffer, &head, &msg);
-
-	conn->send(buffer, size);
-}
-
-
-void World::leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason)
-{
-	MSG_HEAD_BACK head;
-	head.id = MSG_LEAVE_GAME_1005;
-	head.type = MSG_TYPE_PLAYER;
-	head.rid = player->getRoomId();
-	head.tid = player->getTableId();
-	head.cid = player->getChanelId();
-	head.length = 0;
-
-	char buffer[sizeof MSG_HEAD_BACK] = { 0 };
-	int size = write_head_back(buffer, &head);
-	conn->send(buffer, size);
+	if (room)
+	{
+		room->handleWorldMessage(conn, head, body);
+	}
 }
 
 Room* World::findRoom(rid_t rid)

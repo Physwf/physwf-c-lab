@@ -96,13 +96,16 @@ void Router::doClientRoute(ClientConnection* conn, char* head, char* body)
 	//pBuffer->append(head, hsize);
 	//pBuffer->append(body, bsize);
 	//
+	Client *client = findClient(conn);
 	MSG_HEAD_GATE* pHead = (MSG_HEAD_GATE*)head;
 	Client* client = findClient(conn);
 	MSG_HEAD_BACK pBack;
 	pBack.id = pHead->id;
 	pBack.length = pHead->length;
-	//pBack.rid = 
-	//pBack.tid
+	pBack.rid = client->rid;
+	pBack.tid = client->tid;
+	pBack.pid = client->pid;
+	//pBack.cid = client->
 	pMaster->send((char*)&pBack, sizeof(MSG_HEAD_BACK), body, pHead->length);
 	//pMaster->send(pBuffer->data(), pBuffer->bytesAvaliable());
 	//pMaster->send();

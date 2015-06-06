@@ -8,14 +8,17 @@
 class Game : public Zone
 {
 public:
-	Game();
+	Game(GameConnection* game);
 	~Game();
 public:
+	void handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
 	gid_t tid() { return nTid; }
+	
 private:
 	gid_t nTid;
+	iid_t nIid;
 };
 
 #endif

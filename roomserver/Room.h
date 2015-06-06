@@ -20,12 +20,22 @@ public:
 	int avaliable();
 	rid_t rid() { return nRid; }
 public:
+	void handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
 	err_t tryEnterGame(gid_t tid, Player* player);
 	err_t tryLeaveGame(gid_t tid, Player* player);
 	err_t startNewGame();
 	err_t destroyGame();
+private:
+	void onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqLeaveGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void doForward(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+private:
+	void enterGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
+	void enterGameFailed(ServiceConnection* conn, Player* player, err_t reason);
+	void leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
+	void leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason);
 private:
 	Game* findGame(gid_t gid);
 private:

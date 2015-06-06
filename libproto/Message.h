@@ -9,16 +9,28 @@ union MyUnion
 };
 typedef struct s_msg_head_back
 {
-	size_t length;
-	mid_t id;
-	unsigned short type;
-	rid_t rid;
-	gid_t tid;
-	pid_t pid;
-	cid_t cid;
-	err_t err;
+	unsigned short length;//2
+	unsigned short type;//2
+	mid_t id;//4
+	pid_t pid;//4
+	rid_t rid;//2
+	gid_t tid;//2
+	cid_t cid;//2
+	err_t err;//2
 } MSG_HEAD_BACK;
 
+typedef struct MSG_HEAD_GAME
+{
+	unsigned short length;//2
+	unsigned short type;//2
+	mid_t id;//4
+	pid_t pid;//4
+	iid_t iid;//4
+	rid_t rid;//2
+	gid_t tid;//2
+	cid_t cid;//2
+	err_t err;//2
+};
 struct MSG_HEAD_GATE
 {
 	unsigned short length;
@@ -32,12 +44,15 @@ struct MSG_HEAD_GATE
 
 inline int read_head_gate(char* buff, MSG_HEAD_GATE* head);
 inline int read_head_back(char* buff, MSG_HEAD_BACK* head);
+inline int read_head_game(char* buff, MSG_HEAD_BACK* head);
 
 inline int write_head_gate(char* buff, MSG_HEAD_GATE* head);
 inline int write_head_back(char* buff, MSG_HEAD_BACK* head);
+inline int write_head_game(char* buff, MSG_HEAD_GAME* head);
 
 inline int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
 inline int pack_gate_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
+inline int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body);
 
 #define C_SIZE sizeof(char)
 #define B_SIZE sizeof(bool)
@@ -89,6 +104,8 @@ protected:
 #include <set>
 typedef SyncMsgConnection<mid_t, MSG_HEAD_GATE> ClientConnection;
 typedef SyncMsgConnection<mid_t, MSG_HEAD_BACK> ServiceConnection;
+typedef SyncMsgConnection<mid_t, MSG_HEAD_GAME> GameConnection;
+
 typedef std::set<ClientConnection*> ClientBuffer;
 typedef std::set<ServiceConnection*> ServiceBuffer;
 

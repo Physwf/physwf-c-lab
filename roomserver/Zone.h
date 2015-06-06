@@ -9,7 +9,7 @@
 class Zone : public Object
 {
 public:
-	Zone(ServiceConnection* game) :pGame(game) { }
+	Zone(GameConnection* game) :pGame(game) { }
 	~Zone();
 public:
 	void enterZone(ServiceConnection* conn, Player* player);
@@ -23,10 +23,10 @@ protected:
 	inline Player* removePlayer(pid_t pid);
 protected:
 	cid_t nCid;
-	ServiceConnection* pGame;
+	GameConnection* pGame;
 	std::map<pid_t, Player*> mPlayers;
 private:
 	static cid_t nIncreaser;
 };
-typedef std::map<rid_t, Room*> map_room;
+
 #endif

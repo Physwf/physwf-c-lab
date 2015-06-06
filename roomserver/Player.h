@@ -1,7 +1,7 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
-#include "Connection.h"
+#include "Message.h"
 
 #include "type.h"
 
@@ -17,6 +17,9 @@ public:
 	void joinGame(gid_t which);
 	void leaveGame();
 public:
+	void setGate(ServiceConnection* gate);
+	//void setGame(GameConnection* game);
+public:
 	void setRoomId(rid_t rid) { nRid = rid; }
 	rid_t getRoomId() { return nRid; }
 	void setTableId(gid_t tid) { nTid = tid; }
@@ -29,6 +32,9 @@ private:
 	rid_t nRid;
 	gid_t nTid;
 	cid_t nCid;
+private:
+	ServiceConnection* pGate;
+	GameConnection* pGame;
 };
 
 #include <map>

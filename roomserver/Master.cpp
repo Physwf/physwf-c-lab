@@ -15,7 +15,7 @@ void Master::start()
 {
 	pLoop = new EventLoop();
 
-	pGame = new SyncMsgConnection<mid_t, MSG_HEAD_BACK>(pLoop);
+	pGame = new GameConnection(pLoop);
 	pGame->setConnectHandler(EV_CB(this,Master::startServer));
 	pGame->setMessageHandler(EV_CB(this,Master::onGameMessage));
 }
@@ -37,7 +37,7 @@ void Master::onGatewayConnected(int fd, int event, void* data)
 }
 
 
-void Master::onGameMessage(ServiceConnection* conn, char* head, char* body)
+void Master::onGameMessage(GameConnection* conn, char* head, char* body)
 {
 
 }

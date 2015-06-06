@@ -16,11 +16,11 @@ public:
 private:
 	void startServer();
 	void onGatewayConnected(int fd, int event, void* data);
-	void onGameMessage(ServiceConnection* conn, char* head, char* body);
+	void onGameMessage(GameConnection* conn, char* head, char* body);
 private:
 	Server* pServer;
 	EventLoop* pLoop;
-	SyncMsgConnection<mid_t, MSG_HEAD_BACK>* pGame;
+	GameConnection* pGame;
 	World* pWorld;
 };
 
