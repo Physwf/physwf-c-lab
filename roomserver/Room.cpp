@@ -1,7 +1,7 @@
 #include "Protocol.h"
 #include "Room.h"
 
-Room::Room(ServiceConnection* game) : Zone(game)
+Room::Room()
 {
 	
 }
@@ -30,7 +30,6 @@ err_t Room::enterPlayer(Player* player)
 	}
 	if (!err)
 	{
-		tryCreate();
 		player->setChanelId(nCid);
 	}
 	return err;

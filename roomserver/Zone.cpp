@@ -1,6 +1,12 @@
 #include "Zone.h"
 #include "Protocol.h"
 
+
+Zone::Zone()
+{
+	nCid = getNextId();
+}
+
 Zone::~Zone()
 {
 
@@ -13,11 +19,10 @@ cid_t Zone::getNextId()
 	return ++nIncreaser;
 }
 
-void Zone::tryCreate()
+void Zone::tryCreate(ServiceConnection* conn)
 {
 	if (!nCid)
 	{
-		nCid = getNextId();
 		MSG_HEAD_BACK head;
 		head.id = MSG_CREATE_CHANEL_100;
 		head.type = MSG_TYPE_CHANEL;
@@ -28,7 +33,7 @@ void Zone::tryCreate()
 		char data[4] = { 0 };
 		size_t bSize = 0;
 		body.writeBody(data, &bSize);
-		pGame->send((char*)&head, sizeof(MSG_HEAD_BACK), data,bSize);
+		conn->send((char*)&head, sizeof(MSG_HEAD_BACK), data, bSize);
 	}
 }
 
@@ -56,6 +61,21 @@ Player* Zone::removePlayer(pid_t pid)
 		return it->second;
 	}
 	return NULL;
+}
+
+
+int Zone::addToCounter(ServiceConnection* conn)
+{
+	map_counter::iterator it = mCounter.find(conn);
+	if (it != mCounter.end())
+	{
+		return it->second++;
+	}
+	else
+	{
+		mCounter.insert(map_counter::value_type(conn, 1));
+		return 1;
+	}
 }
 
 void Zone::enterZone(ServiceConnection* conn, Player* player)
@@ -101,7 +121,7 @@ void Zone::broadcast(mid_t mid, char* body, size_t size)
 	head.type = MSG_TYPE_BROADCAST;
 	head.err = 0;
 	char body[32];
-	pGame->send((char*)&head, sizeof(MSG_HEAD_BACK), body, size);
+	//pGame->send((char*)&head, sizeof(MSG_HEAD_BACK), body, size);
 }
 
 

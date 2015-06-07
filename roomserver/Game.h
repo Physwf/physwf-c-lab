@@ -8,7 +8,7 @@
 class Game : public Zone
 {
 public:
-	Game(GameConnection* game);
+	Game();
 	~Game();
 public:
 	void handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);

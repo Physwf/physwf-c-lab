@@ -11,7 +11,7 @@
 class World : public Zone
 {
 public:
-	World(GameConnection* game);
+	World();
 	~World();
 public:
 	void initialize();

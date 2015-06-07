@@ -3,7 +3,7 @@
 #include "Protocol.h"
 #include "Message.h"
 
-World::World(GameConnection* game) :Zone(game)
+World::World()
 {
 
 }
@@ -15,7 +15,7 @@ World::~World()
 
 void World::initialize()
 {
-	tryCreate();
+	
 }
 
 

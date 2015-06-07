@@ -13,7 +13,7 @@
 class Room : public Zone
 {
 public:
-	Room(ServiceConnection* game);
+	Room();
 	~Room();
 public:
 	int capacity();

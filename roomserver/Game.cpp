@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(GameConnection* game) :Zone(game)
+Game::Game()
 {
 
 }
