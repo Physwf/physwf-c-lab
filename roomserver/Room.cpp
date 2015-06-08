@@ -73,7 +73,7 @@ void Room::handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* pHead, cha
 void Room::onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	Player* player = findPlayer(head->pid);
-	err_t err = tryEnterGame(head->tid, player);
+	err_t err = tryEnterTable(head->tid, player);
 	if (err) enterGameFailed(conn, player, err);
 	else enterGameSuccess(conn, player, err);
 }
@@ -115,7 +115,7 @@ void Room::enterGameFailed(ServiceConnection* conn, Player* player, err_t reason
 void Room::onReqLeaveGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	Player* player = findPlayer(head->pid);
-	err_t err = tryLeaveGame(head->tid, player);
+	err_t err = tryLeaveTable(head->tid, player);
 	if (err) leaveGameFailed(conn, player, err);
 	else leaveGameSuccess(conn, player, err);
 }
@@ -153,9 +153,9 @@ void Room::leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason
 	conn->send(buffer, size);
 }
 
-err_t Room::tryEnterGame(gid_t tid, Player* player)
+err_t Room::tryEnterTable(tid_t tid, Player* player)
 {
-	Game* game = findGame(tid);
+	Table* game = table(tid);
 	if (game == NULL)
 	{
 		return MSG_ERR_TABLE_FULL_1004;
@@ -163,9 +163,9 @@ err_t Room::tryEnterGame(gid_t tid, Player* player)
 	return game->enterPlayer(player);
 }
 
-err_t Room::tryLeaveGame(gid_t tid, Player* player)
+err_t Room::tryLeaveTable(tid_t tid, Player* player)
 {
-	Game* game = findGame(tid);
+	Table* game = table(tid);
 	if (game == NULL)
 	{
 		return MSG_ERR_TABLE_FULL_1004;
@@ -175,17 +175,17 @@ err_t Room::tryLeaveGame(gid_t tid, Player* player)
 
 void Room::doForward(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	Game* game = findGame(head->tid);
+	Table* game = table(head->tid);
 	if (game)
 	{
 		game->handleRoomMessage(conn, head, body);
 	}
 }
 
-Game* Room::findGame(gid_t gid)
+Table* Room::table(tid_t gid)
 {
-	map_game::iterator it = mGames.find(gid);
-	if (it != mGames.end())
+	map_table::iterator it = mTables.find(gid);
+	if (it != mTables.end())
 	{
 		return it->second;
 	}

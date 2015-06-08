@@ -2,6 +2,8 @@
 #define _GAME_CONNECTION_POOL
 
 #include "Message.h"
+#include "Table.h"
+#include "Game.h"
 #include <map>
 
 typedef struct
@@ -16,24 +18,28 @@ typedef struct
 #define CONN_STATUS_BUZY	2
 
 typedef std::map<GameConnection*, PooledConnection*> map_con;
-class GameConnectionPool : Object
+typedef std::map<iid_t, Game*> map_game;
+
+class GamePool : Object
 {
 private:
-	GameConnectionPool();
-	~GameConnectionPool();
+	GamePool();
+	~GamePool();
 public:
 	void initialize(EventLoop* loop);
-	GameConnection* getConnection();
-	void recycle(GameConnection*);
+	Game* getGame();
+	void recycle(Game* game);
 
-	static GameConnectionPool* getInstance();
+	static GamePool* getInstance();
 private:
 	void onConnected(GameConnection* conn);
+	void onGameMessage(char* head, size_t hsize, char* body, size_t bsize);
 	void onClose(GameConnection* conn);
-	void setEventListener(GameConnection* conn);
+	GameConnection* getConnection();
 private:
-	static GameConnectionPool* pPool;
+	static GamePool* pPool;
 	EventLoop* pLoop;
 	map_con mConnections;
+	map_game mGames;
 };
 #endif

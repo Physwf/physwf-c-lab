@@ -14,7 +14,7 @@ typedef struct s_msg_head_back
 	mid_t id;//4
 	pid_t pid;//4
 	rid_t rid;//2
-	gid_t tid;//2
+	tid_t tid;//2
 	cid_t cid;//2
 	err_t err;//2
 } MSG_HEAD_BACK;
@@ -27,7 +27,7 @@ typedef struct MSG_HEAD_GAME
 	pid_t pid;//4
 	iid_t iid;//4
 	rid_t rid;//2
-	gid_t tid;//2
+	tid_t tid;//2
 	cid_t cid;//2
 	err_t err;//2
 };
@@ -44,7 +44,7 @@ struct MSG_HEAD_GATE
 
 inline int read_head_gate(char* buff, MSG_HEAD_GATE* head);
 inline int read_head_back(char* buff, MSG_HEAD_BACK* head);
-inline int read_head_game(char* buff, MSG_HEAD_BACK* head);
+inline int read_head_game(char* buff, MSG_HEAD_GAME* head);
 
 inline int write_head_gate(char* buff, MSG_HEAD_GATE* head);
 inline int write_head_back(char* buff, MSG_HEAD_BACK* head);

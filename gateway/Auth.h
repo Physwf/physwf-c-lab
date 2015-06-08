@@ -9,7 +9,7 @@ struct Client
 	ClientConnection* connection;
 	Session* session;
 	rid_t rid;
-	gid_t tid;
+	tid_t tid;
 	pid_t pid;
 };
 

@@ -21,10 +21,29 @@ cid_t Zone::getNextId()
 
 void Zone::tryCreate(ServiceConnection* conn)
 {
-	if (!nCid)
+	if (addGate(conn) == 1)
 	{
 		MSG_HEAD_BACK head;
 		head.id = MSG_CREATE_CHANEL_100;
+		head.type = MSG_TYPE_CHANEL;
+		head.rid = head.tid = head.pid = 0;
+		head.err = 0;
+		MSG_CREATE_CHANEL body;
+		body.cid = nCid;
+		char data[4] = { 0 };
+		size_t bSize = 0;
+		body.writeBody(data, &bSize);
+		conn->send((char*)&head, sizeof(MSG_HEAD_BACK), data, bSize);
+	}
+}
+
+
+void Zone::tryDestroy(ServiceConnection* conn)
+{
+	if (removeGate(conn) <= 0)
+	{
+		MSG_HEAD_BACK head;
+		head.id = MSG_DESTROY_CHANEL_101;
 		head.type = MSG_TYPE_CHANEL;
 		head.rid = head.tid = head.pid = 0;
 		head.err = 0;
@@ -64,24 +83,48 @@ Player* Zone::removePlayer(pid_t pid)
 }
 
 
-int Zone::addToCounter(ServiceConnection* conn)
+int Zone::addGate(ServiceConnection* conn)
 {
-	map_counter::iterator it = mCounter.find(conn);
-	if (it != mCounter.end())
+	map_gates::iterator it = mGates.find(conn);
+	if (it != mGates.end())
 	{
 		return it->second++;
 	}
 	else
 	{
-		mCounter.insert(map_counter::value_type(conn, 1));
+		mGates.insert(map_gates::value_type(conn, 1));
 		return 1;
+	}
+}
+
+
+int Zone::removeGate(ServiceConnection* conn)
+{
+	map_gates::iterator it = mGates.find(conn);
+	if (it != mGates.end())
+	{
+		if (it->second <= 1)
+		{
+			mGates.erase(it);
+		}
+		else
+		{
+			return it->second--;
+		}
+		return 0;
+	}
+	else
+	{
+		return -1;
 	}
 }
 
 void Zone::enterZone(ServiceConnection* conn, Player* player)
 {
+	tryCreate(conn);
+
 	MSG_HEAD_BACK head;
-	head.id = MSG_CHANEL_STATUS_101;
+	head.id = MSG_CHANEL_STATUS_102;
 	head.type = MSG_TYPE_CHANEL;
 	head.cid = nCid;
 	head.pid = player->pid();
@@ -98,8 +141,10 @@ void Zone::enterZone(ServiceConnection* conn, Player* player)
 
 void Zone::leaveZone(ServiceConnection* conn, Player* player)
 {
+	tryDestroy(conn);
+
 	MSG_HEAD_BACK head;
-	head.id = MSG_CHANEL_STATUS_101;
+	head.id = MSG_CHANEL_STATUS_102;
 	head.type = MSG_TYPE_CHANEL;
 	head.cid = nCid;
 	head.pid = player->pid();
@@ -114,14 +159,18 @@ void Zone::leaveZone(ServiceConnection* conn, Player* player)
 	conn->send(buffer, size);
 }
 
-void Zone::broadcast(mid_t mid, char* body, size_t size)
+void Zone::broadcast(MSG_HEAD_BACK* head, char* body)
 {
-	MSG_HEAD_BACK head;
-	head.id = mid;
-	head.type = MSG_TYPE_BROADCAST;
-	head.err = 0;
-	char body[32];
-	//pGame->send((char*)&head, sizeof(MSG_HEAD_BACK), body, size);
+	head->type = MSG_TYPE_BROADCAST;
+	head->err = 0;
+	head->cid = nCid;
+
+	char buffer[32] = {0};
+	int size = pack_back_msg(buffer, head, body);
+	for (map_gates::iterator it = mGates.begin(); it != mGates.end(); it++)
+	{
+		it->first->send(buffer, size);
+	}
 }
 
 

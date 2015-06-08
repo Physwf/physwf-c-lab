@@ -1,24 +1,27 @@
-#ifndef _TABLE_H
-#define _TABLE_H
+#ifndef _GAME_H
+#define _GAME_H
 
-#include "type.h"
+#include "Message.h"
 
-#include "Zone.h"
-
-class Game : public Zone
+class Game : public Object
 {
 public:
 	Game();
 	~Game();
 public:
-	void handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
-	err_t enterPlayer(Player* player);
-	err_t leavePlayer(Player* player);
-	gid_t tid() { return nTid; }
-	
+	void start(GameConnection* con);
+	void end();
+	void send(MSG_HEAD_GAME* pHead, char* body);
+	void setMessageHandler(EventHandler& cb) { cbMessageHandler = cb; };
+	void handleMessage(GameConnection* con,MSG_HEAD_GAME* pHead, char* body);
+	iid_t iid() { return nIid; }
+	bool isIdle() { return bIdle; }
 private:
-	gid_t nTid;
+	EventHandler cbMessageHandler;
+private:
+	GameConnection* pCon;
 	iid_t nIid;
+	static iid_t sIid;
+	bool bIdle;
 };
-
 #endif

@@ -12,9 +12,12 @@
 #define MSG_LEAVE_ROOM_1003			1003
 #define MSG_JOIN_GAME_1004			1004
 #define MSG_LEAVE_GAME_1005			1005
+#define MSG_START_GAME_1006			1006
+#define MSG_END_GAME_1007			1007
 
 #define MSG_CREATE_CHANEL_100			0100
-#define MSG_CHANEL_STATUS_101			0101
+#define MSG_DESTROY_CHANEL_101			0101
+#define MSG_CHANEL_STATUS_102			0102
 
 #define MSG_ERR_ROOM_NOT_EXIST_1000		1000
 #define MSG_ERR_ROOM_FULL_1001			1001
@@ -99,7 +102,7 @@ struct MSG_RES_LEAVE_ROOM : Message
 
 struct MSG_REQ_JOIN_GAME : Message
 {
-	gid_t gid;
+	tid_t gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -107,7 +110,7 @@ struct MSG_REQ_JOIN_GAME : Message
 
 struct MSG_RES_JOIN_GAME : Message
 {
-	gid_t gid;
+	tid_t gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -115,7 +118,7 @@ struct MSG_RES_JOIN_GAME : Message
 
 struct MSG_REQ_LEAVE_GAME : Message
 {
-	gid_t gid;
+	tid_t gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -123,10 +126,23 @@ struct MSG_REQ_LEAVE_GAME : Message
 
 struct MSG_RES_LEAVE_GAME : Message
 {
-	gid_t gid;
+	tid_t gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct MSG_REQ_START_GAME : Message
+{
+	tid_t gid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct MSG_REQ_END_GAME : Message
+{
+
 };
 
 struct MSG_CREATE_CHANEL : Message

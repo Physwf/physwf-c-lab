@@ -6,7 +6,7 @@
 
 #include "Player.h"
 #include "Zone.h"
-#include "Game.h"
+#include "Table.h"
 
 #include "type.h"
 
@@ -23,8 +23,8 @@ public:
 	void handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
-	err_t tryEnterGame(gid_t tid, Player* player);
-	err_t tryLeaveGame(gid_t tid, Player* player);
+	err_t tryEnterTable(tid_t tid, Player* player);
+	err_t tryLeaveTable(tid_t tid, Player* player);
 	err_t startNewGame();
 	err_t destroyGame();
 private:
@@ -37,12 +37,12 @@ private:
 	void leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
 	void leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason);
 private:
-	Game* findGame(gid_t gid);
+	Table* table(tid_t gid);
 private:
 	rid_t nRid;
-	std::map<gid_t, Game*> mGames;
+	std::map<tid_t, Table*> mTables;
 };
 
-typedef std::map<gid_t, Game*> map_game;
+typedef std::map<tid_t, Table*> map_table;
 
 #endif

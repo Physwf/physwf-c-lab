@@ -2,7 +2,7 @@
 
 Game::Game()
 {
-
+	nIid = sIid++;
 }
 
 Game::~Game()
@@ -10,39 +10,26 @@ Game::~Game()
 
 }
 
-void Game::handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
+void Game::start(GameConnection* con)
 {
-	MSG_HEAD_GAME gHead;
-	gHead.id = head->id;
-	gHead.pid = head->pid;
-	gHead.type = head->type;
-	gHead.rid = head->id;
-	gHead.tid = nTid;
-	gHead.cid = head->cid;
-	gHead.iid = nIid;
-	gHead.length = head->length;
-
-	char buffer[64] = { 0 };
-	int size = pack_game_msg(buffer, &gHead, body);
-	pGame->send(buffer, size);
+	pCon = con;
+	bIdle = false;
 }
 
-err_t Game::enterPlayer(Player* player)
+void Game::end()
 {
-	Player* old = findPlayer(player->pid());
-	if (old)
-	{
-		removePlayer(player->pid());
-		addPlayer(player->pid(), player);
-	}
-	else
-	{
-		addPlayer(player->pid(), player);
-	}
-	return 0;
+	bIdle = true;
 }
 
-err_t Game::leavePlayer(Player* player)
+void Game::send(MSG_HEAD_GAME* pHead, char* body)
 {
-
+	char buffer[32] = { 0 };
+	int size = pack_game_msg(buffer, pHead, body);
+	pCon->send(buffer,size);
 }
+
+void Game::handleMessage(GameConnection* con,MSG_HEAD_GAME* pHead, char* body)
+{
+	EV_INVOKE(cbMessageHandler,pHead,body);
+}
+

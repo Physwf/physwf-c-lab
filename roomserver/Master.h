@@ -14,9 +14,7 @@ public:
 	void start();
 	void run();
 private:
-	void startServer();
 	void onGatewayConnected(int fd, int event, void* data);
-	void onGameMessage(GameConnection* conn, char* head, char* body);
 private:
 	Server* pServer;
 	EventLoop* pLoop;

@@ -14,21 +14,23 @@ public:
 public:
 	void enterZone(ServiceConnection* conn, Player* player);
 	void leaveZone(ServiceConnection* conn, Player* player);
-	void broadcast(mid_t mid, char* body, size_t size);
+	void broadcast(MSG_HEAD_BACK* head,char* body);
 protected:
 	static cid_t getNextId();
 	void tryCreate(ServiceConnection* conn);
+	void tryDestroy(ServiceConnection* conn);
 	inline Player* addPlayer(pid_t pid, Player* player);
 	inline Player* findPlayer(pid_t pid);
 	inline Player* removePlayer(pid_t pid);
-	inline int addToCounter(ServiceConnection* conn);
+	inline int addGate(ServiceConnection* conn);
+	inline int removeGate(ServiceConnection* conn);
 protected:
 	cid_t nCid;
 	std::map<pid_t, Player*> mPlayers;
-	std::map<ServiceConnection*, int> mCounter;
+	std::map<ServiceConnection*, int> mGates;
 private:
 	static cid_t nIncreaser;
 };
 
-typedef std::map<ServiceConnection*, int> map_counter;
+typedef std::map<ServiceConnection*, int> map_gates;
 #endif
