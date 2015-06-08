@@ -130,6 +130,7 @@ void Router::onMasterMessage(ServiceConnection* conn, char* head, char* body)
 	case MSG_TYPE_BROADCAST:
 	{
 		onBroadcastMessage(conn, pBack, body);
+		break;
 	}
 	default:
 		break;

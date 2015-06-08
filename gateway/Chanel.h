@@ -4,7 +4,7 @@
 #include "Message.h"
 #include "SyncMsgConnection.h"
 
-#include <map>
+#include <set>
 
 #include "Auth.h"
 
@@ -19,7 +19,8 @@ public:
 	void removeClient(Client* front);
 private:
 	cid_t nCid;
-	std::map<cid_t, Client*> mClients;
+	std::set<Client*> mClients;
 };
 
+typedef std::set<Client*> set_client;
 #endif

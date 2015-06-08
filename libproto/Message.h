@@ -51,8 +51,12 @@ inline int write_head_back(char* buff, MSG_HEAD_BACK* head);
 inline int write_head_game(char* buff, MSG_HEAD_GAME* head);
 
 inline int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
-inline int pack_gate_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
+inline int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body);
+inline int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body);
+inline int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body);
 inline int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body);
+inline int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body);
+
 
 #define C_SIZE sizeof(char)
 #define B_SIZE sizeof(bool)

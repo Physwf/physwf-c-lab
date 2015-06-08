@@ -168,7 +168,27 @@ int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
 
 }
 
-int pack_gate_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
+int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body)
+{
+
+}
+
+int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body)
+{
+
+}
+
+int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body)
+{
+
+}
+
+int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body)
+{
+
+}
+
+int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body)
 {
 
 }
