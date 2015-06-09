@@ -7,6 +7,8 @@
 #include <assert.h>
 #include <stdio.h>
 
+#include "platform.h"
+
 #ifdef WIN32
 #include <Ws2tcpip.h>
 #include <WinSock2.h>
@@ -34,7 +36,7 @@ typedef int socklen_t;
 
 #define SOCKET_OK 0
 
-class Socket
+class VALE_DLL Socket
 {
 public:
 	Socket(int fd); 

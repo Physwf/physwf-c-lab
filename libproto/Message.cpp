@@ -100,7 +100,7 @@ void Message::writeInt(int value)
 
 void Message::writeUnsignedInt(unsigned int value)
 {
-	writeUnsignedInt(value);
+	writeInt(value);
 }
 
 long Message::readLong(char* input)
@@ -145,50 +145,50 @@ void Message::writeBytes(char* bytes, size_t size)
 
 int read_head_gate(char* buff, MSG_HEAD_GATE* head)
 {
-
+	return 0;
 }
 
 int read_head_back(char* buff, MSG_HEAD_BACK* head)
 {
-
+	return 0;
 }
 
 int write_head_gate(char* buff, MSG_HEAD_GATE* head)
 {
-
+	return 0;
 }
 
 int write_head_back(char* buff, MSG_HEAD_BACK* head)
 {
-
+	return 0;
 }
 
 int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
 {
-
+	return 0;
 }
 
 int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body)
 {
-
+	return 0;
 }
 
 int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body)
 {
-
+	return 0;
 }
 
 int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body)
 {
-
+	return 0;
 }
 
 int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body)
 {
-
+	return 0;
 }
 
 int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body)
 {
-
+	return 0;
 }

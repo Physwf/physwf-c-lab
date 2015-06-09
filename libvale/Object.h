@@ -2,7 +2,9 @@
 #ifndef _OBJECT_H
 #define _OBJECT_H
 
-class Object
+#include "platform.h"
+
+class VALE_DLL Object
 {
 public:
 	Object() {}

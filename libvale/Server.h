@@ -2,11 +2,14 @@
 #ifndef _SERVER_H
 #define _SERVER_H
 
-#include "EventLoop.h"
-#include "Socket.h"
 #include <string.h>
 
-class Server : public Object
+#include "EventLoop.h"
+#include "Socket.h"
+
+#include "platform.h"
+
+class VALE_DLL Server : public Object
 {
 public:
 	Server(EventLoop* loop,int fd=INVALID_SOCKET);

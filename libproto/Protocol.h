@@ -28,7 +28,7 @@
 
 #include "Message.h"
 
-struct MSG_REQ_LOGIN : Message
+struct VALE_DLL MSG_REQ_LOGIN : Message
 {
 	unsigned char accout_length;
 	char* accout;
@@ -38,7 +38,7 @@ struct MSG_REQ_LOGIN : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_CREATE_PLAYER : Message
+struct VALE_DLL MSG_REQ_CREATE_PLAYER : Message
 {
 	pid_t pid;
 
@@ -46,7 +46,7 @@ struct MSG_REQ_CREATE_PLAYER : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_RES_CREATE_PLAYER : Message
+struct VALE_DLL MSG_RES_CREATE_PLAYER : Message
 {
 	pid_t pid;
 
@@ -54,21 +54,21 @@ struct MSG_RES_CREATE_PLAYER : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_DESTROY_PLAYER : Message
+struct VALE_DLL MSG_REQ_DESTROY_PLAYER : Message
 {
 	pid_t pid;
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_RES_DESTROY_PLAYER : Message
+struct VALE_DLL MSG_RES_DESTROY_PLAYER : Message
 {
 	pid_t pid;
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_ENTER_ROOM : Message
+struct VALE_DLL MSG_REQ_ENTER_ROOM : Message
 {
 	rid_t rid;
 
@@ -76,7 +76,7 @@ struct MSG_REQ_ENTER_ROOM : Message
 	inline virtual void writebody(char* output, size_t* size);
 };
 
-struct MSG_RES_ENTER_ROOM : Message
+struct VALE_DLL MSG_RES_ENTER_ROOM : Message
 {
 	rid_t rid;
 
@@ -84,7 +84,7 @@ struct MSG_RES_ENTER_ROOM : Message
 	inline virtual void writebody(char* output, size_t* size);
 };
 
-struct MSG_REQ_LEAVE_ROOM : Message
+struct VALE_DLL MSG_REQ_LEAVE_ROOM : Message
 {
 	rid_t rid;
 
@@ -92,7 +92,7 @@ struct MSG_REQ_LEAVE_ROOM : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_RES_LEAVE_ROOM : Message
+struct VALE_DLL MSG_RES_LEAVE_ROOM : Message
 {
 	rid_t rid;
 
@@ -100,7 +100,7 @@ struct MSG_RES_LEAVE_ROOM : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_JOIN_GAME : Message
+struct VALE_DLL MSG_REQ_JOIN_GAME : Message
 {
 	tid_t gid;
 
@@ -108,7 +108,7 @@ struct MSG_REQ_JOIN_GAME : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_RES_JOIN_GAME : Message
+struct VALE_DLL MSG_RES_JOIN_GAME : Message
 {
 	tid_t gid;
 
@@ -116,7 +116,7 @@ struct MSG_RES_JOIN_GAME : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_LEAVE_GAME : Message
+struct VALE_DLL MSG_REQ_LEAVE_GAME : Message
 {
 	tid_t gid;
 
@@ -124,7 +124,7 @@ struct MSG_REQ_LEAVE_GAME : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_RES_LEAVE_GAME : Message
+struct VALE_DLL MSG_RES_LEAVE_GAME : Message
 {
 	tid_t gid;
 
@@ -132,7 +132,7 @@ struct MSG_RES_LEAVE_GAME : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_START_GAME : Message
+struct VALE_DLL MSG_REQ_START_GAME : Message
 {
 	tid_t gid;
 
@@ -140,12 +140,12 @@ struct MSG_REQ_START_GAME : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_END_GAME : Message
+struct VALE_DLL MSG_REQ_END_GAME : Message
 {
 
 };
 
-struct MSG_CREATE_CHANEL : Message
+struct VALE_DLL MSG_CREATE_CHANEL : Message
 {
 	cid_t cid;
 
@@ -156,7 +156,7 @@ struct MSG_CREATE_CHANEL : Message
 #define CHANEL_STATUS_ADD_PLAYER 1
 #define CHANEL_STATUS_RMV_PLAYER 2
 
-struct MSG_CHANEL_STATUS : Message
+struct VALE_DLL MSG_CHANEL_STATUS : Message
 {
 	unsigned char status_type;
 	unsigned long value;

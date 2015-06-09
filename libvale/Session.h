@@ -1,7 +1,9 @@
 #ifndef _SESSION_H
 #define _SESSION_H
 
-class Session
+#include "platform.h"
+
+class VALE_DLL Session
 {
 public:
 	Session();

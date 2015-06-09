@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-class Buffer
+#include "platform.h"
+
+class VALE_DLL Buffer
 {
 public:
 	Buffer();

@@ -136,7 +136,7 @@ void MSG_REQ_LOGIN::readBody(char* input, size_t size)
 	Message::readBody(input, size);
 	accout_length = readUnsignedByte(input);
 	accout = readBytes(input, accout_length*C_SIZE);
-	readBytes()
+	//readBytes()
 }
 
 void MSG_REQ_LOGIN::writeBody(char* output, size_t* size)
@@ -156,4 +156,124 @@ void MSG_CHANEL_STATUS::writeBody(char* output, size_t* size)
 	writeUnsigndByte(status_type);
 	writeUnsignedLong(value);
 	Message::writeBody(output, size);
+}
+
+void MSG_CREATE_CHANEL::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_CREATE_CHANEL::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_RES_CREATE_PLAYER::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_RES_CREATE_PLAYER::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_RES_DESTROY_PLAYER::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_RES_DESTROY_PLAYER::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_REQ_ENTER_ROOM::readbody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_ENTER_ROOM::writebody(char* output, size_t* size)
+{
+
+}
+
+void MSG_RES_ENTER_ROOM::readbody(char* input, size_t size)
+{
+
+}
+
+void MSG_RES_ENTER_ROOM::writebody(char* output, size_t* size)
+{
+
+}
+
+void MSG_REQ_LEAVE_ROOM::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_LEAVE_ROOM::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_RES_LEAVE_ROOM::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_RES_LEAVE_ROOM::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_REQ_JOIN_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_JOIN_GAME::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_RES_JOIN_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_RES_JOIN_GAME::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_REQ_LEAVE_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_LEAVE_GAME::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_RES_LEAVE_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_RES_LEAVE_GAME::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_REQ_START_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_START_GAME::writeBody(char* output, size_t* size)
+{
+
 }

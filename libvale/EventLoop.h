@@ -5,6 +5,8 @@
 #include "Object.h"
 #include "EventPoll.h"
 
+#include "platform.h"
+
 #define EV_ERROR -1
 #define EV_IO_NONE 0
 #define EV_IO_READ 1
@@ -47,7 +49,7 @@ typedef struct {
 	int mask;
 } IOFired;
 
-class EventLoop : public Object
+class VALE_DLL EventLoop : public Object
 {
 public:
 	friend class EventSelect;

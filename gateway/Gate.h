@@ -18,7 +18,6 @@ public:
 	~Gate();
 public:
 	void start();
-	void setMode(int mode) { nMode &= mode; }
 private:
 	void connectMaster();
 	void connectAuth();
@@ -43,9 +42,6 @@ private:
 
 	Auth* pAuth;
 	Router* pRouter;
-
-	int nMode;
-	
 };
 
 #endif

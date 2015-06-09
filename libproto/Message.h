@@ -2,11 +2,8 @@
 #define _MESSAGE_H
 
 #include "type.h"
+#include "platform.h"
 
-union MyUnion
-{
-
-};
 typedef struct s_msg_head_back
 {
 	unsigned short length;//2
@@ -19,7 +16,7 @@ typedef struct s_msg_head_back
 	err_t err;//2
 } MSG_HEAD_BACK;
 
-typedef struct MSG_HEAD_GAME
+typedef struct 
 {
 	unsigned short length;//2
 	unsigned short type;//2
@@ -30,7 +27,8 @@ typedef struct MSG_HEAD_GAME
 	tid_t tid;//2
 	cid_t cid;//2
 	err_t err;//2
-};
+} MSG_HEAD_GAME;
+
 struct MSG_HEAD_GATE
 {
 	unsigned short length;
@@ -42,20 +40,22 @@ struct MSG_HEAD_GATE
 #define MSG_TYPE_CHANEL			2
 #define MSG_TYPE_BROADCAST		3
 
-inline int read_head_gate(char* buff, MSG_HEAD_GATE* head);
-inline int read_head_back(char* buff, MSG_HEAD_BACK* head);
-inline int read_head_game(char* buff, MSG_HEAD_GAME* head);
+VALE_DLL inline int read_head_gate(char* buff, MSG_HEAD_GATE* head);
+VALE_DLL inline int read_head_back(char* buff, MSG_HEAD_BACK* head);
+VALE_DLL inline int read_head_game(char* buff, MSG_HEAD_GAME* head);
 
-inline int write_head_gate(char* buff, MSG_HEAD_GATE* head);
-inline int write_head_back(char* buff, MSG_HEAD_BACK* head);
-inline int write_head_game(char* buff, MSG_HEAD_GAME* head);
+VALE_DLL inline int write_head_gate(char* buff, MSG_HEAD_GATE* head);
+VALE_DLL inline int write_head_back(char* buff, MSG_HEAD_BACK* head);
+VALE_DLL inline int write_head_game(char* buff, MSG_HEAD_GAME* head);
 
-inline int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
-inline int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body);
-inline int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body);
-inline int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body);
-inline int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body);
-inline int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body);
+struct Message;
+
+VALE_DLL inline int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body);
+VALE_DLL inline int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body);
+VALE_DLL inline int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body);
+VALE_DLL inline int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body);
+VALE_DLL inline int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body);
+VALE_DLL inline int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body);
 
 
 #define C_SIZE sizeof(char)
@@ -64,7 +64,7 @@ inline int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body);
 #define I_SIZE sizeof(int)
 #define L_SIZE sizeof(long)
 
-struct Message
+struct VALE_DLL  Message
 {
 	Message();
 	Message(mid_t mid);
@@ -106,9 +106,17 @@ protected:
 
 #include "SyncMsgConnection.h"
 #include <set>
+
+EXPIMP_TEMPLATE template class VALE_DLL SyncMsgConnection<mid_t, MSG_HEAD_GATE>;
+EXPIMP_TEMPLATE template class VALE_DLL SyncMsgConnection<mid_t, MSG_HEAD_BACK>;
+EXPIMP_TEMPLATE template class VALE_DLL SyncMsgConnection<mid_t, MSG_HEAD_GAME>;
+
 typedef SyncMsgConnection<mid_t, MSG_HEAD_GATE> ClientConnection;
 typedef SyncMsgConnection<mid_t, MSG_HEAD_BACK> ServiceConnection;
 typedef SyncMsgConnection<mid_t, MSG_HEAD_GAME> GameConnection;
+
+EXPIMP_TEMPLATE template class VALE_DLL std::set<ClientConnection*>;
+EXPIMP_TEMPLATE template class VALE_DLL std::set<ServiceConnection*>;
 
 typedef std::set<ClientConnection*> ClientBuffer;
 typedef std::set<ServiceConnection*> ServiceBuffer;

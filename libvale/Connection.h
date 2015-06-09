@@ -6,7 +6,9 @@
 #include "Socket.h"
 #include "Buffer.h"
 
-class Connection : public Object
+#include "platform.h"
+
+class VALE_DLL Connection : public Object
 {
 public:
 	Connection(EventLoop* loop, int fd = INVALID_SOCKET);

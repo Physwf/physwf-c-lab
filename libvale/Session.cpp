@@ -9,3 +9,17 @@
 #include "Session.h"
 
 
+Session::Session()
+{
+
+}
+
+Session::Session(const char* sid)
+{
+
+}
+
+Session::~Session()
+{
+
+}

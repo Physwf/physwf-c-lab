@@ -100,3 +100,9 @@ void Gate::onServiceAuthResult(ServiceConnection* service, bool success)
 {
 	pRouter->addServiceForRoute(service);
 }
+
+int main(int argc, char**argv)
+{
+	Gate *gate = new Gate();
+	gate->start();
+}

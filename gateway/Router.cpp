@@ -27,6 +27,7 @@ void Router::addServiceForRoute(ServiceConnection* service)
 Client* Router::addClient(Client* client)
 {
 	mClients.insert(map_client::value_type(client->connection, client));
+	return client;
 }
 
 
@@ -41,7 +42,7 @@ Client* Router::findClient(ClientConnection* conn)
 
 Client* Router::findClient(pid_t pid)
 {
-
+	return NULL;
 }
 
 Client* Router::removeClient(ClientConnection* conn)
@@ -58,7 +59,9 @@ Client* Router::removeClient(ClientConnection* conn)
 
 Chanel* Router::createChanel(cid_t cid)
 {
-	mChanels.insert(map_chanel::value_type(cid, new Chanel(cid)));
+	Chanel* chanel = new Chanel(cid);
+	mChanels.insert(map_chanel::value_type(cid, chanel));
+	return chanel;
 }
 
 
@@ -98,7 +101,6 @@ void Router::doClientRoute(ClientConnection* conn, char* head, char* body)
 	//
 	Client *client = findClient(conn);
 	MSG_HEAD_GATE* pHead = (MSG_HEAD_GATE*)head;
-	Client* client = findClient(conn);
 	MSG_HEAD_BACK pBack;
 	pBack.id = pHead->id;
 	pBack.length = pHead->length;
