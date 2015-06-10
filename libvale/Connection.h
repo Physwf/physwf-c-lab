@@ -14,6 +14,7 @@ public:
 	Connection(EventLoop* loop, int fd = INVALID_SOCKET);
 	~Connection();
 public:
+	void createTcp(EventLoop* loop);
 	int connect(const char* host, short port);
 	int send(const char* data, size_t size);
 	int send(Buffer& buf);
@@ -25,6 +26,7 @@ public:
 	void setConnectHandler(const EventHandler &cb) { cbConnectHandler = cb; }
 	void setWriteCompleteHandler(const EventHandler &cb) { cbWriteCompleteHandler = cb; }
 private:
+	void initSocket();
 	void onConnect(int fd, int event, void* data);
 	void onRead(int fd, int event, void* data);
 	void onWrite(int fd, int event, void* data);

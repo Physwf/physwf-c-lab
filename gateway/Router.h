@@ -14,11 +14,11 @@ typedef std::map<cid_t, Chanel*> map_chanel;
 class Router : public Object
 {
 public:
-	Router(ServiceConnection* service);
+	Router();
 	~Router();
 public:
 	void addClientForRoute(Client* client);
-	void addServiceForRoute(ServiceConnection* service);
+	void setMaster(ServiceConnection* service);
 private:
 	inline Client* addClient(Client* client);
 	inline Client* findClient(ClientConnection* conn);

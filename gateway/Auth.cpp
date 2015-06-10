@@ -1,6 +1,12 @@
 #include "Auth.h"
 #include "Protocol.h"
 
+
+Auth::Auth()
+{
+
+}
+
 Auth::~Auth()
 {
 

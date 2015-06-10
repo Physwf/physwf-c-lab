@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _SYNC_MSG_CONNECTION_H
 #define _SYNC_MSG_CONNECTION_H
 
@@ -6,18 +7,30 @@
 #include "platform.h"
 
 template <typename TMID, typename TMSG_HEAD>
-class VALE_DLL SyncMsgConnection : public Connection
+class VALE_DLL SyncMsgConnection : public Object
 {
 public:
-	SyncMsgConnection(EventLoop* loop, int fd = INVALID_SOCKET) :Connection(loop, fd)
+	SyncMsgConnection(EventLoop* loop, int fd = INVALID_SOCKET)
 	{
-		//Connection::setReadHandler(EV_CB(this, SyncMsgConnection::onSocketData));
+		pConnection = new Connection(loop, fd);
+		init();
+	}
+	SyncMsgConnection(Connection* conn) :pConnection(conn)
+	{
+		init();
 	}
 	~SyncMsgConnection()
 	{
 
 	}
 public:
+	static SyncMsgConnection* create(EventLoop* loop)
+	{
+		Connection* conn = new Connection(loop);
+		conn->createTcp(loop);
+		return new SyncMsgConnection(conn);
+	}
+	void connect(const char* host, short port) { pConnection->connect(host, port); }
 	void send(char* head, size_t head_len, char* body, size_t body_len)
 	{
 
@@ -26,11 +39,21 @@ public:
 	{
 
 	}
+	void setCloseHandler(const EventHandler &cb) { pConnection->setCloseHandler(cb); }
+	void setConnectHandler(const EventHandler &cb) 
+	{ 
+		cbConnectHandler = cb;
+	}
 	void setMessageHandler(EventHandler &handler) { onMessage = handler; }
 private:
-	void onConnected()
+	void init()
 	{
-
+		pConnection->setConnectHandler(EV_CB(this, SyncMsgConnection::onConnected));
+		pConnection->setReadHandler(EV_CB(this, SyncMsgConnection::onSocketData));
+	}
+	void onConnected(Connection* con)
+	{
+		EV_INVOKE( cbConnectHandler, this);
 	}
 	void onClose()
 	{
@@ -42,6 +65,11 @@ private:
 	}
 private:
 	EventHandler onMessage;
+	Connection* pConnection;
+	EventHandler cbReadHandler;
+	EventHandler cbCloseHandler;
+	EventHandler cbConnectHandler;
+	EventHandler cbWriteCompleteHandler;
 };
 
 #endif

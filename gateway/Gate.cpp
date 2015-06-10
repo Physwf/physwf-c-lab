@@ -14,36 +14,29 @@ Gate::~Gate()
 void Gate::start()
 {
 	pLoop = new EventLoop();
+	pRouter = new Router();
 
 	connectMaster();
 
 	pLoop->run();
 }
 
-
-
 void Gate::connectMaster()
 {
-	pMaster = new ServiceConnection(pLoop);
-	pMaster->setConnectHandler(EV_CB(this, Gate::onMasterConnect));
-	pRouter->addServiceForRoute(pMaster);
+	ServiceConnection* master = ServiceConnection::create(pLoop);
+	master->setConnectHandler(EV_CB(this, Gate::onMasterConnect));
+	master->connect("127.0.0.1",1234);
 }
 
 void Gate::onMasterConnect(ServiceConnection* con)
 {
-	connectAuth();
+	pRouter->setMaster(con);
+	initServer();
 }
 
-void Gate::connectAuth()
+void Gate::initServer()
 {
-	ServiceConnection* authService = new ServiceConnection(pLoop);
-	authService->setConnectHandler(EV_CB(this, Gate::onAuthConnected));
-}
-
-
-void Gate::onAuthConnected(ServiceConnection* con)
-{
-	pAuth = new Auth(con);
+	pAuth = new Auth();
 	pAuth->setClientAuthResultHandler(EV_CB(this, Gate::onClientAuthResult));
 	//pAuth->setServiceAuthResultHandler(EV_CB(this, Gate::onServiceAuthResult));
 
@@ -58,9 +51,6 @@ void Gate::onAuthConnected(ServiceConnection* con)
 
 	pFront->start();
 	//pBack->start();
-
-	pRouter = new Router(con);
-	pRouter->addServiceForRoute(pMaster);
 }
 
 void Gate::onClientConnect(int fd, int event, void* data)
@@ -75,8 +65,6 @@ void Gate::onClientClose(ClientConnection* con)
 	delete con;
 	con = NULL;
 }
-
-
 
 void Gate::onBackConnect(int fd, int event, void* data)
 {
@@ -98,7 +86,7 @@ void Gate::onClientAuthResult(Client* client, bool success)
 
 void Gate::onServiceAuthResult(ServiceConnection* service, bool success)
 {
-	pRouter->addServiceForRoute(service);
+	pRouter->setMaster(service);
 }
 
 int main(int argc, char**argv)

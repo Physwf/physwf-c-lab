@@ -2,7 +2,7 @@
 #include "Protocol.h"
 
 
-Router::Router(ServiceConnection* service) :pMaster(service)
+Router::Router()
 {
 	pBuffer = new Buffer(1024 * 1024);
 }
@@ -18,9 +18,10 @@ void Router::addClientForRoute(Client* client)
 	client->connection->setMessageHandler(EV_CB(this, Router::doClientRoute));
 }
 
-void Router::addServiceForRoute(ServiceConnection* service)
+void Router::setMaster(ServiceConnection* service)
 {
-	service->setMessageHandler(EV_CB(this, Router::onMasterMessage));
+	pMaster = service;
+	pMaster->setMessageHandler(EV_CB(this, Router::onMasterMessage));
 }
 
 

@@ -2,10 +2,7 @@
 
 Connection::Connection(EventLoop* loop, int fd /*= INVALID_SOCKET*/) :pLoop(loop), sSocket(fd)
 {
-	if (sSocket.isValid())
-	{
-		pLoop->addEventListener(sSocket.getFd(), EV_IO_READ, EV_IO_CB(this, Connection::onRead), NULL);
-	}
+	initSocket();
 }
 
 Connection::~Connection()
@@ -13,14 +10,24 @@ Connection::~Connection()
 
 }
 
+void Connection::createTcp(EventLoop* loop)
+{
+	if (sSocket.create(AF_INET) == INVALID_SOCKET)
+	{
+		return;
+	}
+	initSocket();
+}
+
 int Connection::connect(const char* host, short port)
 {
 	if (sSocket.connect(host, port) == SOCKET_ERROR)
 	{
+		//to do non-block
+		pLoop->addEventListener(sSocket.getFd(), EV_IO_ALL, EV_IO_CB(this, Connection::onConnect), NULL);
 		return -1;
 	}
-	pLoop->addEventListener(sSocket.getFd(), EV_IO_ALL, EV_IO_CB(this, Connection::onConnect), NULL);
-
+	EV_INVOKE(cbConnectHandler, this);
 	return 0;
 }
 
@@ -47,6 +54,14 @@ void Connection::close()
 	sSocket.close();
 	EV_INVOKE(cbCloseHandler, this);
 	//to do??
+}
+
+void Connection::initSocket()
+{
+	if (sSocket.isValid())
+	{
+		pLoop->addEventListener(sSocket.getFd(), EV_IO_READ, EV_IO_CB(this, Connection::onRead), NULL);
+	}
 }
 
 void Connection::onConnect(int fd, int event, void* data)

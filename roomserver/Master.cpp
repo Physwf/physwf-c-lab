@@ -19,8 +19,10 @@ void Master::start()
 	GamePool::getInstance()->initialize(pLoop);
 
 	pServer = new Server(pLoop);
-	pServer->start();
+	pServer->createTcpServer(1234);
 	pServer->setConnectionHandler(EV_IO_CB(this, Master::onGatewayConnected));
+	pServer->start();
+
 	pWorld = new World();
 }
 

@@ -20,15 +20,13 @@ public:
 	void start();
 private:
 	void connectMaster();
-	void connectAuth();
 private:
 	void onClientConnect(int fd, int event,void* data);
 	void onClientClose(ClientConnection* con);
 	void onMasterConnect(ServiceConnection* con);
-
+	void initServer();
 	void onBackConnect(int fd, int event, void* data);
 	void onBackClose(ServiceConnection* con);
-	void onAuthConnected(ServiceConnection* con);
 
 	void onClientAuthResult(Client* client, bool success);
 	void onServiceAuthResult(ServiceConnection* service, bool success);
@@ -36,9 +34,6 @@ private:
 private:
 	EventLoop* pLoop;
 	Server* pFront;
-	Server* pBack;
-
-	ServiceConnection* pMaster;
 
 	Auth* pAuth;
 	Router* pRouter;

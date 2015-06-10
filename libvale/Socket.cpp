@@ -93,7 +93,7 @@ int Socket::connect(const char* addr, short port)
 	sa.sin_addr.s_addr = inet_addr(addr);
 #endif // WIN32
 
-	sa.sin_port = port;
+	sa.sin_port = htons(port);
 	int iResult = ::connect(nFd, (sockaddr*)&sa, sizeof sa);
 	if (iResult == SOCKET_ERROR)
 	{

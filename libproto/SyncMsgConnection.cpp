@@ -1,4 +1,4 @@
-#include "SyncMsgConnection.h"
+//#include "SyncMsgConnection.h"
 //
 //template <typename TMID, typename TMSG_HEAD>
 //SyncMsgConnection<TMID, TMSG_HEAD>::SyncMsgConnection(EventLoop* loop, int fd) :Connection(loop,fd)

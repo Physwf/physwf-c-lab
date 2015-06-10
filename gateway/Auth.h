@@ -22,7 +22,7 @@ struct Service
 class Auth : public Object
 {
 public:
-	Auth(ServiceConnection* service):pAuthService(service) {}
+	Auth();
 	~Auth();
 public:
 	void addClientForAuth(ClientConnection* client);
@@ -35,7 +35,6 @@ public:
 private:
 	void doClientAuth(ClientConnection* conn, char* head, char*body);
 private:
-	ServiceConnection* pAuthService;
 
 	ClientBuffer cBuffer;
 	ServiceBuffer sBuffer;
