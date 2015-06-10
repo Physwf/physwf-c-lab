@@ -4,7 +4,7 @@
 #include "type.h"
 #include "platform.h"
 
-typedef struct s_msg_head_back
+typedef struct
 {
 	unsigned short length;//2
 	unsigned short type;//2

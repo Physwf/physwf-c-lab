@@ -39,11 +39,9 @@ public:
 	{
 
 	}
+	void setTest(int *t) { test = t; }
 	void setCloseHandler(const EventHandler &cb) { pConnection->setCloseHandler(cb); }
-	void setConnectHandler(const EventHandler &cb) 
-	{ 
-		cbConnectHandler = cb;
-	}
+	void setConnectHandler(const EventHandler &cb) { cbConnectHandler = cb; }
 	void setMessageHandler(EventHandler &handler) { onMessage = handler; }
 private:
 	void init()
@@ -66,10 +64,13 @@ private:
 private:
 	EventHandler onMessage;
 	Connection* pConnection;
+	EventHandler cbConnectHandler;
 	EventHandler cbReadHandler;
 	EventHandler cbCloseHandler;
-	EventHandler cbConnectHandler;
+	int *test;
+	
 	EventHandler cbWriteCompleteHandler;
 };
+
 
 #endif
