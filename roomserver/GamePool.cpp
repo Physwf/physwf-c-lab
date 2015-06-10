@@ -67,8 +67,14 @@ void GamePool::onGameMessage(char* head, size_t hsize, char* body, size_t bsize)
 	map_game::iterator it = mGames.find(gHead.iid);
 	if (it != mGames.end())
 	{
-		it->second->handleMessage(&gHead,body);
+		//it->second->handleMessage(&gHead,body);
 	}
+}
+
+
+void GamePool::onClose(GameConnection* conn)
+{
+
 }
 
 GameConnection* GamePool::getConnection()

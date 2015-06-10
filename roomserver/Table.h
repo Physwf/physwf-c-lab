@@ -2,7 +2,7 @@
 #define _TABLE_H
 
 #include "type.h"
-
+#include "Game.h"
 #include "Zone.h"
 
 class Table : public Zone
@@ -21,7 +21,7 @@ public:
 private:
 	void doForward(MSG_HEAD_BACK* head, char* body);
 private:
-	Game* pGame;
+	Game *pGame;
 	tid_t nTid;
 };
 

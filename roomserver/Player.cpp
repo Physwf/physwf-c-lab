@@ -35,3 +35,8 @@ void Player::setGate(ServiceConnection* gate)
 {
 	pGate = gate;
 }
+
+void Player::send(MSG_HEAD_BACK* head, char* body)
+{
+
+}

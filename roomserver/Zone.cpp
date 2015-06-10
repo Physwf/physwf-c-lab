@@ -59,6 +59,7 @@ void Zone::tryDestroy(ServiceConnection* conn)
 Player* Zone::addPlayer(pid_t pid, Player* player)
 {
 	mPlayers.insert(map_player::value_type(pid, player));
+	return player;
 }
 
 Player* Zone::findPlayer(pid_t pid)
@@ -166,7 +167,7 @@ void Zone::broadcast(MSG_HEAD_BACK* head, char* body)
 	head->cid = nCid;
 
 	char buffer[32] = {0};
-	int size = pack_back_msg(buffer, head, body);
+	int size = pack_back_msg2(buffer, head, body);
 	for (map_gates::iterator it = mGates.begin(); it != mGates.end(); it++)
 	{
 		it->first->send(buffer, size);

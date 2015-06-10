@@ -24,7 +24,7 @@ void Game::end()
 void Game::send(MSG_HEAD_GAME* pHead, char* body)
 {
 	char buffer[32] = { 0 };
-	int size = pack_game_msg(buffer, pHead, body);
+	int size = pack_game_msg2(buffer, pHead, body);
 	pCon->send(buffer,size);
 }
 
@@ -32,4 +32,6 @@ void Game::handleMessage(GameConnection* con,MSG_HEAD_GAME* pHead, char* body)
 {
 	EV_INVOKE(cbMessageHandler,pHead,body);
 }
+
+iid_t Game::sIid=0;
 

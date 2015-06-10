@@ -56,8 +56,11 @@ void Table::handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* b
 		broadcast(&hBack, body);
 		break;
 	case MSG_TYPE_PLAYER:
+	{
 		Player* player = findPlayer(head->pid);
 		if (player) player->send(&hBack, body);
+		break;
+	}
 	default:
 		break;
 	}
@@ -81,7 +84,7 @@ err_t Table::enterPlayer(Player* player)
 
 err_t Table::leavePlayer(Player* player)
 {
-
+	return 0;
 }
 
 void Table::doForward(MSG_HEAD_BACK* head, char* body)

@@ -194,10 +194,10 @@ Table* Room::table(tid_t gid)
 
 int Room::capacity()
 {
-
+	return 10;
 }
 
 int Room::avaliable()
 {
-
+	return 1;
 }

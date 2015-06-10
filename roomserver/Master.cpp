@@ -35,3 +35,10 @@ void Master::run()
 {
 	pLoop->run();
 }
+
+int main(int argc, char** argv)
+{
+	Master* master = new Master();
+	master->start();
+	master->run();
+}

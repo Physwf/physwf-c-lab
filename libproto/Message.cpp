@@ -192,3 +192,8 @@ int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body)
 {
 	return 0;
 }
+
+VALE_DLL int read_head_game(char* buff, MSG_HEAD_GAME* head)
+{
+	return 0;
+}

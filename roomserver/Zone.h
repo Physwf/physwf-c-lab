@@ -19,9 +19,9 @@ protected:
 	static cid_t getNextId();
 	void tryCreate(ServiceConnection* conn);
 	void tryDestroy(ServiceConnection* conn);
-	inline Player* addPlayer(pid_t pid, Player* player);
-	inline Player* findPlayer(pid_t pid);
-	inline Player* removePlayer(pid_t pid);
+	Player* addPlayer(pid_t pid, Player* player);
+	Player* findPlayer(pid_t pid);
+	Player* removePlayer(pid_t pid);
 	inline int addGate(ServiceConnection* conn);
 	inline int removeGate(ServiceConnection* conn);
 protected:
