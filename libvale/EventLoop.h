@@ -27,24 +27,24 @@
 typedef void(Object::*EventCallBack)(...);
 typedef void(Object::*IOEventCallBack)(int, int, void*);
 
-typedef struct {
+typedef struct VALE_DLL {
 	Object* object;
 	EventCallBack method;
 } EventHandler;
 
-typedef struct {
+typedef struct VALE_DLL {
 	Object* object;
 	IOEventCallBack method;
 } IOEventHandler;
 
-typedef struct {
+typedef struct VALE_DLL {
 	int mask;
 	void *data;
 	IOEventHandler cbRead;
 	IOEventHandler cbWrite;
 } IOEvent;
 
-typedef struct {
+typedef struct VALE_DLL {
 	int fd;
 	int mask;
 } IOFired;
