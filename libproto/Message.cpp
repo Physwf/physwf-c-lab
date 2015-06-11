@@ -1,4 +1,5 @@
 #include "Message.h"
+#include <string>
 
 Message::Message()
 {

@@ -2,6 +2,7 @@
 #define _GAME_H
 
 #include "Message.h"
+#include "GameConnection.h"
 
 class Game : public Object
 {

@@ -2,7 +2,8 @@
 #define _PLAYER_H
 
 #include "Message.h"
-
+#include "ServiceConnection.h"
+#include "GameConnection.h"
 #include "type.h"
 
 class Player

@@ -1,4 +1,5 @@
 #pragma once
+/*
 #ifndef _SYNC_MSG_CONNECTION_H
 #define _SYNC_MSG_CONNECTION_H
 
@@ -7,7 +8,7 @@
 #include "platform.h"
 
 template <typename TMID, typename TMSG_HEAD>
-class VALE_DLL SyncMsgConnection : public Object
+class SyncMsgConnection : public Object
 {
 public:
 	SyncMsgConnection(EventLoop* loop, int fd = INVALID_SOCKET)
@@ -41,7 +42,7 @@ public:
 	}
 	void setTest(int *t) { test = t; }
 	void setCloseHandler(const EventHandler &cb) { pConnection->setCloseHandler(cb); }
-	void setConnectHandler(const EventHandler &cb) { cbConnectHandler = cb; }
+	void setConnectHandler(const EventHandler &cb) { pConnection->setConnectHandler(cb); }
 	void setMessageHandler(EventHandler &handler) { onMessage = handler; }
 private:
 	void init()
@@ -74,3 +75,4 @@ private:
 
 
 #endif
+*/

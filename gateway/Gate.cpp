@@ -25,8 +25,7 @@ void Gate::connectMaster()
 {
 	ServiceConnection* master = ServiceConnection::create(pLoop);
 	master->setConnectHandler(EV_CB(this, Gate::onMasterConnect));
-	int i = 1983;
-	master->setTest(&i);
+	master->setTest(1024);
 	master->connect("127.0.0.1",1234);
 }
 

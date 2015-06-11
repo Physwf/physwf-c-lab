@@ -104,22 +104,4 @@ protected:
 	size_t nOffset;
 };
 
-#include "SyncMsgConnection.h"
-#include <set>
-
-EXPIMP_TEMPLATE template class VALE_DLL SyncMsgConnection<mid_t, MSG_HEAD_GATE>;
-EXPIMP_TEMPLATE template class VALE_DLL SyncMsgConnection<mid_t, MSG_HEAD_BACK>;
-EXPIMP_TEMPLATE template class VALE_DLL SyncMsgConnection<mid_t, MSG_HEAD_GAME>;
-
-typedef SyncMsgConnection<mid_t, MSG_HEAD_GATE> ClientConnection;
-typedef SyncMsgConnection<mid_t, MSG_HEAD_BACK> ServiceConnection;
-typedef SyncMsgConnection<mid_t, MSG_HEAD_GAME> GameConnection;
-
-EXPIMP_TEMPLATE template class VALE_DLL std::set<ClientConnection*>;
-EXPIMP_TEMPLATE template class VALE_DLL std::set<ServiceConnection*>;
-
-typedef std::set<ClientConnection*> ClientBuffer;
-typedef std::set<ServiceConnection*> ServiceBuffer;
-
-
 #endif

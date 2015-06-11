@@ -3,6 +3,8 @@
 
 #include "Message.h"
 #include "Session.h"
+#include "ClientConnection.h"
+#include "ServiceConnection.h"
 
 struct Client
 {
@@ -18,6 +20,11 @@ struct Service
 	ServiceConnection* connection;
 	char type;
 };
+
+#include <set>
+
+typedef std::set<ClientConnection*> ClientBuffer;
+typedef std::set<ServiceConnection*> ServiceBuffer;
 
 class Auth : public Object
 {
