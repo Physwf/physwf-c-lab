@@ -2,6 +2,7 @@
 #include "Master.h"
 #include "Protocol.h"
 #include "Message.h"
+#include "Log.h"
 
 World::World()
 {
@@ -21,7 +22,8 @@ void World::initialize()
 
 void World::addGateWay(ServiceConnection* conn)
 {
-	conn->setMessageHandler(EV_CB(this, World::onGatewayMessage));
+	conn->setMessageHandler(EV_M_CB(this, World::onGatewayMessage));
+	conn->setCloseHandler(EV_CB(this,World::onGatewayClose));
 }
 
 
@@ -46,6 +48,12 @@ void World::onGatewayMessage(ServiceConnection* conn, char* head, char* body)
 		doForword(conn, pHead, body);
 		break;
 	}
+}
+
+
+void World::onGatewayClose(ServiceConnection* con)
+{
+	Log::info("Gateway closed!");
 }
 
 void World::onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)

@@ -30,7 +30,7 @@ void Game::send(MSG_HEAD_GAME* pHead, char* body)
 
 void Game::handleMessage(GameConnection* con,MSG_HEAD_GAME* pHead, char* body)
 {
-	EV_INVOKE(cbMessageHandler,pHead,body);
+	EV_INVOKE(cbMessageHandler,con,pHead,body);
 }
 
 iid_t Game::sIid=0;

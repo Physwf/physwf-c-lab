@@ -1,5 +1,5 @@
 #include "Gate.h"
-
+#include "Log.h"
 
 Gate::Gate()
 {
@@ -38,7 +38,7 @@ void Gate::onMasterConnect(ServiceConnection* con)
 void Gate::initServer()
 {
 	pAuth = new Auth();
-	pAuth->setClientAuthResultHandler(EV_CB(this, Gate::onClientAuthResult));
+	pAuth->setClientAuthResultHandler(EV_AH_CB(this, Gate::onClientAuthResult));
 	//pAuth->setServiceAuthResultHandler(EV_CB(this, Gate::onServiceAuthResult));
 
 	pFront = new Server(pLoop);
@@ -56,14 +56,17 @@ void Gate::initServer()
 
 void Gate::onClientConnect(int fd, int event, void* data)
 {
-	ClientConnection* fCon = new ClientConnection(pLoop, fd);
+	Log::info("client connected! fd = %d", fd);
+	ClientConnection* fCon = ClientConnection::create(pLoop, fd);
+	fCon->setCloseHandler(EV_CB(this, Gate::onClientClose));
 	pAuth->addClientForAuth(fCon);
 }
 
 void Gate::onClientClose(ClientConnection* con)
 {
+	Log::info("client closed!");
 	pAuth->removeClient(con);
-	delete con;
+	ClientConnection::destory(con);
 	con = NULL;
 }
 

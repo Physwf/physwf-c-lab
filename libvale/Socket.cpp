@@ -116,6 +116,9 @@ int Socket::read(char* buffer, int len)
 		printf("read failed with error:%d!", WSAGetLastError());
 #endif
 	}
+	else if (iRecv == 0)
+	{
+	}
 	return iRecv;
 #else
     int nread = ::read(nFd,buffer,len);

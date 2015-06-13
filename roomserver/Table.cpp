@@ -15,7 +15,7 @@ Table::~Table()
 void Table::startGame()
 {
 	pGame = GamePool::getInstance()->getGame();
-	pGame->setMessageHandler(EV_CB(this, Table::handleGameMessage));
+	pGame->setMessageHandler(EV_M_CB(this, Table::handleGameMessage));
 }
 
 

@@ -15,13 +15,13 @@ Router::~Router()
 void Router::addClientForRoute(Client* client)
 {
 	addClient(client);
-	client->connection->setMessageHandler(EV_CB(this, Router::doClientRoute));
+	client->connection->setMessageHandler(EV_M_CB(this, Router::doClientRoute));
 }
 
 void Router::setMaster(ServiceConnection* service)
 {
 	pMaster = service;
-	pMaster->setMessageHandler(EV_CB(this, Router::onMasterMessage));
+	pMaster->setMessageHandler(EV_M_CB(this, Router::onMasterMessage));
 }
 
 

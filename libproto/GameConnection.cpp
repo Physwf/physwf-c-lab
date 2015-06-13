@@ -62,7 +62,7 @@ void GameConnection::send(char* data, size_t size)
 
 }
 
-void GameConnection::setMessageHandler(const EventHandler &cb)
+void GameConnection::setMessageHandler(const MessageHandler &cb)
 {
 	cbMessageHandler = cb;
 }
@@ -88,4 +88,16 @@ GameConnection* GameConnection::create(EventLoop* loop)
 	con->createTcp(loop);
 	GameConnection* gCon = new GameConnection(con);
 	return gCon;
+}
+
+
+GameConnection* GameConnection::create(EventLoop* loop, int fd /*= INVALID_SOCKET*/)
+{
+	GameConnection* gCon = new GameConnection(loop,fd);
+	return gCon;
+}
+
+void GameConnection::destory(GameConnection* con)
+{
+	delete con;
 }

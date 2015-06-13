@@ -59,10 +59,10 @@ void ClientConnection::send(char* head, size_t head_len, char* body, size_t body
 
 void ClientConnection::send(char* data, size_t size)
 {
-
+	pConnection->send(data, size);
 }
 
-void ClientConnection::setMessageHandler(const EventHandler &cb)
+void ClientConnection::setMessageHandler(const MessageHandler &cb)
 {
 	cbMessageHandler = cb;
 }
@@ -88,5 +88,17 @@ ClientConnection* ClientConnection::create(EventLoop* loop)
 	con->createTcp(loop);
 	ClientConnection* gCon = new ClientConnection(con);
 	return gCon;
+}
+
+
+ClientConnection* ClientConnection::create(EventLoop* loop, int fd /*= INVALID_SOCKET*/)
+{
+	ClientConnection* con = new ClientConnection(loop,fd);
+	return con;
+}
+
+void ClientConnection::destory(ClientConnection* con)
+{
+	delete con;
 }
 

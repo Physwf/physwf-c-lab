@@ -65,7 +65,7 @@ void ServiceConnection::send(char* data, size_t size)
 
 }
 
-void ServiceConnection::setMessageHandler(const EventHandler &cb)
+void ServiceConnection::setMessageHandler(const MessageHandler &cb)
 {
 	cbMessageHandler = cb;
 }
@@ -96,5 +96,17 @@ ServiceConnection* ServiceConnection::create(EventLoop* loop)
 	con->createTcp(loop);
 	ServiceConnection* gCon = new ServiceConnection(con);
 	return gCon;
+}
+
+
+ServiceConnection* ServiceConnection::create(EventLoop* loop, int fd /*= INVALID_SOCKET*/)
+{
+	ServiceConnection* sCon = new ServiceConnection(loop,fd);
+	return sCon;
+}
+
+void ServiceConnection::destroy(ServiceConnection* con)
+{
+	delete con;
 }
 

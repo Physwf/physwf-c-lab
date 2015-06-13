@@ -13,12 +13,12 @@ public:
 	void start(GameConnection* con);
 	void end();
 	void send(MSG_HEAD_GAME* pHead, char* body);
-	void setMessageHandler(EventHandler& cb) { cbMessageHandler = cb; };
+	void setMessageHandler(MessageHandler& cb) { cbMessageHandler = cb; };
 	void handleMessage(GameConnection* con,MSG_HEAD_GAME* pHead, char* body);
 	iid_t iid() { return nIid; }
 	bool isIdle() { return bIdle; }
 private:
-	EventHandler cbMessageHandler;
+	MessageHandler cbMessageHandler;
 private:
 	GameConnection* pCon;
 	iid_t nIid;

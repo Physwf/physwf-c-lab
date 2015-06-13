@@ -3,7 +3,7 @@
 
 Message::Message()
 {
-
+	nOffset = 0;
 }
 
 Message::Message(mid_t mid)
@@ -156,7 +156,16 @@ int read_head_back(char* buff, MSG_HEAD_BACK* head)
 
 int write_head_gate(char* buff, MSG_HEAD_GATE* head)
 {
-	return 0;
+	size_t size = 0;
+	memcpy(buff, &head->length, sizeof(head->length));
+	size += sizeof(head->length);
+	buff += sizeof(head->length);
+	memcpy(buff, &head->id, sizeof(head->id));
+	size += sizeof(head->id);
+	buff += sizeof(head->id);
+	memcpy(buff, &head->err, sizeof(head->err));
+	size += sizeof(head->err);
+	return size;
 }
 
 int write_head_back(char* buff, MSG_HEAD_BACK* head)
@@ -166,6 +175,7 @@ int write_head_back(char* buff, MSG_HEAD_BACK* head)
 
 int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
 {
+	
 	return 0;
 }
 
@@ -176,7 +186,12 @@ int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body)
 
 int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body)
 {
-	return 0;
+	int hsize = write_head_gate(buff, head);
+	size_t bsize = 0;
+	body->writeBody(buff + hsize, &bsize);
+	head->length = bsize;
+	write_head_gate(buff, head);
+	return bsize + hsize;
 }
 
 int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body)

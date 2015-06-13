@@ -6,6 +6,14 @@
 #include "ClientConnection.h"
 #include "ServiceConnection.h"
 
+typedef void(Object::*AuthCallBack)(void*,bool);
+typedef struct
+{
+	Object* object;
+	AuthCallBack method;
+} AuthHandler;
+
+#define EV_AH_CB(_obj,_func) AuthHandler {_obj,(AuthCallBack)&_func}
 struct Client
 {
 	ClientConnection* connection;
@@ -37,16 +45,16 @@ public:
 	void removeClient(ClientConnection* client);
 	void removeService(ServiceConnection* service);
 	
-	void setClientAuthResultHandler(EventHandler &cb) { cbClientAuthHandler = cb; }
-	void setServiceAuthResultHandler(EventHandler &cb) { cbServiceAuthHandler = cb; }
+	void setClientAuthResultHandler(AuthHandler &cb) { cbClientAuthHandler = cb; }
+	void setServiceAuthResultHandler(AuthHandler &cb) { cbServiceAuthHandler = cb; }
 private:
 	void doClientAuth(ClientConnection* conn, char* head, char*body);
 private:
 
 	ClientBuffer cBuffer;
 	ServiceBuffer sBuffer;
-	EventHandler cbClientAuthHandler;
-	EventHandler cbServiceAuthHandler;
+	AuthHandler cbClientAuthHandler;
+	AuthHandler cbServiceAuthHandler;
 	
 };
 #endif

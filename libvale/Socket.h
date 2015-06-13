@@ -13,7 +13,7 @@
 #include <Ws2tcpip.h>
 #include <WinSock2.h>
 typedef int socklen_t;
-
+typedef SOCKET sock_t;
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -25,14 +25,10 @@ typedef int socklen_t;
 #include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
-
+typedef int sock_t;
+#define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #endif
-
-#ifndef INVALID_SOCKET
-#define INVALID_SOCKET -1
-#endif
-
 
 #define SOCKET_OK 0
 
@@ -56,7 +52,7 @@ public:
     int setReuseAddr();
     int setNonDelay();
 	int setKeepAlive();
-	bool isValid() { return nFd == INVALID_SOCKET; }
+	bool isValid() { return nFd != INVALID_SOCKET; }
 private:
 	int nFd;
 #ifdef WIN32

@@ -141,7 +141,9 @@ void MSG_REQ_LOGIN::readBody(char* input, size_t size)
 
 void MSG_REQ_LOGIN::writeBody(char* output, size_t* size)
 {
-
+	writeUnsigndByte(accout_length);
+	writeBytes(accout,accout_length);
+	Message::writeBody(output, size);
 }
 
 void MSG_CHANEL_STATUS::readBody(char* input, size_t size)

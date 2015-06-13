@@ -2,6 +2,8 @@
 #include "Message.h"
 #include "GamePool.h"
 
+#include "Log.h"
+
 Master::Master()
 {
 
@@ -28,7 +30,8 @@ void Master::start()
 
 void Master::onGatewayConnected(int fd, int event, void* data)
 {
-	ServiceConnection* service = new ServiceConnection(pLoop, fd);
+	Log::info("GateWay Connected : fd = %d",fd);
+	ServiceConnection* service = ServiceConnection::create(pLoop, fd);
 	pWorld->addGateWay(service);
 	//ServiceConnection
 }

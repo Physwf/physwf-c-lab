@@ -49,7 +49,7 @@ int Connection::send(Buffer& buf)
 
 void Connection::close()
 {
-	if (sSocket.isValid()) return;
+	if (!sSocket.isValid()) return;
 	pLoop->removeEventListener(sSocket.getFd(), EV_IO_ALL);
 	sSocket.close();
 	EV_INVOKE(cbCloseHandler, this);
