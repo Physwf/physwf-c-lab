@@ -37,7 +37,7 @@ size_t Buffer::append(const char* buf, size_t size)
 int Buffer::readBytes(Buffer* buff, size_t start, size_t len)
 {
 	nPosition = start;
-	if (bytesAvaliable() > len)
+	if (bytesAvaliable() >= len)
 	{
 		buff->append(pBuffer, len);
 		nPosition += len;

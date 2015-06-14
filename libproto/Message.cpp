@@ -146,12 +146,94 @@ void Message::writeBytes(char* bytes, size_t size)
 
 int read_head_gate(char* buff, MSG_HEAD_GATE* head)
 {
-	return 0;
+	size_t size = 0;
+	memcpy(&head->length, buff, sizeof(head->length));
+	size += sizeof(head->length);
+	buff += sizeof(head->length);
+	memcpy(&head->id, buff, sizeof(head->id));
+	size += sizeof(head->id);
+	buff += sizeof(head->id);
+	memcpy(&head->err, buff, sizeof(head->err));
+	size += sizeof(head->err);
+	return size;
 }
 
 int read_head_back(char* buff, MSG_HEAD_BACK* head)
 {
-	return 0;
+	size_t size = 0;
+	memcpy(&head->length, buff, sizeof(head->length));
+	size += sizeof(head->length);
+	buff += sizeof(head->length);
+
+	memcpy(&head->type, buff, sizeof(head->type));
+	size += sizeof(head->type);
+	buff += sizeof(head->type);
+
+	memcpy(&head->id, buff, sizeof(head->id));
+	size += sizeof(head->id);
+	buff += sizeof(head->id);
+
+	memcpy(&head->pid, buff, sizeof(head->pid));
+	size += sizeof(head->pid);
+	buff += sizeof(head->pid);
+
+	memcpy(&head->rid, buff, sizeof(head->rid));
+	size += sizeof(head->rid);
+	buff += sizeof(head->rid);
+
+	memcpy(&head->tid, buff, sizeof(head->tid));
+	size += sizeof(head->tid);
+	buff += sizeof(head->tid);
+
+	memcpy(&head->cid, buff, sizeof(head->cid));
+	size += sizeof(head->cid);
+	buff += sizeof(head->cid);
+
+	memcpy(&head->err, buff, sizeof(head->err));
+	size += sizeof(head->err);
+
+	return size;
+}
+
+int read_head_game(char* buff, MSG_HEAD_GAME* head)
+{
+	size_t size = 0;
+	memcpy(&head->length, buff, sizeof(head->length));
+	size += sizeof(head->length);
+	buff += sizeof(head->length);
+
+	memcpy(&head->type, buff, sizeof(head->type));
+	size += sizeof(head->type);
+	buff += sizeof(head->type);
+
+	memcpy(&head->id, buff, sizeof(head->id));
+	size += sizeof(head->id);
+	buff += sizeof(head->id);
+
+	memcpy(&head->pid, buff, sizeof(head->pid));
+	size += sizeof(head->pid);
+	buff += sizeof(head->pid);
+
+	memcpy(&head->iid, buff, sizeof(head->iid));
+	size += sizeof(head->iid);
+	buff += sizeof(head->iid);
+
+	memcpy(&head->rid, buff, sizeof(head->rid));
+	size += sizeof(head->rid);
+	buff += sizeof(head->rid);
+
+	memcpy(&head->tid, buff, sizeof(head->tid));
+	size += sizeof(head->tid);
+	buff += sizeof(head->tid);
+
+	memcpy(&head->cid, buff, sizeof(head->cid));
+	size += sizeof(head->cid);
+	buff += sizeof(head->cid);
+
+	memcpy(&head->err, buff, sizeof(head->err));
+	size += sizeof(head->err);
+
+	return size;
 }
 
 int write_head_gate(char* buff, MSG_HEAD_GATE* head)
@@ -170,18 +252,99 @@ int write_head_gate(char* buff, MSG_HEAD_GATE* head)
 
 int write_head_back(char* buff, MSG_HEAD_BACK* head)
 {
-	return 0;
+	size_t size = 0;
+	memcpy(buff, &head->length, sizeof(head->length));
+	size += sizeof(head->length);
+	buff += sizeof(head->length);
+
+	memcpy(buff, &head->type, sizeof(head->type));
+	size += sizeof(head->type);
+	buff += sizeof(head->type);
+
+	memcpy(buff, &head->id, sizeof(head->id));
+	size += sizeof(head->id);
+	buff += sizeof(head->id);
+
+	memcpy(buff, &head->pid, sizeof(head->pid));
+	size += sizeof(head->pid);
+	buff += sizeof(head->pid);
+
+	memcpy(buff, &head->rid, sizeof(head->rid));
+	size += sizeof(head->rid);
+	buff += sizeof(head->rid);
+
+	memcpy(buff, &head->tid, sizeof(head->tid));
+	size += sizeof(head->tid);
+	buff += sizeof(head->tid);
+
+	memcpy(buff, &head->cid, sizeof(head->cid));
+	size += sizeof(head->cid);
+	buff += sizeof(head->cid);
+
+	memcpy(buff, &head->err, sizeof(head->err));
+	size += sizeof(head->err);
+	buff += sizeof(head->err);
+
+	return size;
+}
+
+int write_head_game(char* buff, MSG_HEAD_GAME* head)
+{
+	size_t size = 0;
+	memcpy(buff, &head->length, sizeof(head->length));
+	size += sizeof(head->length);
+	buff += sizeof(head->length);
+
+	memcpy(buff, &head->type, sizeof(head->type));
+	size += sizeof(head->type);
+	buff += sizeof(head->type);
+
+	memcpy(buff, &head->id, sizeof(head->id));
+	size += sizeof(head->id);
+	buff += sizeof(head->id);
+
+	memcpy(buff, &head->pid, sizeof(head->pid));
+	size += sizeof(head->pid);
+	buff += sizeof(head->pid);
+
+	memcpy(buff, &head->iid, sizeof(head->iid));
+	size += sizeof(head->iid);
+	buff += sizeof(head->iid);
+
+	memcpy(buff, &head->rid, sizeof(head->rid));
+	size += sizeof(head->rid);
+	buff += sizeof(head->rid);
+
+	memcpy(buff, &head->tid, sizeof(head->tid));
+	size += sizeof(head->tid);
+	buff += sizeof(head->tid);
+
+	memcpy(buff, &head->cid, sizeof(head->cid));
+	size += sizeof(head->cid);
+	buff += sizeof(head->cid);
+
+	memcpy(buff, &head->err, sizeof(head->err));
+	size += sizeof(head->err);
+	buff += sizeof(head->err);
+
+	return size;
 }
 
 int pack_back_msg(char* buff, MSG_HEAD_BACK* head, Message* body)
 {
-	
-	return 0;
+	write_head_back(buff, head);
+	size_t bsize = 0;
+	body->writeBody(buff + HEAD_LENGTH_BACK, &bsize);
+	head->length = bsize;
+	write_head_back(buff, head);
+	return HEAD_LENGTH_BACK+bsize;
 }
 
 int pack_back_msg2(char* buff, MSG_HEAD_BACK* head, char* body)
 {
-	return 0;
+	write_head_back(buff, head);
+	memcpy(buff + HEAD_LENGTH_BACK, body, head->length);
+	return HEAD_LENGTH_BACK + head->length;
 }
 
 int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body)
@@ -196,20 +359,30 @@ int pack_gate_msg(char* buff, MSG_HEAD_GATE* head, Message* body)
 
 int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body)
 {
-	return 0;
+	write_head_gate(buff, head);
+	size_t size = 0;
+	memcpy(buff + HEAD_LENGTH_GATE, body,head->length);
+	return HEAD_LENGTH_GATE + head->length;
 }
 
 int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body)
 {
-	return 0;
+	int hsize = write_head_game(buff, head);
+	size_t bsize = 0;
+	body->writeBody(buff + hsize, &bsize);
+	head->length = bsize;
+	write_head_game(buff, head);
+	return bsize + hsize;
 }
 
 int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body)
 {
-	return 0;
+	write_head_game(buff, head);
+	size_t size = 0;
+	memcpy(buff + HEAD_LENGTH_GAME, body, head->length);
+	return HEAD_LENGTH_GAME + head->length;
 }
 
-VALE_DLL int read_head_game(char* buff, MSG_HEAD_GAME* head)
-{
-	return 0;
-}
+
+
+

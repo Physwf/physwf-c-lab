@@ -1,4 +1,5 @@
 #include "ClientConnection.h"
+#include "Log.h"
 
 ClientConnection::ClientConnection(EventLoop* loop, int fd /*= INVALID_SOCKET*/)
 {
@@ -26,15 +27,19 @@ void ClientConnection::onConnected(Connection* con)
 void ClientConnection::onRead(Connection* con)
 {
 	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() > sizeof(MSG_HEAD_GATE))
+	if (buff->bytesAvaliable() >= sizeof(HEAD_LENGTH_GATE))
 	{
 		MSG_HEAD_GATE head;
 		read_head_gate(buff->data(), &head);
-		if (head.length < 0 || head.length > 512) pConnection->close();
+		if (head.length < 0 || head.length > MAX_MSG_LENGTH)
+		{
+			Log::debug("client been closed due to illegal head length: %d",head.length);
+			pConnection->close();
+		}
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			//gBuffer->seek(2);
-			buff->readBytes(&bufRead, 2, head.length);
+			buff->readBytes(&bufRead, HEAD_LENGTH_GATE, head.length);
 			buff->tight();
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
 			bufRead.clear();

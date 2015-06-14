@@ -36,6 +36,28 @@ struct MSG_HEAD_GATE
 	err_t err;
 };
 
+#define HEAD_LENGTH_GATE sizeof(unsigned short)+sizeof(mid_t)+sizeof(err_t)
+#define HEAD_LENGTH_BACK sizeof(unsigned short)\
+							+ sizeof(unsigned short)\
+							+ sizeof(mid_t)\
+							+ sizeof(pid_t)\
+							+ sizeof(rid_t)\
+							+ sizeof(tid_t)\
+							+ sizeof(cid_t)\
+							+ sizeof(err_t)
+
+#define HEAD_LENGTH_GAME sizeof(unsigned short)\
+							+ sizeof(unsigned short)\
+							+ sizeof(mid_t)\
+							+ sizeof(pid_t)\
+							+ sizeof(iid_t)\
+							+ sizeof(rid_t)\
+							+ sizeof(tid_t)\
+							+ sizeof(cid_t)\
+							+ sizeof(err_t)
+
+#define MAX_MSG_LENGTH 512
+
 #define MSG_TYPE_PLAYER			1
 #define MSG_TYPE_CHANEL			2
 #define MSG_TYPE_BROADCAST		3

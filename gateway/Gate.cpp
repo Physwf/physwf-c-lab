@@ -72,14 +72,14 @@ void Gate::onClientClose(ClientConnection* con)
 
 void Gate::onBackConnect(int fd, int event, void* data)
 {
-	ServiceConnection* bCon = new ServiceConnection(pLoop, fd);
+	ServiceConnection* bCon = ServiceConnection::create(pLoop, fd);
 	pAuth->addServiceForAuth(bCon);
 }
 
 void Gate::onBackClose(ServiceConnection* con)
 {
 	pAuth->removeService(con);
-	delete con;
+	ServiceConnection::destroy(con);
 	con = NULL;
 }
 

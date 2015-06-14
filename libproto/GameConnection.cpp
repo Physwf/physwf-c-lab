@@ -1,4 +1,5 @@
 #include "GameConnection.h"
+#include "Log.h"
 
 GameConnection::GameConnection(EventLoop* loop, int fd /*= INVALID_SOCKET*/)
 {
@@ -26,11 +27,15 @@ void GameConnection::onConnected(Connection* con)
 void GameConnection::onRead(Connection* con)
 {
 	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() > sizeof(MSG_HEAD_GAME))
+	if (buff->bytesAvaliable() > HEAD_LENGTH_GAME)
 	{
 		MSG_HEAD_GAME head;
 		read_head_game(buff->data(), &head);
-		if (head.length < 0 || head.length > 512) pConnection->close();
+		if (head.length < 0 || head.length > MAX_MSG_LENGTH)
+		{
+			Log::debug("game been closed due to illegal head length: %d", head.length);
+			pConnection->close();
+		}
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			//gBuffer->seek(2);

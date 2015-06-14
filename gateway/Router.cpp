@@ -16,6 +16,7 @@ void Router::addClientForRoute(Client* client)
 {
 	addClient(client);
 	client->connection->setMessageHandler(EV_M_CB(this, Router::doClientRoute));
+
 }
 
 void Router::setMaster(ServiceConnection* service)
@@ -101,17 +102,19 @@ void Router::doClientRoute(ClientConnection* conn, char* head, char* body)
 	//pBuffer->append(body, bsize);
 	//
 	Client *client = findClient(conn);
-	MSG_HEAD_GATE* pHead = (MSG_HEAD_GATE*)head;
+	MSG_HEAD_GATE gHead;
+	read_head_gate(head, &gHead);
 	MSG_HEAD_BACK pBack;
-	pBack.id = pHead->id;
-	pBack.length = pHead->length;
+	pBack.id = gHead.id;
+	pBack.length = gHead.length;
+
 	pBack.rid = client->rid;
 	pBack.tid = client->tid;
 	pBack.pid = client->pid;
-	//pBack.cid = client->
-	pMaster->send((char*)&pBack, sizeof(MSG_HEAD_BACK), body, pHead->length);
-	//pMaster->send(pBuffer->data(), pBuffer->bytesAvaliable());
-	//pMaster->send();
+
+	char buffer[MAX_MSG_LENGTH] = { 0 };
+	int size = pack_back_msg2(buffer, &pBack, body);
+	pMaster->send(buffer, size);
 }
 
 

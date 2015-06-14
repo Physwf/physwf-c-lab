@@ -1,4 +1,5 @@
 #include "ServiceConnection.h"
+#include "Log.h"
 
 ServiceConnection::ServiceConnection(EventLoop* loop, int fd /*= INVALID_SOCKET*/)
 {
@@ -29,11 +30,15 @@ void ServiceConnection::onConnected(Connection* con)
 void ServiceConnection::onRead(Connection* con)
 {
 	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() > sizeof(MSG_HEAD_BACK))
+	if (buff->bytesAvaliable() > HEAD_LENGTH_BACK)
 	{
 		MSG_HEAD_BACK head;
 		read_head_back(buff->data(), &head);
-		if (head.length < 0 || head.length > 512) pConnection->close();
+		if (head.length < 0 || head.length > MAX_MSG_LENGTH)
+		{
+			Log::debug("service been closed due to illegal head length: %d", head.length);
+			pConnection->close();
+		}
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			//gBuffer->seek(2);
