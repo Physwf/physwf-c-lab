@@ -62,7 +62,7 @@ void World::onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body
 	Player* player = new Player(msg->pid);
 
 	player->setGate(conn);
-
+	Log::debug("new player enter world");
 	addPlayer(player->pid(), player);
 	player->setChanelId(nCid);
 
@@ -73,7 +73,7 @@ void World::onDestroyPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* 
 {
 	MSG_REQ_DESTROY_PLAYER* msg = (MSG_REQ_DESTROY_PLAYER*)body;
 	Player* player = removePlayer(msg->pid);
-
+	Log::debug("player left world");
 	leaveZone(conn, player);
 }
 

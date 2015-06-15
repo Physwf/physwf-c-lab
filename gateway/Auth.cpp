@@ -15,6 +15,7 @@ Auth::~Auth()
 void Auth::addClientForAuth(ClientConnection* client)
 {
 	client->setMessageHandler(EV_M_CB(this, Auth::doClientAuth));
+	cBuffer.insert(client);
 }
 
 void Auth::addServiceForAuth(ServiceConnection* service)
@@ -22,9 +23,9 @@ void Auth::addServiceForAuth(ServiceConnection* service)
 	EV_INVOKE(cbServiceAuthHandler, service, true);
 }
 
-void Auth::removeClient(ClientConnection* client)
+bool Auth::removeClient(ClientConnection* client)
 {
-
+	return cBuffer.erase(client) > 0;
 }
 
 void Auth::removeService(ServiceConnection* service)
@@ -38,5 +39,6 @@ void Auth::doClientAuth(ClientConnection* conn,char* head, char*body)
 	Client* client = new Client();
 	client->connection = conn;
 	client->session = new Session();
+	removeClient(conn);
 	EV_INVOKE(cbClientAuthHandler, client, true);
 }

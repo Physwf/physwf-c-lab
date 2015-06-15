@@ -31,6 +31,8 @@ private:
 	void onClientAuthResult(Client* client, bool success);
 	void onServiceAuthResult(ServiceConnection* service, bool success);
 
+	void createPlayer(Client* client);
+	void destroyPlayer(Client* client);
 private:
 	EventLoop* pLoop;
 	Server* pFront;

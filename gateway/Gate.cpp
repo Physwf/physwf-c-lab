@@ -1,5 +1,6 @@
 #include "Gate.h"
 #include "Log.h"
+#include "Protocol.h"
 
 Gate::Gate()
 {
@@ -65,7 +66,12 @@ void Gate::onClientConnect(int fd, int event, void* data)
 void Gate::onClientClose(ClientConnection* con)
 {
 	Log::info("client closed!");
-	pAuth->removeClient(con);
+	if (!pAuth->removeClient(con))
+	{
+		Client* client = pRouter->findClient(con);
+		destroyPlayer(client);
+	}
+	
 	ClientConnection::destory(con);
 	con = NULL;
 }
@@ -85,12 +91,56 @@ void Gate::onBackClose(ServiceConnection* con)
 
 void Gate::onClientAuthResult(Client* client, bool success)
 {
-	pRouter->addClientForRoute(client);
+	if (success)
+	{
+		pRouter->addClientForRoute(client);
+		createPlayer(client);
+	}
 }
 
 void Gate::onServiceAuthResult(ServiceConnection* service, bool success)
 {
 	pRouter->setMaster(service);
+}
+
+
+void Gate::createPlayer(Client* client)
+{
+	MSG_HEAD_BACK bHead;
+	bHead.id = MSG_CREATE_PLAYER_1000;
+	bHead.pid = client->pid;
+	bHead.type = MSG_TYPE_PLAYER;
+	bHead.rid = 0;
+	bHead.tid = 0;
+	bHead.cid = 0;
+	
+	MSG_REQ_CREATE_PLAYER msg;
+	msg.pid = client->pid;
+	
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &bHead, &msg);
+	Log::debug("send create player");
+	client->master->send(buffer, size);
+}
+
+
+void Gate::destroyPlayer(Client* client)
+{
+	MSG_HEAD_BACK bHead;
+	bHead.id = MSG_DESTROY_PLAYER_1001;
+	bHead.pid = client->pid;
+	bHead.type = MSG_TYPE_PLAYER;
+	bHead.rid = 0;
+	bHead.tid = 0;
+	bHead.cid = 0;
+
+	MSG_REQ_DESTROY_PLAYER msg;
+	msg.pid = client->pid;
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &bHead, &msg);
+	Log::debug("send destroy player");
+	client->master->send(buffer, size);
 }
 
 int main(int argc, char**argv)

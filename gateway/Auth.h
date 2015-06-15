@@ -17,6 +17,7 @@ typedef struct
 struct Client
 {
 	ClientConnection* connection;
+	ServiceConnection* master;
 	Session* session;
 	rid_t rid;
 	tid_t tid;
@@ -42,7 +43,7 @@ public:
 public:
 	void addClientForAuth(ClientConnection* client);
 	void addServiceForAuth(ServiceConnection* service);
-	void removeClient(ClientConnection* client);
+	bool removeClient(ClientConnection* client);
 	void removeService(ServiceConnection* service);
 	
 	void setClientAuthResultHandler(AuthHandler &cb) { cbClientAuthHandler = cb; }

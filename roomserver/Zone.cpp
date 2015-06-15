@@ -77,8 +77,9 @@ Player* Zone::removePlayer(pid_t pid)
 	map_player::iterator it = mPlayers.find(pid);
 	if (it != mPlayers.end())
 	{
+		Player* ret = it->second;
 		mPlayers.erase(it);
-		return it->second;
+		return ret;
 	}
 	return NULL;
 }

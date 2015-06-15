@@ -15,6 +15,7 @@ Router::~Router()
 void Router::addClientForRoute(Client* client)
 {
 	addClient(client);
+	client->master = pMaster;
 	client->connection->setMessageHandler(EV_M_CB(this, Router::doClientRoute));
 
 }

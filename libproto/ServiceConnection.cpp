@@ -67,7 +67,7 @@ void ServiceConnection::send(char* head, size_t head_len, char* body, size_t bod
 
 void ServiceConnection::send(char* data, size_t size)
 {
-
+	pConnection->send(data, size);
 }
 
 void ServiceConnection::setMessageHandler(const MessageHandler &cb)

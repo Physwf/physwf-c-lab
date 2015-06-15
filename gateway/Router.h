@@ -19,9 +19,10 @@ public:
 public:
 	void addClientForRoute(Client* client);
 	void setMaster(ServiceConnection* service);
+	Client* findClient(ClientConnection* conn);
 private:
 	inline Client* addClient(Client* client);
-	inline Client* findClient(ClientConnection* conn);
+	
 	inline Client* findClient(pid_t pid);
 	inline Client* removeClient(ClientConnection* conn);
 	inline Chanel* createChanel(cid_t cid);

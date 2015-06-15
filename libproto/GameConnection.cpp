@@ -64,7 +64,7 @@ void GameConnection::send(char* head, size_t head_len, char* body, size_t body_l
 
 void GameConnection::send(char* data, size_t size)
 {
-
+	pConnection->send(data, size);
 }
 
 void GameConnection::setMessageHandler(const MessageHandler &cb)
