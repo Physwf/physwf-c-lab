@@ -161,13 +161,13 @@ void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char*
 {
 	switch (head->id)
 	{
-	case MSG_CREATE_CHANEL_100:
+	case MSG_CREATE_CHANEL_102:
 	{
 		MSG_CREATE_CHANEL msg;
 		msg.readBody(body, head->length);
 		createChanel(msg.cid);
 	}
-	case MSG_CHANEL_STATUS_102:
+	case MSG_CHANEL_STATUS_104:
 	{
 		MSG_CHANEL_STATUS msg;
 		Chanel* chanel = findChanel(head->cid);

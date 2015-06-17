@@ -107,7 +107,7 @@ void Gate::onServiceAuthResult(ServiceConnection* service, bool success)
 void Gate::createPlayer(Client* client)
 {
 	MSG_HEAD_BACK bHead;
-	bHead.id = MSG_CREATE_PLAYER_1000;
+	bHead.id = MSG_CREATE_PLAYER_100;
 	bHead.pid = client->pid;
 	bHead.type = MSG_TYPE_PLAYER;
 	bHead.rid = 0;
@@ -127,7 +127,7 @@ void Gate::createPlayer(Client* client)
 void Gate::destroyPlayer(Client* client)
 {
 	MSG_HEAD_BACK bHead;
-	bHead.id = MSG_DESTROY_PLAYER_1001;
+	bHead.id = MSG_DESTROY_PLAYER_101;
 	bHead.pid = client->pid;
 	bHead.type = MSG_TYPE_PLAYER;
 	bHead.rid = 0;

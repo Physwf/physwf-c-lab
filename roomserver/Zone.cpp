@@ -24,7 +24,7 @@ void Zone::tryCreate(ServiceConnection* conn)
 	if (addGate(conn) == 1)
 	{
 		MSG_HEAD_BACK head;
-		head.id = MSG_CREATE_CHANEL_100;
+		head.id = MSG_CREATE_CHANEL_102;
 		head.type = MSG_TYPE_CHANEL;
 		head.pid =head.rid = head.tid = 0;
 		head.err = 0;
@@ -43,7 +43,7 @@ void Zone::tryDestroy(ServiceConnection* conn)
 	if (removeGate(conn) <= 0)
 	{
 		MSG_HEAD_BACK head;
-		head.id = MSG_DESTROY_CHANEL_101;
+		head.id = MSG_DESTROY_CHANEL_103;
 		head.type = MSG_TYPE_CHANEL;
 		head.rid = head.tid = head.pid = 0;
 		head.err = 0;
@@ -126,7 +126,7 @@ void Zone::enterZone(ServiceConnection* conn, Player* player)
 	tryCreate(conn);
 
 	MSG_HEAD_BACK head;
-	head.id = MSG_CHANEL_STATUS_102;
+	head.id = MSG_CHANEL_STATUS_104;
 	head.type = MSG_TYPE_CHANEL;
 	head.cid = nCid;
 	head.pid = player->pid();
@@ -146,7 +146,7 @@ void Zone::leaveZone(ServiceConnection* conn, Player* player)
 	tryDestroy(conn);
 
 	MSG_HEAD_BACK head;
-	head.id = MSG_CHANEL_STATUS_102;
+	head.id = MSG_CHANEL_STATUS_104;
 	head.type = MSG_TYPE_CHANEL;
 	head.cid = nCid;
 	head.pid = player->pid();

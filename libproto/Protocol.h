@@ -5,8 +5,7 @@
 
 #define MSG_REQ_LOGIN_0001				0001
 
-#define MSG_CREATE_PLAYER_1000		1000
-#define MSG_DESTROY_PLAYER_1001		1001
+
 
 #define MSG_ENTER_ROOM_1002			1002
 #define MSG_LEAVE_ROOM_1003			1003
@@ -15,9 +14,15 @@
 #define MSG_START_GAME_1006			1006
 #define MSG_END_GAME_1007			1007
 
-#define MSG_CREATE_CHANEL_100			0100
-#define MSG_DESTROY_CHANEL_101			0101
-#define MSG_CHANEL_STATUS_102			0102
+
+#define MSG_CREATE_PLAYER_100			0100
+#define MSG_DESTROY_PLAYER_101			0101
+#define MSG_CREATE_CHANEL_102			0102
+#define MSG_DESTROY_CHANEL_103			0103
+#define MSG_CHANEL_STATUS_104			0104
+#define MSG_CREATE_GAME_105				0107
+#define MSG_DESTROY_GAME_106			0106
+
 
 #define MSG_ERR_ROOM_NOT_EXIST_1000		1000
 #define MSG_ERR_ROOM_FULL_1001			1001
@@ -160,6 +165,22 @@ struct VALE_DLL MSG_CHANEL_STATUS : Message
 {
 	unsigned char status_type;
 	unsigned long value;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_REQ_CREATE_GAME : Message
+{
+	unsigned short gid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_REQ_DESTROY_GAME : Message
+{
+	unsigned short gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);

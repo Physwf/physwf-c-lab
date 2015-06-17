@@ -32,10 +32,10 @@ void World::onGatewayMessage(ServiceConnection* conn, char* head, char* body)
 	MSG_HEAD_BACK* pHead = (MSG_HEAD_BACK*)head;
 	switch (pHead->id)
 	{
-	case MSG_CREATE_PLAYER_1000:
+	case MSG_CREATE_PLAYER_100:
 		onNewPlayer(conn, pHead, body);
 		break;
-	case MSG_DESTROY_PLAYER_1001:
+	case MSG_DESTROY_PLAYER_101:
 		onDestroyPlayer(conn, pHead, body);
 		break;
 	case MSG_ENTER_ROOM_1002:
