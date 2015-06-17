@@ -16,6 +16,10 @@ void Table::startGame()
 {
 	pGame = GamePool::getInstance()->getGame();
 	pGame->setMessageHandler(EV_M_CB(this, Table::handleGameMessage));
+	if (!isAlive)
+	{
+
+	}
 }
 
 
@@ -100,4 +104,19 @@ void Table::doForward(MSG_HEAD_BACK* head, char* body)
 	gHead.length = head->length;
 
 	pGame->send(&gHead, body);
+}
+
+void Table::createGame(GameConnection* conn)
+{
+	MSG_HEAD_GAME head;
+	head.id = MSG_CREATE_GAME_105;
+	head.type = MSG_TYPE_PLAYER;
+	head.pid = 0;
+	head.tid = nTid;
+	head.rid = 
+}
+
+void Table::destoryGame(GameConnection* conn)
+{
+
 }

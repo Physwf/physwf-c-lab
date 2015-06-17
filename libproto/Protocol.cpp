@@ -279,3 +279,23 @@ void MSG_REQ_START_GAME::writeBody(char* output, size_t* size)
 {
 
 }
+
+void MSG_REQ_CREATE_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_CREATE_GAME::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_REQ_DESTROY_GAME::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_REQ_DESTROY_GAME::writeBody(char* output, size_t* size)
+{
+
+}

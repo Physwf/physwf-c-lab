@@ -65,7 +65,7 @@ void Room::handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* pHead, cha
 		onReqLeaveGame(conn, pHead, body);
 		break;
 	default:
-		//doReqRoute(conn, pHead, body);
+		doForward(conn, pHead, body);
 		break;
 	}
 }
