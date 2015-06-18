@@ -19,11 +19,11 @@ public:
 	//size_t append(const char* data) { return append(data, sizeof()) }
 	size_t append(Buffer &buf) { return append(buf.data(), buf.size()); }
 	size_t append(Buffer *buf) { return append(buf->data(), buf->size()); }
-	char* data() { return pBuffer + nPosition; }
-	void clear() { nPosition = nSize = 0; }
-	size_t position() { return nPosition; }
+	char* data();
+	void clear();
+	size_t position();
 	size_t seek(size_t pos);
-	size_t bytesAvaliable() { return nSize - nPosition; }
+	size_t bytesAvaliable();
 	size_t size() { return nSize; }
 
 	int readBytes(Buffer* buffer,size_t start,size_t len);

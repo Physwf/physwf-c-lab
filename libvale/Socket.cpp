@@ -99,7 +99,7 @@ int Socket::connect(const char* addr, short port)
 	{
 #if (defined DEBUG) && (defined WIN32)
 		printf("connect failed with error:%d!\n", WSAGetLastError());
-#ele
+#else
         printf("connect failed with error:%d!\n", errno);
 #endif
 	}

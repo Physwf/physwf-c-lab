@@ -20,11 +20,12 @@ public:
 	tid_t tid() { return nTid; }
 private:
 	void doForward(MSG_HEAD_BACK* head, char* body);
-	void createGame(GameConnection* conn);
-	void destoryGame(GameConnection* conn);
+	void createGame();
+	void destoryGame();
 private:
 	Game *pGame;
 	tid_t nTid;
+	rid_t nRid;
 	bool isAlive;
 };
 

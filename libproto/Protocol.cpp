@@ -192,110 +192,132 @@ void MSG_RES_DESTROY_PLAYER::writeBody(char* output, size_t* size)
 
 void MSG_REQ_ENTER_ROOM::readbody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	rid = readUnsignedShort(input);
 }
 
 void MSG_REQ_ENTER_ROOM::writebody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(rid);
+	Message::writeBody(output, size);
 }
 
 void MSG_RES_ENTER_ROOM::readbody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	rid = readUnsignedShort(input);
 }
 
 void MSG_RES_ENTER_ROOM::writebody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(rid);
+	Message::writeBody(output, size);
 }
 
 void MSG_REQ_LEAVE_ROOM::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	rid = readUnsignedShort(input);
 }
 
 void MSG_REQ_LEAVE_ROOM::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(rid);
+	Message::writeBody(output, size);
 }
 
 void MSG_RES_LEAVE_ROOM::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	rid = readUnsignedShort(input);
 }
 
 void MSG_RES_LEAVE_ROOM::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(rid);
+	Message::writeBody(output, size);
 }
 
-void MSG_REQ_JOIN_GAME::readBody(char* input, size_t size)
+void MSG_REQ_JOIN_TABLE::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	tid = readUnsignedShort(input);
 }
 
-void MSG_REQ_JOIN_GAME::writeBody(char* output, size_t* size)
+void MSG_REQ_JOIN_TABLE::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(tid);
+	Message::writeBody(output, size);
 }
 
-void MSG_RES_JOIN_GAME::readBody(char* input, size_t size)
+void MSG_RES_JOIN_TABLE::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	tid = readUnsignedShort(input);
 }
 
-void MSG_RES_JOIN_GAME::writeBody(char* output, size_t* size)
+void MSG_RES_JOIN_TABLE::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(tid);
+	Message::writeBody(output, size);
 }
 
-void MSG_REQ_LEAVE_GAME::readBody(char* input, size_t size)
+void MSG_REQ_LEAVE_TABLE::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	tid = readUnsignedShort(input);
 }
 
-void MSG_REQ_LEAVE_GAME::writeBody(char* output, size_t* size)
+void MSG_REQ_LEAVE_TABLE::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(tid);
+	Message::writeBody(output, size);
 }
 
-void MSG_RES_LEAVE_GAME::readBody(char* input, size_t size)
+void MSG_RES_LEAVE_TABLE::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	tid = readUnsignedShort(input);
 }
 
-void MSG_RES_LEAVE_GAME::writeBody(char* output, size_t* size)
+void MSG_RES_LEAVE_TABLE::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(tid);
+	Message::writeBody(output, size);
 }
 
 void MSG_REQ_START_GAME::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	gid = readUnsignedShort(input);
 }
 
 void MSG_REQ_START_GAME::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(gid);
+	Message::writeBody(output, size);
 }
 
 void MSG_REQ_CREATE_GAME::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	gid = readUnsignedShort(input);
 }
 
 void MSG_REQ_CREATE_GAME::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(gid);
+	Message::writeBody(output, size);
 }
 
 void MSG_REQ_DESTROY_GAME::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	gid = readUnsignedShort(input);
 }
 
 void MSG_REQ_DESTROY_GAME::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(gid);
+	Message::writeBody(output, size);
 }

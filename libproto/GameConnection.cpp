@@ -30,19 +30,19 @@ void GameConnection::onRead(Connection* con)
 	if (buff->bytesAvaliable() > HEAD_LENGTH_GAME)
 	{
 		MSG_HEAD_GAME head;
-		read_head_game(buff->data(), &head);
+		buff->readBytes(&bufRead, 0, HEAD_LENGTH_GAME);
+		read_head_game(bufRead.data(), &head);
 		if (head.length < 0 || head.length > MAX_MSG_LENGTH)
 		{
 			Log::debug("game been closed due to illegal head length: %d", head.length);
 			pConnection->close();
 		}
+		buff->tight();
 		if (buff->bytesAvaliable() >= head.length)
 		{
-			//gBuffer->seek(2);
-			buff->readBytes(&bufRead, 2, head.length);
-			buff->tight();
+			buff->readBytes(&bufRead, 0, head.length);
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
-			bufRead.clear();
+			bufRead.tight();
 		}
 	}
 }

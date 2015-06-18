@@ -34,6 +34,24 @@ size_t Buffer::append(const char* buf, size_t size)
 	return nSize;
 }
 
+
+char* Buffer::data()
+{
+	return pBuffer + nPosition;
+}
+
+
+void Buffer::clear()
+{
+	nPosition = nSize = 0;
+}
+
+
+size_t Buffer::position()
+{
+	return nPosition;
+}
+
 int Buffer::readBytes(Buffer* buff, size_t start, size_t len)
 {
 	nPosition = start;
@@ -66,6 +84,12 @@ size_t Buffer::seek(size_t pos)
 		nPosition = pos;
 	}
 	return bytesAvaliable();
+}
+
+
+size_t Buffer::bytesAvaliable()
+{
+	return nSize - nPosition;
 }
 
 void Buffer::resize(size_t newsize)

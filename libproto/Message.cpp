@@ -25,20 +25,26 @@ void Message::writeBody(char* output, size_t* size)
 
 char Message::readByte(char* input)
 {
+	char value;
+	memcpy(&value, input + nOffset, C_SIZE);
 	nOffset += C_SIZE;
-	return *(input + nOffset - C_SIZE);
+	return value;
 }
 
 unsigned char Message::readUnsignedByte(char* input)
 {
+	unsigned char value;
+	memcpy(&value, input + nOffset, C_SIZE);
 	nOffset += C_SIZE;
-	return (unsigned char)*(input + nOffset - C_SIZE);
+	return value;
 }
 
 bool Message::readBoolean(char* input)
 {
+	bool value;
+	memcpy(&value, input + nOffset, B_SIZE);
 	nOffset += B_SIZE;
-	return (bool)*(input + nOffset - B_SIZE);
+	return value;
 }
 
 void Message::writeBoolean(bool value)
@@ -60,14 +66,18 @@ void Message::writeUnsigndByte(unsigned char value)
 
 short Message::readShort(char* input)
 {
+	short value;
+	memcpy(&value, input + nOffset, S_SIZE);
 	nOffset += S_SIZE;
-	return (short)*(input + nOffset - S_SIZE);
+	return value;
 }
 
 unsigned short Message::readUnsignedShort(char* input)
 {
+	unsigned short value;
+	memcpy(&value, input + nOffset, S_SIZE);
 	nOffset += S_SIZE;
-	return (unsigned short)*(input + nOffset - S_SIZE);
+	return value;
 }
 
 void Message::writeShort(short value)
@@ -83,14 +93,18 @@ void Message::writeUnsignedShort(unsigned short value)
 
 int Message::readInt(char* input)
 {
+	int value;
+	memcpy(&value, input + nOffset, I_SIZE);
 	nOffset += I_SIZE;
-	return *(input + nOffset - I_SIZE);
+	return value;
 }
 
 unsigned int Message::readUnsignedInt(char* input)
 {
+	unsigned int value;
+	memcpy(&value, input+nOffset, I_SIZE);
 	nOffset += I_SIZE;
-	return (unsigned int)*(input + nOffset - I_SIZE);
+	return value;
 }
 
 void Message::writeInt(int value)
@@ -106,14 +120,18 @@ void Message::writeUnsignedInt(unsigned int value)
 
 long Message::readLong(char* input)
 {
-	nOffset += I_SIZE;
-	return *(input + nOffset - I_SIZE);
+	long value;
+	memcpy(&value, input + nOffset, L_SIZE);
+	nOffset += L_SIZE;
+	return value;
 }
 
 unsigned long Message::readUnsignedLong(char* input)
 {
-	nOffset += I_SIZE;
-	return (unsigned long)*(input + nOffset - I_SIZE);
+	unsigned long value;
+	memcpy(&value, input + nOffset, L_SIZE);
+	nOffset += L_SIZE;
+	return value;
 }
 
 void Message::writeLong(long value)

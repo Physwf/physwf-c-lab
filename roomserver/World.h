@@ -17,7 +17,7 @@ public:
 	void initialize();
 	void addGateWay(ServiceConnection* conn);
 private:
-	void onGatewayMessage(ServiceConnection* conn, char* head, char* body);
+	void onGatewayMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void onGatewayClose(ServiceConnection* con);
 	void onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void onDestroyPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);

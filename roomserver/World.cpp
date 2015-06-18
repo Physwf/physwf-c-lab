@@ -16,7 +16,7 @@ World::~World()
 
 void World::initialize()
 {
-	
+	mRooms.insert(map_room::value_type(1, new Room()));
 }
 
 
@@ -27,25 +27,24 @@ void World::addGateWay(ServiceConnection* conn)
 }
 
 
-void World::onGatewayMessage(ServiceConnection* conn, char* head, char* body)
+void World::onGatewayMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	MSG_HEAD_BACK* pHead = (MSG_HEAD_BACK*)head;
-	switch (pHead->id)
+	switch (head->id)
 	{
 	case MSG_CREATE_PLAYER_100:
-		onNewPlayer(conn, pHead, body);
+		onNewPlayer(conn, head, body);
 		break;
 	case MSG_DESTROY_PLAYER_101:
-		onDestroyPlayer(conn, pHead, body);
+		onDestroyPlayer(conn, head, body);
 		break;
 	case MSG_ENTER_ROOM_1002:
-		onReqEnterRoom(conn, pHead, body);
+		onReqEnterRoom(conn, head, body);
 		break;
 	case MSG_LEAVE_ROOM_1003:
-		onReqLeaveRoom(conn, pHead, body);
+		onReqLeaveRoom(conn, head, body);
 		break;
 	default:
-		doForword(conn, pHead, body);
+		doForword(conn, head, body);
 		break;
 	}
 }
@@ -58,11 +57,12 @@ void World::onGatewayClose(ServiceConnection* con)
 
 void World::onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	MSG_REQ_CREATE_PLAYER* msg = (MSG_REQ_CREATE_PLAYER*)body;
-	Player* player = new Player(msg->pid);
+	MSG_REQ_CREATE_PLAYER msg;
+	msg.readBody(body,head->length);
+	Player* player = new Player(msg.pid);
 
 	player->setGate(conn);
-	Log::debug("new player enter world");
+	Log::debug("new player enter world,pid:%d",msg.pid);
 	addPlayer(player->pid(), player);
 	player->setChanelId(nCid);
 
@@ -71,17 +71,19 @@ void World::onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body
 
 void World::onDestroyPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	MSG_REQ_DESTROY_PLAYER* msg = (MSG_REQ_DESTROY_PLAYER*)body;
-	Player* player = removePlayer(msg->pid);
-	Log::debug("player left world");
+	MSG_REQ_DESTROY_PLAYER msg;
+	msg.readBody(body, head->length);
+	Player* player = removePlayer(msg.pid);
+	Log::debug("player left world,pid:%d",msg.pid);
 	leaveZone(conn, player);
 }
 
 void World::onReqEnterRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	MSG_REQ_ENTER_ROOM* msg = (MSG_REQ_ENTER_ROOM*)body;
+	MSG_REQ_ENTER_ROOM msg;
+	msg.readBody(body,head->length);
 	Player* player = findPlayer(head->pid);
-	Room* room = findRoom(msg->rid);
+	Room* room = findRoom(msg.rid);
 	err_t err = tryEnterRoom(room, player);
 	if (err) enterRoomFailed(conn, player, err);
 	else

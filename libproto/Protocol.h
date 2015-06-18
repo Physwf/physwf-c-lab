@@ -9,19 +9,19 @@
 
 #define MSG_ENTER_ROOM_1002			1002
 #define MSG_LEAVE_ROOM_1003			1003
-#define MSG_JOIN_GAME_1004			1004
-#define MSG_LEAVE_GAME_1005			1005
+#define MSG_JOIN_TABLE_1004			1004
+#define MSG_LEAVE_TABLE_1005		1005
 #define MSG_START_GAME_1006			1006
 #define MSG_END_GAME_1007			1007
 
 
-#define MSG_CREATE_PLAYER_100			0100
-#define MSG_DESTROY_PLAYER_101			0101
-#define MSG_CREATE_CHANEL_102			0102
-#define MSG_DESTROY_CHANEL_103			0103
-#define MSG_CHANEL_STATUS_104			0104
-#define MSG_CREATE_GAME_105				0107
-#define MSG_DESTROY_GAME_106			0106
+#define MSG_CREATE_PLAYER_100			100
+#define MSG_DESTROY_PLAYER_101			101
+#define MSG_CREATE_CHANEL_102			102
+#define MSG_DESTROY_CHANEL_103			103
+#define MSG_CHANEL_STATUS_104			104
+#define MSG_CREATE_GAME_105				107
+#define MSG_DESTROY_GAME_106			106
 
 
 #define MSG_ERR_ROOM_NOT_EXIST_1000		1000
@@ -105,33 +105,33 @@ struct VALE_DLL MSG_RES_LEAVE_ROOM : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct VALE_DLL MSG_REQ_JOIN_GAME : Message
+struct VALE_DLL MSG_REQ_JOIN_TABLE : Message
 {
-	tid_t gid;
+	tid_t tid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct VALE_DLL MSG_RES_JOIN_GAME : Message
+struct VALE_DLL MSG_RES_JOIN_TABLE : Message
 {
-	tid_t gid;
+	tid_t tid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct VALE_DLL MSG_REQ_LEAVE_GAME : Message
+struct VALE_DLL MSG_REQ_LEAVE_TABLE : Message
 {
-	tid_t gid;
+	tid_t tid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct VALE_DLL MSG_RES_LEAVE_GAME : Message
+struct VALE_DLL MSG_RES_LEAVE_TABLE : Message
 {
-	tid_t gid;
+	tid_t tid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -139,7 +139,7 @@ struct VALE_DLL MSG_RES_LEAVE_GAME : Message
 
 struct VALE_DLL MSG_REQ_START_GAME : Message
 {
-	tid_t gid;
+	unsigned short gid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -147,7 +147,7 @@ struct VALE_DLL MSG_REQ_START_GAME : Message
 
 struct VALE_DLL MSG_REQ_END_GAME : Message
 {
-
+	unsigned short gid;
 };
 
 struct VALE_DLL MSG_CREATE_CHANEL : Message

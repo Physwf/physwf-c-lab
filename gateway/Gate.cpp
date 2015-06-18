@@ -113,13 +113,13 @@ void Gate::createPlayer(Client* client)
 	bHead.rid = 0;
 	bHead.tid = 0;
 	bHead.cid = 0;
-	
+	bHead.err = 0;
 	MSG_REQ_CREATE_PLAYER msg;
 	msg.pid = client->pid;
 	
 	char buffer[32] = { 0 };
 	int size = pack_back_msg(buffer, &bHead, &msg);
-	Log::debug("send create player");
+	Log::debug("send create player,pid:%d",msg.pid);
 	client->master->send(buffer, size);
 }
 
@@ -139,7 +139,7 @@ void Gate::destroyPlayer(Client* client)
 
 	char buffer[32] = { 0 };
 	int size = pack_back_msg(buffer, &bHead, &msg);
-	Log::debug("send destroy player");
+	Log::debug("send destroy player,pid:%d",msg.pid);
 	client->master->send(buffer, size);
 }
 

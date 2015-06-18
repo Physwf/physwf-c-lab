@@ -30,17 +30,17 @@ void ClientConnection::onRead(Connection* con)
 	if (buff->bytesAvaliable() >= sizeof(HEAD_LENGTH_GATE))
 	{
 		MSG_HEAD_GATE head;
-		read_head_gate(buff->data(), &head);
+		buff->readBytes(&bufRead, 0, HEAD_LENGTH_GATE);
+		read_head_gate(bufRead.data(), &head);
 		if (head.length < 0 || head.length > MAX_MSG_LENGTH)
 		{
 			Log::debug("client been closed due to illegal head length: %d",head.length);
 			pConnection->close();
 		}
+		buff->tight();
 		if (buff->bytesAvaliable() >= head.length)
 		{
-			//gBuffer->seek(2);
-			buff->readBytes(&bufRead, HEAD_LENGTH_GATE, head.length);
-			buff->tight();
+			buff->readBytes(&bufRead, 0, head.length);
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
 			bufRead.clear();
 		}

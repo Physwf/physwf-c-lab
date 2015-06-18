@@ -1,4 +1,5 @@
 #include "GamePool.h"
+#include "Log.h"
 
 GamePool::GamePool()
 {
@@ -15,9 +16,10 @@ void GamePool::initialize(EventLoop* loop)
 	pLoop = loop;
 	for (int i = 0; i < 1;i++)
 	{
-		GameConnection* gConn = new GameConnection(pLoop);
+		GameConnection* gConn = GameConnection::create(pLoop);
 		gConn->setConnectHandler(EV_CB(this,GamePool::onConnected));
 		gConn->setCloseHandler(EV_CB(this, GamePool::onClose));
+		gConn->connect("10.88.52.36", 2345);
 	}
 }
 
@@ -52,6 +54,7 @@ void GamePool::recycle(Game* game)
 
 void GamePool::onConnected(GameConnection* conn)
 {
+	Log::debug("game connected!");
 	PooledConnection* pCon = new PooledConnection();
 	pCon->connection = conn;
 	pCon->refCount = 0;

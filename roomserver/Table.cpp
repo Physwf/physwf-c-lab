@@ -18,7 +18,7 @@ void Table::startGame()
 	pGame->setMessageHandler(EV_M_CB(this, Table::handleGameMessage));
 	if (!isAlive)
 	{
-
+		createGame();
 	}
 }
 
@@ -106,17 +106,36 @@ void Table::doForward(MSG_HEAD_BACK* head, char* body)
 	pGame->send(&gHead, body);
 }
 
-void Table::createGame(GameConnection* conn)
+void Table::createGame()
 {
 	MSG_HEAD_GAME head;
 	head.id = MSG_CREATE_GAME_105;
 	head.type = MSG_TYPE_PLAYER;
 	head.pid = 0;
 	head.tid = nTid;
-	head.rid = 
+	head.rid = nRid;
+	head.cid = nCid;
+	head.err = 0;
+
+	MSG_REQ_CREATE_GAME msg;
+	msg.gid = 2;
+
+	pGame->send(&head, &msg);
 }
 
-void Table::destoryGame(GameConnection* conn)
+void Table::destoryGame()
 {
+	MSG_HEAD_GAME head;
+	head.id = MSG_DESTROY_GAME_106;
+	head.type = MSG_TYPE_PLAYER;
+	head.pid = 0;
+	head.tid = nTid;
+	head.rid = nRid;
+	head.cid = nCid;
+	head.err = 0;
 
+	MSG_REQ_CREATE_GAME msg;
+	msg.gid = 2;
+
+	pGame->send(&head, &msg);
 }
