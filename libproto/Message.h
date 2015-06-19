@@ -26,7 +26,7 @@ typedef struct
 	rid_t rid;//2
 	tid_t tid;//2
 	cid_t cid;//2
-	err_t err;//2
+	err_t err;//4
 } MSG_HEAD_GAME;
 
 struct MSG_HEAD_GATE
