@@ -119,6 +119,7 @@ void Connection::onWrite(int fd, int event, void* data)
 	else
 	{
 		int avalible = bufWrite.seek(n);
+		bufWrite.tight();
 		if (avalible <= 0)
 		{
 			bWriting = false;

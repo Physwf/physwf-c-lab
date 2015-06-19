@@ -14,6 +14,7 @@ class Room : public Zone
 {
 public:
 	Room();
+	Room(rid_t id);
 	~Room();
 public:
 	int capacity();

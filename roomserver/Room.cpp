@@ -6,6 +6,13 @@ Room::Room()
 	
 }
 
+
+Room::Room(rid_t id)
+{
+	nRid = id;
+	mTables.insert(map_table::value_type(1,new Table(1)));
+}
+
 Room::~Room()
 {
 
@@ -18,6 +25,7 @@ err_t Room::enterPlayer(Player* player)
 	if (!old)
 	{
 		addPlayer(player->pid(),player);
+		player->setRoomId(nRid);
 	}
 	else if (old == player)
 	{
@@ -72,8 +80,10 @@ void Room::handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* pHead, cha
 
 void Room::onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
+	MSG_REQ_JOIN_TABLE msg;
+	msg.readBody(body,head->length);
 	Player* player = findPlayer(head->pid);
-	err_t err = tryEnterTable(head->tid, player);
+	err_t err = tryEnterTable(msg.tid, player);
 	if (err) enterGameFailed(conn, player, err);
 	else enterGameSuccess(conn, player, err);
 }
@@ -87,7 +97,7 @@ void Room::enterGameSuccess(ServiceConnection* conn, Player* player, err_t reaso
 	head.rid = player->getRoomId();
 	head.tid = player->getTableId();
 	head.cid = player->getChanelId();
-
+	head.pid = player->pid();
 	MSG_RES_JOIN_TABLE msg;
 	msg.tid = player->getTableId();
 

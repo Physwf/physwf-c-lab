@@ -9,6 +9,7 @@ class Table : public Zone
 {
 public:
 	Table();
+	Table(tid_t tid);
 	~Table();
 public:
 	void startGame();

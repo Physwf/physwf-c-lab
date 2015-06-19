@@ -16,7 +16,7 @@ World::~World()
 
 void World::initialize()
 {
-	mRooms.insert(map_room::value_type(1, new Room()));
+	mRooms.insert(map_room::value_type(1, new Room(1)));
 }
 
 

@@ -6,6 +6,12 @@ Table::Table()
 {
 }
 
+
+Table::Table(tid_t tid)
+{
+	nTid = tid;
+}
+
 Table::~Table()
 {
 	
@@ -77,10 +83,12 @@ err_t Table::enterPlayer(Player* player)
 	if (old)
 	{
 		removePlayer(player->pid());
+		player->setTableId(nTid);
 		addPlayer(player->pid(), player);
 	}
 	else
 	{
+		player->setTableId(nTid);
 		addPlayer(player->pid(), player);
 	}
 	return 0;
