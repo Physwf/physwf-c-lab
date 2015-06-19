@@ -27,7 +27,7 @@ void ClientConnection::onConnected(Connection* con)
 void ClientConnection::onRead(Connection* con)
 {
 	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() >= sizeof(HEAD_LENGTH_GATE))
+	while(buff->bytesAvaliable() >= sizeof(HEAD_LENGTH_GATE))
 	{
 		MSG_HEAD_GATE head;
 		buff->readBytes(&bufRead, 0, HEAD_LENGTH_GATE);
@@ -38,10 +38,12 @@ void ClientConnection::onRead(Connection* con)
 			pConnection->close();
 		}
 		buff->tight();
+		bufRead.clear();
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			buff->readBytes(&bufRead, 0, head.length);
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
+			buff->tight();
 			bufRead.clear();
 		}
 	}

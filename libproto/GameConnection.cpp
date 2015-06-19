@@ -27,7 +27,7 @@ void GameConnection::onConnected(Connection* con)
 void GameConnection::onRead(Connection* con)
 {
 	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() > HEAD_LENGTH_GAME)
+	while(buff->bytesAvaliable() >= HEAD_LENGTH_GAME)
 	{
 		MSG_HEAD_GAME head;
 		buff->readBytes(&bufRead, 0, HEAD_LENGTH_GAME);
@@ -38,10 +38,12 @@ void GameConnection::onRead(Connection* con)
 			pConnection->close();
 		}
 		buff->tight();
+		bufRead.clear();
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			buff->readBytes(&bufRead, 0, head.length);
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
+			buff->tight();
 			bufRead.tight();
 		}
 	}

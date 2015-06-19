@@ -1,6 +1,6 @@
 #include "Router.h"
 #include "Protocol.h"
-
+#include "Log.h"
 
 Router::Router()
 {
@@ -45,6 +45,11 @@ Client* Router::findClient(ClientConnection* conn)
 
 Client* Router::findClient(pid_t pid)
 {
+	for (map_client::iterator it = mClients.begin(); it != mClients.end();it++)
+	{
+		if (it->second->pid == pid)
+			return it->second;
+	}
 	return NULL;
 }
 
@@ -97,46 +102,40 @@ Chanel* Router::findChanel(cid_t cid)
 	return NULL;
 }
 
-void Router::doClientRoute(ClientConnection* conn, char* head, char* body)
+void Router::doClientRoute(ClientConnection* conn, MSG_HEAD_GATE* head, char* body)
 {
-	//pBuffer->append(head, hsize);
-	//pBuffer->append(body, bsize);
-	//
 	Client *client = findClient(conn);
-	MSG_HEAD_GATE gHead;
-	read_head_gate(head, &gHead);
 	MSG_HEAD_BACK pBack;
-	pBack.id = gHead.id;
-	pBack.length = gHead.length;
-
+	pBack.id = head->id;
+	pBack.length = head->length;
+	pBack.type = MSG_TYPE_PLAYER;
 	pBack.rid = client->rid;
 	pBack.tid = client->tid;
 	pBack.pid = client->pid;
 
 	char buffer[MAX_MSG_LENGTH] = { 0 };
 	int size = pack_back_msg2(buffer, &pBack, body);
-	pMaster->send(buffer, size);
+	client->master->send(buffer, size);
 }
 
 
-void Router::onMasterMessage(ServiceConnection* conn, char* head, char* body)
+void Router::onMasterMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	MSG_HEAD_BACK* pBack = (MSG_HEAD_BACK*)head;
-	switch (pBack->type)
+	switch (head->type)
 	{
 	case MSG_TYPE_PLAYER:
 	{
-		doServiceRoute(conn, pBack, body);
+		doServiceRoute(conn, head, body);
 		break;
 	}
 	case MSG_TYPE_CHANEL:
 	{
-		onChanelMessage(conn, pBack, body);
+		onChanelMessage(conn, head, body);
 		break;
 	}
 	case MSG_TYPE_BROADCAST:
 	{
-		onBroadcastMessage(conn, pBack, body);
+		onBroadcastMessage(conn, head, body);
 		break;
 	}
 	default:
@@ -146,19 +145,45 @@ void Router::onMasterMessage(ServiceConnection* conn, char* head, char* body)
 
 void Router::doServiceRoute(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	MSG_HEAD_GATE pGate;
-	pGate.id = head->id;
-	pGate.length = head->length;
-	pGate.err = head->err;
+	Log::debug("service msg,id:%d", head->id);
+
 	Client* client = findClient(head->pid);
-	if (client)
+	if (client == NULL)
 	{
-		client->connection->send((char*)&pGate, sizeof(MSG_HEAD_GATE), body, head->length);
+		LOG_DEBUG("failed to find client");
+		return;
 	}
+		
+	switch (head->id)
+	{
+	case MSG_ENTER_ROOM_1002:
+		client->rid = head->rid;
+		break;
+	case MSG_LEAVE_ROOM_1003:
+		client->rid = 0;
+		break;
+	case MSG_JOIN_TABLE_1004:
+		client->tid = head->tid;
+		break;
+	case MSG_LEAVE_TABLE_1005:
+		client->tid = 0;
+		break;
+	default:
+		break;
+	}
+
+	MSG_HEAD_GATE gHead;
+	gHead.id = head->id;
+	gHead.length = head->length;
+	gHead.err = head->err;
+	char buffer[32] = { 0 };
+	int size = pack_gate_msg2(buffer, &gHead, body);
+	client->connection->send(buffer, size);
 }
 
 void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
+
 	switch (head->id)
 	{
 	case MSG_CREATE_CHANEL_102:

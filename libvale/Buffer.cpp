@@ -4,6 +4,8 @@ Buffer::Buffer()
 {
 	nPosition = 0;
 	nSize = 0;
+	nCapacity = 0;
+	pBuffer = NULL;
 	resize(64);
 }
 
@@ -11,6 +13,8 @@ Buffer::Buffer(size_t hint)
 {
 	nPosition = 0;
 	nSize = 0;
+	nCapacity = 0;
+	pBuffer = NULL;
 	resize(hint);
 }
 
@@ -26,11 +30,11 @@ Buffer::~Buffer()
 
 size_t Buffer::append(const char* buf, size_t size)
 {
-	size_t tailFree = nCapacity - nPosition;
+	size_t tailFree = nCapacity - nSize;
 	if (tailFree < size)
 		resize(nSize + size);
+	memcpy(pBuffer + nSize, buf, size);
 	nSize += size;
-	memcpy(pBuffer + nPosition, buf, size);
 	return nSize;
 }
 

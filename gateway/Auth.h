@@ -49,7 +49,9 @@ public:
 	void setClientAuthResultHandler(AuthHandler &cb) { cbClientAuthHandler = cb; }
 	void setServiceAuthResultHandler(AuthHandler &cb) { cbServiceAuthHandler = cb; }
 private:
-	void doClientAuth(ClientConnection* conn, char* head, char*body);
+	void doClientAuth(ClientConnection* conn, MSG_HEAD_GATE* head, char*body);
+	void authSuccess(Client* conn);
+	void authFailed(Client* conn);
 private:
 
 	ClientBuffer cBuffer;

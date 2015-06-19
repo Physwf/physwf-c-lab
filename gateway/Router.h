@@ -30,8 +30,8 @@ private:
 	inline Chanel* removeFromChanel(cid_t cid, Client* client);
 	inline Chanel* findChanel(cid_t cid);
 private:
-	void doClientRoute(ClientConnection* conn, char* head, char* body);
-	void onMasterMessage(ServiceConnection* conn, char* head, char* body);
+	void doClientRoute(ClientConnection* conn, MSG_HEAD_GATE* head, char* body);
+	void onMasterMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void doServiceRoute(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void onBroadcastMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);

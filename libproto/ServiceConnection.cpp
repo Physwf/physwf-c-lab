@@ -30,7 +30,7 @@ void ServiceConnection::onConnected(Connection* con)
 void ServiceConnection::onRead(Connection* con)
 {
 	Buffer* buff = pConnection->getBuffer();
-	if (buff->bytesAvaliable() > HEAD_LENGTH_BACK)
+	while (buff->bytesAvaliable() >= HEAD_LENGTH_BACK)
 	{
 		MSG_HEAD_BACK head;
 		buff->readBytes(&bufRead, 0, HEAD_LENGTH_BACK);
@@ -41,11 +41,13 @@ void ServiceConnection::onRead(Connection* con)
 			pConnection->close();
 		}
 		buff->tight();
+		bufRead.clear();
 		if (buff->bytesAvaliable() >= head.length)
 		{
 			buff->readBytes(&bufRead, 0, head.length);
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
-			bufRead.tight();
+			buff->tight();
+			bufRead.clear();
 		}
 	}
 }

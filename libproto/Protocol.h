@@ -3,7 +3,7 @@
 
 #include "type.h"
 
-#define MSG_REQ_LOGIN_0001				0001
+#define MSG_LOGIN_0001				1
 
 
 
@@ -24,6 +24,7 @@
 #define MSG_DESTROY_GAME_106			106
 
 
+#define MSG_ERR_AUTH_FAILED_0001			1
 #define MSG_ERR_ROOM_NOT_EXIST_1000		1000
 #define MSG_ERR_ROOM_FULL_1001			1001
 #define MSG_ERR_ALREADY_IN_1002			1002
@@ -38,6 +39,14 @@ struct VALE_DLL MSG_REQ_LOGIN : Message
 	unsigned char accout_length;
 	char* accout;
 	char psd_hash[32];
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_RES_LOGIN : Message
+{
+	pid_t pid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -77,16 +86,16 @@ struct VALE_DLL MSG_REQ_ENTER_ROOM : Message
 {
 	rid_t rid;
 
-	inline virtual void readbody(char* input, size_t size);
-	inline virtual void writebody(char* output, size_t* size);
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
 };
 
 struct VALE_DLL MSG_RES_ENTER_ROOM : Message
 {
 	rid_t rid;
 
-	inline virtual void readbody(char* input, size_t size);
-	inline virtual void writebody(char* output, size_t* size);
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
 };
 
 struct VALE_DLL MSG_REQ_LEAVE_ROOM : Message

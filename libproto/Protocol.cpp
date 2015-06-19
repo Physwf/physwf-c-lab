@@ -136,13 +136,24 @@ void MSG_REQ_LOGIN::readBody(char* input, size_t size)
 	Message::readBody(input, size);
 	accout_length = readUnsignedByte(input);
 	accout = readBytes(input, accout_length*C_SIZE);
-	//readBytes()
 }
 
 void MSG_REQ_LOGIN::writeBody(char* output, size_t* size)
 {
 	writeUnsigndByte(accout_length);
 	writeBytes(accout,accout_length);
+	Message::writeBody(output, size);
+}
+
+void MSG_RES_LOGIN::readBody(char* input, size_t size)
+{
+	Message::readBody(input,size);
+	pid = readUnsignedLong(input);
+}
+
+void MSG_RES_LOGIN::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
 	Message::writeBody(output, size);
 }
 
@@ -190,25 +201,25 @@ void MSG_RES_DESTROY_PLAYER::writeBody(char* output, size_t* size)
 
 }
 
-void MSG_REQ_ENTER_ROOM::readbody(char* input, size_t size)
+void MSG_REQ_ENTER_ROOM::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
 	rid = readUnsignedShort(input);
 }
 
-void MSG_REQ_ENTER_ROOM::writebody(char* output, size_t* size)
+void MSG_REQ_ENTER_ROOM::writeBody(char* output, size_t* size)
 {
 	writeUnsignedShort(rid);
 	Message::writeBody(output, size);
 }
 
-void MSG_RES_ENTER_ROOM::readbody(char* input, size_t size)
+void MSG_RES_ENTER_ROOM::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
 	rid = readUnsignedShort(input);
 }
 
-void MSG_RES_ENTER_ROOM::writebody(char* output, size_t* size)
+void MSG_RES_ENTER_ROOM::writeBody(char* output, size_t* size)
 {
 	writeUnsignedShort(rid);
 	Message::writeBody(output, size);
@@ -321,3 +332,5 @@ void MSG_REQ_DESTROY_GAME::writeBody(char* output, size_t* size)
 	writeUnsignedShort(gid);
 	Message::writeBody(output, size);
 }
+
+

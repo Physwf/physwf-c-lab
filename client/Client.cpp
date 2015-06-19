@@ -14,6 +14,12 @@ Client::~Client()
 
 void Client::start()
 {
+	//Buffer buf;
+	//char a[64];
+	//buf.append(a, sizeof(a));
+	//char b[128];
+	//buf.append(b, sizeof(b));
+	//return;
 	pLoop = new EventLoop();
 
 	pConnection = ClientConnection::create(pLoop);
@@ -28,10 +34,6 @@ void Client::onConnected(ClientConnection* con)
 {
 	Log::info("connected to gateway"); 
 	login();
-	enterRoom();
-	return;
-	joinTable();
-	startGame();
 }
 
 
@@ -39,14 +41,20 @@ void Client::onMessage(ClientConnection* con, MSG_HEAD_GATE* head, char* body)
 {
 	switch (head->id)
 	{
+	case MSG_LOGIN_0001:
+		if (head->err == 0) LOG_INFO("login success");
+		enterRoom();
+		break;
 	case MSG_ENTER_ROOM_1002:
 		Log::info("enter room success");
+		joinTable();
 		break;
 	case MSG_LEAVE_ROOM_1003:
 		Log::info("leave room success");
 		break;
 	case MSG_JOIN_TABLE_1004:
 		Log::info("join table success");
+		startGame();
 		break;
 	case MSG_LEAVE_TABLE_1005:
 		Log::info("leave table success");
@@ -66,7 +74,7 @@ void Client::login()
 {
 	char buffer[128] = { 0 };
 	MSG_HEAD_GATE head;
-	head.id = MSG_REQ_LOGIN_0001;
+	head.id = MSG_LOGIN_0001;
 	head.err = 0;
 	
 	MSG_REQ_LOGIN body;
@@ -85,10 +93,10 @@ void Client::enterRoom()
 	head.id = MSG_ENTER_ROOM_1002;
 	head.err = 0;
 
-	MSG_REQ_ENTER_ROOM msg;
-	msg.rid = 1;
+	MSG_REQ_ENTER_ROOM body;
+	body.rid = 1;
 
-	int size = pack_gate_msg(buffer, &head, &msg);
+	int size = pack_gate_msg(buffer, &head, &body);
 
 	pConnection->send(buffer, size);
 }

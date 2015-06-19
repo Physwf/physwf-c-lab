@@ -26,6 +26,7 @@ void Master::start()
 	pServer->start();
 
 	pWorld = new World();
+	pWorld->initialize();
 }
 
 void Master::onGatewayConnected(int fd, int event, void* data)

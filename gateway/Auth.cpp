@@ -33,12 +33,53 @@ void Auth::removeService(ServiceConnection* service)
 
 }
 
-void Auth::doClientAuth(ClientConnection* conn,char* head, char*body)
+void Auth::doClientAuth(ClientConnection* conn,MSG_HEAD_GATE* head, char*body)
 {
-	Log::info("Client Auth Message");
-	Client* client = new Client();
-	client->connection = conn;
-	client->session = new Session();
-	removeClient(conn);
-	EV_INVOKE(cbClientAuthHandler, client, true);
+	switch (head->id)
+	{
+	case MSG_LOGIN_0001:
+	{
+		Log::info("Client Auth Message");
+		Client* client = new Client();
+		client->connection = conn;
+		client->session = new Session();
+		client->pid = 1;
+		removeClient(conn);
+		authSuccess(client);
+		EV_INVOKE(cbClientAuthHandler, client, true);
+		break;
+	}
+	default:
+		Log::info("Wrong Auth Message");
+		break;
+	}
+	
+}
+
+void Auth::authSuccess(Client* client)
+{
+	MSG_HEAD_GATE head;
+	head.id = MSG_LOGIN_0001;
+	head.err = 0;
+
+	MSG_RES_LOGIN body;
+	body.pid = client->pid;
+
+	char buffer[32] = { 0 };
+	int size = pack_gate_msg(buffer, &head, &body);
+	client->connection->send(buffer, size);
+}
+
+void Auth::authFailed(Client* client)
+{
+	MSG_HEAD_GATE head;
+	head.id = MSG_LOGIN_0001;
+	head.err = MSG_ERR_AUTH_FAILED_0001;
+
+	MSG_RES_LOGIN body;
+	body.pid = client->pid;
+
+	char buffer[32] = { 0 };
+	int size = pack_gate_msg(buffer, &head, &body);
+	client->connection->send(buffer, size);
 }
