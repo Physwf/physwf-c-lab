@@ -38,5 +38,7 @@ void Player::setGate(ServiceConnection* gate)
 
 void Player::send(MSG_HEAD_BACK* head, char* body)
 {
-
+	char buffer[32] = { 0 };
+	int size = pack_back_msg2(buffer, head, body);
+	pGate->send(buffer, size);
 }
