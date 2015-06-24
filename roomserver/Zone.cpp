@@ -45,7 +45,9 @@ void Zone::tryDestroy(ServiceConnection* conn)
 		MSG_HEAD_BACK head;
 		head.id = MSG_DESTROY_CHANEL_103;
 		head.type = MSG_TYPE_CHANEL;
-		head.rid = head.tid = head.pid = 0;
+		head.rid = 0;
+		head.tid = 0;
+		head.pid = 0;
 		head.err = 0;
 		MSG_CREATE_CHANEL body;
 		body.cid = nCid;
