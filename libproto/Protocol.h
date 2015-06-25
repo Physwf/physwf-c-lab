@@ -20,7 +20,7 @@
 #define MSG_CREATE_CHANEL_102			102
 #define MSG_DESTROY_CHANEL_103			103
 #define MSG_CHANEL_STATUS_104			104
-#define MSG_CREATE_GAME_105				107
+#define MSG_CREATE_GAME_105				105
 #define MSG_DESTROY_GAME_106			106
 
 
@@ -117,6 +117,7 @@ struct VALE_DLL MSG_RES_LEAVE_ROOM : Message
 struct VALE_DLL MSG_REQ_JOIN_TABLE : Message
 {
 	tid_t tid;
+	unsigned char seat;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -125,6 +126,8 @@ struct VALE_DLL MSG_REQ_JOIN_TABLE : Message
 struct VALE_DLL MSG_RES_JOIN_TABLE : Message
 {
 	tid_t tid;
+	unsigned char seat;
+	unsigned char state;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);

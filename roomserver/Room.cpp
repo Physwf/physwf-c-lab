@@ -67,10 +67,10 @@ void Room::handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* pHead, cha
 	switch (pHead->id)
 	{
 	case MSG_JOIN_TABLE_1004:
-		onReqJoinGame(conn, pHead, body);
+		onReqJoinTable(conn, pHead, body);
 		break;
 	case MSG_LEAVE_TABLE_1005:
-		onReqLeaveGame(conn, pHead, body);
+		onReqLeaveTable(conn, pHead, body);
 		break;
 	default:
 		doForward(conn, pHead, body);
@@ -78,12 +78,12 @@ void Room::handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* pHead, cha
 	}
 }
 
-void Room::onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
+void Room::onReqJoinTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	MSG_REQ_JOIN_TABLE msg;
 	msg.readBody(body,head->length);
 	Player* player = findPlayer(head->pid);
-	err_t err = tryEnterTable(msg.tid, player);
+	err_t err = tryEnterTable(msg.tid, player,msg.seat);
 	if (err) enterGameFailed(conn, player, err);
 	else enterGameSuccess(conn, player, err);
 }
@@ -122,7 +122,7 @@ void Room::enterGameFailed(ServiceConnection* conn, Player* player, err_t reason
 	conn->send(buffer, size);
 }
 
-void Room::onReqLeaveGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
+void Room::onReqLeaveTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	Player* player = findPlayer(head->pid);
 	err_t err = tryLeaveTable(head->tid, player);
@@ -163,14 +163,14 @@ void Room::leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason
 	conn->send(buffer, size);
 }
 
-err_t Room::tryEnterTable(tid_t tid, Player* player)
+err_t Room::tryEnterTable(tid_t tid, Player* player, unsigned char seat)
 {
 	Table* game = table(tid);
 	if (game == NULL)
 	{
 		return MSG_ERR_TABLE_FULL_1004;
 	}
-	return game->enterPlayer(player);
+	return game->enterPlayer(player,seat);
 }
 
 err_t Room::tryLeaveTable(tid_t tid, Player* player)

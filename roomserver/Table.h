@@ -16,7 +16,7 @@ public:
 	void endGame();
 	void handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body);
-	err_t enterPlayer(Player* player);
+	err_t enterPlayer(Player* player,unsigned char seat);
 	err_t leavePlayer(Player* player);
 	tid_t tid() { return nTid; }
 private:

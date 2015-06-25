@@ -253,11 +253,13 @@ void MSG_REQ_JOIN_TABLE::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
 	tid = readUnsignedShort(input);
+	seat = readUnsignedByte(input);
 }
 
 void MSG_REQ_JOIN_TABLE::writeBody(char* output, size_t* size)
 {
 	writeUnsignedShort(tid);
+	writeUnsigndByte(seat);
 	Message::writeBody(output, size);
 }
 
@@ -265,11 +267,15 @@ void MSG_RES_JOIN_TABLE::readBody(char* input, size_t size)
 {
 	Message::readBody(input, size);
 	tid = readUnsignedShort(input);
+	seat = readUnsignedByte(input);
+	state = readUnsignedByte(input);
 }
 
 void MSG_RES_JOIN_TABLE::writeBody(char* output, size_t* size)
 {
 	writeUnsignedShort(tid);
+	writeUnsigndByte(seat);
+	writeUnsigndByte(state);
 	Message::writeBody(output, size);
 }
 

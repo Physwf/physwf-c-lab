@@ -24,13 +24,13 @@ public:
 	void handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
-	err_t tryEnterTable(tid_t tid, Player* player);
+	err_t tryEnterTable(tid_t tid, Player* player,unsigned char seat);
 	err_t tryLeaveTable(tid_t tid, Player* player);
 	err_t startNewGame();
 	err_t destroyGame();
 private:
-	void onReqJoinGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
-	void onReqLeaveGame(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqJoinTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
+	void onReqLeaveTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	void doForward(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 private:
 	void enterGameSuccess(ServiceConnection* conn, Player* player, err_t reason);

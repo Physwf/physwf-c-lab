@@ -77,7 +77,7 @@ void Table::handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* b
 	
 }
 
-err_t Table::enterPlayer(Player* player)
+err_t Table::enterPlayer(Player* player, unsigned char seat)
 {
 	Player* old = findPlayer(player->pid());
 	if (old)
