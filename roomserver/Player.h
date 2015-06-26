@@ -13,6 +13,7 @@ public:
 	Player(pid_t id) :nId(id) { }
 	~Player();
 public:
+	void init();
 	void enterRoom(rid_t which);
 	void leaveRoom();
 	void joinGame(tid_t which);
@@ -28,12 +29,18 @@ public:
 	tid_t getTableId() { return nTid; }
 	void setChanelId(cid_t cid) { nCid = cid; }
 	cid_t getChanelId() { return nCid; }
+	void setSeatId(sid_t sid) { nSid = sid; }
+	sid_t getSeatId() { return nSid; }
+	void setStatus(unsigned char status) { nStatus = status; }
+	unsigned char getStatus() { return nStatus; }
 	pid_t pid() { return nId; }
 private:
 	pid_t nId;
 	rid_t nRid;
 	tid_t nTid;
 	cid_t nCid;
+	sid_t nSid;
+	unsigned char nStatus;
 private:
 	ServiceConnection* pGate;
 	GameConnection* pGame;

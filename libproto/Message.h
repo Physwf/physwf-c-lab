@@ -25,6 +25,7 @@ typedef struct
 	iid_t iid;//4
 	rid_t rid;//2
 	tid_t tid;//2
+	sid_t sid;//2
 	cid_t cid;//2
 	err_t err;//4
 } MSG_HEAD_GAME;
@@ -53,6 +54,7 @@ struct MSG_HEAD_GATE
 							+ sizeof(iid_t)\
 							+ sizeof(rid_t)\
 							+ sizeof(tid_t)\
+							+ sizeof(sid_t)\
 							+ sizeof(cid_t)\
 							+ sizeof(err_t)
 
@@ -61,6 +63,14 @@ struct MSG_HEAD_GATE
 #define MSG_TYPE_PLAYER			1
 #define MSG_TYPE_CHANEL			2
 #define MSG_TYPE_BROADCAST		3
+
+#define FILTER_TYPE_MSG			0xFF
+#define FILTER_TYPE_CHANEL		0xFF00
+
+#define CHANEL_TYPE_WORLD		512
+#define CHANEL_TYPE_ROOM		1024
+#define CHANEL_TYPE_TABLE		2048
+#define CHANEL_TYPE_SEAT		4096
 
 VALE_DLL inline int read_head_gate(char* buff, MSG_HEAD_GATE* head);
 VALE_DLL inline int read_head_back(char* buff, MSG_HEAD_BACK* head);

@@ -38,7 +38,7 @@ private:
 	void leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
 	void leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason);
 private:
-	Table* table(tid_t gid);
+	Table* findTable(tid_t gid);
 private:
 	rid_t nRid;
 	std::map<tid_t, Table*> mTables;

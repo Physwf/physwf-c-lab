@@ -4,6 +4,7 @@
 typedef unsigned long pid_t;
 typedef unsigned short rid_t;
 typedef unsigned short tid_t;
+typedef unsigned short sid_t;
 typedef unsigned short cid_t;//chanel id
 
 typedef unsigned int iid_t;

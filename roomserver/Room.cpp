@@ -51,12 +51,13 @@ err_t Room::leavePlayer(Player* player)
 	{
 		err = MSG_ERR_NOT_IN_ROOM_1003;
 	}
-	else if (old != player)
-	{
-		//??
-	}
 	else
 	{
+		Table* table = findTable(player->getTableId());
+		if (table)
+		{
+			table->leavePlayer(player);
+		}
 	}
 	return err;
 }
@@ -100,6 +101,8 @@ void Room::enterGameSuccess(ServiceConnection* conn, Player* player, err_t reaso
 	head.pid = player->pid();
 	MSG_RES_JOIN_TABLE msg;
 	msg.tid = player->getTableId();
+	msg.seat = player->getSeatId();
+	msg.state = player->getStatus();
 
 	char buffer[32] = { 0 };
 	int size = pack_back_msg(buffer, &head, &msg);
@@ -165,7 +168,7 @@ void Room::leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason
 
 err_t Room::tryEnterTable(tid_t tid, Player* player, unsigned char seat)
 {
-	Table* game = table(tid);
+	Table* game = findTable(tid);
 	if (game == NULL)
 	{
 		return MSG_ERR_TABLE_FULL_1004;
@@ -175,7 +178,7 @@ err_t Room::tryEnterTable(tid_t tid, Player* player, unsigned char seat)
 
 err_t Room::tryLeaveTable(tid_t tid, Player* player)
 {
-	Table* game = table(tid);
+	Table* game = findTable(tid);
 	if (game == NULL)
 	{
 		return MSG_ERR_TABLE_FULL_1004;
@@ -185,14 +188,14 @@ err_t Room::tryLeaveTable(tid_t tid, Player* player)
 
 void Room::doForward(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
-	Table* game = table(head->tid);
+	Table* game = findTable(head->tid);
 	if (game)
 	{
 		game->handleRoomMessage(conn, head, body);
 	}
 }
 
-Table* Room::table(tid_t gid)
+Table* Room::findTable(tid_t gid)
 {
 	map_table::iterator it = mTables.find(gid);
 	if (it != mTables.end())

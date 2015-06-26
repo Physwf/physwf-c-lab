@@ -31,6 +31,9 @@
 #define MSG_ERR_NOT_IN_ROOM_1003		1003
 #define MSG_ERR_TABLE_FULL_1004			1004
 #define MSG_ERR_TABLE_ALREADY_IN_1005	1005
+#define MSG_ERR_SEAT_NOT_EXIST_1006		1006
+#define MSG_ERR_NOT_IN_TABLE_1007		1007
+#define MSG_ERR_NOT_IN_SEAT_1008		1008
 
 #include "Message.h"
 
@@ -126,7 +129,7 @@ struct VALE_DLL MSG_REQ_JOIN_TABLE : Message
 struct VALE_DLL MSG_RES_JOIN_TABLE : Message
 {
 	tid_t tid;
-	unsigned char seat;
+	sid_t seat;
 	unsigned char state;
 
 	inline virtual void readBody(char* input, size_t size);

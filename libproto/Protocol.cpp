@@ -274,7 +274,7 @@ void MSG_RES_JOIN_TABLE::readBody(char* input, size_t size)
 void MSG_RES_JOIN_TABLE::writeBody(char* output, size_t* size)
 {
 	writeUnsignedShort(tid);
-	writeUnsigndByte(seat);
+	writeUnsignedShort(seat);
 	writeUnsigndByte(state);
 	Message::writeBody(output, size);
 }

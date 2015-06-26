@@ -59,23 +59,37 @@ void World::onNewPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body
 {
 	MSG_REQ_CREATE_PLAYER msg;
 	msg.readBody(body,head->length);
-	Player* player = new Player(msg.pid);
+	Player* player = findPlayer(msg.pid);
+	if (!player)
+	{
+		player = new Player(msg.pid);
+		Log::debug("new player enter world,pid:%d", msg.pid);
+		addPlayer(player->pid(), player);
 
-	player->setGate(conn);
-	Log::debug("new player enter world,pid:%d",msg.pid);
-	addPlayer(player->pid(), player);
+		enterZone(conn, player);
+	}
+	player->init();
 	player->setChanelId(nCid);
-
-	enterZone(conn, player);
+	player->setGate(conn);
 }
 
 void World::onDestroyPlayer(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	MSG_REQ_DESTROY_PLAYER msg;
 	msg.readBody(body, head->length);
+	
 	Player* player = removePlayer(msg.pid);
-	Log::debug("player left world,pid:%d",msg.pid);
-	leaveZone(conn, player);
+	if (player)
+	{
+		Log::debug("player left world,pid:%d", msg.pid);
+		leaveZone(conn, player);
+
+		Room* room = findRoom(head->rid);
+		if (room)
+		{
+			room->leavePlayer(player);
+		}
+	}
 }
 
 void World::onReqEnterRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
