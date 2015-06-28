@@ -37,6 +37,8 @@ private:
 	void enterGameFailed(ServiceConnection* conn, Player* player, err_t reason);
 	void leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason);
 	void leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason);
+	void notifyEnterTable(ServiceConnection* conn, Player* player);
+	void notifyLeaveTable(ServiceConnection* conn, Player* player);
 private:
 	Table* findTable(tid_t gid);
 private:

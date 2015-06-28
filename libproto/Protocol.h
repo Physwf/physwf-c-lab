@@ -14,6 +14,10 @@
 #define MSG_START_GAME_1006			1006
 #define MSG_END_GAME_1007			1007
 
+#define MSG_NOTI_ENTER_ROOM_1008	1008
+#define MSG_NOTI_LEAVE_ROOM_1009	1009
+#define MSG_NOTI_JOIN_TABLE_1010	1010
+#define MSG_NOTI_LEAVE_TABLE_1011	1011
 
 #define MSG_CREATE_PLAYER_100			100
 #define MSG_DESTROY_PLAYER_101			101
@@ -101,6 +105,14 @@ struct VALE_DLL MSG_RES_ENTER_ROOM : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
+struct VALE_DLL MSG_NOTI_ENTER_ROOM : Message
+{
+	pid_t pid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
 struct VALE_DLL MSG_REQ_LEAVE_ROOM : Message
 {
 	rid_t rid;
@@ -112,6 +124,14 @@ struct VALE_DLL MSG_REQ_LEAVE_ROOM : Message
 struct VALE_DLL MSG_RES_LEAVE_ROOM : Message
 {
 	rid_t rid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_NOTI_LEAVE_ROOM : Message
+{
+	pid_t pid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
@@ -136,6 +156,15 @@ struct VALE_DLL MSG_RES_JOIN_TABLE : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
+struct VALE_DLL MSG_NOTI_JOIN_TABLE : Message
+{
+	pid_t pid;
+	sid_t sid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
 struct VALE_DLL MSG_REQ_LEAVE_TABLE : Message
 {
 	tid_t tid;
@@ -147,6 +176,14 @@ struct VALE_DLL MSG_REQ_LEAVE_TABLE : Message
 struct VALE_DLL MSG_RES_LEAVE_TABLE : Message
 {
 	tid_t tid;
+
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_NOTI_LEAVE_TABLE : Message
+{
+	pid_t pid;
 
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);

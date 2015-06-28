@@ -86,7 +86,11 @@ void Room::onReqJoinTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bo
 	Player* player = findPlayer(head->pid);
 	err_t err = tryEnterTable(msg.tid, player,msg.seat);
 	if (err) enterGameFailed(conn, player, err);
-	else enterGameSuccess(conn, player, err);
+	else
+	{
+		enterGameSuccess(conn, player, err);
+		notifyEnterTable(conn, player);
+	}
 }
 
 
@@ -130,7 +134,11 @@ void Room::onReqLeaveTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* b
 	Player* player = findPlayer(head->pid);
 	err_t err = tryLeaveTable(head->tid, player);
 	if (err) leaveGameFailed(conn, player, err);
-	else leaveGameSuccess(conn, player, err);
+	else
+	{
+		leaveGameSuccess(conn, player, err);
+		notifyLeaveTable(conn, player);
+	}
 }
 
 void Room::leaveGameSuccess(ServiceConnection* conn, Player* player, err_t reason)
@@ -161,8 +169,47 @@ void Room::leaveGameFailed(ServiceConnection* conn, Player* player, err_t reason
 	head.cid = player->getChanelId();
 	head.length = 0;
 
-	char buffer[sizeof MSG_HEAD_BACK] = { 0 };
+	char buffer[32] = { 0 };
 	int size = write_head_back(buffer, &head);
+	conn->send(buffer, size);
+}
+
+
+void Room::notifyEnterTable(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_NOTI_JOIN_TABLE_1010;
+	head.type = MSG_TYPE_BROADCAST;
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.cid = player->getChanelId();
+	head.pid = player->pid();
+
+	MSG_NOTI_JOIN_TABLE msg;
+	msg.pid = player->pid();
+	msg.sid = player->getSeatId();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+	conn->send(buffer, size);
+}
+
+
+void Room::notifyLeaveTable(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_NOTI_LEAVE_TABLE_1011;
+	head.type = MSG_TYPE_BROADCAST;
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.cid = player->getChanelId();
+	head.pid = player->pid();
+
+	MSG_NOTI_LEAVE_TABLE msg;
+	msg.pid = player->pid();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
 	conn->send(buffer, size);
 }
 

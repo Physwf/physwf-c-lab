@@ -340,3 +340,52 @@ void MSG_REQ_DESTROY_GAME::writeBody(char* output, size_t* size)
 }
 
 
+void MSG_NOTI_ENTER_ROOM::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
+}
+
+void MSG_NOTI_ENTER_ROOM::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
+	Message::writeBody(output, size);
+}
+
+void MSG_NOTI_LEAVE_ROOM::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
+}
+
+void MSG_NOTI_LEAVE_ROOM::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
+	Message::writeBody(output, size);
+}
+
+void MSG_NOTI_JOIN_TABLE::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_NOTI_JOIN_TABLE::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
+}
+
+void MSG_NOTI_LEAVE_TABLE::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
+}
+
+void MSG_NOTI_LEAVE_TABLE::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
+	Message::writeBody(output, size);
+}

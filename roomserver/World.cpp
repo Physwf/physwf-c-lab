@@ -104,6 +104,7 @@ void World::onReqEnterRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* b
 	{
 		enterRoomSuccess(conn, player, err);
 		room->enterZone(conn, player);
+		notifyEnterRoom(conn, player);
 	}
 }
 
@@ -165,6 +166,7 @@ void World::onReqLeaveRoom(ServiceConnection* conn, MSG_HEAD_BACK* head, char* b
 	{
 		leaveRoomSuccess(conn, player, err);
 		room->leaveZone(conn, player);
+		notifyLeaveRoom(conn, player);
 	}
 }
 
@@ -211,6 +213,25 @@ void World::leaveRoomFailed(ServiceConnection* conn, Player* player, err_t reaso
 	conn->send(buffer, size);
 }
 
+
+void World::notifyEnterRoom(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_NOTI_ENTER_ROOM_1008;
+	head.type = MSG_TYPE_BROADCAST;
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.cid = player->getChanelId();
+	head.length = 0;
+
+	MSG_NOTI_ENTER_ROOM msg;
+	msg.pid = player->pid();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+	conn->send(buffer, size);
+}
+
 void World::doForword(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	Room* room = findRoom(head->rid);
@@ -218,6 +239,25 @@ void World::doForword(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 	{
 		room->handleWorldMessage(conn, head, body);
 	}
+}
+
+
+void World::notifyLeaveRoom(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_NOTI_LEAVE_ROOM_1009;
+	head.type = MSG_TYPE_BROADCAST;
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.cid = player->getChanelId();
+	head.length = 0;
+
+	MSG_NOTI_LEAVE_ROOM msg;
+	msg.pid = player->pid();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+	conn->send(buffer, size);
 }
 
 Room* World::findRoom(rid_t rid)

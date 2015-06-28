@@ -31,6 +31,8 @@ private:
 	err_t tryLeaveRoom(Room* room, Player* player);
 	void leaveRoomSuccess(ServiceConnection* conn, Player* player, err_t reason);
 	void leaveRoomFailed(ServiceConnection* conn, Player* player, err_t reason);
+	void notifyEnterRoom(ServiceConnection* conn, Player* player);
+	void notifyLeaveRoom(ServiceConnection* conn, Player* player);
 private:
 	inline Room* findRoom(rid_t rid);
 private:
