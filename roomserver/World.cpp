@@ -118,6 +118,7 @@ err_t World::tryEnterRoom(Room* room, Player* player)
 
 void World::enterRoomSuccess(ServiceConnection* conn, Player* player, err_t reason)
 {
+	Log::info("player enter room success,pid:%d", player->pid());
 	MSG_HEAD_BACK sHead;
 	sHead.id = MSG_ENTER_ROOM_1002;
 	sHead.type = MSG_TYPE_PLAYER;
@@ -139,6 +140,7 @@ void World::enterRoomSuccess(ServiceConnection* conn, Player* player, err_t reas
 
 void World::enterRoomFailed(ServiceConnection* conn, Player* player, err_t reason)
 {
+	Log::info("player enter room failed,pid:%d", player->pid());
 	MSG_HEAD_BACK sHead;
 	sHead.id = MSG_ENTER_ROOM_1002;
 	sHead.type = MSG_TYPE_PLAYER;

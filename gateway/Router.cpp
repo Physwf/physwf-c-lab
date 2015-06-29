@@ -150,7 +150,7 @@ void Router::doServiceRoute(ServiceConnection* conn, MSG_HEAD_BACK* head, char* 
 	Client* client = findClient(head->pid);
 	if (client == NULL)
 	{
-		LOG_DEBUG("failed to find client");
+		LOG_DEBUG("failed to find client,mid:%d",head->id);
 		return;
 	}
 		
@@ -191,10 +191,13 @@ void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char*
 		MSG_CREATE_CHANEL msg;
 		msg.readBody(body, head->length);
 		createChanel(msg.cid);
+		break;
 	}
 	case MSG_CHANEL_STATUS_104:
 	{
 		MSG_CHANEL_STATUS msg;
+		msg.readBody(body,head->length);
+		Log::info("msg chanel status,cid:%d,status:%d,value:%d", head->cid, msg.status_type, msg.value);
 		Chanel* chanel = findChanel(head->cid);
 		Client* client = findClient(msg.value);
 		if (msg.status_type == CHANEL_STATUS_ADD_PLAYER)
@@ -202,7 +205,7 @@ void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char*
 			if (chanel && client)
 			{
 				chanel->addClient(client);
-				client->rid = head->cid;
+				client->rid = head->rid;
 				client->tid = head->tid;
 			}
 		}
@@ -211,7 +214,7 @@ void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char*
 			if (chanel && client)
 			{
 				chanel->removeClient(client);
-				client->rid = head->cid;
+				client->rid = head->rid;
 				client->tid = head->tid;
 			}
 		}

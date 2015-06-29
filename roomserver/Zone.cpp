@@ -30,10 +30,9 @@ void Zone::tryCreate(ServiceConnection* conn)
 		head.err = 0;
 		MSG_CREATE_CHANEL body;
 		body.cid = nCid;
-		char data[4] = { 0 };
-		size_t bSize = 0;
-		body.writeBody(data, &bSize);
-		conn->send((char*)&head, sizeof(MSG_HEAD_BACK), data, bSize);
+		char buffer[32] = { 0 };
+		size_t size = pack_back_msg(buffer,&head,&body);
+		conn->send(buffer, size);
 	}
 }
 
@@ -51,10 +50,9 @@ void Zone::tryDestroy(ServiceConnection* conn)
 		head.err = 0;
 		MSG_CREATE_CHANEL body;
 		body.cid = nCid;
-		char data[4] = { 0 };
-		size_t bSize = 0;
-		body.writeBody(data, &bSize);
-		conn->send((char*)&head, sizeof(MSG_HEAD_BACK), data, bSize);
+		char buffer[32] = { 0 };
+		size_t size = pack_back_msg(buffer, &head, &body);
+		conn->send(buffer, size);
 	}
 }
 

@@ -49,15 +49,42 @@ void Client::onMessage(ClientConnection* con, MSG_HEAD_GATE* head, char* body)
 		Log::info("enter room success");
 		joinTable();
 		break;
+	case MSG_NOTI_ENTER_ROOM_1008:
+	{
+		MSG_NOTI_ENTER_ROOM msg;
+		msg.readBody(body, head->length);
+		Log::info("player enter room,pid:%d", msg.pid);
+	}
+		break;
 	case MSG_LEAVE_ROOM_1003:
 		Log::info("leave room success");
+		break;
+	case MSG_NOTI_LEAVE_ROOM_1009:
+	{
+		MSG_NOTI_LEAVE_ROOM msg;
+		msg.readBody(body, head->length);
+		Log::info("player leave room,pid:%d",msg.pid);
+	}
 		break;
 	case MSG_JOIN_TABLE_1004:
 		Log::info("join table success");
 		startGame();
 		break;
+	case MSG_NOTI_JOIN_TABLE_1010:
+	{
+		MSG_NOTI_JOIN_TABLE msg;
+		msg.readBody(body, head->length);
+		Log::info("player join table,pid:%d,sid:%d", msg.pid, msg.sid);
+	}
 	case MSG_LEAVE_TABLE_1005:
 		Log::info("leave table success");
+		break;
+	case MSG_NOTI_LEAVE_TABLE_1011:
+	{
+		MSG_NOTI_LEAVE_TABLE msg;
+		msg.readBody(body, head->length);
+		Log::info("player leave table,pid:%d", msg.pid);
+	}
 		break;
 	case MSG_START_GAME_1006:
 		Log::info("start game success");
@@ -127,7 +154,7 @@ void Client::joinTable()
 
 	MSG_REQ_JOIN_TABLE msg;
 	msg.tid = 1;
-
+	msg.seat = 1;
 	int size = pack_gate_msg(buffer, &head, &msg);
 
 	pConnection->send(buffer, size);

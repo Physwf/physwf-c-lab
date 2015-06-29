@@ -14,7 +14,7 @@ Player::~Player()
 
 void Player::init()
 {
-	nId = 0;	nRid = 0;
+	nRid = 0;
 	nTid = 0;	nCid = 0;
 	nSid = 0;	nStatus = 0;
 }

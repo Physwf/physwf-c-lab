@@ -4,7 +4,7 @@
 
 Auth::Auth()
 {
-
+	cheat_pid = 0;
 }
 
 Auth::~Auth()
@@ -43,7 +43,7 @@ void Auth::doClientAuth(ClientConnection* conn,MSG_HEAD_GATE* head, char*body)
 		Client* client = new Client();
 		client->connection = conn;
 		client->session = new Session();
-		client->pid = 1;
+		client->pid = ++cheat_pid;
 		removeClient(conn);
 		authSuccess(client);
 		EV_INVOKE(cbClientAuthHandler, client, true);

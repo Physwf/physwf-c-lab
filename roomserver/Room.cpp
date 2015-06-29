@@ -1,5 +1,6 @@
 #include "Protocol.h"
 #include "Room.h"
+#include "Log.h"
 
 Room::Room()
 {
@@ -96,6 +97,7 @@ void Room::onReqJoinTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bo
 
 void Room::enterGameSuccess(ServiceConnection* conn, Player* player, err_t reason)
 {
+	Log::info("player join table success,pid:%d", player->pid());
 	MSG_HEAD_BACK head;
 	head.id = MSG_JOIN_TABLE_1004;
 	head.type = MSG_TYPE_PLAYER;
@@ -116,12 +118,14 @@ void Room::enterGameSuccess(ServiceConnection* conn, Player* player, err_t reaso
 
 void Room::enterGameFailed(ServiceConnection* conn, Player* player, err_t reason)
 {
+	Log::info("player join table failed,pid:%d", player->pid());
 	MSG_HEAD_BACK head;
 	head.id = MSG_JOIN_TABLE_1004;
 	head.type = MSG_TYPE_PLAYER;
 	head.rid = player->getRoomId();
 	head.tid = player->getTableId();
 	head.cid = player->getChanelId();
+	head.pid = player->pid();
 	head.length = 0;
 
 	char buffer[sizeof MSG_HEAD_BACK] = { 0 };

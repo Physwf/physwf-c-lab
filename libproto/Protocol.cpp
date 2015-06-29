@@ -173,32 +173,38 @@ void MSG_CHANEL_STATUS::writeBody(char* output, size_t* size)
 
 void MSG_CREATE_CHANEL::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input,size);
+	cid = readUnsignedShort(input);
 }
 
 void MSG_CREATE_CHANEL::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedShort(cid);
+	Message::writeBody(output, size);
 }
 
 void MSG_RES_CREATE_PLAYER::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
 }
 
 void MSG_RES_CREATE_PLAYER::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedLong(pid);
+	Message::writeBody(output, size);
 }
 
 void MSG_RES_DESTROY_PLAYER::readBody(char* input, size_t size)
 {
-
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
 }
 
 void MSG_RES_DESTROY_PLAYER::writeBody(char* output, size_t* size)
 {
-
+	writeUnsignedLong(pid);
+	Message::writeBody(output, size);
 }
 
 void MSG_REQ_ENTER_ROOM::readBody(char* input, size_t size)

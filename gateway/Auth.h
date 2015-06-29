@@ -53,7 +53,7 @@ private:
 	void authSuccess(Client* conn);
 	void authFailed(Client* conn);
 private:
-
+	int cheat_pid;
 	ClientBuffer cBuffer;
 	ServiceBuffer sBuffer;
 	AuthHandler cbClientAuthHandler;
