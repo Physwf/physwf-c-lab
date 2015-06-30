@@ -76,6 +76,7 @@ void Client::onMessage(ClientConnection* con, MSG_HEAD_GATE* head, char* body)
 		msg.readBody(body, head->length);
 		Log::info("player join table,pid:%d,sid:%d", msg.pid, msg.sid);
 	}
+		break;
 	case MSG_LEAVE_TABLE_1005:
 		Log::info("leave table success");
 		break;

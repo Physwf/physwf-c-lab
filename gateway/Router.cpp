@@ -205,8 +205,8 @@ void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char*
 			if (chanel && client)
 			{
 				chanel->addClient(client);
-				client->rid = head->rid;
-				client->tid = head->tid;
+				//client->rid = head->rid;
+				//client->tid = head->tid;
 			}
 		}
 		else if (msg.status_type == CHANEL_STATUS_RMV_PLAYER)
@@ -214,8 +214,8 @@ void Router::onChanelMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char*
 			if (chanel && client)
 			{
 				chanel->removeClient(client);
-				client->rid = head->rid;
-				client->tid = head->tid;
+				//client->rid = head->rid;
+				//client->tid = head->tid;
 			}
 		}
 		break;

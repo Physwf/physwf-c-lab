@@ -17,6 +17,7 @@ public:
 	void broadcast(MSG_HEAD_GATE* head,char* body);
 	void addClient(Client* front);
 	void removeClient(Client* front);
+	cid_t cid() { return nCid; }
 private:
 	cid_t nCid;
 	std::set<Client*> mClients;
