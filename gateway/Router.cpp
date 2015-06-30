@@ -113,6 +113,8 @@ void Router::doClientRoute(ClientConnection* conn, MSG_HEAD_GATE* head, char* bo
 	pBack.tid = client->tid;
 	pBack.pid = client->pid;
 
+	Log::debug("do client route,mid:%d,pid:%d", head->id,client->pid);
+
 	char buffer[MAX_MSG_LENGTH] = { 0 };
 	int size = pack_back_msg2(buffer, &pBack, body);
 	client->master->send(buffer, size);

@@ -105,6 +105,8 @@ void Room::enterGameSuccess(ServiceConnection* conn, Player* player, err_t reaso
 	head.tid = player->getTableId();
 	head.cid = player->getChanelId();
 	head.pid = player->pid();
+	head.err = reason;
+
 	MSG_RES_JOIN_TABLE msg;
 	msg.tid = player->getTableId();
 	msg.seat = player->getSeatId();
