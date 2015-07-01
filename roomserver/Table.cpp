@@ -29,6 +29,7 @@ void Table::startGame()
 	if (!isAlive)
 	{
 		createGame();
+		isAlive = true;
 	}
 }
 
@@ -44,10 +45,12 @@ void Table::handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char
 	{
 	case MSG_START_GAME_1006:
 		startGame();
+		break;
 	case MSG_END_GAME_1007:
 		endGame();
+		break;
 	default:
-		doForward(head, body);
+		forwardToGame(head, body);
 		break;
 	}
 }
@@ -55,36 +58,14 @@ void Table::handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char
 
 void Table::handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body)
 {
-	MSG_HEAD_BACK hBack;
-	hBack.id = head->id;
-	hBack.type = head->type;
-	hBack.pid = head->pid;
-	hBack.rid = head->rid;
-	hBack.tid = head->tid;
-	hBack.id = head->id;
-	hBack.length = head->length;
-
 	unsigned short mtype = head->type & FILTER_TYPE_MSG;
 	switch (mtype)
 	{
-	case MSG_TYPE_BROADCAST:
-		if(CHANEL_TYPE_TABLE & head->type) broadcast(&hBack, body);
-		else
-		{
-			Seat* seat = findSeat(head->sid);
-			if (seat)
-			{
-				seat->handleGameMessage(conn, head, body);
-			}
-		}
+	case MSG_TYPE_GAME:
+		handleInternal(head, body);
 		break;
-	case MSG_TYPE_PLAYER:
-	{
-		Player* player = findPlayer(head->pid);
-		if (player) player->send(&hBack, body);
-		break;
-	}
 	default:
+		forwardToGate(head, body);
 		break;
 	}
 	
@@ -96,7 +77,7 @@ err_t Table::enterPlayer(Player* player, sid_t seat)
 	Seat* pSeat = findSeat(seat);
 	if (!pSeat)
 	{
-		err = MSG_ERR_SEAT_NOT_EXIST_1006;
+		err = MSG_ERR_SEAT_NOT_EXIST_1007;
 	}
 	else
 	{
@@ -126,7 +107,7 @@ err_t Table::leavePlayer(Player* player)
 	err_t err = 0;
 	if (!old)
 	{
-		err = MSG_ERR_NOT_IN_TABLE_1007;
+		err = MSG_ERR_NOT_IN_TABLE_1008;
 	}
 	else
 	{
@@ -139,7 +120,7 @@ err_t Table::leavePlayer(Player* player)
 	return err;
 }
 
-void Table::doForward(MSG_HEAD_BACK* head, char* body)
+void Table::forwardToGame(MSG_HEAD_BACK* head, char* body)
 {
 	MSG_HEAD_GAME gHead;
 	gHead.id = head->id;
@@ -154,15 +135,96 @@ void Table::doForward(MSG_HEAD_BACK* head, char* body)
 	pGame->send(&gHead, body);
 }
 
+
+void Table::forwardToGate(MSG_HEAD_GAME* head, char* body)
+{
+	MSG_HEAD_BACK hBack;
+	hBack.id = head->id;
+	hBack.type = head->type;
+	hBack.pid = head->pid;
+	hBack.rid = head->rid;
+	hBack.tid = head->tid;
+	hBack.id = head->id;
+	hBack.length = head->length;
+
+	switch (head->type & FILTER_TYPE_MSG)
+	{
+	case MSG_TYPE_BROADCAST:
+		if (CHANEL_TYPE_TABLE & head->type) broadcast(&hBack, body);
+		else
+		{
+			Seat* seat = findSeat(head->sid);
+			if (seat)
+			{
+				seat->handleGameMessage(head, body);
+			}
+		}
+		break;
+	case MSG_TYPE_PLAYER:
+	{
+		Player* player = findPlayer(head->pid);
+		if (player) player->send(&hBack, body);
+	}
+	break;
+	default:
+		break;
+	}
+}
+
+void Table::handleInternal(MSG_HEAD_GAME* head, char* body)
+{
+	switch (head->id)
+	{
+	case MSG_CREATE_GAME_105:
+		notiGameStart();
+		break;
+	case MSG_DESTROY_GAME_106:
+		notiGameEnd();
+		break;
+	default:
+		break;
+	}
+}
+
+
+void Table::notiGameStart()
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_NOTI_GAME_START_1012;
+	head.pid = 0;
+	head.rid = nRid;
+	head.tid = nTid;
+
+	MSG_NOTI_GAME_START msg;
+
+	broadcast(&head, &msg);
+}
+
+
+void Table::notiGameEnd()
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_NOTI_GAME_END_1013;
+	head.pid = 0;
+	head.rid = nRid;
+	head.tid = nTid;
+
+	MSG_NOTI_GAME_END msg;
+
+	broadcast(&head, &msg);
+}
+
 void Table::createGame()
 {
 	MSG_HEAD_GAME head;
 	head.id = MSG_CREATE_GAME_105;
-	head.type = MSG_TYPE_PLAYER;
+	head.type = MSG_TYPE_GAME;
 	head.pid = 0;
 	head.tid = nTid;
+	head.sid = 0;
 	head.rid = nRid;
 	head.cid = nCid;
+	head.iid = 0;
 	head.err = 0;
 
 	MSG_REQ_CREATE_GAME msg;
@@ -175,7 +237,7 @@ void Table::destoryGame()
 {
 	MSG_HEAD_GAME head;
 	head.id = MSG_DESTROY_GAME_106;
-	head.type = MSG_TYPE_PLAYER;
+	head.type = MSG_TYPE_GAME;
 	head.pid = 0;
 	head.tid = nTid;
 	head.rid = nRid;

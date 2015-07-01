@@ -18,6 +18,8 @@
 #define MSG_NOTI_LEAVE_ROOM_1009	1009
 #define MSG_NOTI_JOIN_TABLE_1010	1010
 #define MSG_NOTI_LEAVE_TABLE_1011	1011
+#define MSG_NOTI_GAME_START_1012	1012
+#define MSG_NOTI_GAME_END_1013		1013
 
 #define MSG_CREATE_PLAYER_100			100
 #define MSG_DESTROY_PLAYER_101			101
@@ -33,11 +35,12 @@
 #define MSG_ERR_ROOM_FULL_1001			1001
 #define MSG_ERR_ALREADY_IN_1002			1002
 #define MSG_ERR_NOT_IN_ROOM_1003		1003
-#define MSG_ERR_TABLE_FULL_1004			1004
-#define MSG_ERR_TABLE_ALREADY_IN_1005	1005
-#define MSG_ERR_SEAT_NOT_EXIST_1006		1006
-#define MSG_ERR_NOT_IN_TABLE_1007		1007
-#define MSG_ERR_NOT_IN_SEAT_1008		1008
+#define MSG_ERR_TABLE_NOT_EXIST_1004	1004
+#define MSG_ERR_TABLE_FULL_1005			1005
+#define MSG_ERR_TABLE_ALREADY_IN_1006	1006
+#define MSG_ERR_SEAT_NOT_EXIST_1007		1007
+#define MSG_ERR_NOT_IN_TABLE_1008		1008
+#define MSG_ERR_NOT_IN_SEAT_1009		1009
 
 #include "Message.h"
 
@@ -234,6 +237,18 @@ struct VALE_DLL MSG_REQ_DESTROY_GAME : Message
 {
 	unsigned short gid;
 
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_NOTI_GAME_START : Message
+{
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+struct VALE_DLL MSG_NOTI_GAME_END : Message
+{
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };

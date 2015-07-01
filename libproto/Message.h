@@ -63,6 +63,7 @@ struct MSG_HEAD_GATE
 #define MSG_TYPE_PLAYER			1
 #define MSG_TYPE_CHANEL			2
 #define MSG_TYPE_BROADCAST		3
+#define MSG_TYPE_GAME			4
 
 #define FILTER_TYPE_MSG			0xFF
 #define FILTER_TYPE_CHANEL		0xFF00
@@ -89,6 +90,10 @@ VALE_DLL inline int pack_gate_msg2(char* buff, MSG_HEAD_GATE* head, char* body);
 VALE_DLL inline int pack_game_msg(char* buff, MSG_HEAD_GAME* head, Message* body);
 VALE_DLL inline int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body);
 
+VALE_DLL inline void game_to_back(MSG_HEAD_GAME* game, MSG_HEAD_BACK* back);
+VALE_DLL inline void back_to_game(MSG_HEAD_BACK* back, MSG_HEAD_GAME* game);
+VALE_DLL inline void back_to_gate(MSG_HEAD_BACK* back, MSG_HEAD_GATE* gate);
+VALE_DLL inline void gate_to_back(MSG_HEAD_GATE* gate, MSG_HEAD_BACK* back);
 
 #define C_SIZE sizeof(char)
 #define B_SIZE sizeof(bool)

@@ -16,7 +16,7 @@ Seat::~Seat()
 
 }
 
-void Seat::handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body)
+void Seat::handleGameMessage(MSG_HEAD_GAME* head, char* body)
 {
 	if ((head->type & MSG_TYPE_BROADCAST) && (head->type & CHANEL_TYPE_SEAT))
 	{
@@ -59,7 +59,7 @@ err_t Seat::leavePlayer(Player* player)
 	err_t err = 0;
 	if (!old)
 	{
-		err = MSG_ERR_NOT_IN_SEAT_1008;
+		err = MSG_ERR_NOT_IN_SEAT_1009;
 	}
 	else
 	{

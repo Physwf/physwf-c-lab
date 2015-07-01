@@ -395,3 +395,23 @@ void MSG_NOTI_LEAVE_TABLE::writeBody(char* output, size_t* size)
 	writeUnsignedLong(pid);
 	Message::writeBody(output, size);
 }
+
+void MSG_NOTI_GAME_START::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_NOTI_GAME_START::writeBody(char* output, size_t* size)
+{
+
+}
+
+void MSG_NOTI_GAME_END::readBody(char* input, size_t size)
+{
+
+}
+
+void MSG_NOTI_GAME_END::writeBody(char* output, size_t* size)
+{
+
+}

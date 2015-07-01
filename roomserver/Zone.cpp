@@ -175,4 +175,18 @@ void Zone::broadcast(MSG_HEAD_BACK* head, char* body)
 	}
 }
 
+void Zone::broadcast(MSG_HEAD_BACK* head, Message* body)
+{
+	head->type = MSG_TYPE_BROADCAST;
+	head->err = 0;
+	head->cid = nCid;
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, head, body);
+	for (map_gates::iterator it = mGates.begin(); it != mGates.end(); it++)
+	{
+		it->first->send(buffer, size);
+	}
+}
+
 

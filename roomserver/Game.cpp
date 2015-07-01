@@ -33,6 +33,7 @@ void Game::send(MSG_HEAD_GAME* pHead, Message* msg)
 {
 	char buffer[52] = { 0 };
 	int size = pack_game_msg(buffer, pHead, msg);
+	pCon->send(buffer, size);
 }
 
 iid_t Game::sIid=0;

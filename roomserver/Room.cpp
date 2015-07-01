@@ -85,11 +85,13 @@ void Room::onReqJoinTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bo
 	MSG_REQ_JOIN_TABLE msg;
 	msg.readBody(body,head->length);
 	Player* player = findPlayer(head->pid);
-	err_t err = tryEnterTable(msg.tid, player,msg.seat);
+	Table* table = findTable(msg.tid);
+	err_t err = tryEnterTable(table, player, msg.seat);
 	if (err) enterGameFailed(conn, player, err);
 	else
 	{
 		enterGameSuccess(conn, player, err);
+		table->enterZone(conn, player);
 		notifyEnterTable(conn, player);
 	}
 }
@@ -138,11 +140,13 @@ void Room::enterGameFailed(ServiceConnection* conn, Player* player, err_t reason
 void Room::onReqLeaveTable(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
 {
 	Player* player = findPlayer(head->pid);
-	err_t err = tryLeaveTable(head->tid, player);
+	Table* table = findTable(head->tid);
+	err_t err = tryLeaveTable(table, player);
 	if (err) leaveGameFailed(conn, player, err);
 	else
 	{
 		leaveGameSuccess(conn, player, err);
+		table->leaveZone(conn, player);
 		notifyLeaveTable(conn, player);
 	}
 }
@@ -219,24 +223,16 @@ void Room::notifyLeaveTable(ServiceConnection* conn, Player* player)
 	conn->send(buffer, size);
 }
 
-err_t Room::tryEnterTable(tid_t tid, Player* player, unsigned char seat)
+err_t Room::tryEnterTable(Table* table, Player* player, unsigned char seat)
 {
-	Table* game = findTable(tid);
-	if (game == NULL)
-	{
-		return MSG_ERR_TABLE_FULL_1004;
-	}
-	return game->enterPlayer(player,seat);
+	if (table == NULL) return MSG_ERR_TABLE_NOT_EXIST_1004;
+	return table->enterPlayer(player, seat);
 }
 
-err_t Room::tryLeaveTable(tid_t tid, Player* player)
+err_t Room::tryLeaveTable(Table* table, Player* player)
 {
-	Table* game = findTable(tid);
-	if (game == NULL)
-	{
-		return MSG_ERR_TABLE_FULL_1004;
-	}
-	return game->leavePlayer(player);
+	if (table == NULL) return MSG_ERR_TABLE_NOT_EXIST_1004;
+	return table->leavePlayer(player);
 }
 
 void Room::doForward(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)

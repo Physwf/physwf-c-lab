@@ -244,6 +244,10 @@ int read_head_game(char* buff, MSG_HEAD_GAME* head)
 	size += sizeof(head->tid);
 	buff += sizeof(head->tid);
 
+	memcpy(&head->sid, buff, sizeof(head->sid));
+	size += sizeof(head->sid);
+	buff += sizeof(head->sid);
+
 	memcpy(&head->cid, buff, sizeof(head->cid));
 	size += sizeof(head->cid);
 	buff += sizeof(head->cid);
@@ -337,6 +341,10 @@ int write_head_game(char* buff, MSG_HEAD_GAME* head)
 	size += sizeof(head->tid);
 	buff += sizeof(head->tid);
 
+	memcpy(buff, &head->sid, sizeof(head->sid));
+	size += sizeof(head->sid);
+	buff += sizeof(head->sid);
+
 	memcpy(buff, &head->cid, sizeof(head->cid));
 	size += sizeof(head->cid);
 	buff += sizeof(head->cid);
@@ -401,6 +409,31 @@ int pack_game_msg2(char* buff, MSG_HEAD_GAME* head, char* body)
 	return HEAD_LENGTH_GAME + head->length;
 }
 
+VALE_DLL void game_to_back(MSG_HEAD_GAME* game, MSG_HEAD_BACK* back)
+{
+	back->cid = game->cid;
+	back->err = game->err;
+	back->id = game->id;
+	back->length = game->length;
+	back->pid = game->pid;
+	back->rid = game->rid;
+	back->tid = game->tid;
+	back->type = game->type;
+}
 
+VALE_DLL void back_to_game(MSG_HEAD_BACK* back, MSG_HEAD_GAME* game)
+{
+
+}
+
+VALE_DLL void back_to_gate(MSG_HEAD_BACK* back, MSG_HEAD_GATE* gate)
+{
+
+}
+
+VALE_DLL void gate_to_back(MSG_HEAD_GATE* gate, MSG_HEAD_BACK* back)
+{
+
+}
 
 

@@ -24,8 +24,8 @@ public:
 	void handleWorldMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
-	err_t tryEnterTable(tid_t tid, Player* player,unsigned char seat);
-	err_t tryLeaveTable(tid_t tid, Player* player);
+	err_t tryEnterTable(Table* table, Player* player,unsigned char seat);
+	err_t tryLeaveTable(Table* table, Player* player);
 	err_t startNewGame();
 	err_t destroyGame();
 private:

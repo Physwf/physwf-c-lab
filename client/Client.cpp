@@ -87,10 +87,10 @@ void Client::onMessage(ClientConnection* con, MSG_HEAD_GATE* head, char* body)
 		Log::info("player leave table,pid:%d", msg.pid);
 	}
 		break;
-	case MSG_START_GAME_1006:
-		Log::info("start game success");
+	case MSG_NOTI_GAME_START_1012:
+		Log::info("game started");
 		break;
-	case MSG_END_GAME_1007:
+	case MSG_NOTI_GAME_END_1013:
 		Log::info("end game success");
 		break;
 	default:

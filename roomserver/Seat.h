@@ -14,7 +14,7 @@ public:
 	Seat(sid_t id);
 	~Seat();
 public:
-	void handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body);
+	void handleGameMessage(MSG_HEAD_GAME* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
 private:

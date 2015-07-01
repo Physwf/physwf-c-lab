@@ -15,6 +15,7 @@ public:
 	void enterZone(ServiceConnection* conn, Player* player);
 	void leaveZone(ServiceConnection* conn, Player* player);
 	void broadcast(MSG_HEAD_BACK* head,char* body);
+	void broadcast(MSG_HEAD_BACK* head, Message* body);
 protected:
 	static cid_t getNextId();
 	void tryCreate(ServiceConnection* conn);

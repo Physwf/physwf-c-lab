@@ -22,7 +22,11 @@ public:
 	err_t leavePlayer(Player* player);
 	tid_t tid() { return nTid; }
 private:
-	void doForward(MSG_HEAD_BACK* head, char* body);
+	void forwardToGame(MSG_HEAD_BACK* head, char* body);
+	void forwardToGate(MSG_HEAD_GAME* head, char* body);
+	void handleInternal(MSG_HEAD_GAME* head, char* body);
+	void notiGameStart();
+	void notiGameEnd();
 	void createGame();
 	void destoryGame();
 private:
