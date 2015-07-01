@@ -33,12 +33,13 @@ public:
 	static GamePool* getInstance();
 private:
 	void onConnected(GameConnection* conn);
-	void onGameMessage(char* head, size_t hsize, char* body, size_t bsize);
+	void onGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body);
 	void onClose(GameConnection* conn);
 	GameConnection* getConnection();
 private:
 	static GamePool* pPool;
 	EventLoop* pLoop;
+	MessageHandler cbTableHandler;
 	map_con mConnections;
 	map_game mGames;
 };

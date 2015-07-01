@@ -18,6 +18,7 @@ void GamePool::initialize(EventLoop* loop)
 	{
 		GameConnection* gConn = GameConnection::create(pLoop);
 		gConn->setConnectHandler(EV_CB(this,GamePool::onConnected));
+		gConn->setMessageHandler(EV_M_CB(this,GamePool::onGameMessage));
 		gConn->setCloseHandler(EV_CB(this, GamePool::onClose));
 		gConn->connect("10.88.52.36", 2345);
 		//gConn->connect("192.168.1.7", 2345);
@@ -64,14 +65,12 @@ void GamePool::onConnected(GameConnection* conn)
 }
 
 
-void GamePool::onGameMessage(char* head, size_t hsize, char* body, size_t bsize)
+void GamePool::onGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body)
 {
-	MSG_HEAD_GAME gHead;
-	read_head_game(head, &gHead);
-	map_game::iterator it = mGames.find(gHead.iid);
+	map_game::iterator it = mGames.find(head->iid);
 	if (it != mGames.end())
 	{
-		//it->second->handleMessage(&gHead,body);
+		it->second->handleMessage(conn,head, body);
 	}
 }
 

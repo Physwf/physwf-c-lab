@@ -14,21 +14,17 @@ public:
 	Table(tid_t tid);
 	~Table();
 public:
-	void startGame();
+	void tryCreateGame();
 	void endGame();
 	void handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
-	void handleGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body);
 	err_t enterPlayer(Player* player,sid_t seat);
 	err_t leavePlayer(Player* player);
 	tid_t tid() { return nTid; }
 private:
+	void onGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body);
 	void forwardToGame(MSG_HEAD_BACK* head, char* body);
-	void forwardToGate(MSG_HEAD_GAME* head, char* body);
-	void handleInternal(MSG_HEAD_GAME* head, char* body);
 	void notiGameStart();
 	void notiGameEnd();
-	void createGame();
-	void destoryGame();
 private:
 	Seat* findSeat(sid_t sid);
 private:
