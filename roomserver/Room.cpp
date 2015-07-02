@@ -23,10 +23,11 @@ err_t Room::enterPlayer(Player* player)
 {
 	Player* old = removePlayer(player->pid());
 	err_t err = 0;
-	if (!old)
+	if (old != player)
 	{
 		addPlayer(player->pid(),player);
 		player->setRoomId(nRid);
+		// need to clean player
 	}
 	else if (old == player)
 	{
@@ -217,6 +218,7 @@ void Room::notifyLeaveTable(ServiceConnection* conn, Player* player)
 
 	MSG_NOTI_LEAVE_TABLE msg;
 	msg.pid = player->pid();
+	msg.state = player->getStatus();
 
 	char buffer[32] = { 0 };
 	int size = pack_back_msg(buffer, &head, &msg);

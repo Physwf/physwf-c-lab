@@ -21,12 +21,12 @@ typedef struct
 	unsigned short length;//2
 	unsigned short type;//2
 	mid_t id;//4
-	pid_t pid;//4
+	//pid_t pid;//4
 	iid_t iid;//4
-	rid_t rid;//2
-	tid_t tid;//2
+	//rid_t rid;//2
+	//tid_t tid;//2
 	sid_t sid;//2
-	cid_t cid;//2
+	//cid_t cid;//2
 	err_t err;//4
 } MSG_HEAD_GAME;
 
@@ -50,12 +50,8 @@ struct MSG_HEAD_GATE
 #define HEAD_LENGTH_GAME sizeof(unsigned short)\
 							+ sizeof(unsigned short)\
 							+ sizeof(mid_t)\
-							+ sizeof(pid_t)\
 							+ sizeof(iid_t)\
-							+ sizeof(rid_t)\
-							+ sizeof(tid_t)\
 							+ sizeof(sid_t)\
-							+ sizeof(cid_t)\
 							+ sizeof(err_t)
 
 #define MAX_MSG_LENGTH 512

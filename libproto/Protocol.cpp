@@ -408,10 +408,86 @@ void MSG_NOTI_GAME_START::writeBody(char* output, size_t* size)
 
 void MSG_NOTI_GAME_END::readBody(char* input, size_t size)
 {
-
+	
 }
 
 void MSG_NOTI_GAME_END::writeBody(char* output, size_t* size)
 {
+	
+}
 
+void MSG_REQ_TAKE_SEAT::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_REQ_TAKE_SEAT::writeBody(char* output, size_t* size)
+{
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
+}
+
+void MSG_RES_TAKE_SEAT::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_RES_TAKE_SEAT::writeBody(char* output, size_t* size)
+{
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
+}
+
+void MSG_NOTI_TAKE_SEAT::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_NOTI_TAKE_SEAT::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
+}
+
+void MSG_REQ_STAND_UP::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_REQ_STAND_UP::writeBody(char* output, size_t* size)
+{
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
+}
+
+void MSG_RES_STAND_UP::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_RES_STAND_UP::writeBody(char* output, size_t* size)
+{
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
+}
+
+void MSG_NOTI_STAND_UP::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	pid = readUnsignedLong(input);
+	sid = readUnsignedShort(input);
+}
+
+void MSG_NOTI_STAND_UP::writeBody(char* output, size_t* size)
+{
+	writeUnsignedLong(pid);
+	writeUnsignedShort(sid);
+	Message::writeBody(output, size);
 }

@@ -19,11 +19,7 @@ void Game::start(GameConnection* con)
 	MSG_HEAD_GAME head;
 	head.id = MSG_CREATE_GAME_105;
 	head.type = MSG_TYPE_GAME;
-	head.pid = 0;
-	head.tid = 0;
 	head.sid = 0;
-	head.rid = 0;
-	head.cid = 0;
 	head.iid = nIid;
 	head.err = 0;
 
@@ -42,10 +38,6 @@ void Game::end()
 	MSG_HEAD_GAME head;
 	head.id = MSG_DESTROY_GAME_106;
 	head.type = MSG_TYPE_GAME;
-	head.pid = 0;
-	head.tid = 0;
-	head.rid = 0;
-	head.cid = 0;
 	head.iid = nIid;
 	head.err = 0;
 

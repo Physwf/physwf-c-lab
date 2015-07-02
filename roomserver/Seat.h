@@ -14,12 +14,16 @@ public:
 	Seat(sid_t id);
 	~Seat();
 public:
-	void handleGameMessage(MSG_HEAD_GAME* head, char* body);
+	void handleBroadcast(MSG_HEAD_GAME* head, char* body);
+	void handlePlayerMessage(MSG_HEAD_GAME* head, char* body);
 	err_t enterPlayer(Player* player);
 	err_t leavePlayer(Player* player);
+	err_t take(Player* player);
+	err_t stand(Player* player);
 private:
 	sid_t sid();
 private:
 	sid_t nSid;
+	Player* pHost;
 };
 #endif
