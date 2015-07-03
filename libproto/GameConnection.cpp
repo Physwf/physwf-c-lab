@@ -44,7 +44,7 @@ void GameConnection::onRead(Connection* con)
 			buff->readBytes(&bufRead, 0, head.length);
 			EV_INVOKE(cbMessageHandler, this, &head, bufRead.data());
 			buff->tight();
-			bufRead.tight();
+			bufRead.clear();
 		}
 	}
 }

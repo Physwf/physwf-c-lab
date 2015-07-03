@@ -22,21 +22,25 @@ Table::~Table()
 }
 
 
-void Table::tryCreateGame()
+void Table::checkGame()
 {
-	if (!isAlive)
+	if (!isAlive && !mPlayers.empty())
 	{
 		pGame = GamePool::getInstance()->getGame();
 		pGame->setMessageHandler(EV_M_CB(this, Table::onGameMessage));
 		isAlive = true;
 	}
+	else if (isAlive && mPlayers.empty())
+	{
+		GamePool::getInstance()->recycle(pGame);
+		isAlive = false;
+	}
 }
 
 
-void Table::endGame()
+void Table::startGame()
 {
-	GamePool::getInstance()->recycle(pGame);
-	isAlive = false;
+	pGame->start();
 }
 
 void Table::handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body)
@@ -44,10 +48,10 @@ void Table::handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char
 	switch (head->id)
 	{
 	case MSG_START_GAME_1006:
-		//tryCreateGame();
+		startGame();
 		break;
 	case MSG_END_GAME_1007:
-		endGame();
+		
 		break;
 	case MSG_TAKE_SEAT_1014:
 		onReqTakeSeat(conn, head, body);
@@ -87,7 +91,10 @@ err_t Table::enterPlayer(Player* player, sid_t seat)
 			player->setTableId(nTid);
 			addPlayer(player->pid(), player);
 		}
-		tryCreateGame();
+		checkGame();
+
+		if (player->getStatus() == STATUS_SIT)
+			pGame->initStatus(GAME_STATUS_SIT_DOWN, player->getSeatId());
 	}
 	return err;
 }
@@ -107,6 +114,7 @@ err_t Table::leavePlayer(Player* player)
 		{
 			seat->leavePlayer(player);
 		}
+		checkGame();
 	}
 	return err;
 }
@@ -114,9 +122,6 @@ err_t Table::leavePlayer(Player* player)
 
 void Table::onGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body)
 {
-	
-	
-
 	switch (head->type & FILTER_TYPE_MSG)
 	{
 	case MSG_TYPE_BROADCAST:
@@ -206,6 +211,7 @@ void Table::onReqTakeSeat(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bo
 	else
 	{
 		takeSeatSuccess(conn, player, err);
+		pGame->updateStatus(GAME_STATUS_SIT_DOWN, msg.sid);
 		notiTakeSeat(conn, player);
 	}
 }
@@ -219,12 +225,93 @@ void Table::onReqStandUp(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bod
 	else
 	{
 		standUpSuccess(conn, player, err);
+		pGame->updateStatus(GAME_STATUS_STAND_UP, player->getSeatId());
 		notiStandUp(conn, player);
 	}
 }
 
+
+void Table::takeSeatFailed(ServiceConnection* conn, Player* player, err_t reason)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_TAKE_SEAT_1014;
+	head.type = MSG_TYPE_PLAYER;
+	head.cid = nCid;
+	head.pid = player->pid();
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.err = reason;
+	
+	char buffer[32] = { 0 };
+	int size = write_head_back(buffer, &head);
+
+	conn->send(buffer, size);
+}
+
+
+void Table::takeSeatSuccess(ServiceConnection* conn, Player* player, err_t reason)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_TAKE_SEAT_1014;
+	head.type = MSG_TYPE_PLAYER;
+	head.cid = nCid;
+	head.pid = player->pid();
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.err = reason;
+
+	MSG_RES_TAKE_SEAT msg;
+	msg.sid = player->getSeatId();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+
+	conn->send(buffer, size);
+}
+
+
+void Table::standUpFailed(ServiceConnection* conn, Player* player, err_t reason)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_STAND_UP_1016;
+	head.type = MSG_TYPE_PLAYER;
+	head.cid = nCid;
+	head.pid = player->pid();
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.err = reason;
+
+	char buffer[32] = { 0 };
+	int size = write_head_back(buffer, &head);
+
+	conn->send(buffer, size);
+}
+
+
+void Table::standUpSuccess(ServiceConnection* conn, Player* player, err_t reason)
+{
+	MSG_HEAD_BACK head;
+	head.id = MSG_STAND_UP_1016;
+	head.type = MSG_TYPE_PLAYER;
+	head.cid = nCid;
+	head.pid = player->pid();
+	head.rid = player->getRoomId();
+	head.tid = player->getTableId();
+	head.err = reason;
+
+	MSG_RES_STAND_UP msg;
+	msg.sid = player->getSeatId();
+
+	char buffer[32] = { 0 };
+	int size = pack_back_msg(buffer, &head, &msg);
+
+	conn->send(buffer, size);
+}
+
 err_t Table::tryTakeSeat(Player* player, Seat* seat)
 {
+	if (player->getStatus() == STATUS_SIT) return MSG_ERR_ALREADY_IN_SEAT_1013;
+
 	if (!seat) return MSG_ERR_SEAT_NOT_EXIST_1007;
 	else return seat->take(player);
 }
@@ -232,14 +319,44 @@ err_t Table::tryTakeSeat(Player* player, Seat* seat)
 
 err_t Table::tryStandUp(Player* player)
 {
-	if (!player) return MSG_ERR_PLAYER_NOT_AT_TABLE_1011;
-
+	err_t err = 0;
+	if (!player) err = MSG_ERR_PLAYER_NOT_AT_TABLE_1011;
+	if (player->getStatus() == STATUS_STAND) err = MSG_ERR_ALREADY_STAND_1014;
 	if (player->getStatus() == STATUS_SIT)
 	{
 		Seat* seat = findSeat(player->getSeatId());
 		if (!seat) return MSG_ERR_SEAT_NOT_EXIST_1007;
-		return seat->stand(player);
+		err = seat->stand(player);
 	}
+	return err;
+}
+
+
+void Table::notiTakeSeat(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head = { 0 };
+	head.id = MSG_NOTI_TAKE_SEAT_1015;
+	head.err = 0;
+	
+	MSG_NOTI_TAKE_SEAT msg;
+	msg.pid = player->pid();
+	msg.sid = player->getSeatId();
+
+	broadcast(&head, &msg);
+}
+
+
+void Table::notiStandUp(ServiceConnection* conn, Player* player)
+{
+	MSG_HEAD_BACK head = { 0 };
+	head.id = MSG_NOTI_STAND_UP_1017;
+	head.err = 0;
+
+	MSG_NOTI_STAND_UP msg;
+	msg.pid = player->pid();
+	msg.sid = player->getSeatId();
+
+	broadcast(&head, &msg);
 }
 
 Seat* Table::findSeat(sid_t sid)

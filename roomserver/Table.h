@@ -14,7 +14,8 @@ public:
 	Table(tid_t tid);
 	~Table();
 public:
-	void tryCreateGame();
+	void checkGame();
+	void startGame();
 	void endGame();
 	void handleRoomMessage(ServiceConnection* conn, MSG_HEAD_BACK* head, char* body);
 	err_t enterPlayer(Player* player,sid_t seat);

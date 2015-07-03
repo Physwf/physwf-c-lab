@@ -491,3 +491,17 @@ void MSG_NOTI_STAND_UP::writeBody(char* output, size_t* size)
 	writeUnsignedShort(sid);
 	Message::writeBody(output, size);
 }
+
+void MSG_GAME_STATUS::readBody(char* input, size_t size)
+{
+	Message::readBody(input, size);
+	status_type = readUnsignedByte(input);
+	value = readUnsignedInt(input);
+}
+
+void MSG_GAME_STATUS::writeBody(char* output, size_t* size)
+{
+	writeUnsigndByte(status_type);
+	writeUnsignedInt(value);
+	Message::writeBody(output, size);
+}

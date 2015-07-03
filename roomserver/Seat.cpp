@@ -39,6 +39,7 @@ void Seat::handlePlayerMessage(MSG_HEAD_GAME* head, char* body)
 		hBack.type = head->type;
 		hBack.id = head->id;
 		hBack.length = head->length;
+		hBack.pid = pHost->pid();
 		pHost->send(&hBack, body);
 	}
 }
@@ -59,7 +60,7 @@ err_t Seat::enterPlayer(Player* player)
 		addPlayer(player->pid(), player);
 	}
 
-	if (mPlayers.empty())
+	if (mPlayers.size() == 1)
 	{
 		player->setStatus(STATUS_SIT);
 		pHost = player;
@@ -85,31 +86,37 @@ err_t Seat::leavePlayer(Player* player)
 
 err_t Seat::take(Player* player)
 {
+	err_t err = 0;
 	if (pHost != NULL)
 	{
-		return MSG_ERR_SEAT_BEEN_TAKEN_1012;
+		err = MSG_ERR_SEAT_BEEN_TAKEN_1012;
 	}
 	else
 	{
-		if (enterPlayer(player) == 0)
+		err = enterPlayer(player);
+		if (!err)
 		{
 			pHost = player;
 			player->setStatus(STATUS_SIT);
-			return 0;
-		}
-		else
-		{
-			return 1;
+			return err;
 		}
 	}
+	return err;
 }
 
 err_t Seat::stand(Player* player)
 {
-	if (player->getStatus() == STATUS_STAND)
+	err_t err = 0;
+	if (pHost == player)
 	{
-
+		player->setStatus(STATUS_STAND);
+		pHost = NULL;
 	}
+	else
+	{
+		err = 1;
+	}
+	return err;
 }
 
 sid_t Seat::sid()

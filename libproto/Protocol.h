@@ -22,7 +22,7 @@
 #define MSG_NOTI_GAME_END_1013		1013
 
 #define MSG_TAKE_SEAT_1014			1014
-#define MSG_NOTI_STAKE_SEAT_1015	1015
+#define MSG_NOTI_TAKE_SEAT_1015	1015
 #define MSG_STAND_UP_1016			1016
 #define MSG_NOTI_STAND_UP_1017		1017
 
@@ -33,6 +33,7 @@
 #define MSG_CHANEL_STATUS_104			104
 #define MSG_CREATE_GAME_105				105
 #define MSG_DESTROY_GAME_106			106
+#define MSG_GAME_STATUS_107				107
 
 
 #define MSG_ERR_AUTH_FAILED_0001			1
@@ -49,6 +50,8 @@
 #define MSG_ERR_PLAYER_NOT_IN_ROOM_1010	1010
 #define MSG_ERR_PLAYER_NOT_AT_TABLE_1011 1011
 #define MSG_ERR_SEAT_BEEN_TAKEN_1012	1012
+#define MSG_ERR_ALREADY_IN_SEAT_1013	1013
+#define MSG_ERR_ALREADY_STAND_1014		1014
 
 #include "Message.h"
 
@@ -226,7 +229,7 @@ struct VALE_DLL MSG_NOTI_TAKE_SEAT : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_REQ_STAND_UP : Message
+struct VALE_DLL MSG_REQ_STAND_UP : Message
 {
 	sid_t sid;
 
@@ -234,7 +237,7 @@ struct MSG_REQ_STAND_UP : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_RES_STAND_UP : Message
+struct VALE_DLL MSG_RES_STAND_UP : Message
 {
 	sid_t sid;
 
@@ -242,7 +245,7 @@ struct MSG_RES_STAND_UP : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-struct MSG_NOTI_STAND_UP : Message
+struct VALE_DLL MSG_NOTI_STAND_UP : Message
 {
 	pid_t pid;
 	sid_t sid;
@@ -308,6 +311,18 @@ struct VALE_DLL MSG_NOTI_GAME_START : Message
 
 struct VALE_DLL MSG_NOTI_GAME_END : Message
 {
+	inline virtual void readBody(char* input, size_t size);
+	inline virtual void writeBody(char* output, size_t* size);
+};
+
+#define GAME_STATUS_SIT_DOWN 1
+#define GAME_STATUS_STAND_UP 2
+
+struct VALE_DLL MSG_GAME_STATUS : Message
+{
+	unsigned char status_type;
+	unsigned int value;
+
 	inline virtual void readBody(char* input, size_t size);
 	inline virtual void writeBody(char* output, size_t* size);
 };

@@ -178,7 +178,7 @@ void Router::doServiceRoute(ServiceConnection* conn, MSG_HEAD_BACK* head, char* 
 	gHead.id = head->id;
 	gHead.length = head->length;
 	gHead.err = head->err;
-	char buffer[32] = { 0 };
+	char buffer[64] = { 0 };
 	int size = pack_gate_msg2(buffer, &gHead, body);
 	client->connection->send(buffer, size);
 }

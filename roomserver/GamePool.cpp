@@ -36,13 +36,13 @@ Game* GamePool::getGame()
 			if (it->second->isIdle())
 			{
 				game = it->second;
-				game->start(con);
+				game->create(con);
 				return game;
 			}
 		}
 
 		game = new Game();
-		game->start(con);
+		game->create(con);
 		mGames.insert(map_game::value_type(game->iid(), game));
 		return game;
 	}
@@ -51,7 +51,7 @@ Game* GamePool::getGame()
 
 void GamePool::recycle(Game* game)
 {
-	game->end();
+	game->destory();
 }
 
 void GamePool::onConnected(GameConnection* conn)
