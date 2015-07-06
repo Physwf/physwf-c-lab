@@ -40,6 +40,7 @@ void Seat::handlePlayerMessage(MSG_HEAD_GAME* head, char* body)
 		hBack.id = head->id;
 		hBack.length = head->length;
 		hBack.pid = pHost->pid();
+		hBack.err = head->err;
 		pHost->send(&hBack, body);
 	}
 }
