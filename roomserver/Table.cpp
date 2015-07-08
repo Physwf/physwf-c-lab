@@ -1,6 +1,7 @@
 #include "Table.h"
 #include "GamePool.h"
 #include "Protocol.h"
+#include "Log.h"
 
 Table::Table()
 {
@@ -94,7 +95,7 @@ err_t Table::enterPlayer(Player* player, sid_t seat)
 		checkGame();
 
 		if (player->getStatus() == STATUS_SIT)
-			pGame->initStatus(GAME_STATUS_SIT_DOWN, player->getSeatId());
+			pGame->setSeat(player->getSeatId(), GAME_STATUS_SIT_DOWN);
 	}
 	return err;
 }
@@ -122,6 +123,7 @@ err_t Table::leavePlayer(Player* player)
 
 void Table::onGameMessage(GameConnection* conn, MSG_HEAD_GAME* head, char* body)
 {
+	Log::debug("game msg,mid:%d,sid:%d", head->id, head->sid);
 	switch (head->type & FILTER_TYPE_MSG)
 	{
 	case MSG_TYPE_BROADCAST:
@@ -163,11 +165,15 @@ void Table::forwardToGame(MSG_HEAD_BACK* head, char* body)
 {
 	MSG_HEAD_GAME gHead;
 	gHead.id = head->id;
-
+	Player* player = findPlayer(head->pid);
+	if (player)
+	{
+		gHead.sid = player->getSeatId();
+	}
 	gHead.type = head->type;
 	gHead.iid = pGame->iid();
 	gHead.length = head->length;
-
+	Log::debug("send to game,mid:%d,pid:%d,sid:%d", head->id, head->pid, gHead.sid);
 	pGame->send(&gHead, body);
 }
 
@@ -211,7 +217,7 @@ void Table::onReqTakeSeat(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bo
 	else
 	{
 		takeSeatSuccess(conn, player, err);
-		pGame->updateStatus(GAME_STATUS_SIT_DOWN, msg.sid);
+		pGame->updateSeat(msg.sid, GAME_STATUS_SIT_DOWN);
 		notiTakeSeat(conn, player);
 	}
 }
@@ -225,7 +231,7 @@ void Table::onReqStandUp(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bod
 	else
 	{
 		standUpSuccess(conn, player, err);
-		pGame->updateStatus(GAME_STATUS_STAND_UP, player->getSeatId());
+		pGame->updateSeat(player->getSeatId(), GAME_STATUS_STAND_UP);
 		notiStandUp(conn, player);
 	}
 }

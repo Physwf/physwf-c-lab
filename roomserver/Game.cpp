@@ -4,7 +4,7 @@
 Game::Game()
 {
 	nIid = sIid++;
-	memset(aStatus, 0, sizeof aStatus);
+	memset(aStatus, GAME_STATUS_STAND_UP, sizeof aStatus);
 }
 
 Game::~Game()
@@ -97,12 +97,12 @@ void Game::handleMessage(GameConnection* con, MSG_HEAD_GAME* head, char* body)
 }
 
 
-void Game::initStatus(unsigned char status, unsigned int value)
+void Game::setSeat(sid_t sid, unsigned char status)
 {
-	aStatus[value] = status == GAME_STATUS_SIT_DOWN ? 1 : 0;
+	aStatus[sid - 1] = status;
 }
 
-void Game::updateStatus(unsigned char status, unsigned int value)
+void Game::updateSeat(sid_t sid, unsigned char status)
 {
 	if (!bIdle)
 	{
@@ -113,7 +113,7 @@ void Game::updateStatus(unsigned char status, unsigned int value)
 
 		MSG_GAME_STATUS msg;
 		msg.status_type = status;
-		msg.value = value;
+		msg.value = sid;
 
 		send(&head, &msg);
 	}

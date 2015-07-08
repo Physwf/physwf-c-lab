@@ -19,8 +19,8 @@ public:
 	void handleMessage(GameConnection* con,MSG_HEAD_GAME* pHead, char* body);
 	iid_t iid() { return nIid; }
 	bool isIdle() { return bIdle; }
-	void initStatus(unsigned char status, unsigned int value);
-	void updateStatus(unsigned char status, unsigned int value);
+	void setSeat(sid_t sid,unsigned char status);
+	void updateSeat(sid_t sid, unsigned char status);
 private:
 	void forwardToGate(MSG_HEAD_GAME* head, char* body);
 	void handleInternal(MSG_HEAD_GAME* head, char* body);

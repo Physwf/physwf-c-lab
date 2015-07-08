@@ -50,7 +50,7 @@ err_t Seat::enterPlayer(Player* player)
 	err_t err = 0;
 
 	Player* old = findPlayer(player->pid());
-	if (old != player)
+	if (old)
 	{
 		removePlayer(player->pid());
 		addPlayer(player->pid(), player);
