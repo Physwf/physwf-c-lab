@@ -95,7 +95,7 @@ err_t Table::enterPlayer(Player* player, sid_t seat)
 		checkGame();
 
 		if (player->getStatus() == STATUS_SIT)
-			pGame->setSeat(player->getSeatId(), GAME_STATUS_SIT_DOWN);
+			pGame->setSeat(player->getSeatId(), SEAT_STATUS_SIT);
 	}
 	return err;
 }
@@ -217,7 +217,7 @@ void Table::onReqTakeSeat(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bo
 	else
 	{
 		takeSeatSuccess(conn, player, err);
-		pGame->updateSeat(msg.sid, GAME_STATUS_SIT_DOWN);
+		pGame->updateSeat(msg.sid, SEAT_STATUS_SIT);
 		notiTakeSeat(conn, player);
 	}
 }
@@ -231,7 +231,7 @@ void Table::onReqStandUp(ServiceConnection* conn, MSG_HEAD_BACK* head, char* bod
 	else
 	{
 		standUpSuccess(conn, player, err);
-		pGame->updateSeat(player->getSeatId(), GAME_STATUS_STAND_UP);
+		pGame->updateSeat(player->getSeatId(), SEAT_STATUS_STAND);
 		notiStandUp(conn, player);
 	}
 }

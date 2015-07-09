@@ -20,8 +20,8 @@ void GamePool::initialize(EventLoop* loop)
 		gConn->setConnectHandler(EV_CB(this,GamePool::onConnected));
 		gConn->setMessageHandler(EV_M_CB(this,GamePool::onGameMessage));
 		gConn->setCloseHandler(EV_CB(this, GamePool::onClose));
-		//gConn->connect("10.88.52.36", 2345);
-		gConn->connect("192.168.1.7", 2345);
+		gConn->connect("10.88.52.36", 2345);
+		//gConn->connect("192.168.1.7", 2345);
 	}
 }
 

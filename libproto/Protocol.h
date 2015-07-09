@@ -315,8 +315,8 @@ struct VALE_DLL MSG_NOTI_GAME_END : Message
 	inline virtual void writeBody(char* output, size_t* size);
 };
 
-#define GAME_STATUS_SIT_DOWN 1
-#define GAME_STATUS_STAND_UP 2
+#define SEAT_STATUS_SIT		1
+#define SEAT_STATUS_STAND	2
 
 struct VALE_DLL MSG_GAME_STATUS : Message
 {

@@ -4,7 +4,7 @@
 Game::Game()
 {
 	nIid = sIid++;
-	memset(aStatus, GAME_STATUS_STAND_UP, sizeof aStatus);
+	memset(aStatus, SEAT_STATUS_STAND, sizeof aStatus);
 }
 
 Game::~Game()
