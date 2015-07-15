@@ -167,7 +167,7 @@ void Zone::broadcast(MSG_HEAD_BACK* head, char* body)
 	head->err = 0;
 	head->cid = nCid;
 
-	char buffer[32] = {0};
+	char buffer[64] = {0};
 	int size = pack_back_msg2(buffer, head, body);
 	for (map_gates::iterator it = mGates.begin(); it != mGates.end(); it++)
 	{
@@ -181,7 +181,7 @@ void Zone::broadcast(MSG_HEAD_BACK* head, Message* body)
 	head->err = 0;
 	head->cid = nCid;
 
-	char buffer[32] = { 0 };
+	char buffer[64] = { 0 };
 	int size = pack_back_msg(buffer, head, body);
 	for (map_gates::iterator it = mGates.begin(); it != mGates.end(); it++)
 	{
