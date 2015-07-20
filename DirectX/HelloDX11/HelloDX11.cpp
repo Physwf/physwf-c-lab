@@ -5,6 +5,9 @@
 #include "HelloDX11.h"
 #include <d3d11_1.h>
 #include <DirectXColors.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -29,6 +32,10 @@ ID3D11DeviceContext1* g_pImidiateContext1 = nullptr;
 IDXGISwapChain* g_pSwapChain = nullptr;
 IDXGISwapChain1* g_pSwapChain1 = nullptr;
 ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
+ID3D11VertexShader* g_pVertexShader;
+ID3D11PixelShader* g_pPixelShader;
+ID3D11InputLayout* g_pInputLayout;
+
 
 HRESULT InitDevice();
 void Render();
@@ -204,8 +211,44 @@ HRESULT InitDevice2()
 
 	g_pImidiateContext->RSSetViewports(1, &vp);
 
+	struct SimpleVertex
+	{
+		DirectX::XMFLOAT3 Pos;
+	};
+
+	D3D11_INPUT_ELEMENT_DESC layout[] = 
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	UINT numElements = ARRAYSIZE(layout);
+
+	ID3DBlob* pVSBlob = nullptr;
+	ID3DBlob* pFSBlob = nullptr;
+	ID3DBlob* pErrorBlob = nullptr;
+
+	if (FAILED(D3DCompileFromFile(L"Triangle.fx", nullptr, nullptr, "VS", "vs_4_0", D3DCOMPILE_ENABLE_STRICTNESS, 0, &pVSBlob, &pErrorBlob)))
+		return FALSE;
+	if (FAILED(D3DCompileFromFile(L"Triangle.fx", nullptr, nullptr, "PS", "ps_4_0", D3DCOMPILE_ENABLE_STRICTNESS, 0, &pFSBlob, &pErrorBlob)))
+		return FALSE;
+	hr = g_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &g_pVertexShader);
+
+	if (FAILED(hr))
+		pVSBlob->Release();
+
+	hr = g_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &g_pInputLayout);
+
+	pVSBlob->Release();
+
+	if (FAILED(hr))
+		return hr;
+
+	g_pImidiateContext->IASetInputLayout(g_pInputLayout);
+
+
 	return S_OK;
 }
+
+
 
 HRESULT InitDevice()
 {
