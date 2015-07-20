@@ -35,12 +35,13 @@ ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
 ID3D11VertexShader* g_pVertexShader;
 ID3D11PixelShader* g_pPixelShader;
 ID3D11InputLayout* g_pInputLayout;
-
+ID3D11Buffer* g_pVertexBuffer;
 
 HRESULT InitDevice();
 void Render();
 HRESULT InitDevice2();
 void Render2();
+void Render3();
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -83,7 +84,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 		else
 		{
-			Render2();
+			Render3();
 		}
 	}
 
@@ -244,6 +245,35 @@ HRESULT InitDevice2()
 
 	g_pImidiateContext->IASetInputLayout(g_pInputLayout);
 
+	hr = g_pd3dDevice->CreatePixelShader(pFSBlob->GetBufferPointer(), pFSBlob->GetBufferSize(), nullptr, &g_pPixelShader);
+	pFSBlob->Release();
+	if (FAILED(hr))
+		return hr;
+
+	SimpleVertex vertices[] = 
+	{
+		DirectX::XMFLOAT3(0.0f, 0.5f, 0.5f),
+		DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f),
+		DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f),
+	};
+
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof bd);
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(SimpleVertex) * 3;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	D3D11_SUBRESOURCE_DATA InitData;
+	ZeroMemory(&InitData, sizeof(InitData));
+	InitData.pSysMem = vertices;
+	hr = g_pd3dDevice->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
+	if (FAILED(hr))
+		return hr;
+	UINT stride = sizeof SimpleVertex;
+	UINT offset = 0;
+	g_pImidiateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+
+	g_pImidiateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return S_OK;
 }
@@ -433,6 +463,15 @@ void Render2()
 	float ClearColor[4] = {0.0f, 0.125f, 0.6f, 1.0f};
 	g_pImidiateContext->ClearRenderTargetView(g_pRenderTargetView,ClearColor);
 	g_pSwapChain->Present(0,0);
+}
+
+void Render3()
+{
+	g_pImidiateContext->ClearRenderTargetView(g_pRenderTargetView, DirectX::Colors::MidnightBlue);
+	g_pImidiateContext->VSSetShader(g_pVertexShader, nullptr, 0);
+	g_pImidiateContext->PSSetShader(g_pPixelShader, nullptr, 0);
+	g_pImidiateContext->Draw(3, 0);
+	g_pSwapChain->Present(0, 0);
 }
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
