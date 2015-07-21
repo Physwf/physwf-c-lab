@@ -68,7 +68,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HELLODX11));
 
-	if (FAILED(InitDevice2()))
+	if (!InitDevice2())
 	{
 		return 0;
 	}
