@@ -321,11 +321,12 @@ HRESULT InitDevice2()
 	D3D11_BUFFER_DESC ibd;
 	ZeroMemory(&ibd, sizeof ibd);
 	ibd.Usage = D3D11_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(indices);
+	ibd.ByteWidth = sizeof(WORD)*36;
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA InitData2;
+	ZeroMemory(&InitData2, sizeof(InitData2));
 	InitData2.pSysMem = indices;
 	if (FAILED(g_pd3dDevice->CreateBuffer(&ibd, &InitData2, &g_pIndexBuffer)))
 		return FALSE;
@@ -585,7 +586,7 @@ void Render4()
 	g_pImidiateContext->VSSetShader(g_pVertexShader, nullptr, 0);
 	g_pImidiateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImidiateContext->PSSetShader(g_pPixelShader, nullptr, 0);
-	g_pImidiateContext->Draw(36, 0);
+	g_pImidiateContext->DrawIndexed(36, 0, 0);
 	g_pSwapChain->Present(0, 0);
 }
 //
