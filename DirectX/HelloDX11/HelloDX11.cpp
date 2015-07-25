@@ -8,6 +8,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
+using namespace DirectX;
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -34,6 +35,7 @@ IDXGISwapChain1* g_pSwapChain1 = nullptr;
 ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
 ID3D11VertexShader* g_pVertexShader;
 ID3D11PixelShader* g_pPixelShader;
+ID3D11PixelShader* g_pPixelShaderSolid;
 ID3D11InputLayout* g_pInputLayout;
 ID3D11Buffer* g_pVertexBuffer;
 ID3D11Buffer* g_pIndexBuffer;
@@ -52,6 +54,9 @@ struct ConstantBuffer
 	DirectX::XMMATRIX World;
 	DirectX::XMMATRIX View;
 	DirectX::XMMATRIX Projection;
+	DirectX::XMFLOAT4 vLightDir[2];
+	DirectX::XMFLOAT4 vLightColor[2];
+	DirectX::XMFLOAT4 vOutputColor;
 };
 
 HRESULT InitDevice();
@@ -61,6 +66,7 @@ void Render2();
 void Render3();
 void Render4();
 void Render5();
+void Render6();
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -103,7 +109,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 		else
 		{
-			Render5();
+			Render6();
 		}
 	}
 
@@ -264,23 +270,28 @@ HRESULT InitDevice2()
 	struct SimpleVertex
 	{
 		DirectX::XMFLOAT3 Pos;
-		DirectX::XMFLOAT4 Color;
+		//DirectX::XMFLOAT4 Color;
+		DirectX::XMFLOAT3 Normal;
 	};
 
 	D3D11_INPUT_ELEMENT_DESC layout[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT numElements = ARRAYSIZE(layout);
 
 	ID3DBlob* pVSBlob = nullptr;
 	ID3DBlob* pFSBlob = nullptr;
+	ID3DBlob* pPSSloidBlob = nullptr;
 	ID3DBlob* pErrorBlob = nullptr;
 
 	if (FAILED(D3DCompileFromFile(L"Triangle.fx", nullptr, nullptr, "VS", "vs_4_0", D3DCOMPILE_ENABLE_STRICTNESS, 0, &pVSBlob, &pErrorBlob)))
 		return FALSE;
 	if (FAILED(D3DCompileFromFile(L"Triangle.fx", nullptr, nullptr, "PS", "ps_4_0", D3DCOMPILE_ENABLE_STRICTNESS, 0, &pFSBlob, &pErrorBlob)))
+		return FALSE;
+	if (FAILED(D3DCompileFromFile(L"Triangle.fx", nullptr, nullptr, "PSSolid", "ps_4_0", D3DCOMPILE_ENABLE_STRICTNESS, 0, &pPSSloidBlob, &pErrorBlob)))
 		return FALSE;
 	hr = g_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &g_pVertexShader);
 
@@ -301,25 +312,59 @@ HRESULT InitDevice2()
 	if (FAILED(hr))
 		return hr;
 
+	hr = g_pd3dDevice->CreatePixelShader(pPSSloidBlob->GetBufferPointer(), pPSSloidBlob->GetBufferSize(), nullptr, &g_pPixelShaderSolid);
+	pPSSloidBlob->Release();
+	if (FAILED(hr))
+		return hr;
+
 	SimpleVertex vertices[] = 
 	{
 		/*DirectX::XMFLOAT3(0.0f, 0.5f, 0.5f),
 		DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f),
 		DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f),*/
-		{ DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+	/*	{ DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
 		{ DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
 		{ DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
 		{ DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
 		{ DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
 		{ DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
 		{ DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },*/
+		{ DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f) },
+
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f) },
+
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f) },
+
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f) },
+
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
+		{ DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f) },
+
+		{ DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f) },
 	};
 
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof bd);
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(SimpleVertex) * 8;
+	bd.ByteWidth = sizeof(SimpleVertex) * 24;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	D3D11_SUBRESOURCE_DATA InitData;
@@ -334,7 +379,7 @@ HRESULT InitDevice2()
 
 	WORD indices[] =
 	{
-		3, 1, 0,
+		/*3, 1, 0,
 		2, 1, 3,
 
 		0, 5, 4,
@@ -350,7 +395,24 @@ HRESULT InitDevice2()
 		3, 7, 2,
 
 		6, 4, 5,
+		7, 4, 6,*/
+		3, 1, 0,
+		2, 1, 3,
+
+		6, 4, 5,
 		7, 4, 6,
+
+		11, 9, 8,
+		10, 9, 11,
+
+		14, 12, 13,
+		15, 12, 14,
+
+		19, 17, 16,
+		18, 17, 19,
+
+		22, 20, 21,
+		23, 20, 22
 	};
 
 
@@ -670,6 +732,79 @@ void Render5()
 	g_pImidiateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb2, 0, 0);
 
 	g_pImidiateContext->DrawIndexed(36, 0, 0);
+
+	g_pSwapChain->Present(0, 0);
+}
+
+void Render6()
+{
+	static float t = 0.0f;
+	if (g_driverType == D3D_DRIVER_TYPE_REFERENCE)
+	{
+		t += (float)DirectX::XM_PI * 0.0125f;
+	}
+	else
+	{
+		static ULONGLONG timeStart = 0;
+		ULONGLONG timeCur = GetTickCount64();
+		if (timeStart == 0)
+			timeStart = timeCur;
+		t = (timeCur - timeStart) / 1000.0f;
+	}
+
+	DirectX::XMFLOAT4 vLightDirs[] =
+	{
+		DirectX::XMFLOAT4(-0.577f, 0.577f, -0.577f, 1.0f),
+		DirectX::XMFLOAT4(0.0f, 0.0f, -1.0f, 1.0f),
+	};
+
+	DirectX::XMFLOAT4 vLightColors[] =
+	{
+		DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),
+		DirectX::XMFLOAT4(0.5f, 0.0f, 0.0f, 1.0f),
+	};
+
+	DirectX::XMMATRIX mRotate = DirectX::XMMatrixRotationY(-2.0f*t);
+	DirectX::XMVECTOR vLightDir = DirectX::XMLoadFloat4(&vLightDirs[1]);
+	vLightDir = XMVector3Transform(vLightDir, mRotate);
+	XMStoreFloat4(&vLightDirs[1], vLightDir);
+
+
+	g_World = DirectX::XMMatrixRotationY(t);
+
+	g_pImidiateContext->ClearRenderTargetView(g_pRenderTargetView, DirectX::Colors::MidnightBlue);
+	g_pImidiateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	ConstantBuffer cb1;
+	cb1.World = DirectX::XMMatrixTranspose(g_World);
+	cb1.View = DirectX::XMMatrixTranspose(g_View);
+	cb1.Projection = DirectX::XMMatrixTranspose(g_Projection);
+	cb1.vLightDir[0] = vLightDirs[0];
+	cb1.vLightDir[1] = vLightDirs[1];
+	cb1.vLightColor[0] = vLightColors[0];
+	cb1.vLightColor[1] = vLightColors[1];
+	cb1.vOutputColor = XMFLOAT4(0, 0, 0, 0);
+	g_pImidiateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb1, 0, 0);
+
+	g_pImidiateContext->VSSetShader(g_pVertexShader, nullptr, 0);
+	g_pImidiateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	g_pImidiateContext->PSSetShader(g_pPixelShader, nullptr, 0);
+	g_pImidiateContext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
+	g_pImidiateContext->DrawIndexed(36, 0, 0);
+
+	for (int m = 0; m < 2; m++)
+	{
+		DirectX::XMMATRIX mLight = DirectX::XMMatrixTranslationFromVector( 5.0f * DirectX::XMLoadFloat4(&vLightDirs[m]));
+		XMMATRIX mLightScale = XMMatrixScaling(0.2f, 0.2f, 0.2f);
+		mLight = mLightScale * mLight;
+
+		cb1.World = XMMatrixTranspose(mLight);
+		cb1.vOutputColor = vLightColors[m];
+
+		g_pImidiateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb1, 0, 0);
+		g_pImidiateContext->PSSetShader(g_pPixelShaderSolid, nullptr, 0);
+		g_pImidiateContext->DrawIndexed(36, 0, 0);
+	}
 
 	g_pSwapChain->Present(0, 0);
 }
