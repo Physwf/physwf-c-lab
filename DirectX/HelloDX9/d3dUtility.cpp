@@ -104,3 +104,55 @@ LRESULT CALLBACK d3d::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	return ::DefWindowProc(hwnd, msg, wParam, lParam);
 }
+
+D3DMATERIAL9 d3d::InitMaterial(D3DXCOLOR a, D3DXCOLOR d, D3DXCOLOR s, D3DXCOLOR e, float p)
+{
+	D3DMATERIAL9 mtrl;
+	mtrl.Ambient = a;
+	mtrl.Diffuse = d;
+	mtrl.Specular = s;
+	mtrl.Emissive = e;
+	mtrl.Power = p;
+	return mtrl;
+}
+
+D3DLIGHT9 d3d::InitDirectionalLight(D3DXVECTOR3* direction, D3DXCOLOR* color)
+{
+	D3DLIGHT9 light;
+	::ZeroMemory(&light, sizeof(light));
+
+	light.Type = D3DLIGHT_DIRECTIONAL;
+	light.Ambient = *color * 0.4f;
+	light.Diffuse = *color;
+	light.Specular = *color * 0.6f;
+	light.Direction = *direction;
+
+	return light;
+}
+
+D3DLIGHT9 d3d::InitPointLight(D3DXVECTOR3* position, D3DXCOLOR* color)
+{
+	D3DLIGHT9 light;
+	::ZeroMemory(&light, sizeof(light));
+
+	light.Type = D3DLIGHT_POINT;
+	light.Ambient = *color * 0.4f;
+	light.Diffuse = *color;
+	light.Specular = *color * 0.6f;
+	light.Position = *position;
+	return light;
+}
+
+D3DLIGHT9 d3d::InitSpotLight(D3DXVECTOR3* position, D3DXVECTOR3* direction, D3DXCOLOR* color)
+{
+	D3DLIGHT9 light;
+	::ZeroMemory(&light, sizeof(light));
+
+	light.Type = D3DLIGHT_POINT;
+	light.Ambient = *color * 0.4f;
+	light.Diffuse = *color;
+	light.Specular = *color * 0.6f;
+	light.Position = *position;
+	light.Direction = *direction;
+	return light;
+}
