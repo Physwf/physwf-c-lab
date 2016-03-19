@@ -1,22 +1,26 @@
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
 
+#include <memory>
+
 #include <windows.h>
+#include "Input.h"
+#include "Scene.h"
 
 namespace Toy3D {
 
 	const bool FULLSCREEN = false;
 	static bool bExit = false;
 
-	class System 
+	class Application 
 	{
 	public:
-		System();
-		System(const System&) = delete;
-		System& operator=(const System&) = delete;
-		System(System&&) = delete;
-		System& operator=(System&&) = delete;
-		~System();
+		Application();
+		Application(const Application&) = delete;
+		Application& operator=(const Application&) = delete;
+		Application(Application&&) = delete;
+		Application& operator=(Application&&) = delete;
+		~Application();
 
 	public:
 		bool Initialize();
@@ -32,9 +36,11 @@ namespace Toy3D {
 		LPCTSTR m_ApplicationName;
 		HINSTANCE m_hInstance;
 		HWND m_hwnd;
+		std::shared_ptr<Input> m_spInput{ nullptr };
+		std::shared_ptr<Scene> m_spScene{ nullptr };
 	};
 
 	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-	static System* ApplicationHandle = nullptr;
+	static Application* ApplicationHandle = nullptr;
 }
 #endif

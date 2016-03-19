@@ -1,30 +1,55 @@
-#include "System.h"
+#include "Application.h"
+#include "Object3D.h"
+#include "Primitives.h"
 
 using namespace Toy3D;
 
-System::System()
+Application::Application()
 {
 	bExit = false;
 }
 
-System::~System()
+Application::~Application()
 {
 
 }
 
-bool System::Initialize()
+bool Application::Initialize()
 {
 	int screenW = 0, screenH = 0;
 	InitialzeWindows(screenW, screenH);
+
+	d3dContext = std::make_shared<D3DContext>();
+	d3dContext->Initialize(m_hwnd, screenW, screenH,!FULLSCREEN);
+
+	m_spInput = std::make_shared<Input>();
+	m_spInput->Initialize();
+
+	m_spScene = std::make_shared<Scene>();
+	m_spScene->Initialize(screenW, screenH);
+
+	using Toy3D::Primitives::Line;
+	using Toy3D::Primitives::Triangle;
+	std::shared_ptr<Line> line = std::make_shared<Line>(D3DXVECTOR3(-10, 0, 0), D3DXVECTOR3(10, 0, 0), D3DCOLOR_XRGB(0, 0, 255));
+	std::shared_ptr<Triangle> tri = std::make_shared<Triangle>(D3DXVECTOR3(-20, 10, 0), D3DXVECTOR3(20, 10, 0), D3DXVECTOR3(0, -10, 0), D3DCOLOR_XRGB(255, 0, 0));
+	line->SetPosition(0, 0, 100.0f);
+	tri->SetPosition(0, 0, 200.0f);
+	m_spScene->AddObject(line);
+	m_spScene->AddObject(tri);
 	return true;
 }
 
-void System::Shutdown()
+void Application::Shutdown()
 {
+	if (m_spScene)
+	{
+		m_spScene->Dispose();
+	}
+
 	ShutdownWindows();
 }
 
-void System::Run()
+void Application::Run()
 {
 	MSG msg;
 	bool done, result = true;
@@ -59,12 +84,19 @@ void System::Run()
 
 }
 
-bool System::Frame()
+bool Application::Frame()
 {
+	if (m_spInput->IsKeyDown(VK_ESCAPE))
+	{
+		bExit = true;
+		return false;
+	}
+	m_spScene->Update(0);
+	m_spScene->Render();
 	return true;
 }
 
-void System::InitialzeWindows(int& screenWidth, int& screenHeight)
+void Application::InitialzeWindows(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
@@ -129,7 +161,7 @@ void System::InitialzeWindows(int& screenWidth, int& screenHeight)
 	//ShowCursor(false);
 }
 
-void System::ShutdownWindows()
+void Application::ShutdownWindows()
 {
 	//ShowCursor(true);
 	if (FULLSCREEN)
@@ -139,14 +171,20 @@ void System::ShutdownWindows()
 	ApplicationHandle = NULL;
 }
 
-LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Application::MessageHandler(HWND hwnd, UINT umsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (umsg)
 	{
 	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE)
-			bExit = true;
-		return 0;
+	{
+					   m_spInput->KeyDown(static_cast<unsigned int>(wParam));
+					   return 0;
+	}
+	case WM_KEYUP:
+	{
+					 m_spInput->KeyUp(static_cast<unsigned int>(wParam));
+					 return 0;
+	}
 	default:
 	{
 			   return DefWindowProc(hwnd, umsg, wParam, lParam);
