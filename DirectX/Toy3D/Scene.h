@@ -3,6 +3,7 @@
 
 #include "Object3D.h"
 #include "Camera.h"
+#include "SkyBox.h"
 
 namespace Toy3D
 {
@@ -22,6 +23,7 @@ namespace Toy3D
 	private:
 		object_set_t m_objSet;
 		std::shared_ptr<Camera> m_spCamera;
+		std::shared_ptr<SkyBox> m_spSky;
 	};
 }
 #endif

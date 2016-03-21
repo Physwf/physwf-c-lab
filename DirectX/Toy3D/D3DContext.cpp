@@ -108,6 +108,11 @@ void Toy3D::D3DContext::SetRenderState(D3DRENDERSTATETYPE State, DWORD Value)
 	m_spDivice->SetRenderState(State, Value);
 }
 
+void D3DContext::SetTexture(DWORD sampler, IDirect3DBaseTexture9* tex)
+{
+	m_spDivice->SetTexture(sampler, tex);
+}
+
 void Toy3D::D3DContext::SetIndices(IDirect3DIndexBuffer9* indexBuffer)
 {
 	m_spDivice->SetIndices(indexBuffer);

@@ -13,8 +13,9 @@ Scene::~Scene()
 
 void Scene::Update(unsigned int delta)
 {
+	//m_spCamera->Rotate(0.0f, .01f, 0.0f);
 	m_spCamera->Update(delta);
-
+	m_spSky->Update(delta);
 	for (auto& obj : m_objSet)
 		obj->Update(delta);
 }
@@ -24,6 +25,7 @@ void Scene::Render()
 	d3dContext->Clear();
 	d3dContext->BeginScene();
 	m_spCamera->Render();
+	m_spSky->Render();
 
 	for (auto& obj : m_objSet)
 		obj->Render();
@@ -39,7 +41,8 @@ void Scene::Initialize(int sw, int sh)
 	D3DXVECTOR3 target(0.0f,0.0f,0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	m_spCamera->LookAt(&target, &up);
-
+	//m_spCamera->Rotate(D3DX_PI / 2, 0.0f,0.0f);
+	m_spSky = SkyBox::Create(m_spCamera, "sky.dds");
 	d3dContext->SetRenderState(D3DRS_LIGHTING, false);//to be reconsider+
 }
 

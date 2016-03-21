@@ -33,7 +33,7 @@ bool Application::Initialize()
 	std::shared_ptr<Line> line = std::make_shared<Line>(D3DXVECTOR3(-10, 0, 0), D3DXVECTOR3(10, 0, 0), D3DCOLOR_XRGB(0, 0, 255));
 	std::shared_ptr<Triangle> tri = std::make_shared<Triangle>(D3DXVECTOR3(-20, 10, 0), D3DXVECTOR3(20, 10, 0), D3DXVECTOR3(0, -10, 0), D3DCOLOR_XRGB(255, 0, 0));
 	line->SetPosition(0, 0, 100.0f);
-	tri->SetPosition(0, 0, 200.0f);
+	tri->SetPosition(0, 0, 150.0f);
 	m_spScene->AddObject(line);
 	m_spScene->AddObject(tri);
 	return true;

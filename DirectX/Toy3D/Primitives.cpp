@@ -35,6 +35,7 @@ void Toy3D::Primitives::Line::AlllocateBuffers()
 
 void Line::Update(unsigned int delta)
 {
+	Object3D::Update(delta);
 	if (m_bDirty)
 	{
 		ColorVertex* cVertex;
@@ -42,13 +43,7 @@ void Line::Update(unsigned int delta)
 		cVertex[0] = ColorVertex(m_vP1.x, m_vP1.y, m_vP1.z, m_dwColor);
 		cVertex[1] = ColorVertex(m_vP2.x, m_vP2.y, m_vP2.z, m_dwColor);
 		m_spVetexBuffer->Unlock();
-
-		D3DXMatrixTranslation(
-			&m_xWorld,
-			m_vPos.x,
-			m_vPos.y,
-			m_vPos.z);
-
+		
 		m_bDirty = false;
 	}
 }
@@ -97,6 +92,7 @@ Triangle::~Triangle()
 
 void Triangle::Update(unsigned int delta)
 {
+	Object3D::Update(delta);
 	if (m_bDirty)
 	{
 		ColorVertex* cVertex;
@@ -105,12 +101,6 @@ void Triangle::Update(unsigned int delta)
 		cVertex[1] = ColorVertex(m_vP2.x, m_vP2.y, m_vP2.z, m_dwColor);
 		cVertex[2] = ColorVertex(m_vP3.x, m_vP3.y, m_vP3.z, m_dwColor);
 		m_spVetexBuffer->Unlock();
-
-		D3DXMatrixTranslation(
-			&m_xWorld,
-			m_vPos.x,
-			m_vPos.y,
-			m_vPos.z);
 
 		m_bDirty = false;
 	}

@@ -6,8 +6,10 @@
 
 namespace Toy3D
 {
+	class SkyBox;
 	class Camera : public Object3D
 	{
+		friend class SkyBox;
 	public:
 		Camera(int sw, int sh);
 		Camera(const Camera& rhs);
@@ -23,6 +25,8 @@ namespace Toy3D
 		const D3DXMATRIX& xProjection() const { return m_xProj; }
 		const D3DVIEWPORT9 Viewport() const { return m_Viewport; }
 
+		virtual void Rotate(float x, float y, float z) override;
+
 		virtual void Update(unsigned int delta) override;
 		virtual void Render() override;
 	protected:
@@ -35,6 +39,8 @@ namespace Toy3D
 		int m_iScreenWidth, m_iScreenHeight;
 		FLOAT m_zFar, m_zNear;
 		FLOAT m_fovY;
+		D3DXVECTOR3 m_vDir;
+		bool m_bDirty;
 	};
 }
 #endif

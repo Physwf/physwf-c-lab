@@ -23,18 +23,20 @@ namespace Toy3D
 		const D3DXMATRIX& xTransform() const { return m_xWorld; }
 
 		virtual void SetPosition(float x,float y,float z);
-		void Rotate();
+		virtual void Rotate(float x, float y, float z);
 
 
-		virtual void Update(unsigned int delta) = 0;
+		virtual void Update(unsigned int delta);
 		virtual void Render() = 0;
 	protected:
 		virtual void AlllocateBuffers() = 0;
 	protected:
 		D3DXVECTOR3 m_vPos{ 0.0f, 0.0f, 0.0f };
+		D3DXVECTOR3 m_vRotation{ 0.0f, 0.0f, 0.0f };
 		D3DXMATRIX m_xWorld;
 		std::shared_ptr<IDirect3DVertexBuffer9> m_spVetexBuffer{ nullptr };
 		std::shared_ptr<IDirect3DIndexBuffer9> m_spIndexBuffer{ nullptr };
+	private:
 		bool m_bDirty;
 	};
 	extern std::shared_ptr<D3DContext> d3dContext;

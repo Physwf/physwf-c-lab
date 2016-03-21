@@ -26,6 +26,7 @@ Camera::~Camera()
 
 void Camera::LookAt(const D3DXVECTOR3* pAt, const D3DXVECTOR3* pUp)
 {
+	m_vDir = *pAt - m_vPos;
 	D3DXMatrixLookAtLH(&m_xView, &m_vPos, pAt, pUp);
 	m_bDirty = true;
 }
@@ -33,11 +34,11 @@ void Camera::LookAt(const D3DXVECTOR3* pAt, const D3DXVECTOR3* pUp)
 void Camera::SetViewport(DWORD x, DWORD y, DWORD width, DWORD height, float MinZ, float MaxZ)
 {
 	m_Viewport = { x, y, width, height, MinZ, MaxZ };
-	m_bDirty = true;
 }
 
 void Camera::Update(unsigned int delta)
 {
+	Object3D::Update(delta);
 	if (m_bDirty)
 	{
 		D3DXMatrixPerspectiveFovLH(
@@ -47,14 +48,21 @@ void Camera::Update(unsigned int delta)
 			m_zNear,
 			m_zFar);
 
-		d3dContext->SetTransform(D3DTS_VIEW, &m_xView);
-		d3dContext->SetTransform(D3DTS_PROJECTION, &m_xProj);
-		d3dContext->SetViewport(&m_Viewport);
 		m_bDirty = false;
 	}
 }
 
 void Camera::Render()
 {
-	
+	d3dContext->SetTransform(D3DTS_VIEW, &m_xView);
+	d3dContext->SetTransform(D3DTS_PROJECTION, &m_xProj);
+	d3dContext->SetTransform(D3DTS_WORLD, &m_xWorld);
+	d3dContext->SetViewport(&m_Viewport);
+}
+
+void Camera::Rotate(float x, float y, float z)
+{
+	Object3D::Rotate(x, y, z);
+	// to do
+	m_bDirty = true;
 }

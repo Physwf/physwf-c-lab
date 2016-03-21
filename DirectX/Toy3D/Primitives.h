@@ -26,6 +26,8 @@ namespace Toy3D
 			D3DXVECTOR3 m_vP1{ 0.0f, 0.0f, 0.0f };
 			D3DXVECTOR3 m_vP2{ 0.0f, 0.0f, 0.0f };
 			D3DCOLOR m_dwColor{ 0 };
+		private:
+			bool m_bDirty;
 		};
 
 		class Triangle : public Object3D
@@ -47,6 +49,8 @@ namespace Toy3D
 			D3DXVECTOR3 m_vP2{ 0.0f, 0.0f, 0.0f };
 			D3DXVECTOR3 m_vP3{ 0.0f, 0.0f, 0.0f };
 			D3DCOLOR m_dwColor{ 0 };
+		private:
+			bool m_bDirty;
 		};
 	}
 }
