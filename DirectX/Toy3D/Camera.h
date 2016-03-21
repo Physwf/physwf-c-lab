@@ -18,7 +18,7 @@ namespace Toy3D
 		Camera& operator=(Camera&&);
 		~Camera();
 
-		void LookAt(const D3DXVECTOR3* pAt, const D3DXVECTOR3* pUp);
+		void LookAt(const D3DXVECTOR3* pAt);
 		void SetViewport(DWORD X, DWORD Y, DWORD Width, DWORD Height, float MinZ, float MaxZ);
 
 		const D3DXMATRIX& xView() const { return m_xView; }
@@ -29,6 +29,15 @@ namespace Toy3D
 
 		virtual void Update(unsigned int delta) override;
 		virtual void Render() override;
+
+		void Walk(float units);
+		void Strafe(float units);
+		void Fly(float units);
+
+		void Yaw(float rad);
+		void Pitch(float rad);
+		void Roll(float rad);
+
 	protected:
 		virtual void AlllocateBuffers() override {}
 	protected:
@@ -39,7 +48,9 @@ namespace Toy3D
 		int m_iScreenWidth, m_iScreenHeight;
 		FLOAT m_zFar, m_zNear;
 		FLOAT m_fovY;
-		D3DXVECTOR3 m_vDir;
+		D3DXVECTOR3 m_vRight;//x
+		D3DXVECTOR3 m_vUp;//y
+		D3DXVECTOR3 m_vLook;//z
 		bool m_bDirty;
 	};
 }
