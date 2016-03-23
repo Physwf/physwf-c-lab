@@ -29,6 +29,13 @@ namespace Toy3D
 		static const DWORD FVF_TEX;
 	};
 
+	struct TexNormalVertex : public Vertex
+	{
+		TexNormalVertex(float x, float y, float z, float u, float v,float nx,float ny,float nz) :Vertex(x, y, z), mU(u), mV(v),mNX(nx),mNY(ny),mNZ(nz){}
+		float mU{ 0.0 }, mV{ 0.0 };
+		float mNX{ 0.0 }, mNY{ 0.0 }, mNZ{ 0.0 };
+	};
+
 	struct SkyBoxVertex : public Vertex
 	{
 		SkyBoxVertex(float x, float y, float z, float u, float v, float t) :Vertex(x, y, z), mU(u), mV(v), mT(t) {}

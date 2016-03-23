@@ -1,13 +1,15 @@
 #include "Camera.h"
+#include "Debuger.h"
 
 using namespace Toy3D;
 
-Camera::Camera(int sw, int sh) :m_iScreenWidth(sw), m_iScreenHeight(sh), m_zFar(1000.0f), m_zNear(1.0f), m_fovY(D3DX_PI*0.5)
+Camera::Camera(int sw, int sh) :m_iScreenWidth(sw), m_iScreenHeight(sh), m_zFar(1000.0f), m_zNear(1.0f), m_fovY(D3DX_PI*0.3)
 {
 	m_Viewport = { 0, 0, sw, sh, 0, 1 };
 	m_vUp = { 0.0f, 1.0f, 0.0f };
 	m_vRight = { 1.0f, 0.0f, 0.0f };
 	m_vLook = { 0.0f, 0.0f, 1.0f };
+	D3DXMatrixIdentity(&m_xWorld);
 	m_bDirty = true;
 }
 
@@ -90,7 +92,7 @@ void Camera::Render()
 {
 	d3dContext->SetTransform(D3DTS_VIEW, &m_xView);
 	d3dContext->SetTransform(D3DTS_PROJECTION, &m_xProj);
-	d3dContext->SetTransform(D3DTS_WORLD, &m_xWorld);
+	//d3dContext->SetTransform(D3DTS_WORLD, &m_xWorld);
 	d3dContext->SetViewport(&m_Viewport);
 }
 

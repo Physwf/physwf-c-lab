@@ -4,6 +4,7 @@
 #include "Object3D.h"
 #include "Camera.h"
 #include "SkyBox.h"
+#include "Terrain.h"
 
 namespace Toy3D
 {
@@ -24,6 +25,7 @@ namespace Toy3D
 		object_set_t m_objSet;
 		std::shared_ptr<Camera> m_spCamera;
 		std::shared_ptr<SkyBox> m_spSky;
+		std::shared_ptr<Terrain> m_spTerrain;
 	};
 }
 #endif

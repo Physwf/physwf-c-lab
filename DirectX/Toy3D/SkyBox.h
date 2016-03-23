@@ -21,6 +21,7 @@ namespace Toy3D
 	private:
 		std::shared_ptr<Camera> m_spCamera;
 		std::shared_ptr<IDirect3DCubeTexture9> m_spCubeTexture{nullptr};
+		D3DXMATRIX m_xProj;
 		bool m_bDirty;
 	};
 

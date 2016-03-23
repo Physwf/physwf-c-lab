@@ -30,6 +30,8 @@ HRESULT D3DContext::Initialize(HWND hwnd, int width, int height, bool windowed)
 	{
 		vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 	}
+	caps.MaxVertexIndex;
+	caps.MaxPrimitiveCount;
 	D3DPRESENT_PARAMETERS d3dpp;
 	d3dpp.BackBufferWidth = width;
 	d3dpp.BackBufferHeight = height;
@@ -85,7 +87,8 @@ void Toy3D::D3DContext::Present()
 
 void Toy3D::D3DContext::CreateVertexBuffer(UINT Length, DWORD Usage, DWORD FVF, D3DPOOL Pool, IDirect3DVertexBuffer9** ppVertexBuffer, HANDLE* pSharedHandle)
 {
-	m_spDivice->CreateVertexBuffer(Length, Usage, FVF, Pool, ppVertexBuffer, pSharedHandle);
+	HRESULT hr = m_spDivice->CreateVertexBuffer(Length, Usage, FVF, Pool, ppVertexBuffer, pSharedHandle);
+	hr = 0;
 }
 
 void Toy3D::D3DContext::CreateIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, IDirect3DIndexBuffer9** ppIndexBuffer, HANDLE* pSharedHandle)
