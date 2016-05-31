@@ -1,4 +1,4 @@
-#include "RacorX.h"
+#include "Application.h"
 #include <memory>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdShow)
