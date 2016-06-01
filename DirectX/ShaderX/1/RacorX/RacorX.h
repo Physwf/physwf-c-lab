@@ -4,6 +4,10 @@
 #include <windows.h>
 #include <memory>
 
+struct Vertex
+{
+	float x; float y; float z;
+};
 class CRacorX
 {
 public:
@@ -27,6 +31,12 @@ private:
 	std::shared_ptr<IDirect3D8> m_spD3D{ nullptr };
 	std::shared_ptr<IDirect3DDevice8> m_spDevice{ nullptr };
 	D3DCAPS8 m_D3DCAPS;
+	D3DPRESENT_PARAMETERS m_dpps;
+	int m_iVP;
+
+	Vertex m_Vertices[4];
+	float m_Diffuse[3] = { 0.0f, 0.0f, 0.0f};
+
 };
 
 
