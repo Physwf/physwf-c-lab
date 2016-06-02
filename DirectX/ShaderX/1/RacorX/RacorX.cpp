@@ -1,4 +1,5 @@
 #include "RacorX.h"
+#include <d3dx8.h>
 
 CRacorX::CRacorX(HWND hwnd, int width, int height)
 {
@@ -67,6 +68,80 @@ HRESULT CRacorX::RestoreDeviceObjects()
 		&m_dpps,
 		&device);
 	m_spDevice.reset(device, [](IDirect3DDevice8* device){ device->Release(); });
+
+	DWORD dwDecl0[] = {
+		D3DVSD_STREAM(0),
+		D3DVSD_REG(0,D3DVSDT_FLOAT3),
+		D3DVSD_REG(5,D3DVSDT_D3DCOLOR),
+		D3DVSD_CONST(0, 1), *(DWORD*)&m_fDiffuse[0], *(DWORD*)&m_fDiffuse[1], *(DWORD*)&m_fDiffuse[2], *(DWORD*)&m_fDiffuse[3],
+		D3DVSD_END()
+	};
+
+	IDirect3DVertexBuffer8* vb;
+	m_spDevice->CreateVertexBuffer(
+		sizeof(m_Vertices),
+		D3DUSAGE_WRITEONLY,
+		Vertex::FVF,
+		D3DPOOL_MANAGED,
+		&vb);
+	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){ vb->Release(); });
+
+	m_spVB->Lock(0, 0, reinterpret_cast<BYTE**>(m_Vertices), 0);
+
+	m_Vertices[0] = { 0.0f, 0.0f, 0.0f };
+	m_Vertices[1] = { 0.0f, 0.0f, 0.0f };
+	m_Vertices[2] = { 0.0f, 0.0f, 0.0f };
+	m_Vertices[3] = { 0.0f, 0.0f, 0.0f };
+
+	m_spVB->Unlock();
+
+	IDirect3DIndexBuffer8* ib;
+	m_spDevice->CreateIndexBuffer(
+		6 * sizeof(WORD),
+		D3DUSAGE_WRITEONLY,
+		D3DFMT_INDEX16,
+		D3DPOOL_MANAGED,
+		&ib);
+	m_spIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ ib->Release(); });
+
+	WORD *indices;
+	m_spIB->Lock(0, 0, reinterpret_cast<BYTE**>(indices), 0);
+
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 2;
+	indices[3] = 2;
+	indices[4] = 3;
+	indices[5] = 1;
+
+	m_spIB->Unlock();
+
+	const char vsh[] = 
+		"vs.1.1"\
+		"dp4 oPos.x, v0, c4"\
+		"dp4 oPos.y, v0, c5"\
+		"dp4 oPos.z, v0, c6"\
+		"dp4 oPos.w, v0, c7"\
+		"mov oD0, c8";
+	ID3DXBuffer* pVBuffer;
+	ID3DXBuffer* pErrors;
+	HRESULT rc = D3DXAssembleShader(reinterpret_cast<LPCVOID>(vsh), sizeof(vsh) - 1, 0, NULL, &pVBuffer, &pErrors);
+	if (FAILED(rc))
+	{
+		OutputDebugString(L"Failed to assemble the vertex shader, error:\n");
+		OutputDebugString(reinterpret_cast<WCHAR*>(pErrors->GetBufferPointer()));
+		OutputDebugString(L"\n");
+	}
+
+	rc = m_spDevice->CreateVertexShader(dwDecl0, reinterpret_cast<DWORD*>(pVBuffer->GetBufferPointer()), &m_dwVertexShader, 0);
+	if (FAILED(rc))
+	{
+		OutputDebugString(L"Failed to create vertex shader, error:\n");
+		WCHAR szBuffer[512] = { 0 };
+		D3DXGetErrorString(rc, szBuffer, sizeof(szBuffer));
+		OutputDebugString(szBuffer);
+		OutputDebugString(L"\n");
+	}
 }
 
 HRESULT CRacorX::DeleteDeviceObjects()
