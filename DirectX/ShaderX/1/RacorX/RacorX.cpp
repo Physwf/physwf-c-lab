@@ -4,8 +4,8 @@ const DWORD Vertex::FVF = D3DFVF_XYZ;
 
 CRacorX::CRacorX() : CD3DApplication()
 {
-	m_fMaterial[0] = 0.0f;
-	m_fMaterial[1] = 1.0f;
+	m_fMaterial[0] = 1.0f;
+	m_fMaterial[1] = 0.0f;
 	m_fMaterial[2] = 0.0f;
 	m_fMaterial[3] = 0.0f;
 	
@@ -41,12 +41,12 @@ HRESULT CRacorX::OneTimeSceneInit()
 
 	m_Viewport = { 0, 0, m_iWidth, m_iHeight };
 
-	D3DXVECTOR3 eye = { 0.0f, 0.0f, -1.0f };
+	D3DXVECTOR3 eye = { 0.0f, 0.0f, -500.0f };
 	D3DXVECTOR3 target = { 0.0f, 0.0f, 0.0f };
-	D3DXVECTOR3 up = { 0.0f, 1.0f, 1.0f };
+	D3DXVECTOR3 up = { 0.0f, 1.0f, 0.0f };
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &target, &up);
 
-	D3DXMatrixPerspectiveLH(&m_mtProj, D3DX_PI*0.5, static_cast<float>(m_iWidth) / m_iHeight, 1.0f, 1000.0f);
+	D3DXMatrixPerspectiveLH(&m_mtProj, D3DX_PI*0.5, static_cast<float>(m_iWidth) / static_cast<float>(m_iHeight), 1.0f, 1000.0f);
 
 	D3DXMatrixIdentity(&m_mtWorld);
 
@@ -140,13 +140,18 @@ HRESULT CRacorX::RestoreDeviceObjects()
 		&vb);
 	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){ vb->Release(); });
 
-	m_spVB->Lock(0, 0, reinterpret_cast<BYTE**>(&m_Vertices), 0);
-
-	m_Vertices[0] = { -100.0f, -100.0f, 0.0f, };
-	m_Vertices[1] = { 100.0f, -100.0f, 0.0f, };
-	m_Vertices[2] = { 100.0f, 100.0f, 0.0f, };
-	m_Vertices[3] = { -100.0f, 100.0f, 0.0f, };
-
+	Vertex* vertices = 0;
+	m_spVB->Lock(0, 0, reinterpret_cast<BYTE**>(&vertices), 0);
+	vertices[0] = { -100.0f, -100.0f, 0.0f, };
+	vertices[1] = { 100.0f, -100.0f, 0.0f, };
+	vertices[2] = { 100.0f, 100.0f, 0.0f, };
+	vertices[3] = { -100.0f, 100.0f, 0.0f, };
+	/*
+	vertices[0] = { -1.0f, -1.0f, 0.2f, };
+	vertices[1] = { 1.0f, -1.0f, 0.2f, };
+	vertices[2] = { 1.0f, 1.0f, 0.2f, };
+	vertices[3] = { -1.0f, 1.0f, 0.2f, };
+	*/
 	m_spVB->Unlock();
 
 	IDirect3DIndexBuffer8* ib;
@@ -169,7 +174,7 @@ HRESULT CRacorX::RestoreDeviceObjects()
 	indices[5] = 3;
 
 	m_spIB->Unlock();
-
+	
 	const char vsh[] = 
 		"vs.1.1 \n" \
 		"dp4 oPos.x, v0, c0 \n"\
@@ -177,6 +182,12 @@ HRESULT CRacorX::RestoreDeviceObjects()
 		"dp4 oPos.z, v0, c2 \n"\
 		"dp4 oPos.w, v0, c3 \n"\
 		"mov oD0, c4\n";
+	/*
+	const char vsh[] = 
+		"vs.1.1 \n" \
+		"mov oPos, v0 \n" \
+		"mov oD0, c4 \n";
+		*/
 	ID3DXBuffer* pVBuffer;
 	ID3DXBuffer* pErrors;
 	HRESULT rc = D3DXAssembleShader(reinterpret_cast<LPCVOID>(vsh), sizeof(vsh) - 1, 0, NULL, &pVBuffer, &pErrors);
@@ -187,7 +198,7 @@ HRESULT CRacorX::RestoreDeviceObjects()
 		OutputDebugString(L"\n");
 	}
 
-	rc = m_spDevice->CreateVertexShader(dwDecl0, reinterpret_cast<DWORD*>(pVBuffer->GetBufferPointer()), &m_dwVertexShader, 0);
+	rc = m_spDevice->CreateVertexShader(dwDecl0, (DWORD*)pVBuffer->GetBufferPointer(), &m_dwVertexShader, 0);
 	if (FAILED(rc))
 	{
 		OutputDebugString(L"Failed to create vertex shader, error:\n");
@@ -201,7 +212,7 @@ HRESULT CRacorX::RestoreDeviceObjects()
 	//m_spDevice->SetTransform(D3DTS_PROJECTION, &m_mtProj);
 	m_spDevice->SetRenderState(D3DRS_ZENABLE, true);
 	m_spDevice->SetRenderState(D3DRS_LIGHTING, false);
-	m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	return S_OK;
 }
@@ -214,18 +225,18 @@ HRESULT CRacorX::DeleteDeviceObjects()
 HRESULT CRacorX::Render()
 {
 	D3DXMATRIX mat;
-	mat = m_mtView*m_mtProj;
+	mat = m_mtWorld * m_mtView * m_mtProj;
 	D3DXMatrixTranspose(&mat, &mat);
-
-	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
+	HRESULT hr;
+	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 
 	if (SUCCEEDED(m_spDevice->BeginScene())) 
 	{
-		m_spDevice->SetVertexShader(m_dwVertexShader);
-		m_spDevice->SetVertexShaderConstant(0, &mat, 4);
-		m_spDevice->SetVertexShaderConstant(4, &m_fMaterial, 1);
 		m_spDevice->SetStreamSource(0, m_spVB.get(), (sizeof Vertex));
 		m_spDevice->SetIndices(m_spIB.get(), 0);
+		hr = m_spDevice->SetVertexShader(m_dwVertexShader);
+		m_spDevice->SetVertexShaderConstant(0, &mat, 4);
+		m_spDevice->SetVertexShaderConstant(4, &m_fMaterial, 1);
 		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 4, 0, 2);
 		m_spDevice->EndScene();
 	}
@@ -237,7 +248,10 @@ HRESULT CRacorX::Render()
 
 HRESULT CRacorX::FrameMove(FLOAT)
 {
-	
+	D3DXMATRIX Ry;
+	D3DXMatrixRotationY(&Ry, 3.14f / 40.0f);
+	//m_mtWorld = m_mtWorld * Ry;
+	D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, &Ry);
 	return S_OK;
 }
 
