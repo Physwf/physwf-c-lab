@@ -20,6 +20,16 @@ HRESULT CD3DApplication::Initialze(HINSTANCE hInstance, int nCmdShow)
 	{
 		return S_FALSE;
 	}
+	HRESULT rc = OneTimeSceneInit();
+	if (FAILED(rc)) {
+		MessageBox(m_hWnd, L"OneTimeSceneInit error!",L"Error",0);
+		return S_FALSE;
+	}
+	rc = InitDeviceObjects();
+	if (FAILED(rc)) {
+		MessageBox(m_hWnd, L"InitDeviceObjects error!", L"Error", 0);
+		return S_FALSE;
+	}
 	return S_OK;
 }
 
@@ -32,6 +42,10 @@ BOOL CD3DApplication::InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 	m_hWnd = hwnd;
+	RECT size;
+	GetWindowRect(m_hWnd, &size);
+	m_iWidth = size.right - size.left;
+	m_iHeight = size.bottom - size.top;
 	ShowWindow(m_hWnd, nCmdShow);
 	UpdateWindow(m_hWnd);
 
@@ -121,6 +135,7 @@ HRESULT CD3DApplication::Run()
 		{
 			done = true;
 		}
+		Frame();
 		Sleep(10);
 	}
 	return S_OK;

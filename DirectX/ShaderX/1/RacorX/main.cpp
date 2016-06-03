@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "RacorX.h"
 #include <memory>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdShow)
@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
 	using std::shared_ptr;
 	using std::make_shared;
-	shared_ptr<CD3DApplication> system = make_shared<CD3DApplication>();
+	shared_ptr<CD3DApplication> system = make_shared<CRacorX>();
 	if (!system) return 0;
 	HRESULT result = system->Initialze(hInstance, iCmdShow);
 	if (result == S_OK)

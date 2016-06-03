@@ -1,11 +1,26 @@
 #include "RacorX.h"
-#include <d3dx8.h>
 
-CRacorX::CRacorX(HWND hwnd, int width, int height)
+const DWORD Vertex::FVF = D3DFVF_XYZ;
+
+CRacorX::CRacorX() : CD3DApplication()
 {
-	m_hWnd = hwnd;
-	m_iWidth = width;
-	m_iHeight = height;
+	m_fMaterial[0] = 0.0f;
+	m_fMaterial[1] = 1.0f;
+	m_fMaterial[2] = 0.0f;
+	m_fMaterial[3] = 0.0f;
+	
+}
+
+CRacorX::~CRacorX()
+{
+
+}
+
+HRESULT CRacorX::Frame()
+{
+	FrameMove(0.0f);
+	Render();
+	return S_OK;
 }
 
 HRESULT CRacorX::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
@@ -24,11 +39,18 @@ HRESULT CRacorX::OneTimeSceneInit()
 	m_spD3D.reset(d3d, [](IDirect3D8* d3d) { d3d->Release(); });
 	m_spD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_D3DCAPS);
 
-	m_Vertices[0] = { 0.0f, 0.0f, 0.0f };
-	m_Vertices[1] = { 0.0f, 0.0f, 0.0f };
-	m_Vertices[2] = { 0.0f, 0.0f, 0.0f };
-	m_Vertices[3] = { 0.0f, 0.0f, 0.0f };
+	m_Viewport = { 0, 0, m_iWidth, m_iHeight };
 
+	D3DXVECTOR3 eye = { 0.0f, 0.0f, -1.0f };
+	D3DXVECTOR3 target = { 0.0f, 0.0f, 0.0f };
+	D3DXVECTOR3 up = { 0.0f, 1.0f, 1.0f };
+	D3DXMatrixLookAtLH(&m_mtView, &eye, &target, &up);
+
+	D3DXMatrixPerspectiveLH(&m_mtProj, D3DX_PI*0.5, static_cast<float>(m_iWidth) / m_iHeight, 1.0f, 1000.0f);
+
+	D3DXMatrixIdentity(&m_mtWorld);
+
+	return S_OK;
 }
 
 HRESULT CRacorX::InitDeviceObjects()
@@ -38,7 +60,6 @@ HRESULT CRacorX::InitDeviceObjects()
 	} else {
 		m_iVP = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 	}
-	D3DPRESENT_PARAMETERS m_dpps;
 	m_dpps.BackBufferWidth = m_iWidth;
 	m_dpps.BackBufferHeight = m_iHeight;
 	m_dpps.BackBufferFormat = D3DFMT_A8R8G8B8;
@@ -54,44 +75,77 @@ HRESULT CRacorX::InitDeviceObjects()
 	m_dpps.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 	m_dpps.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
+	HRESULT rc = ConfirmDevice(&m_D3DCAPS, D3DCREATE_HARDWARE_VERTEXPROCESSING, D3DFMT_UNKNOWN);
+	if (FAILED(rc)) {
+		MessageBox(m_hWnd, L"ConfirmDevice failed", L"Error", 0);
+		return S_FALSE;
+	}
 	RestoreDeviceObjects();
+	return S_OK;
 }
 
 HRESULT CRacorX::RestoreDeviceObjects()
 {
 	IDirect3DDevice8* device;
-	HRESULT result = m_spD3D->CreateDevice(
+	HRESULT hr = m_spD3D->CreateDevice(
 		D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,
 		m_hWnd,
 		m_iVP,
 		&m_dpps,
 		&device);
+	if (FAILED(hr)) {
+		OutputDebugString(L"Create Device Failed! Error:\n");
+		switch (hr)
+		{
+		case D3DERR_DEVICELOST:
+			OutputDebugString(L"D3DERR_DEVICELOST\n");
+			break;
+		case D3DERR_INVALIDCALL:
+			OutputDebugString(L"D3DERR_INVALIDCALL\n");
+			break;
+		case D3DERR_NOTAVAILABLE:
+			OutputDebugString(L"D3DERR_NOTAVAILABLE\n");
+			break;
+		case D3DERR_OUTOFVIDEOMEMORY:
+			OutputDebugString(L"D3DERR_OUTOFVIDEOMEMORY\n");
+			break;;
+		default:
+			OutputDebugString(L"Unknown\n");
+			break;
+		}
+		return S_FALSE;
+	}
 	m_spDevice.reset(device, [](IDirect3DDevice8* device){ device->Release(); });
-
 	DWORD dwDecl0[] = {
 		D3DVSD_STREAM(0),
 		D3DVSD_REG(0,D3DVSDT_FLOAT3),
-		D3DVSD_REG(5,D3DVSDT_D3DCOLOR),
-		D3DVSD_CONST(0, 1), *(DWORD*)&m_fDiffuse[0], *(DWORD*)&m_fDiffuse[1], *(DWORD*)&m_fDiffuse[2], *(DWORD*)&m_fDiffuse[3],
+		//D3DVSD_REG(5,D3DVSDT_D3DCOLOR),
+		/*D3DVSD_CONST(0, 4),
+		*(DWORD*)&m_mtWorld[0], *(DWORD*)&m_mtWorld[1], *(DWORD*)&m_mtWorld[2], *(DWORD*)&m_mtWorld[3],
+		*(DWORD*)&m_mtWorld[4], *(DWORD*)&m_mtWorld[5], *(DWORD*)&m_mtWorld[6], *(DWORD*)&m_mtWorld[7],
+		*(DWORD*)&m_mtWorld[8], *(DWORD*)&m_mtWorld[9], *(DWORD*)&m_mtWorld[10], *(DWORD*)&m_mtWorld[11],
+		*(DWORD*)&m_mtWorld[12], *(DWORD*)&m_mtWorld[13], *(DWORD*)&m_mtWorld[14], *(DWORD*)&m_mtWorld[15],
+		D3DVSD_CONST(0, 1),
+		*(DWORD*)&m_fMaterial[0], *(DWORD*)&m_fMaterial[1], *(DWORD*)&m_fMaterial[2], *(DWORD*)&m_fMaterial[3],*/
 		D3DVSD_END()
 	};
 
 	IDirect3DVertexBuffer8* vb;
 	m_spDevice->CreateVertexBuffer(
-		sizeof(m_Vertices),
+		4 * sizeof (Vertex),
 		D3DUSAGE_WRITEONLY,
 		Vertex::FVF,
 		D3DPOOL_MANAGED,
 		&vb);
 	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){ vb->Release(); });
 
-	m_spVB->Lock(0, 0, reinterpret_cast<BYTE**>(m_Vertices), 0);
+	m_spVB->Lock(0, 0, reinterpret_cast<BYTE**>(&m_Vertices), 0);
 
-	m_Vertices[0] = { 0.0f, 0.0f, 0.0f };
-	m_Vertices[1] = { 0.0f, 0.0f, 0.0f };
-	m_Vertices[2] = { 0.0f, 0.0f, 0.0f };
-	m_Vertices[3] = { 0.0f, 0.0f, 0.0f };
+	m_Vertices[0] = { -100.0f, -100.0f, 0.0f, };
+	m_Vertices[1] = { 100.0f, -100.0f, 0.0f, };
+	m_Vertices[2] = { 100.0f, 100.0f, 0.0f, };
+	m_Vertices[3] = { -100.0f, 100.0f, 0.0f, };
 
 	m_spVB->Unlock();
 
@@ -104,32 +158,32 @@ HRESULT CRacorX::RestoreDeviceObjects()
 		&ib);
 	m_spIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ ib->Release(); });
 
-	WORD *indices;
-	m_spIB->Lock(0, 0, reinterpret_cast<BYTE**>(indices), 0);
+	WORD *indices = 0;
+	m_spIB->Lock(0, 0, reinterpret_cast<BYTE**>(&indices), 0);
 
 	indices[0] = 0;
 	indices[1] = 1;
 	indices[2] = 2;
-	indices[3] = 2;
-	indices[4] = 3;
-	indices[5] = 1;
+	indices[3] = 0;
+	indices[4] = 2;
+	indices[5] = 3;
 
 	m_spIB->Unlock();
 
 	const char vsh[] = 
-		"vs.1.1"\
-		"dp4 oPos.x, v0, c4"\
-		"dp4 oPos.y, v0, c5"\
-		"dp4 oPos.z, v0, c6"\
-		"dp4 oPos.w, v0, c7"\
-		"mov oD0, c8";
+		"vs.1.1 \n" \
+		"dp4 oPos.x, v0, c0 \n"\
+		"dp4 oPos.y, v0, c1 \n"\
+		"dp4 oPos.z, v0, c2 \n"\
+		"dp4 oPos.w, v0, c3 \n"\
+		"mov oD0, c4\n";
 	ID3DXBuffer* pVBuffer;
 	ID3DXBuffer* pErrors;
 	HRESULT rc = D3DXAssembleShader(reinterpret_cast<LPCVOID>(vsh), sizeof(vsh) - 1, 0, NULL, &pVBuffer, &pErrors);
 	if (FAILED(rc))
 	{
 		OutputDebugString(L"Failed to assemble the vertex shader, error:\n");
-		OutputDebugString(reinterpret_cast<WCHAR*>(pErrors->GetBufferPointer()));
+		OutputDebugStringA(reinterpret_cast<CHAR*>(pErrors->GetBufferPointer()));
 		OutputDebugString(L"\n");
 	}
 
@@ -142,24 +196,52 @@ HRESULT CRacorX::RestoreDeviceObjects()
 		OutputDebugString(szBuffer);
 		OutputDebugString(L"\n");
 	}
+	m_spDevice->SetViewport(&m_Viewport);
+	//m_spDevice->SetTransform(D3DTS_VIEW, &m_mtView);
+	//m_spDevice->SetTransform(D3DTS_PROJECTION, &m_mtProj);
+	m_spDevice->SetRenderState(D3DRS_ZENABLE, true);
+	m_spDevice->SetRenderState(D3DRS_LIGHTING, false);
+	m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	return S_OK;
 }
 
 HRESULT CRacorX::DeleteDeviceObjects()
 {
-
+	return S_OK;
 }
 
 HRESULT CRacorX::Render()
 {
+	D3DXMATRIX mat;
+	mat = m_mtView*m_mtProj;
+	D3DXMatrixTranspose(&mat, &mat);
 
+	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
+
+	if (SUCCEEDED(m_spDevice->BeginScene())) 
+	{
+		m_spDevice->SetVertexShader(m_dwVertexShader);
+		m_spDevice->SetVertexShaderConstant(0, &mat, 4);
+		m_spDevice->SetVertexShaderConstant(4, &m_fMaterial, 1);
+		m_spDevice->SetStreamSource(0, m_spVB.get(), (sizeof Vertex));
+		m_spDevice->SetIndices(m_spIB.get(), 0);
+		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 4, 0, 2);
+		m_spDevice->EndScene();
+	}
+
+	m_spDevice->Present(0, 0, 0, 0);
+
+	return S_OK;
 }
 
 HRESULT CRacorX::FrameMove(FLOAT)
 {
-
+	
+	return S_OK;
 }
 
 HRESULT CRacorX::FinalCleanup()
 {
-
+	return S_OK;
 }
