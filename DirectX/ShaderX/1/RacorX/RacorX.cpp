@@ -41,12 +41,12 @@ HRESULT CRacorX::OneTimeSceneInit()
 
 	m_Viewport = { 0, 0, m_iWidth, m_iHeight };
 
-	D3DXVECTOR3 eye = { 0.0f, 0.0f, -500.0f };
+	D3DXVECTOR3 eye = { 0.0f, 0.0f, -200.0f };
 	D3DXVECTOR3 target = { 0.0f, 0.0f, 0.0f };
 	D3DXVECTOR3 up = { 0.0f, 1.0f, 0.0f };
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &target, &up);
-
-	D3DXMatrixPerspectiveLH(&m_mtProj, D3DX_PI*0.5, static_cast<float>(m_iWidth) / static_cast<float>(m_iHeight), 1.0f, 1000.0f);
+	float aspect = static_cast<float>(m_iWidth) / m_iHeight;
+	D3DXMatrixPerspectiveFovLH(&m_mtProj, D3DX_PI*0.5, aspect, 1.0f, 1000.0f);
 
 	D3DXMatrixIdentity(&m_mtWorld);
 
@@ -225,7 +225,8 @@ HRESULT CRacorX::DeleteDeviceObjects()
 HRESULT CRacorX::Render()
 {
 	D3DXMATRIX mat;
-	mat = m_mtWorld * m_mtView * m_mtProj;
+	//mat = m_mtWorld * m_mtView * m_mtProj;
+	D3DXMatrixMultiply(&mat, &m_mtView, &m_mtProj);
 	D3DXMatrixTranspose(&mat, &mat);
 	HRESULT hr;
 	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
@@ -235,8 +236,8 @@ HRESULT CRacorX::Render()
 		m_spDevice->SetStreamSource(0, m_spVB.get(), (sizeof Vertex));
 		m_spDevice->SetIndices(m_spIB.get(), 0);
 		hr = m_spDevice->SetVertexShader(m_dwVertexShader);
-		m_spDevice->SetVertexShaderConstant(0, &mat, 4);
-		m_spDevice->SetVertexShaderConstant(4, &m_fMaterial, 1);
+		hr = m_spDevice->SetVertexShaderConstant(0, &mat, 4);
+		hr = m_spDevice->SetVertexShaderConstant(4, &m_fMaterial, 1);
 		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 4, 0, 2);
 		m_spDevice->EndScene();
 	}
@@ -251,7 +252,7 @@ HRESULT CRacorX::FrameMove(FLOAT)
 	D3DXMATRIX Ry;
 	D3DXMatrixRotationY(&Ry, 3.14f / 40.0f);
 	//m_mtWorld = m_mtWorld * Ry;
-	D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, &Ry);
+	//D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, &Ry);
 	return S_OK;
 }
 
