@@ -33,6 +33,50 @@ HRESULT CD3DApplication::Initialze(HINSTANCE hInstance, int nCmdShow)
 	return S_OK;
 }
 
+HRESULT CD3DApplication::CreateVSFromBinFile(IDirect3DDevice8* device, DWORD* dwDecl, TCHAR* strVSPath, DWORD* pHVS)
+{
+	TCHAR strFullPath[1024];
+	TCHAR* strShortName;
+	DWORD dwLen;
+
+	dwLen = GetFullPathName(strVSPath, sizeof(strFullPath) / sizeof(TCHAR), strFullPath, &strShortName);
+
+	if (dwLen == 0 || sizeof(strFullPath) / sizeof(TCHAR) <= dwLen) {
+		MessageBox(m_hWnd, L"GetFullPathName Failed", L"Error", 0);
+		return E_FAIL;
+	}
+
+	HANDLE hFile, hMap;
+	char szBuffer[128];
+	DWORD* pdwVS;
+	HRESULT hr;
+
+	hFile = CreateFile(strFullPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (INVALID_HANDLE_VALUE != hFile) {
+		if (GetFileSize(hFile, 0) > 0) {
+			hMap = CreateFileMapping(hFile, 0, PAGE_READONLY, 0, 0, 0);
+		} else {
+			CloseHandle(hFile);
+			MessageBox(m_hWnd, L"CreateVSFromBinFile: File is empty!", L"Error", 0);
+			return E_FAIL;
+		}
+	} else{
+		MessageBox(m_hWnd, L"CreateVSFromBinFile: Can't Find file!", L"Error", 0);
+		return E_FAIL;
+	}
+	pdwVS = (DWORD*)MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, 0);
+	hr = device->CreateVertexShader(dwDecl, pdwVS, pHVS, 0);
+	if (FAILED(hr)) {
+		D3DXGetErrorStringA(hr, szBuffer, sizeof(szBuffer));
+		MessageBox(m_hWnd, L"CreateVertexShader Failed!", L"Error", 0);
+		return hr;
+	}
+	UnmapViewOfFile(pdwVS);
+	CloseHandle(hMap);
+	CloseHandle(hFile);
+	return S_OK;
+}
+
 BOOL CD3DApplication::InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	HWND hwnd = CreateWindow(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);

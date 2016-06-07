@@ -2,6 +2,8 @@
 //#define _APPLICATION_H_
 #pragma once
 #include "Resource.h"
+#include <d3d8.h>
+#include <d3dx8.h>
 #include <windows.h>
 #include <memory>
 
@@ -28,12 +30,16 @@ protected:
 	virtual HRESULT FrameMove(FLOAT) { return S_OK; }
 	virtual HRESULT FinalCleanup() { return S_OK; }
 
+	
+	virtual HRESULT CreateVSFromBinFile(IDirect3DDevice8* device, DWORD* dwDecl, TCHAR* strVSPath, DWORD* m_dwVS);
 private:
 	BOOL InitInstance(HINSTANCE, int);
 	ATOM MyRegisterClass(HINSTANCE);
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 	static CD3DApplication* Instance;
 protected:
+
+
 	HWND m_hWnd{ nullptr };
 	int m_iWidth;
 	int m_iHeight;

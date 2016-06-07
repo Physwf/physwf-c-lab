@@ -37,7 +37,7 @@ HRESULT CRacorX::OneTimeSceneInit()
 {
 	IDirect3D8* d3d = Direct3DCreate8(D3D_SDK_VERSION);
 	m_spD3D.reset(d3d, [](IDirect3D8* d3d) { d3d->Release(); });
-	m_spD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_D3DCAPS);
+	m_spD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_D3DCaps);
 
 	m_Viewport = { 0, 0, m_iWidth, m_iHeight };
 
@@ -55,7 +55,7 @@ HRESULT CRacorX::OneTimeSceneInit()
 
 HRESULT CRacorX::InitDeviceObjects()
 {
-	if (m_D3DCAPS.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
+	if (m_D3DCaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) {
 		m_iVP = D3DCREATE_HARDWARE_VERTEXPROCESSING;
 	} else {
 		m_iVP = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
@@ -75,7 +75,7 @@ HRESULT CRacorX::InitDeviceObjects()
 	m_dpps.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 	m_dpps.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
-	HRESULT rc = ConfirmDevice(&m_D3DCAPS, D3DCREATE_HARDWARE_VERTEXPROCESSING, D3DFMT_UNKNOWN);
+	HRESULT rc = ConfirmDevice(&m_D3DCaps, m_iVP, D3DFMT_UNKNOWN);
 	if (FAILED(rc)) {
 		MessageBox(m_hWnd, L"ConfirmDevice failed", L"Error", 0);
 		return S_FALSE;
