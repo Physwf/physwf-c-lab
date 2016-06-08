@@ -1,33 +1,35 @@
-#include "RacorX3.h"
+#include "RacorX4.h"
 #include "const.h"
-RacorX3::RacorX3()
+RacorX4::RacorX4()
 {
 
 }
 
-RacorX3::~RacorX3()
+RacorX4::~RacorX4()
 {
 
 }
 
-HRESULT RacorX3::Frame()
+HRESULT RacorX4::Frame()
 {
 	FrameMove(0.0f);
 	Render();
 	return S_OK;
 }
 
-HRESULT RacorX3::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
+HRESULT RacorX4::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
 {
 	if ((dwBehavior & D3DCREATE_HARDWARE_VERTEXPROCESSING) || (D3DCREATE_MIXED_VERTEXPROCESSING))
 	{
 		if (pCaps->VertexShaderVersion < D3DVS_VERSION(1, 1))
 			return E_FAIL;
+		if (pCaps->DevCaps & D3DDEVCAPS_RTPATCHES)
+			return E_FAIL;
 	}
 	return S_OK;
 }
 
-HRESULT RacorX3::OneTimeSceneInit()
+HRESULT RacorX4::OneTimeSceneInit()
 {
 	IDirect3D8* d3d = Direct3DCreate8(D3D_SDK_VERSION);
 	if (d3d == nullptr)
@@ -50,7 +52,7 @@ HRESULT RacorX3::OneTimeSceneInit()
 	return S_OK;
 }
 
-HRESULT RacorX3::InitDeviceObjects()
+HRESULT RacorX4::InitDeviceObjects()
 {
 	HRESULT hr;
 
@@ -85,7 +87,7 @@ HRESULT RacorX3::InitDeviceObjects()
 	return S_OK;
 }
 
-HRESULT RacorX3::RestoreDeviceObjects()
+HRESULT RacorX4::RestoreDeviceObjects()
 {
 	HRESULT hr;
 
@@ -166,13 +168,13 @@ HRESULT RacorX3::RestoreDeviceObjects()
 	return S_OK;
 }
 
-HRESULT RacorX3::DeleteDeviceObjects()
+HRESULT RacorX4::DeleteDeviceObjects()
 {
 	
 	return S_OK;
 }
 
-HRESULT RacorX3::Render()
+HRESULT RacorX4::Render()
 {
 	
 
@@ -189,7 +191,7 @@ HRESULT RacorX3::Render()
 	return S_OK;
 }
 
-HRESULT RacorX3::FrameMove(FLOAT)
+HRESULT RacorX4::FrameMove(FLOAT)
 {
 	D3DXMATRIX Ry;
 	D3DXMatrixRotationY(&Ry, 3.14f / 40.0f);
@@ -204,7 +206,7 @@ HRESULT RacorX3::FrameMove(FLOAT)
 	return S_OK;
 }
 
-HRESULT RacorX3::FinalCleanup()
+HRESULT RacorX4::FinalCleanup()
 {
 	return S_OK;
 }
