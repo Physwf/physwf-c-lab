@@ -1,0 +1,69 @@
+                                      1 ;specular light
+                                      2 #include "const.h"
+                                       ===== specular.vsh -> const.h =====
+                                      1 #define CLIP_MATRIX 0
+                                      2 #define CLIP_MATRIX_1 1
+                                      3 #define CLIP_MATRIX_2 2
+                                      4 #define CLIP_MATRIX_3 3
+                                      5 
+                                      6 #define INVERSE_WORLD_MATRIX 8
+                                      7 #define INVERSE_WORLD_MATRIX_1 9
+                                      8 #define INVERSE_WORLD_MATRIX_2 10
+                                      9 
+                                      10 #define LIGHT_VECTOR 11
+                                      11 #define EYE_VECTOR 12
+                                      12 #define SPEC_POWER 13
+                                      13 #define SPEC_COLOR 14
+                                      14 #define DIFFUSE_COLOR 15
+                                       ===== const.h -> specular.vsh =====
+                                      3 
+                                      4 vs.1.1
+                                      5 ;transpose and transform to clip space
+00000000: 00000005 800f0000 90000000  6 mul r0, v0.x, c[CLIP_MATRIX]
+          a0e40000
+00000010: 00000004 800f0000 90550000  7 mad r0, v0.y, c[CLIP_MATRIX_1], r0
+          a0e40001 80e40000
+00000024: 00000004 800f0000 90aa0000  8 mad r0, v0.z, c[CLIP_MATRIX_2], r0
+          a0e40002 80e40000
+00000038: 00000002 c00f0000 a0e40003  9 add oPos, c[CLIP_MATRIX_3], r0
+          80e40000
+                                      10 ;output texture coords
+00000048: 00000001 e00f0000 90e40007  11 mov oT0, v7
+                                      12 ;transform normal
+00000054: 00000008 80010001 90e40003  13 dp3 r1.x, v3, c[INVERSE_WORLD_MATRIX]
+          a0e40008
+00000064: 00000008 80020001 90e40003  14 dp3 r1.y, v3, c[INVERSE_WORLD_MATRIX_1]
+          a0e40009
+00000074: 00000008 80040001 90e40003  15 dp3 r1.z, v3, c[INVERSE_WORLD_MATRIX_2]
+          a0e4000a
+                                      16 ;renormalize it
+00000084: 00000008 80080001 80e40001  17 dp3 r1.w, r1, r1
+          80e40001
+00000094: 00000007 80080001 80ff0001  18 rsq r1.w, r1.w
+000000a0: 00000005 800f0001 80e40001  19 mul r1, r1, r1.w
+          80ff0001
+                                      20 ;light vector L
+                                      21 ;we need L verctor towards the light, thus negate sign
+000000b0: 00000001 800f0005 a1e4000b  22 mov r5, -c[LIGHT_VECTOR]
+                                      23 ;N dot L
+000000bc: 00000008 80010000 80e40001  24 dp3 r0.x, r1, r5
+          80e40005
+                                      25 ;compute normalized half vector H = L+V
+000000cc: 00000002 800f0002 a0e4000c  26 add r2, c[EYE_VECTOR], r5
+          80e40005
+                                      27 ;renormalize vector
+000000dc: 00000008 80080002 80e40002  28 dp3 r2.w, r2, r2
+          80e40002
+000000ec: 00000007 80080002 80ff0002  29 rsq r2.w, r2.w
+000000f8: 00000005 800f0002 80e40002  30 mul r2, r2, r2.w
+          80ff0002
+                                      31 ;N dot H
+00000108: 00000008 80020000 80e40001  32 dp3 r0.y, r1, r2
+          80e40002
+00000118: 00000001 80080000 a055000d  33 mov r0.w, c[SPEC_POWER].y
+00000124: 00000010 800f0004 80e40000  34 lit r4, r0
+                                      35 
+00000130: 00000005 d00f0000 a0e4000f  36 mul oD0, c[DIFFUSE_COLOR], r4.y
+          80550004
+00000140: 00000005 d00f0001 a0e4000e  37 mul oD1, c[SPEC_COLOR], r4.z
+          80aa0004

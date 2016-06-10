@@ -1,4 +1,4 @@
 @echo off
-
-nvasm.exe -lx basic_light.vsh basic_light.vso
+set PATH=%PATH%;C:\nvasm
+nvasm.exe -lx specular.vsh specular.vso
 pause

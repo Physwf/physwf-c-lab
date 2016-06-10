@@ -1,14 +1,9 @@
 #pragma once
 
 #include "Application.h"
+#include "BPatch.h"
+#include "d3dutil.h"
 #include <memory>
-
-struct Vertex
-{
-	float x; float y; float z;
-	float nx; float ny; float nz;
-	static const DWORD FVF;
-};
 
 class RacorX4 : public CD3DApplication 
 {
@@ -27,6 +22,8 @@ protected:
 	virtual HRESULT Render();
 	virtual HRESULT FrameMove(FLOAT);
 	virtual HRESULT FinalCleanup();
+
+	virtual HRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
 	std::shared_ptr<IDirect3D8> m_spD3D;
 	std::shared_ptr<IDirect3DDevice8> m_spDevice;
@@ -37,6 +34,7 @@ private:
 
 	std::shared_ptr<IDirect3DVertexBuffer8> m_spVB;
 	std::shared_ptr<IDirect3DIndexBuffer8> m_spIB;
+	std::shared_ptr<IDirect3DTexture8> m_spBackground;
 
 	DWORD m_dwVSH;
 
@@ -44,4 +42,13 @@ private:
 	D3DXMATRIX m_mtView;
 	D3DXMATRIX m_mtProj;
 
+	std::shared_ptr<CD3DBPatch> m_spBPatch;
+	CD3DArcBall m_ArcBall;
+
+	D3DXVECTOR3 m_vObjectCenter{ 0.0f, 0.0f, 0.0f };
+	float m_fZDist{0.0f};
+	float m_fObjectRadius;
+	char m_bKey[256];
+	D3DXVECTOR4 m_vLightColor[3];
+	DWORD m_dwCurrentColor;
 };

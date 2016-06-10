@@ -32,10 +32,12 @@ protected:
 
 	
 	virtual HRESULT CreateVSFromBinFile(IDirect3DDevice8* device, DWORD* dwDecl, TCHAR* strVSPath, DWORD* m_dwVS);
+
+	virtual LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
 	BOOL InitInstance(HINSTANCE, int);
 	ATOM MyRegisterClass(HINSTANCE);
-	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
+	
 	static CD3DApplication* Instance;
 protected:
 
