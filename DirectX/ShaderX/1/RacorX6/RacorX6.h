@@ -5,11 +5,13 @@
 #include "d3dutil.h"
 #include <memory>
 
-class RacorX5 : public CD3DApplication 
+#define EARTH_FVF D3DFVF_XYZ | D3DFVF_NORMAL
+
+class RacorX6 : public CD3DApplication 
 {
 public:
-	RacorX5();
-	~RacorX5();
+	RacorX6();
+	~RacorX6();
 
 	virtual HRESULT Frame();
 
@@ -34,23 +36,27 @@ private:
 
 	std::shared_ptr<IDirect3DVertexBuffer8> m_spVB;
 	std::shared_ptr<IDirect3DIndexBuffer8> m_spIB;
-	std::shared_ptr<IDirect3DTexture8> m_spBackground;
+	std::shared_ptr<IDirect3DTexture8> m_spColorMap;
+	std::shared_ptr<IDirect3DTexture8> m_spHeightMap;
+	std::shared_ptr<IDirect3DTexture8> m_spNormalMap;
+
+	std::shared_ptr<ID3DXMesh> m_spEarthMesh;
 
 	DWORD m_dwVSH;
+	DWORD m_dwPSH;
 
 	D3DXMATRIX m_mtWorld;
 	D3DXMATRIX m_mtView;
 	D3DXMATRIX m_mtProj;
 
-	std::shared_ptr<CD3DBPatch> m_spBPatch;
 	CD3DArcBall m_ArcBall;
 
 	D3DXVECTOR3 m_vObjectCenter{ 0.0f, 0.0f, 0.0f };
 	float m_fZDist{0.0f};
 	float m_fObjectRadius;
 	char m_bKey[256];
-	D3DXVECTOR4 m_vLightColor[3];
-	DWORD m_dwCurrentColor;
 
-	D3DXVECTOR3 m_vPointLight{0.0f,0.0f,-100.0f};
+	bool m_bPS14Avaliable{ true };
+
+
 };

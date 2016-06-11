@@ -1,35 +1,38 @@
-#include "RacorX5.h"
+#include "RacorX6.h"
 #include "const.h"
-RacorX5::RacorX5()
+RacorX6::RacorX6()
 {
 	m_fObjectRadius = 1.0f;
 	ZeroMemory(m_bKey, 256);
-	m_dwCurrentColor = 0;
 }
 
-RacorX5::~RacorX5()
+RacorX6::~RacorX6()
 {
 
 }
 
-HRESULT RacorX5::Frame()
+HRESULT RacorX6::Frame()
 {
 	FrameMove(1.1f);
 	Render();
 	return S_OK;
 }
 
-HRESULT RacorX5::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
+HRESULT RacorX6::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
 {
 	if ((dwBehavior & D3DCREATE_HARDWARE_VERTEXPROCESSING) || (D3DCREATE_MIXED_VERTEXPROCESSING))
 	{
 		if (pCaps->VertexShaderVersion < D3DVS_VERSION(1, 1))
 			return E_FAIL;
+		if (pCaps->PixelShaderVersion < D3DPS_VERSION(1, 1))
+			return E_FAIL;
+		if (pCaps->PixelShaderVersion < D3DPS_VERSION(1, 4))
+			m_bPS14Avaliable = false;
 	}
 	return S_OK;
 }
 
-HRESULT RacorX5::OneTimeSceneInit()
+HRESULT RacorX6::OneTimeSceneInit()
 {
 	IDirect3D8* d3d = Direct3DCreate8(D3D_SDK_VERSION);
 	if (d3d == nullptr)
@@ -49,16 +52,11 @@ HRESULT RacorX5::OneTimeSceneInit()
 
 	m_Viewport = { 0, 0, m_iWidth, m_iHeight };
 
-	m_spBPatch = std::make_shared<CD3DBPatch>();
-
-	m_vLightColor[0] = D3DXVECTOR4(0.3f, 0.1f, 0.1f, 1.0f);
-	m_vLightColor[1] = D3DXVECTOR4(0.1f, 0.5f, 0.1f, 1.0f);
-	m_vLightColor[2] = D3DXVECTOR4(0.0f, 0.1f, 0.4f, 1.0f);
 
 	return S_OK;
 }
 
-HRESULT RacorX5::InitDeviceObjects()
+HRESULT RacorX6::InitDeviceObjects()
 {
 	HRESULT hr;
 
@@ -93,7 +91,7 @@ HRESULT RacorX5::InitDeviceObjects()
 	return S_OK;
 }
 
-HRESULT RacorX5::RestoreDeviceObjects()
+HRESULT RacorX6::RestoreDeviceObjects()
 {
 	HRESULT hr;
 
@@ -106,23 +104,7 @@ HRESULT RacorX5::RestoreDeviceObjects()
 	}
 	m_spDevice.reset(device, [](IDirect3DDevice8* device) { device->Release(); });
 
-	VERTICES cp[9];
-	cp[0].vPosition = D3DXVECTOR3(-1, 1, 0);	 cp[0].uv = D3DXVECTOR2(0.0f, 0.0f);
-	cp[1].vPosition = D3DXVECTOR3(0, 1, 0);      cp[1].uv = D3DXVECTOR2(0.5f, 0.0f);
-	cp[2].vPosition = D3DXVECTOR3(1, 1, 0);      cp[2].uv = D3DXVECTOR2(1.0f, 0.0f);
-
-	cp[3].vPosition = D3DXVECTOR3(-1, 0, 0);     cp[3].uv = D3DXVECTOR2(0.0f, 0.5f);
-	cp[4].vPosition = D3DXVECTOR3(0, 0, -2);     cp[4].uv = D3DXVECTOR2(0.5f, 0.5f);
-	cp[5].vPosition = D3DXVECTOR3(1, 0, 0);      cp[5].uv = D3DXVECTOR2(1.0f, 0.5f);
-
-	cp[6].vPosition = D3DXVECTOR3(-1, -1, 0);    cp[6].uv = D3DXVECTOR2(0.0f, 1.0f);
-	cp[7].vPosition = D3DXVECTOR3(0, -1, 0);     cp[7].uv = D3DXVECTOR2(0.5f, 1.0f);
-	cp[8].vPosition = D3DXVECTOR3(1, -1, 0);     cp[8].uv = D3DXVECTOR2(1.0f, 1.0f);
-
-	m_spBPatch->m_dwULevel = 4;
-	m_spBPatch->m_dwVLevel = 4;
-	m_spBPatch->Create(cp, 3, 3);
-	m_spBPatch->RestoreDeviceObjects(m_spDevice.get());
+	
 	DWORD dwDecl[] = {
 		D3DVSD_STREAM(0),
 		D3DVSD_REG(0, D3DVSDT_FLOAT3),
@@ -131,21 +113,68 @@ HRESULT RacorX5::RestoreDeviceObjects()
 		D3DVSD_END()
 	};
 
-	hr = CreateVSFromBinFile(m_spDevice.get(), dwDecl, L"point_light.vso", &m_dwVSH);
+	hr = CreateVSFromBinFile(m_spDevice.get(), dwDecl, L"diff.vso", &m_dwVSH);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"CreateVSFromBinFile failed!", L"Error", 0);
 		return E_FAIL;
 	}
 	
-	IDirect3DTexture8* backgroud;
-	hr = D3DXCreateTextureFromFile(m_spDevice.get(), _T("ShaderX.tga"), &backgroud);
+	IDirect3DTexture8* color_map;
+	hr = D3DXCreateTextureFromFile(m_spDevice.get(), _T("earth.bmp"), &color_map);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"D3DXCreateTextureFromFile failed!", L"Error", 0);
 		return E_FAIL;
 	}
-	m_spBackground.reset(backgroud, [](IDirect3DTexture8* background){ background->Release(); });
+	m_spColorMap.reset(color_map, [](IDirect3DTexture8* color_map){ color_map->Release(); });
+
+	IDirect3DTexture8* heightMap;
+	hr = D3DXCreateTextureFromFile(m_spDevice.get(), _T("earthbump.bmp"), &heightMap);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXCreateTextureFromFile failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	m_spHeightMap.reset(color_map, [](IDirect3DTexture8* colorMap) { colorMap->Release(); });
+
+	D3DSURFACE_DESC desc;
+	m_spHeightMap->GetLevelDesc(0, &desc);
+
+	IDirect3DTexture8* normalMap;
+	hr = D3DXCreateTexture(m_spDevice.get(), desc.Width, desc.Height, 0, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &normalMap);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXCreateTexture failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	m_spNormalMap.reset(normalMap, [](IDirect3DTexture8* normalMap){normalMap->Release(); });
+
+	ID3DXMesh* earth;
+	hr = D3DXCreateSphere(m_spDevice.get(), 100.0f, 10, 10, &earth, NULL);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXCreateSphere failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	m_spEarthMesh.reset(earth, [](ID3DXMesh* earth){earth->Release(); });
+
+	hr = D3DXComputeNormals(m_spEarthMesh.get(), NULL);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXComputeNormals failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
+	hr = D3DXComputeTangent(m_spEarthMesh.get(), 0, m_spEarthMesh.get(), 1, D3DX_COMP_TANGENT_NONE, true, NULL);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXComputeTangent failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
+	D3DXComputeNormalMap(m_spNormalMap.get(), m_spHeightMap.get(), NULL, 0, D3DX_CHANNEL_RED, 10);
+
 
 	m_spDevice->SetViewport(&m_Viewport);
 
@@ -182,19 +211,18 @@ HRESULT RacorX5::RestoreDeviceObjects()
 	return S_OK;
 }
 
-HRESULT RacorX5::DeleteDeviceObjects()
+HRESULT RacorX6::DeleteDeviceObjects()
 {
 	
 	return S_OK;
 }
 
-HRESULT RacorX5::Render()
+HRESULT RacorX6::Render()
 {
 	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 	if (SUCCEEDED(m_spDevice->BeginScene())) {
 		m_spDevice->SetVertexShader(m_dwVSH);
-		m_spDevice->SetTexture(0, m_spBackground.get());
-		m_spBPatch->Render(m_spDevice.get());
+		m_spDevice->SetTexture(0, m_spColorMap.get());
 
 		m_spDevice->EndScene();
 	}
@@ -203,7 +231,7 @@ HRESULT RacorX5::Render()
 	return S_OK;
 }
 
-HRESULT RacorX5::FrameMove(FLOAT delta)
+HRESULT RacorX6::FrameMove(FLOAT delta)
 {
 	//D3DXMATRIX Ry;
 	//D3DXMatrixRotationY(&Ry, 3.14f / 40.0f);
@@ -228,32 +256,15 @@ HRESULT RacorX5::FrameMove(FLOAT delta)
 
 	m_spDevice->SetVertexShaderConstant(EYE_VECTOR, eye, 1);
 
-	if (m_bKey['C'])
-	{
-		m_bKey['C'] = 0;
-		++m_dwCurrentColor;
-		if (m_dwCurrentColor >= 3)
-			m_dwCurrentColor = 0;
-	}
-	m_spDevice->SetVertexShaderConstant(SPEC_COLOR, m_vLightColor[m_dwCurrentColor],1);
-
-	if (m_bKey[VK_LEFT]) { m_bKey[VK_RIGHT] = 0; m_vPointLight.x -= 1.0f * delta; }
-	if (m_bKey[VK_RIGHT]) { m_bKey[VK_LEFT] = 0; m_vPointLight.x += 1.0f * delta; }
-	if (m_bKey[VK_UP]) { m_bKey[VK_DOWN] = 0; m_vPointLight.y -= 1.0f * delta; }
-	if (m_bKey[VK_DOWN]) { m_bKey[VK_UP] = 0; m_vPointLight.y += 1.0f * delta; }
-	if (m_bKey[VK_END]) { m_bKey[VK_HOME] = 0; m_vPointLight.z -= 1.0f * delta; }
-	if (m_bKey[VK_HOME]) { m_bKey[VK_END] = 0; m_vPointLight.z += 1.0f * delta; }
-	m_spDevice->SetVertexShaderConstant(LIGHT_POSITION, m_vPointLight, 1);
-
 	return S_OK;
 }
 
-HRESULT RacorX5::FinalCleanup()
+HRESULT RacorX6::FinalCleanup()
 {
 	return S_OK;
 }
 
-HRESULT CALLBACK RacorX5::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+HRESULT CALLBACK RacorX6::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	m_ArcBall.HandleMouseMessages(hwnd, msg, wParam, lParam);
 	switch (msg)
