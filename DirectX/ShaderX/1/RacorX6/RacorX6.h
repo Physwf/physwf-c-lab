@@ -5,7 +5,7 @@
 #include "d3dutil.h"
 #include <memory>
 
-#define EARTH_FVF D3DFVF_XYZ | D3DFVF_NORMAL
+#define EARTH_FVF D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX0 | D3DFVF_TEXCOORDSIZE3(D3DFVF_TEXTUREFORMAT3)
 
 class RacorX6 : public CD3DApplication 
 {
@@ -57,6 +57,4 @@ private:
 	char m_bKey[256];
 
 	bool m_bPS14Avaliable{ true };
-
-
 };

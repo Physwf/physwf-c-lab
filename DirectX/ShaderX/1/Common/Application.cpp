@@ -1,4 +1,5 @@
 #include "Application.h"
+#include <sstream>
 
 CD3DApplication::CD3DApplication()
 {
@@ -74,6 +75,80 @@ HRESULT CD3DApplication::CreateVSFromBinFile(IDirect3DDevice8* device, DWORD* dw
 	UnmapViewOfFile(pdwVS);
 	CloseHandle(hMap);
 	CloseHandle(hFile);
+	return S_OK;
+}
+
+HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH* ppSphere)
+{
+	HRESULT hr;
+	hr = D3DXCreateSphere(pDevice, 100.f, 40, 40, ppSphere, NULL);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXCreateSphere Failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	LPD3DXMESH pClone;
+	hr = (*ppSphere)->CloneMeshFVF(D3DXMESH_MANAGED, D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE3(1), pDevice, &pClone);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CloneMeshFVF Failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	hr = D3DXComputeNormals(pClone, NULL);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXComputeNormals Failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	struct Vertex
+	{
+		float x, y, z;
+		D3DXVECTOR3 normal;
+		float u, v;
+		D3DXVECTOR3 tangent;
+	};
+
+	Vertex* pVertex = NULL;
+	if (SUCCEEDED(pClone->LockVertexBuffer(D3DLOCK_DISCARD, reinterpret_cast<BYTE**>(&pVertex))))
+	{
+		DWORD numVertices = pClone->GetNumVertices();
+		for (DWORD i = 0; i < numVertices; ++i)
+		{
+			D3DXVECTOR3 temp;
+			D3DXVec3Normalize(&temp, &pVertex->normal);
+			pVertex->u = atan2f(-temp.z, -temp.x) / (2.0f * D3DX_PI) + 0.5f;
+			pVertex->v = 0.5f - asinf(-temp.y) / D3DX_PI;
+			std::stringstream log;
+			log << "x:" << pVertex->x << "\t\ty:" << pVertex->y << "\t\tz:" << pVertex->z << "\n";
+			log << "nx:" << pVertex->normal.x << "\t\tny:" << pVertex->normal.y << "\t\tnz:" << pVertex->normal.z << "\n";
+			log << "u:" << pVertex->u << "\t\tv:" << pVertex->v << "\n";
+			if (pVertex->tangent.x != 0.0f || pVertex->tangent.y != 0.0f || pVertex->tangent.z != 0.0f)
+				log << "tx:" << pVertex->tangent.x << "\t\tty:" << pVertex->tangent.y << "\t\ttz:" << pVertex->tangent.z << "\n";
+			log << "--------------------------\n";
+			OutputDebugStringA(log.str().c_str());
+			++pVertex;
+			
+		}
+		pClone->UnlockVertexBuffer();
+	}
+	LPD3DXMESH pOut = NULL;
+	hr = D3DXComputeTangent(pClone, 0, pOut, 1, 1, true, NULL);
+	if (FAILED(hr))
+	{
+		WCHAR szBuffer[512] = { 0 };
+		D3DXGetErrorString(hr, szBuffer, sizeof(szBuffer));
+		OutputDebugString(szBuffer);
+		if (hr == D3DERR_INVALIDCALL) {
+			MessageBox(m_hWnd, L"D3DXComputeTangent D3DERR_INVALIDCALL!", L"Error", 0);
+		}
+		else if (hr == E_OUTOFMEMORY) {
+			MessageBox(m_hWnd, L"D3DXComputeTangent E_OUTOFMEMORY!", L"Error", 0);
+		}
+		return E_FAIL;
+	}
+	(*ppSphere)->Release();
+	pClone->Release();
+	ppSphere = &pOut;
 	return S_OK;
 }
 

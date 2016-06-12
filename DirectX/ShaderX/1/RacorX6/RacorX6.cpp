@@ -104,7 +104,9 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	}
 	m_spDevice.reset(device, [](IDirect3DDevice8* device) { device->Release(); });
 
-	
+	LPD3DXMESH pSphere;
+	CreateSphereMesh(m_spDevice.get(), &pSphere);
+
 	DWORD dwDecl[] = {
 		D3DVSD_STREAM(0),
 		D3DVSD_REG(0, D3DVSDT_FLOAT3),
@@ -148,33 +150,11 @@ HRESULT RacorX6::RestoreDeviceObjects()
 		MessageBox(m_hWnd, L"D3DXCreateTexture failed!", L"Error", 0);
 		return E_FAIL;
 	}
-	m_spNormalMap.reset(normalMap, [](IDirect3DTexture8* normalMap){normalMap->Release(); });
-
-	ID3DXMesh* earth;
-	hr = D3DXCreateSphere(m_spDevice.get(), 100.0f, 10, 10, &earth, NULL);
-	if (FAILED(hr))
-	{
-		MessageBox(m_hWnd, L"D3DXCreateSphere failed!", L"Error", 0);
-		return E_FAIL;
-	}
-	m_spEarthMesh.reset(earth, [](ID3DXMesh* earth){earth->Release(); });
-
-	hr = D3DXComputeNormals(m_spEarthMesh.get(), NULL);
-	if (FAILED(hr))
-	{
-		MessageBox(m_hWnd, L"D3DXComputeNormals failed!", L"Error", 0);
-		return E_FAIL;
-	}
-
-	hr = D3DXComputeTangent(m_spEarthMesh.get(), 0, m_spEarthMesh.get(), 1, D3DX_COMP_TANGENT_NONE, true, NULL);
-	if (FAILED(hr))
-	{
-		MessageBox(m_hWnd, L"D3DXComputeTangent failed!", L"Error", 0);
-		return E_FAIL;
-	}
+	m_spNormalMap.reset(normalMap, [](IDirect3DTexture8* normalMap){ normalMap->Release(); });
 
 	D3DXComputeNormalMap(m_spNormalMap.get(), m_spHeightMap.get(), NULL, 0, D3DX_CHANNEL_RED, 10);
 
+	
 
 	m_spDevice->SetViewport(&m_Viewport);
 
