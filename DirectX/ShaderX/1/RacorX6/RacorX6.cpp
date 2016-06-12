@@ -107,13 +107,8 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	LPD3DXMESH pSphere;
 	CreateSphereMesh(m_spDevice.get(), &pSphere);
 
-	DWORD dwDecl[] = {
-		D3DVSD_STREAM(0),
-		D3DVSD_REG(0, D3DVSDT_FLOAT3),
-		D3DVSD_REG(3, D3DVSDT_FLOAT3),
-		D3DVSD_REG(7, D3DVSDT_FLOAT2),
-		D3DVSD_END()
-	};
+	DWORD dwDecl[MAX_FVF_DECL_SIZE];
+	pSphere->GetDeclaration(dwDecl);
 
 	hr = CreateVSFromBinFile(m_spDevice.get(), dwDecl, L"diff.vso", &m_dwVSH);
 	if (FAILED(hr))
