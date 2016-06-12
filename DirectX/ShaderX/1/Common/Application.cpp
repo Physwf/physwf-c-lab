@@ -174,7 +174,7 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 		pOut->UnlockVertexBuffer();
 	}
 	pClone->Release();
-	ppSphere = &pOut;
+	*ppSphere = pOut;
 	return S_OK;
 }
 
