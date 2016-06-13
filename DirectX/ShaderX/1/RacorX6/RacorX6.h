@@ -43,7 +43,8 @@ private:
 
 	DWORD m_dwVSH;
 	DWORD m_dwPSH;
-	DWORD m_dwPSH14;
+	DWORD m_dwPSHBump;
+	DWORD m_dwPSHBump14;
 
 	D3DXMATRIX m_mtWorld;
 	D3DXMATRIX m_mtView;

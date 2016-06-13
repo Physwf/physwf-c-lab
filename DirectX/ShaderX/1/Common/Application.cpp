@@ -128,7 +128,7 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 {
 	HRESULT hr;
 	LPD3DXMESH pSphere, pClone, pOut;
-	hr = D3DXCreateSphere(pDevice, 100.f, 40, 40, &pSphere, NULL);
+	hr = D3DXCreateSphere(pDevice, 100.0f, 40, 40, &pSphere, NULL);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"D3DXCreateSphere Failed!", L"Error", 0);
@@ -157,7 +157,7 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 	};
 
 	Vertex* pVertex = NULL;
-	if (SUCCEEDED(pClone->LockVertexBuffer(D3DLOCK_DISCARD, reinterpret_cast<BYTE**>(&pVertex))))
+	if (SUCCEEDED(pClone->LockVertexBuffer(0, reinterpret_cast<BYTE**>(&pVertex))))
 	{
 		DWORD numVertices = pClone->GetNumVertices();
 		for (DWORD i = 0; i < numVertices; ++i)
@@ -167,11 +167,12 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 			pVertex->u = atan2f(-temp.z, -temp.x) / (2.0f*D3DX_PI) + 0.5f;
 			pVertex->v = 0.5f - asinf(-temp.y) / D3DX_PI;
 			std::stringstream log;
+			log << i << ":\n";
 			log << "x:" << pVertex->x << "\t\ty:" << pVertex->y << "\t\tz:" << pVertex->z << "\n";
 			log << "nx:" << pVertex->normal.x << "\t\tny:" << pVertex->normal.y << "\t\tnz:" << pVertex->normal.z << "\n";
 			//if (pVertex->u >= 1.0f || pVertex->v >= 1.0f)
 				log << "u:" << pVertex->u << "\t\tv:" << pVertex->v << "\n";
-			if (pVertex->tangent.x != 0.0f || pVertex->tangent.y != 0.0f || pVertex->tangent.z != 0.0f)
+			//if (pVertex->tangent.x != 0.0f || pVertex->tangent.y != 0.0f || pVertex->tangent.z != 0.0f)
 				log << "tx:" << pVertex->tangent.x << "\t\tty:" << pVertex->tangent.y << "\t\ttz:" << pVertex->tangent.z << "\n";
 			log << "--------------------------\n";
 			//OutputDebugStringA(log.str().c_str());
@@ -199,16 +200,14 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 		}
 		return E_FAIL;
 	}
-	if (SUCCEEDED(pOut->LockVertexBuffer(D3DLOCK_DISCARD, reinterpret_cast<BYTE**>(&pVertex))))
+	if (SUCCEEDED(pOut->LockVertexBuffer(0, reinterpret_cast<BYTE**>(&pVertex))))
 	{
 		DWORD numVertices = pOut->GetNumVertices();
+		
 		for (DWORD i = 0; i < numVertices; ++i)
 		{
-			//D3DXVECTOR3 temp;
-			//D3DXVec3Normalize(&temp, &pVertex->normal);
-			//pVertex->u = atan2f(-temp.z, -temp.x) / (2.0f * D3DX_PI) + 0.5f;
-			//pVertex->v = 0.5f - asinf(-temp.y) / D3DX_PI;
 			std::stringstream log;
+			log << i << ":\n";
 			log << "x:" << pVertex->x << "\t\ty:" << pVertex->y << "\t\tz:" << pVertex->z << "\n";
 			log << "nx:" << pVertex->normal.x << "\t\tny:" << pVertex->normal.y << "\t\tnz:" << pVertex->normal.z << "\n";
 			log << "u:" << pVertex->u << "\t\tv:" << pVertex->v << "\n";

@@ -1,0 +1,48 @@
+                                      1 #include "const.h"
+                                       ===== diff.vsh -> const.h =====
+                                      1 #define CLIP_MATRIX 0
+                                      2 
+                                      3 #define TRASPOSED_WORLD_MATRIX 4
+                                      4 
+                                      5 #define LIGHT_DIR 12
+                                      6 
+                                       ===== const.h -> diff.vsh =====
+                                      2 ;diff light
+                                      3 ;v0 position
+                                      4 ;v3 normal v1 
+                                      5 ;v7 texture v2
+                                      6 ;v8 tangent v3
+                                      7 
+                                      8 vs.1.1
+                                      9 ;transpose and transform to clip space
+                                      10 
+00000000: 00000014 c00f0000 90e40000  11 m4x4 oPos, v0, c0
+          a0e40000
+                                      12 
+                                      13 ;output texture coords
+                                      14 ;transform normal
+                                      15 
+00000010: 00000017 800f0005 90e40003  16 m3x3 r5, v3, c4 ;U
+          a0e40004
+00000020: 00000017 800f0007 90e40008  17 m3x3 r7, v8, c4 ;W
+          a0e40004
+                                      18 
+                                      19 ;V
+00000030: 00000005 800f0000 80d20005  20 mul r0, r5.zxyw, -r7.yzxw
+          81c90007
+00000040: 00000004 800f0006 80c90005  21 mad r6, r5.yzxw, -r7.zxyw, -r0
+          81d20007 81e40000
+                                      22 
+                                      23 ;transform light to texture space
+00000054: 00000008 80010008 80e40005  24 dp3 r8.x, r5, -c12
+          a1e4000c
+00000064: 00000008 80020008 80e40006  25 dp3 r8.y, r6, -c12
+          a1e4000c
+00000074: 00000008 80040008 80e40007  26 dp3 r8.z, r7, -c12
+          a1e4000c
+                                      27 
+00000084: 00000004 d0070000 80a40008  28 mad oD0.xyz, r8.xyz, c33, c33
+          a0e40021 a0e40021
+                                      29 
+00000098: 00000001 e0030000 90540007  30 mov oT0.xy, v7.xy
+000000a4: 00000001 e0030001 90540007  31 mov oT1.xy, v7.xy
