@@ -78,6 +78,52 @@ HRESULT CD3DApplication::CreateVSFromBinFile(IDirect3DDevice8* device, DWORD* dw
 	return S_OK;
 }
 
+HRESULT CD3DApplication::CreatePSFromBinFile(IDirect3DDevice8* device, TCHAR* strVSPath, DWORD* phPS)
+{
+	TCHAR strFullPath[1024];
+	TCHAR* strShortName;
+	DWORD dwLen;
+
+	dwLen = GetFullPathName(strVSPath, sizeof(strFullPath) / sizeof(TCHAR), strFullPath, &strShortName);
+
+	if (dwLen == 0 || sizeof(strFullPath) / sizeof(TCHAR) <= dwLen) {
+		MessageBox(m_hWnd, L"GetFullPathName Failed", L"Error", 0);
+		return E_FAIL;
+	}
+
+	HANDLE hFile, hMap;
+	char szBuffer[128];
+	DWORD* pdwPS;
+	HRESULT hr;
+
+	hFile = CreateFile(strFullPath, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	if (INVALID_HANDLE_VALUE != hFile) {
+		if (GetFileSize(hFile, 0) > 0) {
+			hMap = CreateFileMapping(hFile, 0, PAGE_READONLY, 0, 0, 0);
+		}
+		else {
+			CloseHandle(hFile);
+			MessageBox(m_hWnd, L"CreatePSFromBinFile: File is empty!", L"Error", 0);
+			return E_FAIL;
+		}
+	}
+	else{
+		MessageBox(m_hWnd, L"CreatePSFromBinFile: Can't Find file!", L"Error", 0);
+		return E_FAIL;
+	}
+	pdwPS = (DWORD*)MapViewOfFile(hMap, FILE_MAP_READ, 0, 0, 0);
+	hr = device->CreatePixelShader(pdwPS, phPS);
+	if (FAILED(hr)) {
+		D3DXGetErrorStringA(hr, szBuffer, sizeof(szBuffer));
+		MessageBox(m_hWnd, L"CreateVertexShader Failed!", L"Error", 0);
+		return hr;
+	}
+	UnmapViewOfFile(pdwPS);
+	CloseHandle(hMap);
+	CloseHandle(hFile);
+	return S_OK;
+}
+
 HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH* ppSphere)
 {
 	HRESULT hr;
@@ -118,16 +164,17 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 		{
 			D3DXVECTOR3 temp;
 			D3DXVec3Normalize(&temp, &pVertex->normal);
-			pVertex->u = atan2f(-temp.z, -temp.x) / (2.0f * D3DX_PI) + 0.5f;
+			pVertex->u = atan2f(-temp.z, -temp.x) / (2.0f*D3DX_PI) + 0.5f;
 			pVertex->v = 0.5f - asinf(-temp.y) / D3DX_PI;
 			std::stringstream log;
 			log << "x:" << pVertex->x << "\t\ty:" << pVertex->y << "\t\tz:" << pVertex->z << "\n";
 			log << "nx:" << pVertex->normal.x << "\t\tny:" << pVertex->normal.y << "\t\tnz:" << pVertex->normal.z << "\n";
-			log << "u:" << pVertex->u << "\t\tv:" << pVertex->v << "\n";
+			//if (pVertex->u >= 1.0f || pVertex->v >= 1.0f)
+				log << "u:" << pVertex->u << "\t\tv:" << pVertex->v << "\n";
 			if (pVertex->tangent.x != 0.0f || pVertex->tangent.y != 0.0f || pVertex->tangent.z != 0.0f)
 				log << "tx:" << pVertex->tangent.x << "\t\tty:" << pVertex->tangent.y << "\t\ttz:" << pVertex->tangent.z << "\n";
 			log << "--------------------------\n";
-			OutputDebugStringA(log.str().c_str());
+			//OutputDebugStringA(log.str().c_str());
 			++pVertex;
 		}
 		pClone->UnlockVertexBuffer();
@@ -165,7 +212,7 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 			log << "x:" << pVertex->x << "\t\ty:" << pVertex->y << "\t\tz:" << pVertex->z << "\n";
 			log << "nx:" << pVertex->normal.x << "\t\tny:" << pVertex->normal.y << "\t\tnz:" << pVertex->normal.z << "\n";
 			log << "u:" << pVertex->u << "\t\tv:" << pVertex->v << "\n";
-			if (pVertex->tangent.x != 0.0f || pVertex->tangent.y != 0.0f || pVertex->tangent.z != 0.0f)
+			//if (pVertex->tangent.x != 0.0f || pVertex->tangent.y != 0.0f || pVertex->tangent.z != 0.0f)
 				log << "tx:" << pVertex->tangent.x << "\t\tty:" << pVertex->tangent.y << "\t\ttz:" << pVertex->tangent.z << "\n";
 			log << "--------------------------\n";
 			OutputDebugStringA(log.str().c_str());

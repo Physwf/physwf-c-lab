@@ -34,8 +34,7 @@ private:
 	int m_iVP;
 	D3DVIEWPORT8 m_Viewport;
 
-	std::shared_ptr<IDirect3DVertexBuffer8> m_spVB;
-	std::shared_ptr<IDirect3DIndexBuffer8> m_spIB;
+	
 	std::shared_ptr<IDirect3DTexture8> m_spColorMap;
 	std::shared_ptr<IDirect3DTexture8> m_spHeightMap;
 	std::shared_ptr<IDirect3DTexture8> m_spNormalMap;
@@ -44,6 +43,7 @@ private:
 
 	DWORD m_dwVSH;
 	DWORD m_dwPSH;
+	DWORD m_dwPSH14;
 
 	D3DXMATRIX m_mtWorld;
 	D3DXMATRIX m_mtView;

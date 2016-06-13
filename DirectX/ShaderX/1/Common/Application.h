@@ -32,6 +32,7 @@ protected:
 
 	
 	virtual HRESULT CreateVSFromBinFile(IDirect3DDevice8* device, DWORD* dwDecl, TCHAR* strVSPath, DWORD* m_dwVS);
+	virtual HRESULT CreatePSFromBinFile(IDirect3DDevice8* device, TCHAR* strVSPath, DWORD* m_dwPS);
 
 	virtual HRESULT CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice,LPD3DXMESH* ppSphere);
 	virtual LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
