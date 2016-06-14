@@ -108,6 +108,15 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	LPD3DXMESH pSphere;
 	hr = CreateSphereMesh(m_spDevice.get(), &pSphere);
 	m_spEarthMesh.reset(pSphere, [](LPD3DXMESH sphere){ sphere->Release(); });
+	IDirect3DIndexBuffer8* ib;
+	m_spEarthMesh->GetIndexBuffer(&ib);
+	m_spIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	IDirect3DVertexBuffer8* vb;
+	m_spEarthMesh->GetVertexBuffer(&vb);
+	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+	m_iNumTriangles = m_spEarthMesh->GetNumFaces();
+	m_iNumVertices = m_spEarthMesh->GetNumVertices();
+
 	DWORD dwDecl[MAX_FVF_DECL_SIZE];
 	ZeroMemory(dwDecl, sizeof dwDecl);
 	pSphere->GetDeclaration(dwDecl);
@@ -186,12 +195,12 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	m_spDevice->SetRenderState(D3DRS_DITHERENABLE, TRUE);
 	m_spDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	
-	m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+	m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 	m_spDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_spDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
-	//m_spDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
+	m_spDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
 	//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	//m_spDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
 
@@ -201,12 +210,12 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	//m_spDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	//m_spDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 	m_spDevice->SetTextureStageState(0, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-	//m_spDevice->SetTextureStageState(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
 	m_spDevice->SetTextureStageState(0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-	m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
-	m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+	//m_spDevice->SetTextureStageState(0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR);
+	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	D3DXVECTOR4 vLight(1, 1, 1, 0);
+	D3DXVECTOR4 vLight(0.0f, 1.0f, 0.0f, 0.0f);
 	m_spDevice->SetVertexShaderConstant(12, &vLight, 1);
 
 	D3DXVECTOR4 half(0.5f, 0.5f, 0.5f, 0.5f);
@@ -230,7 +239,10 @@ HRESULT RacorX6::Render()
 		//hr = m_spDevice->SetTexture(1, m_spNormalMap.get());
 		hr = m_spDevice->SetVertexShader(m_dwVSH);
 		hr = m_spDevice->SetPixelShader(m_dwPSH);
-		hr = m_spEarthMesh->DrawSubset(0);
+		//hr = m_spEarthMesh->DrawSubset(0);
+		m_spDevice->SetStreamSource(0, m_spVB.get(), sizeof ShaderVertex);
+		m_spDevice->SetIndices(m_spIB.get(), 0);
+		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_iNumVertices, 0, m_iNumVertices);
 		hr = m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);
@@ -249,12 +261,13 @@ HRESULT RacorX6::FrameMove(FLOAT delta)
 
 	//m_spDevice->SetVertexShaderConstant(TRASPOSED_WORLD_MATRIX, &m_mtWorld, 4);
 	D3DXMatrixIdentity(&m_mtWorld);
-	D3DXMATRIX matTemp;
+	
 	D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 eye(0.0f, 0.0f, -1000.f);
+	D3DXVECTOR3 eye(0.0f, 0.0f, 200.f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &pos, &up);
 
+	D3DXMATRIX matTemp;
 	D3DXMatrixTranspose(&matTemp, &(m_mtWorld*m_mtView*m_mtProj));
 	m_spDevice->SetVertexShaderConstant(8, &matTemp, 4);
 	

@@ -5,7 +5,13 @@
 #include "d3dutil.h"
 #include <memory>
 
-#define EARTH_FVF D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX0 | D3DFVF_TEXCOORDSIZE3(D3DFVF_TEXTUREFORMAT3)
+struct ShaderVertex
+{
+	FLOAT x, y, z;
+	FLOAT u, v;
+	FLOAT nx, ny, nz;
+	FLOAT bx, by, bz;
+};
 
 class RacorX6 : public CD3DApplication 
 {
@@ -40,6 +46,10 @@ private:
 	std::shared_ptr<IDirect3DTexture8> m_spNormalMap;
 
 	std::shared_ptr<ID3DXMesh> m_spEarthMesh;
+
+	std::shared_ptr<IDirect3DVertexBuffer8> m_spVB;
+	std::shared_ptr<IDirect3DIndexBuffer8> m_spIB;
+	int m_iNumTriangles, m_iNumVertices;
 
 	DWORD m_dwVSH;
 	DWORD m_dwPSH;
