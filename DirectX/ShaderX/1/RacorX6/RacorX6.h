@@ -8,9 +8,14 @@
 struct ShaderVertex
 {
 	FLOAT x, y, z;
-	FLOAT u, v;
 	FLOAT nx, ny, nz;
+	FLOAT u, v;
 	FLOAT bx, by, bz;
+};
+
+struct SimpleVertex
+{
+	FLOAT x, y, z;
 };
 
 class RacorX6 : public CD3DApplication 
@@ -49,12 +54,21 @@ private:
 
 	std::shared_ptr<IDirect3DVertexBuffer8> m_spVB;
 	std::shared_ptr<IDirect3DIndexBuffer8> m_spIB;
+
+	std::shared_ptr<IDirect3DVertexBuffer8> m_spVBNormal;
+	std::shared_ptr<IDirect3DIndexBuffer8> m_spIBNormal;
+	std::shared_ptr<IDirect3DVertexBuffer8> m_spVBTangent;
+	std::shared_ptr<IDirect3DIndexBuffer8> m_spIBTangent;
+
 	int m_iNumTriangles, m_iNumVertices;
 
 	DWORD m_dwVSH;
 	DWORD m_dwPSH;
 	DWORD m_dwPSHBump;
 	DWORD m_dwPSHBump14;
+
+	DWORD m_dwVSHLine;
+	DWORD m_dwVPHLine;
 
 	D3DXMATRIX m_mtWorld;
 	D3DXMATRIX m_mtView;

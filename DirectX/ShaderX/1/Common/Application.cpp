@@ -128,7 +128,7 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 {
 	HRESULT hr;
 	LPD3DXMESH pSphere, pClone, pOut;
-	hr = D3DXCreateSphere(pDevice, 100.0f, 100, 100, &pSphere, NULL);
+	hr = D3DXCreateSphere(pDevice, 100.0f, 20, 20, &pSphere, NULL);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"D3DXCreateSphere Failed!", L"Error", 0);

@@ -117,6 +117,36 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	m_iNumTriangles = m_spEarthMesh->GetNumFaces();
 	m_iNumVertices = m_spEarthMesh->GetNumVertices();
 
+	IDirect3DVertexBuffer8* vbNormal;
+	hr = m_spDevice->CreateVertexBuffer(m_iNumVertices * 2 * sizeof SimpleVertex, D3DUSAGE_WRITEONLY, D3DFVF_XYZ, D3DPOOL_MANAGED, &vbNormal);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreateVertexBuffer failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	hr = CreateNormal<ShaderVertex, SimpleVertex>(m_spVB.get(), vbNormal);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreateNormal failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	m_spVBNormal.reset(vbNormal, [](IDirect3DVertexBuffer8* vbNormal){vbNormal->Release(); });
+
+	IDirect3DVertexBuffer8* vbTangent;
+	hr = m_spDevice->CreateVertexBuffer(m_iNumVertices * 2 * sizeof SimpleVertex, D3DUSAGE_WRITEONLY, D3DFVF_XYZ, D3DPOOL_MANAGED, &vbTangent);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreateVertexBuffer failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	hr = CreateTangent<ShaderVertex, SimpleVertex>(m_spVB.get(), vbTangent);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreateTangent failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	m_spVBTangent.reset(vbTangent, [](IDirect3DVertexBuffer8* vbTangent){vbTangent->Release(); });
+
 	DWORD dwDecl[MAX_FVF_DECL_SIZE];
 	ZeroMemory(dwDecl, sizeof dwDecl);
 	pSphere->GetDeclaration(dwDecl);
@@ -158,7 +188,23 @@ HRESULT RacorX6::RestoreDeviceObjects()
 			return E_FAIL;
 		}
 	}
-
+	DWORD declLine[] = {
+		D3DVSD_STREAM(0),
+		D3DVSD_REG(D3DVSDE_POSITION, D3DVSDT_FLOAT3),
+		D3DVSD_END()
+	};
+	hr = CreateVSFromBinFile(m_spDevice.get(), declLine, L"line.vso", &m_dwVSHLine);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreateVSFromBinFile failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	hr = CreatePSFromBinFile(m_spDevice.get(), L"line.pso", &m_dwVPHLine);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreatePSFromBinFile failed!", L"Error", 0);
+		return E_FAIL;
+	}
 
 	IDirect3DTexture8* color_map;
 	hr = D3DXCreateTextureFromFile(m_spDevice.get(), _T("earth.bmp"), &color_map);
@@ -265,6 +311,15 @@ HRESULT RacorX6::Render()
 		m_spDevice->SetStreamSource(0, m_spVB.get(), sizeof ShaderVertex);
 		m_spDevice->SetIndices(m_spIB.get(), 0);
 		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_iNumVertices, 0, m_iNumTriangles);
+		//draw lines
+		m_spDevice->SetTexture(0, 0);
+		m_spDevice->SetTexture(1, 0);
+		m_spDevice->SetVertexShader(m_dwVSHLine);
+		m_spDevice->SetPixelShader(m_dwVPHLine);
+		//m_spDevice->SetStreamSource(0, m_spVBNormal.get(), sizeof SimpleVertex);
+		m_spDevice->SetStreamSource(0, m_spVBTangent.get(), sizeof SimpleVertex);
+		m_spDevice->DrawPrimitive(D3DPT_LINELIST, 0, m_iNumVertices);
+
 		hr = m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);
@@ -275,7 +330,7 @@ HRESULT RacorX6::Render()
 HRESULT RacorX6::FrameMove(FLOAT delta)
 {
 	D3DXMATRIX Ry;
-	D3DXMatrixRotationZ(&Ry, 0.01f);
+	D3DXMatrixRotationY(&Ry, 0.01f);
 	D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, &Ry);
 	//D3DXMatrixTranslation(&m_mtWorld, -m_vObjectCenter.x, -m_vObjectCenter.x, -m_vObjectCenter.x);
 	//D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, m_ArcBall.GetTranslationMatrix());

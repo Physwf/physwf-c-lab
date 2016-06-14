@@ -35,8 +35,8 @@ protected:
 	virtual HRESULT CreatePSFromBinFile(IDirect3DDevice8* device, TCHAR* strVSPath, DWORD* m_dwPS);
 
 	virtual HRESULT CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice,LPD3DXMESH* ppSphere);
-	template<T1, T2> virtual HRESULT CreateNormal(IDirect3DVertexBuffer8* vbIn, IDirect3DVertexBuffer8** vbOut, DWORD* numPrimitives);
-	template<T1, T2> virtual HRESULT CreateTangent(IDirect3DVertexBuffer8* vbIn, IDirect3DVertexBuffer8** vbOut, DWORD* numPrimitives);
+	template<typename T1, typename T2> HRESULT CreateNormal(IDirect3DVertexBuffer8* vbIn, IDirect3DVertexBuffer8* vbOut);
+	template<typename T1, typename T2> HRESULT CreateTangent(IDirect3DVertexBuffer8* vbIn, IDirect3DVertexBuffer8* vbOut);
 	virtual LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
 	BOOL InitInstance(HINSTANCE, int);
@@ -58,18 +58,17 @@ private:
 
 static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-template<T1,T2> HRESULT CD3DApplication::CreateNormal(IDirect3DVertexBuffer8* pvbIn, IDirect3DVertexBuffer8** ppvbOut, DWORD* pNumPrimitives)
+template<typename T1, typename T2> HRESULT CD3DApplication::CreateNormal(IDirect3DVertexBuffer8* pvbIn, IDirect3DVertexBuffer8* pvbOut)
 {
-	D3DVERTEXBUFFER_DESC desc;
-	pvbIn->GetDesc(&desc);
-	IDirect3DVertexBuffer8* pvbOut = *ppvbOut;
+	D3DVERTEXBUFFER_DESC descIn,descOut;
+	pvbIn->GetDesc(&descIn);
+	pvbOut->GetDesc(&descOut);
 	T1* vertexIn;
 	T2* vertexOut;
-	if (SUCCEEDED(pvbIn->Lock(0, desc.Size, reinterpret_cast<BYTE**>&vertexIn, 0)))
+	if (SUCCEEDED(pvbIn->Lock(0, descIn.Size, reinterpret_cast<BYTE**>(&vertexIn), 0)))
 	{
-		DWORD numVerticesIn = desc.Size / (sizeof T1);
-		DWORD numVerticesOut = numVerticesIn * 2;
-		if (SUCCEEDED(pvbOut->Lock(0, numVerticesOut*(sizeof T2), reinterpret_cast<BYTE**>&vertexOut, 0)))
+		DWORD numVerticesIn = descIn.Size / (sizeof T1);
+		if (SUCCEEDED(pvbOut->Lock(0, descOut.Size, reinterpret_cast<BYTE**>(&vertexOut), 0)))
 		{
 			for (DWORD i = 0; i < numVerticesIn; ++i)
 			{
@@ -84,23 +83,24 @@ template<T1,T2> HRESULT CD3DApplication::CreateNormal(IDirect3DVertexBuffer8* pv
 
 				++vertexIn;
 			}
+			pvbOut->Unlock();
 		}
-			
+		pvbIn->Unlock();
 	}
+	return S_OK;
 }
 
-template<T1, T2> HRESULT CD3DApplication::CreateTangent(IDirect3DVertexBuffer8* pvbIn, IDirect3DVertexBuffer8** ppvbOut, DWORD* pNumPrimitives)
+template<typename T1, typename T2> HRESULT CD3DApplication::CreateTangent(IDirect3DVertexBuffer8* pvbIn, IDirect3DVertexBuffer8* pvbOut)
 {
-	D3DVERTEXBUFFER_DESC desc;
-	pvbIn->GetDesc(&desc);
-	IDirect3DVertexBuffer8* pvbOut = *ppvbOut;
+	D3DVERTEXBUFFER_DESC descIn, descOut;
+	pvbIn->GetDesc(&descIn);
+	pvbOut->GetDesc(&descOut);
 	T1* vertexIn;
 	T2* vertexOut;
-	if (SUCCEEDED(pvbIn->Lock(0, desc.Size, reinterpret_cast<BYTE**>&vertexIn, 0)))
+	if (SUCCEEDED(pvbIn->Lock(0, descIn.Size, reinterpret_cast<BYTE**>(&vertexIn), 0)))
 	{
-		DWORD numVerticesIn = desc.Size / (sizeof T1);
-		DWORD numVerticesOut = numVerticesIn * 2;
-		if (SUCCEEDED(pvbOut->Lock(0, numVerticesOut*(sizeof T2), reinterpret_cast<BYTE**>&vertexOut, 0)))
+		DWORD numVerticesIn = descIn.Size / (sizeof T1);
+		if (SUCCEEDED(pvbOut->Lock(0, descOut.Size, reinterpret_cast<BYTE**>(&vertexOut), 0)))
 		{
 			for (DWORD i = 0; i < numVerticesIn; ++i)
 			{
@@ -108,9 +108,9 @@ template<T1, T2> HRESULT CD3DApplication::CreateTangent(IDirect3DVertexBuffer8* 
 				vertexOut->y = vertexIn->y;
 				vertexOut->z = vertexIn->z;
 				++vertexOut;
-				vertexOut->x = vertexIn->x + vertexIn->bx * 10;
-				vertexOut->y = vertexIn->y + vertexIn->by * 10;
-				vertexOut->z = vertexIn->z + vertexIn->bz * 10;
+				vertexOut->x = vertexIn->x + vertexIn->bx * 20;
+				vertexOut->y = vertexIn->y + vertexIn->by * 20;
+				vertexOut->z = vertexIn->z + vertexIn->bz * 20;
 				++vertexOut;
 
 				++vertexIn;
@@ -119,5 +119,6 @@ template<T1, T2> HRESULT CD3DApplication::CreateTangent(IDirect3DVertexBuffer8* 
 		}
 		pvbIn->Unlock();
 	}
+	return S_OK;
 }
 //#endif

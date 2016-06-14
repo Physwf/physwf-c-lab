@@ -5,4 +5,6 @@ nvasm.exe -x diff.psh diff.pso
 nvasm.exe -x diffBump.psh diffBump.pso
 set PATH=%PATH%;C:\DXSDK\bin\DXUtils
 psa.exe diffBump14.psh /FodiffBump14.pso
+nvasm.exe -x line.vsh line.vso
+nvasm.exe -x line.psh line.pso
 pause
