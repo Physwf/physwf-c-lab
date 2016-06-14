@@ -68,4 +68,6 @@ private:
 	char m_bKey[256];
 
 	bool m_bPS14Avaliable{ true };
+	bool m_bBump{ FALSE };
+	bool m_bPixelShader{ FALSE };
 };

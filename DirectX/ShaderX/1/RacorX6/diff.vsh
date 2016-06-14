@@ -18,7 +18,7 @@ m3x3 r7, v8, c0 ;W
 
 ;V
 mul r0, r5.zxyw, -r7.yzxw
-mad r6, r5.yzxw, -r7.zxyw, -r0
+mad r6, r5.yzxw, r7.zxyw, r0
 
 ;transform light to texture space
 dp3 r8.x, r5, -c12

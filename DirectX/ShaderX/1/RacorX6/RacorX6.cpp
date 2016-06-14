@@ -44,12 +44,12 @@ HRESULT RacorX6::OneTimeSceneInit()
 	m_spD3D.reset(d3d, [](IDirect3D8* d3d) { d3d->Release(); });
 	m_spD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_D3DCaps);
 
-	D3DXMatrixPerspectiveFovLH(&m_mtProj, D3DX_PI*0.5, static_cast<float>(m_iWidth) / m_iHeight, 1.0f, 1000.0f);
+	D3DXMatrixPerspectiveFovLH(&m_mtProj,0.55f, static_cast<float>(m_iWidth) / m_iHeight, 1.0f, 10000.0f);
 
 	//D3DXMatrixTranslation(&m_mtWorld, -m_vObjectCenter.x, -m_vObjectCenter.x, -m_vObjectCenter.x);
-
-	//m_ArcBall.SetWindow(m_iWidth, m_iHeight, 0.85f);
-	//m_ArcBall.SetRadius(m_fObjectRadius);
+	D3DXMatrixIdentity(&m_mtWorld);
+	m_ArcBall.SetWindow(m_iWidth, m_iHeight, 0.85f);
+	m_ArcBall.SetRadius(m_fObjectRadius);
 
 	m_Viewport = { 0, 0, m_iWidth, m_iHeight };
 
@@ -142,9 +142,16 @@ HRESULT RacorX6::RestoreDeviceObjects()
 		return E_FAIL;
 	}
 
+	hr = CreatePSFromBinFile(m_spDevice.get(), L"diffBump.pso", &m_dwPSHBump);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CreatePSFromBinFile failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
 	if (m_bPS14Avaliable)
 	{
-		hr = CreatePSFromBinFile(m_spDevice.get(), L"diffBump14.pso", &m_dwPSHBump);
+		hr = CreatePSFromBinFile(m_spDevice.get(), L"diffBump14.pso", &m_dwPSHBump14);
 		if (FAILED(hr))
 		{
 			MessageBox(m_hWnd, L"CreatePSFromBinFile failed!", L"Error", 0);
@@ -200,7 +207,7 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	m_spDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	m_spDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
-	m_spDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_FLAT);
+	//m_spDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	//m_spDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
 
@@ -215,7 +222,8 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	D3DXVECTOR4 vLight(0.0f, 1.0f, 0.0f, 0.0f);
+	D3DXVECTOR4 vLight(1.0f, 0.0f, 0.0f, 0.0f);
+	D3DXVec4Normalize(&vLight, &vLight);
 	m_spDevice->SetVertexShaderConstant(12, &vLight, 1);
 
 	D3DXVECTOR4 half(0.5f, 0.5f, 0.5f, 0.5f);
@@ -236,13 +244,27 @@ HRESULT RacorX6::Render()
 	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff, 1.0f, 0);
 	if (SUCCEEDED(m_spDevice->BeginScene())) {
 		hr = m_spDevice->SetTexture(0, m_spColorMap.get());
-		//hr = m_spDevice->SetTexture(1, m_spNormalMap.get());
 		hr = m_spDevice->SetVertexShader(m_dwVSH);
-		hr = m_spDevice->SetPixelShader(m_dwPSH);
+		if (m_bBump)
+		{
+			hr = m_spDevice->SetTexture(1, m_spNormalMap.get());
+			if (m_bPixelShader)
+			{
+				hr = m_spDevice->SetPixelShader(m_dwPSHBump14);
+			}
+			else
+			{
+				hr = m_spDevice->SetPixelShader(m_dwPSHBump);
+			}
+		}
+		else
+		{
+			hr = m_spDevice->SetPixelShader(m_dwPSH);
+		}
 		//hr = m_spEarthMesh->DrawSubset(0);
 		m_spDevice->SetStreamSource(0, m_spVB.get(), sizeof ShaderVertex);
 		m_spDevice->SetIndices(m_spIB.get(), 0);
-		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_iNumVertices, 0, m_iNumVertices);
+		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_iNumVertices, 0, m_iNumTriangles);
 		hr = m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);
@@ -253,29 +275,33 @@ HRESULT RacorX6::Render()
 HRESULT RacorX6::FrameMove(FLOAT delta)
 {
 	D3DXMATRIX Ry;
-	//D3DXMatrixRotationY(&Ry, 0.1);
-	//D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, &Ry);
-	//D3DXMatrixTranslation(&m_mtWorld, 1.0f, 0.0f, 0.0f);
+	D3DXMatrixRotationZ(&Ry, 0.01f);
+	D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, &Ry);
+	//D3DXMatrixTranslation(&m_mtWorld, -m_vObjectCenter.x, -m_vObjectCenter.x, -m_vObjectCenter.x);
 	//D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, m_ArcBall.GetTranslationMatrix());
 	//D3DXMatrixMultiply(&m_mtWorld, &m_mtWorld, m_ArcBall.GetRotationMatrix());
 
 	//m_spDevice->SetVertexShaderConstant(TRASPOSED_WORLD_MATRIX, &m_mtWorld, 4);
-	D3DXMatrixIdentity(&m_mtWorld);
+	//D3DXMatrixIdentity(&m_mtWorld);
 	
 	D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 eye(0.0f, 0.0f, 200.f);
+	D3DXVECTOR3 eye(0.0f, 0.0f, 500.f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &pos, &up);
 
 	D3DXMATRIX matTemp;
-	D3DXMatrixTranspose(&matTemp, &(m_mtWorld*m_mtView*m_mtProj));
-	m_spDevice->SetVertexShaderConstant(8, &matTemp, 4);
-	
 	D3DXMatrixTranspose(&matTemp, &m_mtWorld);
 	m_spDevice->SetVertexShaderConstant(0, &matTemp, 4);
 
-	//m_spDevice->SetVertexShaderConstant(EYE_VECTOR, eye, 1);
+	matTemp = m_mtWorld*m_mtView*m_mtProj;
+	D3DXMatrixTranspose(&matTemp, &(m_mtWorld*m_mtView*m_mtProj));
+	m_spDevice->SetVertexShaderConstant(8, &matTemp, 4);
+	
+	
 
+	//m_spDevice->SetVertexShaderConstant(EYE_VECTOR, eye, 1);
+	if (m_bKey['B']) { m_bKey['B'] = 0; m_bBump = !m_bBump; };
+	if (m_bKey['P'] && m_bPS14Avaliable) { m_bKey['P'] = 0; m_bPixelShader = !m_bPixelShader; };
 	return S_OK;
 }
 
