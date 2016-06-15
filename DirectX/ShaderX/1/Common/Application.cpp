@@ -128,7 +128,7 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 {
 	HRESULT hr;
 	LPD3DXMESH pSphere, pClone, pOut;
-	hr = D3DXCreateSphere(pDevice, 100.0f, 20, 20, &pSphere, NULL);
+	hr = D3DXCreateSphere(pDevice, 1.0f, 40, 40, &pSphere, NULL);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"D3DXCreateSphere Failed!", L"Error", 0);
@@ -164,8 +164,8 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 		{
 			//D3DXVECTOR3 temp;
 			//D3DXVec3Normalize(&temp, &pVertex->normal);
-			pVertex->u = atan2f(-pVertex->nz, -pVertex->nx) / (2.0f*D3DX_PI) + 0.5f;
-			pVertex->v = 0.5f - asinf(-pVertex->ny) / D3DX_PI;
+			pVertex->u = atan2f(pVertex->ny, pVertex->nx) / (2.0f*D3DX_PI) + 0.5f;
+			pVertex->v = 0.5f - asinf(-pVertex->nz) / D3DX_PI;
 			std::stringstream log;
 			log << i << ":\n";
 			log << "x:" << pVertex->x << "\t\ty:" << pVertex->y << "\t\tz:" << pVertex->z << "\n";

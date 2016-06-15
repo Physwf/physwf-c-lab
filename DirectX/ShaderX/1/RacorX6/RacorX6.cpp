@@ -48,6 +48,7 @@ HRESULT RacorX6::OneTimeSceneInit()
 
 	//D3DXMatrixTranslation(&m_mtWorld, -m_vObjectCenter.x, -m_vObjectCenter.x, -m_vObjectCenter.x);
 	D3DXMatrixIdentity(&m_mtWorld);
+	D3DXMatrixRotationX(&m_mtWorld, D3DX_PI / 2);
 	m_ArcBall.SetWindow(m_iWidth, m_iHeight, 0.85f);
 	m_ArcBall.SetRadius(m_fObjectRadius);
 
@@ -105,17 +106,9 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	}
 	m_spDevice.reset(device, [](IDirect3DDevice8* device) { device->Release(); });
 
-	LPD3DXMESH pSphere;
-	hr = CreateSphereMesh(m_spDevice.get(), &pSphere);
-	m_spEarthMesh.reset(pSphere, [](LPD3DXMESH sphere){ sphere->Release(); });
-	IDirect3DIndexBuffer8* ib;
-	m_spEarthMesh->GetIndexBuffer(&ib);
-	m_spIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
-	IDirect3DVertexBuffer8* vb;
-	m_spEarthMesh->GetVertexBuffer(&vb);
-	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
-	m_iNumTriangles = m_spEarthMesh->GetNumFaces();
-	m_iNumVertices = m_spEarthMesh->GetNumVertices();
+	CreateSphere();
+
+	//LoadXFile("sphere.x");
 
 	IDirect3DVertexBuffer8* vbNormal;
 	hr = m_spDevice->CreateVertexBuffer(m_iNumVertices * 2 * sizeof SimpleVertex, D3DUSAGE_WRITEONLY, D3DFVF_XYZ, D3DPOOL_MANAGED, &vbNormal);
@@ -147,9 +140,9 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	}
 	m_spVBTangent.reset(vbTangent, [](IDirect3DVertexBuffer8* vbTangent){vbTangent->Release(); });
 
-	DWORD dwDecl[MAX_FVF_DECL_SIZE];
-	ZeroMemory(dwDecl, sizeof dwDecl);
-	pSphere->GetDeclaration(dwDecl);
+	//DWORD dwDecl[MAX_FVF_DECL_SIZE];
+	//ZeroMemory(dwDecl, sizeof dwDecl);
+	//pSphere->GetDeclaration(dwDecl);
 	DWORD decl[] = {
 		D3DVSD_STREAM(0),
 		D3DVSD_REG(D3DVSDE_POSITION, D3DVSDT_FLOAT3),
@@ -158,7 +151,7 @@ HRESULT RacorX6::RestoreDeviceObjects()
 		D3DVSD_REG(D3DVSDE_TEXCOORD1, D3DVSDT_FLOAT3),
 		D3DVSD_END()
 	};
-	hr = CreateVSFromBinFile(m_spDevice.get(), dwDecl, L"diff.vso", &m_dwVSH);
+	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"diff.vso", &m_dwVSH);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"CreateVSFromBinFile failed!", L"Error", 0);
@@ -268,7 +261,7 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	D3DXVECTOR4 vLight(1.0f, 0.0f, 0.0f, 0.0f);
+	D3DXVECTOR4 vLight(0.0f, -1.0f, 0.0f, 0.0f);
 	D3DXVec4Normalize(&vLight, &vLight);
 	m_spDevice->SetVertexShaderConstant(12, &vLight, 1);
 
@@ -287,7 +280,7 @@ HRESULT RacorX6::DeleteDeviceObjects()
 HRESULT RacorX6::Render()
 {
 	HRESULT hr;
-	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff, 1.0f, 0);
+	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 	if (SUCCEEDED(m_spDevice->BeginScene())) {
 		hr = m_spDevice->SetTexture(0, m_spColorMap.get());
 		hr = m_spDevice->SetVertexShader(m_dwVSH);
@@ -312,14 +305,25 @@ HRESULT RacorX6::Render()
 		m_spDevice->SetIndices(m_spIB.get(), 0);
 		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_iNumVertices, 0, m_iNumTriangles);
 		//draw lines
-		m_spDevice->SetTexture(0, 0);
-		m_spDevice->SetTexture(1, 0);
-		m_spDevice->SetVertexShader(m_dwVSHLine);
-		m_spDevice->SetPixelShader(m_dwVPHLine);
-		//m_spDevice->SetStreamSource(0, m_spVBNormal.get(), sizeof SimpleVertex);
-		m_spDevice->SetStreamSource(0, m_spVBTangent.get(), sizeof SimpleVertex);
-		m_spDevice->DrawPrimitive(D3DPT_LINELIST, 0, m_iNumVertices);
-
+		if (m_bShowTangent || m_bShowNormal)
+		{
+			m_spDevice->SetTexture(0, 0);
+			m_spDevice->SetTexture(1, 0);
+			m_spDevice->SetVertexShader(m_dwVSHLine);
+			m_spDevice->SetPixelShader(m_dwVPHLine);
+			if (m_bShowTangent)
+			{
+				m_spDevice->SetStreamSource(0, m_spVBTangent.get(), sizeof SimpleVertex);
+				m_spDevice->DrawPrimitive(D3DPT_LINELIST, 0, m_iNumVertices);
+			}
+			if (m_bShowNormal)
+			{
+				m_spDevice->SetStreamSource(0, m_spVBNormal.get(), sizeof SimpleVertex);
+				m_spDevice->DrawPrimitive(D3DPT_LINELIST, 0, m_iNumVertices);
+			}
+		}
+		
+		
 		hr = m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);
@@ -340,7 +344,7 @@ HRESULT RacorX6::FrameMove(FLOAT delta)
 	//D3DXMatrixIdentity(&m_mtWorld);
 	
 	D3DXVECTOR3 pos(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 eye(0.0f, 0.0f, 500.f);
+	D3DXVECTOR3 eye(0.0f, 0.0f, -5.f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &pos, &up);
 
@@ -357,6 +361,8 @@ HRESULT RacorX6::FrameMove(FLOAT delta)
 	//m_spDevice->SetVertexShaderConstant(EYE_VECTOR, eye, 1);
 	if (m_bKey['B']) { m_bKey['B'] = 0; m_bBump = !m_bBump; };
 	if (m_bKey['P'] && m_bPS14Avaliable) { m_bKey['P'] = 0; m_bPixelShader = !m_bPixelShader; };
+	if (m_bKey['N']) { m_bKey['N'] = 0; m_bShowNormal = !m_bShowNormal; };
+	if (m_bKey['T']) { m_bKey['T'] = 0; m_bShowTangent = !m_bShowTangent; };
 	return S_OK;
 }
 
@@ -384,5 +390,62 @@ HRESULT CALLBACK RacorX6::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPA
 		break;
 	}
 	return CD3DApplication::MessageHandler(hwnd, msg, wParam, lParam);
+}
+
+HRESULT RacorX6::CreateSphere()
+{
+	HRESULT hr;
+	LPD3DXMESH pSphere;
+	hr = CreateSphereMesh(m_spDevice.get(), &pSphere);
+	m_spEarthMesh.reset(pSphere, [](LPD3DXMESH sphere){ sphere->Release(); });
+	IDirect3DIndexBuffer8* ib;
+	m_spEarthMesh->GetIndexBuffer(&ib);
+	m_spIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	IDirect3DVertexBuffer8* vb;
+	m_spEarthMesh->GetVertexBuffer(&vb);
+	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+	m_iNumTriangles = m_spEarthMesh->GetNumFaces();
+	m_iNumVertices = m_spEarthMesh->GetNumVertices();
+	return hr;
+}
+
+HRESULT RacorX6::LoadXFile(const LPSTR name)
+{
+	HRESULT hr;
+	LPD3DXMESH pMesh, pClone;
+
+	if (FAILED(D3DXLoadMeshFromX(name, D3DXMESH_SYSTEMMEM, m_spDevice.get(), NULL, NULL, NULL, &pMesh)))
+	{
+		MessageBox(m_hWnd, L"D3DXLoadMeshFromX failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
+	hr = pMesh->CloneMeshFVF(D3DXMESH_MANAGED, D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE3(1), m_spDevice.get(), &pClone);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"CloneMeshFVF failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
+	hr = D3DXComputeTangent(pMesh, 0, pClone, 1, D3DX_COMP_TANGENT_NONE, TRUE, NULL);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXComputeTangent failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
+	IDirect3DIndexBuffer8* ib;
+	hr = pClone->GetIndexBuffer(&ib);
+	m_spIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	IDirect3DVertexBuffer8* vb;
+	hr = pClone->GetVertexBuffer(&vb);
+	m_spVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+
+	m_iNumTriangles = pClone->GetNumFaces();
+	m_iNumVertices = pClone->GetNumVertices();
+
+	pMesh->Release();
+	pClone->Release();
+	return S_OK;
 }
 

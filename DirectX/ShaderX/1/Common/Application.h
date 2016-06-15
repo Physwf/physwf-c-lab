@@ -76,9 +76,9 @@ template<typename T1, typename T2> HRESULT CD3DApplication::CreateNormal(IDirect
 				vertexOut->y = vertexIn->y;
 				vertexOut->z = vertexIn->z;
 				++vertexOut;
-				vertexOut->x = vertexIn->x + vertexIn->nx * 10;
-				vertexOut->y = vertexIn->y + vertexIn->ny * 10;
-				vertexOut->z = vertexIn->z + vertexIn->nz * 10;
+				vertexOut->x = vertexIn->x + vertexIn->nx *  0.3f;
+				vertexOut->y = vertexIn->y + vertexIn->ny *  0.3f;
+				vertexOut->z = vertexIn->z + vertexIn->nz *  0.3f;
 				++vertexOut;
 
 				++vertexIn;
@@ -108,9 +108,9 @@ template<typename T1, typename T2> HRESULT CD3DApplication::CreateTangent(IDirec
 				vertexOut->y = vertexIn->y;
 				vertexOut->z = vertexIn->z;
 				++vertexOut;
-				vertexOut->x = vertexIn->x + vertexIn->bx * 20;
-				vertexOut->y = vertexIn->y + vertexIn->by * 20;
-				vertexOut->z = vertexIn->z + vertexIn->bz * 20;
+				vertexOut->x = vertexIn->x + vertexIn->bx * 0.3f;
+				vertexOut->y = vertexIn->y + vertexIn->by * 0.3f;
+				vertexOut->z = vertexIn->z + vertexIn->bz * 0.3f;
 				++vertexOut;
 
 				++vertexIn;

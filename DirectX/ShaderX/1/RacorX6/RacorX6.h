@@ -38,6 +38,9 @@ protected:
 
 	virtual HRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
+	HRESULT CreateSphere();
+	HRESULT LoadXFile(const LPSTR name);
+private:
 	std::shared_ptr<IDirect3D8> m_spD3D;
 	std::shared_ptr<IDirect3DDevice8> m_spDevice;
 	D3DCAPS8 m_D3DCaps;
@@ -84,4 +87,6 @@ private:
 	bool m_bPS14Avaliable{ true };
 	bool m_bBump{ FALSE };
 	bool m_bPixelShader{ FALSE };
+	bool m_bShowNormal{ FALSE };
+	bool m_bShowTangent{ FALSE };
 };
