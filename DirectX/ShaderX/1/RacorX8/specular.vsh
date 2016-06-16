@@ -21,6 +21,10 @@ mul r2.xyz, r2.xyz, r11.xyz
 ;compute half vector
 add r2.xyz, r2.xyz, -c12
 
+dp3 r11.x, r2.xyz, r2.xyz
+rsq r11.xyz, r11.x
+mul r2.xyz, r2.xyz, r11.xyz
+
 ;compute U,V,W
 m3x3 r5, v8, c0 ;U
 m3x3 r7, v3, c0 ;W

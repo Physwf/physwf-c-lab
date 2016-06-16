@@ -282,7 +282,7 @@ HRESULT RacorX8::RestoreDeviceObjects()
 	m_spDevice->SetTextureStageState(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 	m_spDevice->SetTextureStageState(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	D3DXVECTOR4 vLight(0.0f, -1.0f, 0.0f, 0.0f);
+	D3DXVECTOR4 vLight(0.0f, 0.0f, 1.0f, 0.0f);
 	D3DXVec4Normalize(&vLight, &vLight);
 	m_spDevice->SetVertexShaderConstant(12, &vLight, 1);
 
