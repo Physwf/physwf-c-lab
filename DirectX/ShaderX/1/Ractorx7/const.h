@@ -1,0 +1,6 @@
+#define CLIP_MATRIX 8
+
+#define TRASPOSED_WORLD_MATRIX 0
+
+#define LIGHT_DIR 12
+

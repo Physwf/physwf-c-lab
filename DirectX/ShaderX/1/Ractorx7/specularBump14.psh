@@ -1,0 +1,13 @@
+ps.1.4
+
+texld r0, t0
+texld r1, t0
+
+dp3 r2, r1_bx2, v1_bx2
+
+mul r3, r2, r2
+mul r2, r3, r3
+mul r3, r2, r2
+mul r2, r3, r3
+
+mul r0, r0, r2
