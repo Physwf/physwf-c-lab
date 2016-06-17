@@ -1,0 +1,13 @@
+ps.1.1
+tex t0; color
+tex t1; normal
+
+dp3 r0, t1_bx2, v1_bx2 ; (NxH)
+
+mul r1, r0, r0
+mul r0, r1, r1
+mul r1, r0, r0
+mul r0, r1, r1
+
+dp3 r1, t1_bx2, v0_bx2; (N x L)
+mad r0, t0, r1, r0
