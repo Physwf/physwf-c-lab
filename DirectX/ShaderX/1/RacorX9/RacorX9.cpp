@@ -1,25 +1,26 @@
-#include "RacorX6.h"
+#include "RacorX9.h"
 #include <sstream>
-#include "const.h"
-RacorX6::RacorX6()
+#include <math.h>
+
+RacorX9::RacorX9()
 {
 	m_fObjectRadius = 1.0f;
 	ZeroMemory(m_bKey, 256);
 }
 
-RacorX6::~RacorX6()
+RacorX9::~RacorX9()
 {
 
 }
 
-HRESULT RacorX6::Frame()
+HRESULT RacorX9::Frame()
 {
 	FrameMove(1.1f);
 	Render();
 	return S_OK;
 }
 
-HRESULT RacorX6::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
+HRESULT RacorX9::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Format)
 {
 	if ((dwBehavior & D3DCREATE_HARDWARE_VERTEXPROCESSING) || (D3DCREATE_MIXED_VERTEXPROCESSING))
 	{
@@ -33,7 +34,7 @@ HRESULT RacorX6::ConfirmDevice(D3DCAPS8* pCaps, DWORD dwBehavior, D3DFORMAT Form
 	return S_OK;
 }
 
-HRESULT RacorX6::OneTimeSceneInit()
+HRESULT RacorX9::OneTimeSceneInit()
 {
 	IDirect3D8* d3d = Direct3DCreate8(D3D_SDK_VERSION);
 	if (d3d == nullptr)
@@ -58,7 +59,7 @@ HRESULT RacorX6::OneTimeSceneInit()
 	return S_OK;
 }
 
-HRESULT RacorX6::InitDeviceObjects()
+HRESULT RacorX9::InitDeviceObjects()
 {
 	HRESULT hr;
 
@@ -93,7 +94,7 @@ HRESULT RacorX6::InitDeviceObjects()
 	return S_OK;
 }
 
-HRESULT RacorX6::RestoreDeviceObjects()
+HRESULT RacorX9::RestoreDeviceObjects()
 {
 	HRESULT hr;
 
@@ -106,9 +107,9 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	}
 	m_spDevice.reset(device, [](IDirect3DDevice8* device) { device->Release(); });
 
-	CreateSphere();
+	//CreateSphere();
 
-	//LoadXFile("sphere.x");
+	LoadXFile("sphere.x");
 
 	IDirect3DVertexBuffer8* vbNormal;
 	hr = m_spDevice->CreateVertexBuffer(m_iNumVertices * 2 * sizeof SimpleVertex, D3DUSAGE_WRITEONLY, D3DFVF_XYZ, D3DPOOL_MANAGED, &vbNormal);
@@ -151,21 +152,21 @@ HRESULT RacorX6::RestoreDeviceObjects()
 		D3DVSD_REG(D3DVSDE_TEXCOORD1, D3DVSDT_FLOAT3),
 		D3DVSD_END()
 	};
-	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"diff.vso", &m_dwVSH);
+	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"diff_spec.vso", &m_dwVSHDiffSpec);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"CreateVSFromBinFile failed!", L"Error", 0);
 		return E_FAIL;
 	}
 
-	hr = CreatePSFromBinFile(m_spDevice.get(), L"diff.pso", &m_dwPSH);
+	hr = CreatePSFromBinFile(m_spDevice.get(), L"basic.pso", &m_dwPSHBasic);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"CreatePSFromBinFile failed!", L"Error", 0);
 		return E_FAIL;
 	}
 
-	hr = CreatePSFromBinFile(m_spDevice.get(), L"diffBump.pso", &m_dwPSHBump);
+	hr = CreatePSFromBinFile(m_spDevice.get(), L"diff_spec.pso", &m_dwPSHDiffSpec);
 	if (FAILED(hr))
 	{
 		MessageBox(m_hWnd, L"CreatePSFromBinFile failed!", L"Error", 0);
@@ -174,7 +175,14 @@ HRESULT RacorX6::RestoreDeviceObjects()
 
 	if (m_bPS14Avaliable)
 	{
-		hr = CreatePSFromBinFile(m_spDevice.get(), L"diffBump14.pso", &m_dwPSHBump14);
+		hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"diff_spec14.vso", &m_dwVSHDiffSpec14);
+		if (FAILED(hr))
+		{
+			MessageBox(m_hWnd, L"CreateVSFromBinFile failed!", L"Error", 0);
+			return E_FAIL;
+		}
+
+		hr = CreatePSFromBinFile(m_spDevice.get(), L"diff_spec14.pso", &m_dwPSHDiffSpec14);
 		if (FAILED(hr))
 		{
 			MessageBox(m_hWnd, L"CreatePSFromBinFile failed!", L"Error", 0);
@@ -236,6 +244,52 @@ HRESULT RacorX6::RestoreDeviceObjects()
 		return E_FAIL;
 	}
 	
+	m_spNormalMap->GetLevelDesc(0, &desc);
+
+	IDirect3DTexture8* power;
+	hr = D3DXCreateTexture(m_spDevice.get(), desc.Width, desc.Height, 0, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &power);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXCreateTexture failed!", L"Error", 0);
+		return E_FAIL;
+	}
+	m_spPower.reset(power, [](IDirect3DTexture8* power){ power->Release();  });
+	FLOAT fPower = 16.0f;
+	hr = D3DXFillTexture(power, LightEval, &fPower);
+	if (FAILED(hr))
+	{
+		MessageBox(m_hWnd, L"D3DXFillTexture failed!", L"Error", 0);
+		return E_FAIL;
+	}
+
+	D3DLOCKED_RECT nlr;
+	m_spNormalMap->LockRect(0, &nlr, 0, 0);
+	BYTE* pDst = (BYTE*)nlr.pBits;
+
+	D3DLOCKED_RECT plr;
+	m_spPower->LockRect(0, &plr, 0, 0);
+	BYTE* pDst2 = (BYTE*)plr.pBits;
+
+	for (DWORD y = 0; y < desc.Height;++y)
+	{
+		BYTE* pPixel = pDst;
+		BYTE* pPixel2 = pDst2;
+		for (DWORD x = 0; x < desc.Width; ++x)
+		{
+			*pPixel++;
+			*pPixel++;
+			*pPixel++;
+			*pPixel++ = *pPixel2++;
+			*pPixel2++;
+			*pPixel2++;
+			*pPixel2++;
+		}
+		pDst += nlr.Pitch;
+		pDst2 += plr.Pitch;
+	}
+	m_spPower->UnlockRect(0);
+	m_spNormalMap->UnlockRect(0);
+
 	m_spDevice->SetViewport(&m_Viewport);
 
 	m_spDevice->SetRenderState(D3DRS_DITHERENABLE, TRUE);
@@ -261,7 +315,10 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
 	//m_spDevice->SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
 
-	D3DXVECTOR4 vLight(0.0f, -1.0f, 0.0f, 0.0f);
+	m_spDevice->SetTextureStageState(2, D3DTSS_ADDRESSU, D3DTADDRESS_CLAMP);
+	m_spDevice->SetTextureStageState(2, D3DTSS_ADDRESSV, D3DTADDRESS_CLAMP);
+
+	D3DXVECTOR4 vLight(0.0f, 0.0f, 1.0f, 0.0f);
 	D3DXVec4Normalize(&vLight, &vLight);
 	m_spDevice->SetVertexShaderConstant(12, &vLight, 1);
 
@@ -271,34 +328,36 @@ HRESULT RacorX6::RestoreDeviceObjects()
 	return S_OK;
 }
 
-HRESULT RacorX6::DeleteDeviceObjects()
+HRESULT RacorX9::DeleteDeviceObjects()
 {
 	
 	return S_OK;
 }
 
-HRESULT RacorX6::Render()
+HRESULT RacorX9::Render()
 {
 	HRESULT hr;
 	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 	if (SUCCEEDED(m_spDevice->BeginScene())) {
 		hr = m_spDevice->SetTexture(0, m_spColorMap.get());
-		hr = m_spDevice->SetVertexShader(m_dwVSH);
+		hr = m_spDevice->SetTexture(1, m_spNormalMap.get());
 		if (m_bBump)
 		{
-			hr = m_spDevice->SetTexture(1, m_spNormalMap.get());
 			if (m_bPixelShader)
 			{
-				hr = m_spDevice->SetPixelShader(m_dwPSHBump14);
+				hr = m_spDevice->SetVertexShader(m_dwVSHDiffSpec14);
+				hr = m_spDevice->SetPixelShader(m_dwPSHDiffSpec14);
 			}
 			else
 			{
-				hr = m_spDevice->SetPixelShader(m_dwPSHBump);
+				hr = m_spDevice->SetVertexShader(m_dwVSHDiffSpec);
+				hr = m_spDevice->SetPixelShader(m_dwPSHDiffSpec);
 			}
 		}
 		else
 		{
-			hr = m_spDevice->SetPixelShader(m_dwPSH);
+			hr = m_spDevice->SetVertexShader(m_dwVSHDiffSpec14);
+			hr = m_spDevice->SetPixelShader(m_dwPSHBasic);
 		}
 		//hr = m_spEarthMesh->DrawSubset(0);
 		m_spDevice->SetStreamSource(0, m_spVB.get(), sizeof ShaderVertex);
@@ -331,7 +390,7 @@ HRESULT RacorX6::Render()
 	return S_OK;
 }
 
-HRESULT RacorX6::FrameMove(FLOAT delta)
+HRESULT RacorX9::FrameMove(FLOAT delta)
 {
 	D3DXMATRIX Ry;
 	D3DXMatrixRotationY(&Ry, 0.01f);
@@ -356,7 +415,7 @@ HRESULT RacorX6::FrameMove(FLOAT delta)
 	D3DXMatrixTranspose(&matTemp, &(m_mtWorld*m_mtView*m_mtProj));
 	m_spDevice->SetVertexShaderConstant(8, &matTemp, 4);
 	
-	
+	m_spDevice->SetVertexShaderConstant(24, &eye, 1);
 
 	//m_spDevice->SetVertexShaderConstant(EYE_VECTOR, eye, 1);
 	if (m_bKey['B']) { m_bKey['B'] = 0; m_bBump = !m_bBump; };
@@ -366,12 +425,12 @@ HRESULT RacorX6::FrameMove(FLOAT delta)
 	return S_OK;
 }
 
-HRESULT RacorX6::FinalCleanup()
+HRESULT RacorX9::FinalCleanup()
 {
 	return S_OK;
 }
 
-HRESULT CALLBACK RacorX6::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+HRESULT CALLBACK RacorX9::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	m_ArcBall.HandleMouseMessages(hwnd, msg, wParam, lParam);
 	switch (msg)
@@ -392,7 +451,7 @@ HRESULT CALLBACK RacorX6::MessageHandler(HWND hwnd, UINT msg, WPARAM wParam, LPA
 	return CD3DApplication::MessageHandler(hwnd, msg, wParam, lParam);
 }
 
-HRESULT RacorX6::CreateSphere()
+HRESULT RacorX9::CreateSphere()
 {
 	HRESULT hr;
 	LPD3DXMESH pSphere;
@@ -409,7 +468,7 @@ HRESULT RacorX6::CreateSphere()
 	return hr;
 }
 
-HRESULT RacorX6::LoadXFile(const LPSTR name)
+HRESULT RacorX9::LoadXFile(const LPSTR name)
 {
 	HRESULT hr;
 	LPD3DXMESH pMesh, pClone;
@@ -449,3 +508,11 @@ HRESULT RacorX6::LoadXFile(const LPSTR name)
 	return S_OK;
 }
 
+void LightEval(D3DXVECTOR4 *col, D3DXVECTOR2 *input, D3DXVECTOR2 *sampleSize, void *pfPower)
+{
+	float fPower = (float)pow(input->y, *(float*)pfPower);
+	col->x = fPower;
+	col->y = fPower;
+	col->z = fPower;
+	col->w = input->x;
+}

@@ -1,0 +1,4 @@
+ps.1.1
+def c0, 0.0, 0.0, 0.0, 0.0
+tex t0	 //sample texture
+mov r0, t0

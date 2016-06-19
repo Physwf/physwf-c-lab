@@ -18,11 +18,13 @@ struct SimpleVertex
 	FLOAT x, y, z;
 };
 
-class RacorX6 : public CD3DApplication 
+void LightEval(D3DXVECTOR4 *cool, D3DXVECTOR2 *input, D3DXVECTOR2 *sampleSize, void *pfPower);
+
+class RacorX8 : public CD3DApplication 
 {
 public:
-	RacorX6();
-	~RacorX6();
+	RacorX8();
+	~RacorX8();
 
 	virtual HRESULT Frame();
 
@@ -40,6 +42,7 @@ protected:
 private:
 	HRESULT CreateSphere();
 	HRESULT LoadXFile(const LPSTR name);
+
 private:
 	std::shared_ptr<IDirect3D8> m_spD3D;
 	std::shared_ptr<IDirect3DDevice8> m_spDevice;
@@ -52,6 +55,7 @@ private:
 	std::shared_ptr<IDirect3DTexture8> m_spColorMap;
 	std::shared_ptr<IDirect3DTexture8> m_spHeightMap;
 	std::shared_ptr<IDirect3DTexture8> m_spNormalMap;
+	std::shared_ptr<IDirect3DTexture8> m_spPower;
 
 	std::shared_ptr<ID3DXMesh> m_spEarthMesh;
 

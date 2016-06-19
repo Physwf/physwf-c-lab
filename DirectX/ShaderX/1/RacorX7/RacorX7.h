@@ -18,11 +18,11 @@ struct SimpleVertex
 	FLOAT x, y, z;
 };
 
-class RacorX6 : public CD3DApplication 
+class RacorX7 : public CD3DApplication 
 {
 public:
-	RacorX6();
-	~RacorX6();
+	RacorX7();
+	~RacorX7();
 
 	virtual HRESULT Frame();
 

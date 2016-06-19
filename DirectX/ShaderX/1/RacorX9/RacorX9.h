@@ -18,11 +18,13 @@ struct SimpleVertex
 	FLOAT x, y, z;
 };
 
-class RacorX6 : public CD3DApplication 
+void LightEval(D3DXVECTOR4 *cool, D3DXVECTOR2 *input, D3DXVECTOR2 *sampleSize, void *pfPower);
+
+class RacorX9 : public CD3DApplication 
 {
 public:
-	RacorX6();
-	~RacorX6();
+	RacorX9();
+	~RacorX9();
 
 	virtual HRESULT Frame();
 
@@ -40,6 +42,7 @@ protected:
 private:
 	HRESULT CreateSphere();
 	HRESULT LoadXFile(const LPSTR name);
+
 private:
 	std::shared_ptr<IDirect3D8> m_spD3D;
 	std::shared_ptr<IDirect3DDevice8> m_spDevice;
@@ -52,6 +55,7 @@ private:
 	std::shared_ptr<IDirect3DTexture8> m_spColorMap;
 	std::shared_ptr<IDirect3DTexture8> m_spHeightMap;
 	std::shared_ptr<IDirect3DTexture8> m_spNormalMap;
+	std::shared_ptr<IDirect3DTexture8> m_spPower;
 
 	std::shared_ptr<ID3DXMesh> m_spEarthMesh;
 
@@ -65,10 +69,11 @@ private:
 
 	int m_iNumTriangles, m_iNumVertices;
 
-	DWORD m_dwVSH;
-	DWORD m_dwPSH;
-	DWORD m_dwPSHBump;
-	DWORD m_dwPSHBump14;
+	DWORD m_dwVSHDiffSpec;
+	DWORD m_dwVSHDiffSpec14;
+	DWORD m_dwPSHBasic;
+	DWORD m_dwPSHDiffSpec;
+	DWORD m_dwPSHDiffSpec14;
 
 	DWORD m_dwVSHLine;
 	DWORD m_dwVPHLine;
