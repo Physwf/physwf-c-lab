@@ -18,6 +18,10 @@ bool d3d::InitD3D(HWND hwnd, int width, int height, bool windowed, D3DDEVTYPE de
 		vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 	}
 
+	if (caps.VertexShaderVersion < D3DVS_VERSION(2, 0))
+	{
+		return false;
+	}
 	D3DPRESENT_PARAMETERS d3dpp;
 	::ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
 	d3dpp.BackBufferWidth = width;

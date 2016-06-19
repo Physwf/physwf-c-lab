@@ -5,6 +5,9 @@
 
 extern IDirect3DDevice9* Device;
 
+const int Width = 640;
+const int Height = 480;
+
 bool Setup();
 
 void Cleanup();

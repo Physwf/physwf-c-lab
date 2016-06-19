@@ -1,0 +1,32 @@
+matrix WorldViewProj;
+matrix World;
+vector Material;
+vector DirLight;
+const vector ambient = {1.0, 0.0, 0.0, 1.0};
+
+struct VS_INPUT
+{
+	vector position:POSITION;
+	vector normal:NORMAL;
+};
+
+struct VS_OUTPUT
+{
+	vector position:POSITION;
+	vector color:COLOR;
+};
+
+VS_OUTPUT Main(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+
+	output.position = mul(input.position,WorldViewProj);
+
+	vector normal = mul(input.normal,World);
+
+	float nxl = (dot(normal,-DirLight));
+	
+	output.color = Material * nxl;
+
+	return output;
+}
