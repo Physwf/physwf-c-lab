@@ -1,0 +1,36 @@
+matrix WorldViewProj;
+matrix World;
+vector DirLight;
+vector Color;
+
+struct VS_INPUT
+{
+	vector vPosition:POSITION;
+	vector vNormal:NORMAL;
+};
+
+struct VS_OUTPUT
+{
+	vector vClipPosition:POSITION;
+	vector uvCoords:TEXCOORD;
+	vector cColor:Color;
+
+};
+
+VS_OUTPUT Main(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+
+	output.vClipPosition = mul(input.vPosition,WorldViewProj);
+	
+	vector normal = mul(input.vNormal,World);
+	
+	float s = saturate( dot(normal,DirLight) );
+
+	output.uvCoords.x = s;
+	output.uvCoords.y = 0.5f;
+
+	output.color = Color;
+
+	return output;
+}

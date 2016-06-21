@@ -6,6 +6,15 @@ IDirect3DDevice9* Device;
 ID3DXMesh* pMesh;
 IDirect3DVertexBuffer9* pEdges;
 IDirect3DIndexBuffer9* pEdgeIndices;
+IDirect3DTexture9* pBrightTexture;
+IDirect3DVertexShader9* pToonSH;
+ID3DXConstantTable* pToonConst;
+IDirect3DVertexShader9* pEdgeSH;
+ID3DXConstantTable* pEdgeConst;
+IDirect3DVertexDeclaration9* pToonDecl;
+IDirect3DVertexDeclaration9* pEdgeDecl;
+DWORD numEdgeVertices;
+DWORD numEdges;
 
 struct Vertex
 {
@@ -21,7 +30,7 @@ struct EdgeVertex
 	D3DXVECTOR3 faceNormal2;
 };
 
-struct IndexMap
+struct Edge
 {
 	WORD meshIndex1;
 	WORD meshIndex2;
@@ -29,16 +38,16 @@ struct IndexMap
 
 	
 };
-bool operator==(const IndexMap& lhs, const IndexMap& rhs)
+bool operator==(const Edge& lhs, const Edge& rhs)
 {
 	return	(rhs.meshIndex1 == lhs.meshIndex1 && rhs.meshIndex2 == lhs.meshIndex2) ||
 		(rhs.meshIndex1 == lhs.meshIndex2 && rhs.meshIndex2 == lhs.meshIndex1);
 }
-bool operator!=(const IndexMap& lhs, const IndexMap& rhs)
+bool operator!=(const Edge& lhs, const Edge& rhs)
 {
 	return !(lhs == rhs);
 }
-bool operator<(const IndexMap& lhs, const IndexMap& rhs)
+bool operator<(const Edge& lhs, const Edge& rhs)
 {
 	return lhs.meshIndex1 < rhs.meshIndex1;
 }
@@ -47,6 +56,7 @@ bool ComputeEdge(ID3DXMesh* pMesh,IDirect3DVertexBuffer9** ppEdges, IDirect3DInd
 {
 	DWORD numFaces = pMesh->GetNumFaces();
 	DWORD numVertices = pMesh->GetNumVertices();
+	numEdgeVertices = numVertices * 2;
 	std::stringstream log;
 	struct Vertex
 	{
@@ -119,7 +129,7 @@ bool ComputeEdge(ID3DXMesh* pMesh,IDirect3DVertexBuffer9** ppEdges, IDirect3DInd
 	}
 	
 	WORD* meshStartIndex,*edgeStartIndex;
-	std::set<IndexMap> edgeIndices;
+	std::set<Edge> edges;
 	if (SUCCEEDED(pMesh->LockIndexBuffer(0, (VOID**)&meshStartIndex)))
 	{
 		
@@ -137,44 +147,45 @@ bool ComputeEdge(ID3DXMesh* pMesh,IDirect3DVertexBuffer9** ppEdges, IDirect3DInd
 			WORD edgeIndex4 = meshIndex2 * 2;
 			WORD edgeIndex5 = meshIndex2 * 2 + 1;
 
-			IndexMap im;
+			Edge e;
 			{
-				im.meshIndex1 = meshIndex0;
-				im.meshIndex2 = meshIndex1;
+				e.meshIndex1 = meshIndex0;
+				e.meshIndex2 = meshIndex1;
 				WORD temp[6] = { edgeIndex0, edgeIndex2, edgeIndex3, edgeIndex3, edgeIndex1, edgeIndex0 };
-				memcpy(im.edgeIndices, temp, sizeof(temp));
-				edgeIndices.insert(im);
+				memcpy(e.edgeIndices, temp, sizeof(temp));
+				edges.insert(e);
 			}
 			{
-				im.meshIndex1 = meshIndex1;
-				im.meshIndex2 = meshIndex2;
+				e.meshIndex1 = meshIndex1;
+				e.meshIndex2 = meshIndex2;
 				WORD temp[6] = { edgeIndex2, edgeIndex4, edgeIndex5, edgeIndex5, edgeIndex3, edgeIndex2 };
-				memcpy(im.edgeIndices, temp, sizeof(temp));
-				edgeIndices.insert(im);
+				memcpy(e.edgeIndices, temp, sizeof(temp));
+				edges.insert(e);
 			}
 			{
-				im.meshIndex1 = meshIndex2;
-				im.meshIndex2 = meshIndex0;
+				e.meshIndex1 = meshIndex2;
+				e.meshIndex2 = meshIndex0;
 				WORD temp[6] = { edgeIndex4, edgeIndex0, edgeIndex1, edgeIndex1, edgeIndex5, edgeIndex4 };
-				memcpy(im.edgeIndices, temp, sizeof(temp));
-				edgeIndices.insert(im);
+				memcpy(e.edgeIndices, temp, sizeof(temp));
+				edges.insert(e);
 			}
 			
 		}
 		pMesh->UnlockIndexBuffer();
 	}
+	numEdges = edges.size() * 2;
 	IDirect3DIndexBuffer9* pIB;
-	Device->CreateIndexBuffer(edgeIndices.size() * 6 * sizeof(WORD),
+	Device->CreateIndexBuffer(edges.size() * 6 * sizeof(WORD),
 		D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16,
 		D3DPOOL_MANAGED,
 		&pIB,
 		NULL);
-	if (SUCCEEDED(pIB->Lock(0, edgeIndices.size() * 6 * sizeof(WORD), (VOID**)&edgeStartIndex, 0)))
+	if (SUCCEEDED(pIB->Lock(0, edges.size() * 6 * sizeof(WORD), (VOID**)&edgeStartIndex, 0)))
 	{
-		for (std::set<IndexMap>::iterator it = edgeIndices.begin(); it != edgeIndices.end(); ++it)
+		for (std::set<Edge>::iterator it = edges.begin(); it != edges.end(); ++it)
 		{
-			memcpy(edgeStartIndex, it->edgeIndices, sizeof(edgeIndices));
+			memcpy(edgeStartIndex, it->edgeIndices, sizeof(edges));
 			edgeStartIndex += 6;
 		}
 		pIB->Unlock();
@@ -186,8 +197,41 @@ bool ComputeEdge(ID3DXMesh* pMesh,IDirect3DVertexBuffer9** ppEdges, IDirect3DInd
 
 bool Setup()
 {
+	HRESULT hr;
 	D3DXCreateTeapot(Device, &pMesh, NULL);
 	ComputeEdge(pMesh, &pEdges, &pEdgeIndices);
+	D3DXCreateTextureFromFile(Device, L"bright.jpg", &pBrightTexture);
+	D3DVERTEXELEMENT9 toonElems[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 }
+	};
+	Device->CreateVertexDeclaration(toonElems, &pToonDecl);
+	D3DVERTEXELEMENT9 edgeElems[] =
+	{
+		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+		{ 0, 24, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 1 },
+		{ 0, 36, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 2 }
+	};
+	Device->CreateVertexDeclaration(edgeElems, &pEdgeDecl);
+	ID3DXBuffer* pShader, *pError;
+	
+	hr = D3DXCompileShaderFromFile(L"toon.tex", NULL, NULL, "Main", "vs_2_0", D3DXSHADER_DEBUG, &pShader, &pError, &pToonConst);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA((char*)pError->GetBufferPointer());
+		return false;
+	}
+	Device->CreateVertexShader((DWORD*)pShader->GetBufferPointer(), &pToonSH);
+	hr = D3DXCompileShaderFromFile(L"outline.txt", NULL, NULL, "Main", "vs_2_0", D3DXSHADER_DEBUG, &pShader, &pError, &pEdgeConst);
+	if (FAILED(hr))
+	{
+		OutputDebugStringA((char*)pError->GetBufferPointer());
+		return false;
+	}
+	Device->CreateVertexShader((DWORD*)pShader->GetBufferPointer(), &pEdgeSH);
+
 	return true;
 }
 
@@ -198,6 +242,23 @@ void Cleanup()
 
 bool Display(float timeDelta)
 {
+	Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
+	if (SUCCEEDED(Device->BeginScene()))
+	{
+		Device->SetVertexShader(pToonSH);
+		Device->SetVertexDeclaration(pToonDecl);
+		Device->SetTexture(0, pBrightTexture);
+		pMesh->DrawSubset(0);
+
+		Device->SetVertexShader(pEdgeSH);
+		Device->SetVertexDeclaration(pEdgeDecl);
+		Device->SetTexture(0, 0);
+		Device->SetStreamSource(0, pEdges, 0, sizeof(EdgeVertex));
+		Device->SetIndices(pEdgeIndices);
+		Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, numEdgeVertices, 0, numEdges);
+		Device->EndScene();
+	}
+	Device->Present(0,0,0,0);
 	return true;
 }
 
