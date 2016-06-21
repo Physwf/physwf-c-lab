@@ -16,6 +16,24 @@ IDirect3DVertexDeclaration9* pEdgeDecl;
 DWORD numEdgeVertices;
 DWORD numEdges;
 
+D3DXHANDLE hToonWVP;
+D3DXHANDLE hToonWorld;
+D3DXHANDLE hDirLight;
+D3DXHANDLE hToonColor;
+
+D3DXHANDLE hEdgeWVP;
+D3DXHANDLE hEdgeWorld;
+D3DXHANDLE hEye;
+D3DXHANDLE hEdgeColor;
+
+D3DXMATRIX mtProj;
+D3DXMATRIX mtView;
+D3DXMATRIX mtWorld;
+D3DXVECTOR3 vDirLight;
+D3DXVECTOR4 cToonColor;
+D3DXVECTOR4 cEdgeColor;
+D3DXVECTOR3 vEye;
+
 struct Vertex
 {
 	D3DXVECTOR3 positon;
@@ -40,8 +58,7 @@ struct Edge
 };
 bool operator==(const Edge& lhs, const Edge& rhs)
 {
-	return	(rhs.meshIndex1 == lhs.meshIndex1 && rhs.meshIndex2 == lhs.meshIndex2) ||
-		(rhs.meshIndex1 == lhs.meshIndex2 && rhs.meshIndex2 == lhs.meshIndex1);
+	return	(rhs.meshIndex1 == lhs.meshIndex1 && rhs.meshIndex2 == lhs.meshIndex2) || (rhs.meshIndex1 == lhs.meshIndex2 && rhs.meshIndex2 == lhs.meshIndex1);
 }
 bool operator!=(const Edge& lhs, const Edge& rhs)
 {
@@ -185,9 +202,11 @@ bool ComputeEdge(ID3DXMesh* pMesh,IDirect3DVertexBuffer9** ppEdges, IDirect3DInd
 	{
 		for (std::set<Edge>::iterator it = edges.begin(); it != edges.end(); ++it)
 		{
+			log << "Edge:" << it->meshIndex1 << " " << it->meshIndex2 << "\n";
 			memcpy(edgeStartIndex, it->edgeIndices, sizeof(edges));
 			edgeStartIndex += 6;
 		}
+		OutputDebugStringA(log.str().c_str());
 		pIB->Unlock();
 	}
 	*ppEdges = pVB;
@@ -200,7 +219,7 @@ bool Setup()
 	HRESULT hr;
 	D3DXCreateTeapot(Device, &pMesh, NULL);
 	ComputeEdge(pMesh, &pEdges, &pEdgeIndices);
-	D3DXCreateTextureFromFile(Device, L"bright.jpg", &pBrightTexture);
+	D3DXCreateTextureFromFile(Device, L"bright.bmp", &pBrightTexture);
 	D3DVERTEXELEMENT9 toonElems[] =
 	{
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
@@ -217,12 +236,17 @@ bool Setup()
 	Device->CreateVertexDeclaration(edgeElems, &pEdgeDecl);
 	ID3DXBuffer* pShader, *pError;
 	
-	hr = D3DXCompileShaderFromFile(L"toon.tex", NULL, NULL, "Main", "vs_2_0", D3DXSHADER_DEBUG, &pShader, &pError, &pToonConst);
+	hr = D3DXCompileShaderFromFile(L"toon.txt", NULL, NULL, "Main", "vs_2_0", D3DXSHADER_DEBUG, &pShader, &pError, &pToonConst);
 	if (FAILED(hr))
 	{
 		OutputDebugStringA((char*)pError->GetBufferPointer());
 		return false;
 	}
+	hToonWVP = pToonConst->GetConstantByName(0, "WorldViewProj");
+	hToonWorld = pToonConst->GetConstantByName(0, "World");
+	hDirLight = pToonConst->GetConstantByName(0, "DirLight");
+	hToonColor = pToonConst->GetConstantByName(0, "Color");
+
 	Device->CreateVertexShader((DWORD*)pShader->GetBufferPointer(), &pToonSH);
 	hr = D3DXCompileShaderFromFile(L"outline.txt", NULL, NULL, "Main", "vs_2_0", D3DXSHADER_DEBUG, &pShader, &pError, &pEdgeConst);
 	if (FAILED(hr))
@@ -230,7 +254,31 @@ bool Setup()
 		OutputDebugStringA((char*)pError->GetBufferPointer());
 		return false;
 	}
+	hToonWVP = pEdgeConst->GetConstantByName(0, "WorldViewProj");
+	hToonWorld = pEdgeConst->GetConstantByName(0, "World");
+	hEye = pEdgeConst->GetConstantByName(0, "EyePosition");
+	hEdgeColor = pEdgeConst->GetConstantByName(0, "Color");
+
 	Device->CreateVertexShader((DWORD*)pShader->GetBufferPointer(), &pEdgeSH);
+
+	D3DXMatrixPerspectiveFovLH(&mtProj, D3DX_PI*0.2, float(Width) / Height, 1.0f, 1000.0f);
+
+	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+	D3DXVECTOR3 eye(0.0f, 0.0f, -10.0f);
+	D3DXMatrixLookAtLH(&mtView, &eye, &target, &up);
+
+	D3DXMatrixIdentity(&mtWorld);
+
+	pEdgeConst->SetFloatArray(Device, hEye, eye, 3);
+
+	D3DXVECTOR3 DirLight(0.0f, 0.0f, 1.0f);
+
+	pToonConst->SetFloatArray(Device, hDirLight, DirLight, 3);
+	D3DXVECTOR4 toonColor(0.3f, 0.6f, 0.7f, 1.0f);
+	pToonConst->SetVector(Device, hToonColor, &toonColor);
+	D3DXVECTOR4 edgeColor(0.0f, 0.0f, 0.0f, 0.0f);
+	pEdgeConst->SetVector(Device, hEdgeColor, &edgeColor);
 
 	return true;
 }
@@ -243,12 +291,19 @@ void Cleanup()
 bool Display(float timeDelta)
 {
 	Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
+	D3DXMATRIX Ry;
+	D3DXMatrixRotationY(&Ry, 0.0001f);
+	D3DXMatrixMultiply(&mtWorld, &mtWorld, &Ry);
+	
 	if (SUCCEEDED(Device->BeginScene()))
 	{
+		pToonConst->SetMatrix(Device, hToonWVP, &(mtWorld*mtView*mtProj));
+		pToonConst->SetMatrix(Device, hToonWorld, &mtWorld);
 		Device->SetVertexShader(pToonSH);
 		Device->SetVertexDeclaration(pToonDecl);
 		Device->SetTexture(0, pBrightTexture);
 		pMesh->DrawSubset(0);
+
 
 		Device->SetVertexShader(pEdgeSH);
 		Device->SetVertexDeclaration(pEdgeDecl);

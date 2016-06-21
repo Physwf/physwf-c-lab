@@ -1,6 +1,6 @@
 matrix WorldViewProj;
 matrix World;
-vector DirLight;
+float3 DirLight;
 vector Color;
 
 struct VS_INPUT
@@ -13,8 +13,7 @@ struct VS_OUTPUT
 {
 	vector vClipPosition:POSITION;
 	vector uvCoords:TEXCOORD;
-	vector cColor:Color;
-
+	vector cColor:COLOR;
 };
 
 VS_OUTPUT Main(VS_INPUT input)
@@ -30,7 +29,8 @@ VS_OUTPUT Main(VS_INPUT input)
 	output.uvCoords.x = s;
 	output.uvCoords.y = 0.5f;
 
-	output.color = Color;
+	output.cColor = Color;
 
 	return output;
 }
+
