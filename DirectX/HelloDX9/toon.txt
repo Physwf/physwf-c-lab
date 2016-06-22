@@ -5,8 +5,8 @@ vector Color;
 
 struct VS_INPUT
 {
-	vector vPosition:POSITION;
-	vector vNormal:NORMAL;
+	float3 vPosition:POSITION;
+	float3 vNormal:NORMAL;
 };
 
 struct VS_OUTPUT
@@ -22,11 +22,11 @@ VS_OUTPUT Main(VS_INPUT input)
 
 	output.vClipPosition = mul(input.vPosition,WorldViewProj);
 	
-	vector normal = mul(input.vNormal,World);
+	float3 normal = mul(input.vNormal,World);
 	
-	float s = saturate( dot(normal,DirLight) );
+	float s = ( dot(normal,DirLight) );
 
-	output.uvCoords.x = s;
+	output.uvCoords.x = s*s;
 	output.uvCoords.y = 0.5f;
 
 	output.cColor = Color;

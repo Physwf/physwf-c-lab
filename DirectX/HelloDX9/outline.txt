@@ -21,10 +21,13 @@ VS_OUTPUT Main(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	
-	//input.vNormal = mul(input.vNormal,World);
+	output.vClipPosition = mul(input.vPosition,WorldViewProj);
+	
+	input.vPosition = mul(input.vPosition,World);
+	input.vNormal = mul(input.vNormal,World);
 	input.vFaceNormal1 = mul(input.vFaceNormal1,World);
 	input.vFaceNormal2 = mul(input.vFaceNormal2,World);
-
+	
 	float3 viewDir = input.vPosition.xyz - EyePosition;
 
 	float dot1 = dot(viewDir,input.vFaceNormal1);
@@ -32,9 +35,9 @@ VS_OUTPUT Main(VS_INPUT input)
 
 	if(dot1*dot2 < 0.0f)
 	{
-		input.vPosition += input.vNormal * 0.1f;
+		input.vPosition += input.vNormal * 0.01f;
 	}
-	output.vClipPosition = mul(input.vPosition,WorldViewProj);
+	
 	
 	output.cColor = Color;
 	
