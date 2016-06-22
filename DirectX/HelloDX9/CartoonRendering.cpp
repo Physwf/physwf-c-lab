@@ -259,9 +259,13 @@ bool ComputeEdge(ID3DXMesh* pMesh,IDirect3DVertexBuffer9** ppEdges, IDirect3DInd
 bool Setup()
 {
 	HRESULT hr;
+
+	D3DVIEWPORT9 viewport = { 0, 0, Width, Height };
+	Device->SetViewport(&viewport);
+
 	D3DXCreateTeapot(Device, &pMesh, NULL);
 	ComputeEdge(pMesh, &pEdges, &pEdgeIndices);
-	hr = D3DXCreateTextureFromFile(Device, L"bright.bmp", &pBrightTexture);
+	hr = D3DXCreateTextureFromFile(Device, L"brightness.bmp", &pBrightTexture);
 	D3DVERTEXELEMENT9 toonElems[] =
 	{
 		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
@@ -316,19 +320,17 @@ bool Setup()
 
 	pEdgeConst->SetFloatArray(Device, hEye, eye, 3);
 
-	D3DXVECTOR3 DirLight(1.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 DirLight(-1.0f, 0.0f, 0.0f);
 
-	//pToonConst->SetFloatArray(Device, hDirLight, DirLight, 3);
-	D3DXVECTOR4 toonColor(1.0f, 0.0f, 0.0f, 1.0f);
+	pToonConst->SetFloatArray(Device, hDirLight, DirLight, 3);
+	D3DXVECTOR4 toonColor(0.1f, 0.2f, 0.4f, 1.0f);
 	pToonConst->SetVector(Device, hToonColor, &toonColor);
 	D3DXVECTOR4 edgeColor(0.0f, 0.0f, 0.0f, 0.0f);
 	pEdgeConst->SetVector(Device, hEdgeColor, &edgeColor);
 
-	//Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-	//Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-	//Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-	//Device->SetRenderState(D3DRS_ZENABLE, TRUE);
-	Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	
+	Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	return true;
 }
 
@@ -346,13 +348,19 @@ bool Display(float timeDelta)
 	
 	if (SUCCEEDED(Device->BeginScene()))
 	{
+		/*
+		Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 		pToonConst->SetMatrix(Device, hToonWVP, &(mtWorld*mtView*mtProj));
-		//pToonConst->SetMatrix(Device, hToonWorld, &mtWorld);
-		Device->SetVertexShader(pToonSH);
+		pToonConst->SetMatrix(Device, hToonWorld, &mtWorld);
 		Device->SetVertexDeclaration(pToonDecl);
-		//Device->SetTexture(0, pBrightTexture);
-		//pMesh->DrawSubset(0);
-
+		Device->SetVertexShader(pToonSH);
+		Device->SetTexture(0, pBrightTexture);
+		pMesh->DrawSubset(0);
+		*/
+		
+		Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		pEdgeConst->SetMatrix(Device, hEdgeWorld, &mtWorld);
 		pEdgeConst->SetMatrix(Device, hEdgeWVP, &(mtView*mtProj));
 		Device->SetVertexShader(pEdgeSH);
@@ -361,7 +369,10 @@ bool Display(float timeDelta)
 		Device->SetStreamSource(0, pEdges, 0, sizeof(EdgeVertex));
 		Device->SetIndices(pEdgeIndices);
 		Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, numEdgeVertices, 0, numEdges);
+		
+		
 		Device->EndScene();
+		
 	}
 	Device->Present(0,0,0,0);
 	return true;
