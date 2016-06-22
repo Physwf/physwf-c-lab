@@ -298,9 +298,9 @@ bool Setup()
 		OutputDebugStringA((char*)pError->GetBufferPointer());
 		return false;
 	}
-	hEdgeWVP = pEdgeConst->GetConstantByName(0, "WorldViewProj");
+	hEdgeWVP = pEdgeConst->GetConstantByName(0, "ViewProj");
 	hEdgeWorld = pEdgeConst->GetConstantByName(0, "World");
-	hEye = pEdgeConst->GetConstantByName(0, "EyePosition");
+	hEye = pEdgeConst->GetConstantByName(0, "Eye");
 	hEdgeColor = pEdgeConst->GetConstantByName(0, "Color");
 
 	Device->CreateVertexShader((DWORD*)pShader->GetBufferPointer(), &pEdgeSH);
@@ -318,18 +318,17 @@ bool Setup()
 
 	D3DXVECTOR3 DirLight(1.0f, 0.0f, 0.0f);
 
-	pToonConst->SetFloatArray(Device, hDirLight, DirLight, 3);
-	D3DXVECTOR4 toonColor(0.3f, 0.6f, 0.7f, 1.0f);
+	//pToonConst->SetFloatArray(Device, hDirLight, DirLight, 3);
+	D3DXVECTOR4 toonColor(1.0f, 0.0f, 0.0f, 1.0f);
 	pToonConst->SetVector(Device, hToonColor, &toonColor);
 	D3DXVECTOR4 edgeColor(0.0f, 0.0f, 0.0f, 0.0f);
 	pEdgeConst->SetVector(Device, hEdgeColor, &edgeColor);
 
-	Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-	Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-	Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-	Device->SetRenderState(D3DRS_ZENABLE, TRUE);
-	Device->SetRenderState(D3DRS_LIGHTING, FALSE);
-	Device->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
+	//Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	//Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	//Device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	//Device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	return true;
 }
 
@@ -348,14 +347,14 @@ bool Display(float timeDelta)
 	if (SUCCEEDED(Device->BeginScene()))
 	{
 		pToonConst->SetMatrix(Device, hToonWVP, &(mtWorld*mtView*mtProj));
-		pToonConst->SetMatrix(Device, hToonWorld, &mtWorld);
+		//pToonConst->SetMatrix(Device, hToonWorld, &mtWorld);
 		Device->SetVertexShader(pToonSH);
 		Device->SetVertexDeclaration(pToonDecl);
-		Device->SetTexture(0, pBrightTexture);
-		pMesh->DrawSubset(0);
+		//Device->SetTexture(0, pBrightTexture);
+		//pMesh->DrawSubset(0);
 
 		pEdgeConst->SetMatrix(Device, hEdgeWorld, &mtWorld);
-		pEdgeConst->SetMatrix(Device, hEdgeWVP, &(mtWorld*mtView*mtProj));
+		pEdgeConst->SetMatrix(Device, hEdgeWVP, &(mtView*mtProj));
 		Device->SetVertexShader(pEdgeSH);
 		Device->SetVertexDeclaration(pEdgeDecl);
 		Device->SetTexture(0, 0);

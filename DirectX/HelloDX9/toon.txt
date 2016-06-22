@@ -26,7 +26,7 @@ VS_OUTPUT Main(VS_INPUT input)
 	
 	float s = ( dot(normal,DirLight) );
 
-	output.uvCoords.x = s*s;
+	output.uvCoords.x = 1.0f;
 	output.uvCoords.y = 0.5f;
 
 	output.cColor = Color;
