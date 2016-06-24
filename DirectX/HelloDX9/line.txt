@@ -1,0 +1,21 @@
+float4x4 WorldViewProj;
+static vector Red = {1.0f, 0.0f,0.0f, 1.0f};
+
+struct VS_INPUT
+{
+	float4 vPosition:POSITION;
+};
+
+struct VS_OUTPUT
+{
+	float4 vClipPosition:POSITION;
+	float4 cColor:COLOR;
+};
+
+VS_OUTPUT Main(VS_INPUT input)
+{
+	VS_OUTPUT output = (VS_OUTPUT)0;
+	output.vClipPosition = mul( input.vPosition,WorldViewProj );
+	output.cColor = Red;
+	return output;
+}

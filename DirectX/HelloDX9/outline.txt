@@ -2,6 +2,7 @@ uniform matrix ViewProj;
 uniform matrix World;
 uniform float3 Eye;
 uniform vector Color;
+const float4 Red = {1.0f, 0.0f, 0.0f, 0.0f};
 
 struct VS_INPUT
 {
@@ -20,24 +21,25 @@ struct VS_OUTPUT
 VS_OUTPUT Main(VS_INPUT input)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
-	
+	input.vNormal.w = input.vFaceNormal1.w = input.vFaceNormal2.w = 0.0f;
 	input.vPosition = mul(input.vPosition,World);
 	input.vNormal = mul(input.vNormal,World);
 	input.vFaceNormal1 = mul(input.vFaceNormal1,World);
 	input.vFaceNormal2 = mul(input.vFaceNormal2,World);
 	
-	float3 viewDir = input.vPosition.xyz - Eye;
+	float3 viewDir = Eye - input.vPosition.xyz;
 
-	float dot1 = dot(viewDir,input.vFaceNormal1);
-	float dot2 = dot(viewDir,input.vFaceNormal2);
+	float dot1 = dot(viewDir,input.vFaceNormal1.xyz);
+	float dot2 = dot(viewDir,input.vFaceNormal2.xyz);
 
-	if(dot1*dot2 < 0.0f)
+	if(dot1*dot2 < -0.0f)
 	{
-		input.vPosition += input.vNormal * 0.02f;
+		input.vPosition.xyz += input.vNormal.xyz * 0.02f;
+		output.cColor = Color;
 	}
 	
 	output.vClipPosition = mul(input.vPosition,ViewProj);
-	output.cColor = Color;
+	
 	
 	return output;
 }
