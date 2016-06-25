@@ -27,12 +27,12 @@ VS_OUTPUT Main(VS_INPUT input)
 	input.vFaceNormal1 = mul(input.vFaceNormal1,World);
 	input.vFaceNormal2 = mul(input.vFaceNormal2,World);
 	
-	float3 viewDir = Eye - input.vPosition.xyz;
+	float3 viewDir = input.vPosition.xyz - Eye;
 
 	float dot1 = dot(viewDir,input.vFaceNormal1.xyz);
 	float dot2 = dot(viewDir,input.vFaceNormal2.xyz);
 
-	if(dot1*dot2 < -0.0f)
+	if(dot1*dot2 < 0.0f)
 	{
 		input.vPosition.xyz += input.vNormal.xyz * 0.02f;
 		output.cColor = Color;

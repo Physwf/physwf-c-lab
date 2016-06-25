@@ -295,7 +295,7 @@ bool ComputeEdge2(ID3DXMesh* pMesh, IDirect3DVertexBuffer9** ppEdges, IDirect3DI
 	Vertex* meshVertex;
 	WORD* indeices;
 	//std::set<MeshEdge> meshEdges;
-	typedef std::unordered_map<MeshEdge, bool, MeshEdgeHash> MeshEdgeHashMap;
+	typedef std::unordered_map<MeshEdge, MeshEdge, MeshEdgeHash> MeshEdgeHashMap;
 	MeshEdgeHashMap meshEdges;
 	if (SUCCEEDED(pMesh->LockVertexBuffer(0, (VOID**)&meshVertex)))
 	{
@@ -334,8 +334,9 @@ bool ComputeEdge2(ID3DXMesh* pMesh, IDirect3DVertexBuffer9** ppEdges, IDirect3DI
 					{
 						edge.faceNormal1 = normal;
 						edge.faceNormal2 = -normal;
+						
 					}
-					meshEdges[edge] = true;
+					meshEdges[edge] = edge;
 				}
 				{
 					MeshEdge edge;
@@ -356,7 +357,7 @@ bool ComputeEdge2(ID3DXMesh* pMesh, IDirect3DVertexBuffer9** ppEdges, IDirect3DI
 						edge.faceNormal1 = normal;
 						edge.faceNormal2 =  -normal;
 					}
-					meshEdges[edge] = true;
+					meshEdges[edge] = edge;
 				}
 				{
 					MeshEdge edge;
@@ -377,7 +378,7 @@ bool ComputeEdge2(ID3DXMesh* pMesh, IDirect3DVertexBuffer9** ppEdges, IDirect3DI
 						edge.faceNormal1 = normal;
 						edge.faceNormal2 = -normal;
 					}
-					meshEdges[edge] = true;
+					meshEdges[edge] = edge;
 				}
 			}
 			pMesh->UnlockIndexBuffer();
@@ -430,19 +431,21 @@ bool ComputeEdge2(ID3DXMesh* pMesh, IDirect3DVertexBuffer9** ppEdges, IDirect3DI
 	WORD offset = 0;
 	for (MeshEdgeHashMap::iterator it = meshEdges.begin(); it != meshEdges.end(); ++it)
 	{
-		MeshEdge edge = it->first;
+		MeshEdge edge = it->second;
 		eVertices->position = edge.position1;
 		eVertices->normal = edge.normal1;
 		eVertices->faceNormal1 = edge.faceNormal1;
 		eVertices->faceNormal2 = edge.faceNormal2;
 
-		fnVertices->positon = edge.position1;
+		D3DXVECTOR3 pos1 = (edge.position1 + edge.position2) / 2 + (edge.position1 - edge.position2) * 0.2f;
+		D3DXVECTOR3 pos2 = (edge.position1 + edge.position2) / 2 + (edge.position2 - edge.position1) * 0.2f;
+		fnVertices->positon = pos1;
 		fnVertices++;
-		fnVertices->positon = edge.position1+edge.faceNormal1*.2f;
+		fnVertices->positon = pos1 + edge.faceNormal1*.2f;
 		fnVertices++;
-		fnVertices->positon = edge.position1;
+		fnVertices->positon = pos2;
 		fnVertices++;
-		fnVertices->positon = edge.position1 + edge.faceNormal2*.2f;
+		fnVertices->positon = pos2 + edge.faceNormal2*.2f;
 		fnVertices++;
 
 		eVertices++;
@@ -458,13 +461,16 @@ bool ComputeEdge2(ID3DXMesh* pMesh, IDirect3DVertexBuffer9** ppEdges, IDirect3DI
 		eVertices->faceNormal1 = edge.faceNormal1;
 		eVertices->faceNormal2 = edge.faceNormal2;
 
-		fnVertices->positon = edge.position2;
+		pos1 = (edge.position1 + edge.position2) / 2 + (edge.position1 - edge.position2) * 0.2f;
+		pos2 = (edge.position1 + edge.position2) / 2 + (edge.position2 - edge.position1) * 0.2f;
+
+		fnVertices->positon = pos1;
 		fnVertices++;
-		fnVertices->positon = edge.position2 + edge.faceNormal1 *.2f;
+		fnVertices->positon = pos1 + edge.faceNormal1 *.2f;
 		fnVertices++;
-		fnVertices->positon = edge.position2;
+		fnVertices->positon = pos2;
 		fnVertices++;
-		fnVertices->positon = edge.position2 + edge.faceNormal2*.2f;
+		fnVertices->positon = pos2 + edge.faceNormal2*.2f;
 		fnVertices++;
 
 		eVertices++;
@@ -526,8 +532,9 @@ bool Setup()
 	D3DVIEWPORT9 viewport = { 0, 0, Width, Height };
 	Device->SetViewport(&viewport);
 
-	//D3DXCreateTeapot(Device, &pMesh, NULL);
-	D3DXCreateSphere(Device, 1.0f, 20, 20, &pMesh, NULL);
+	D3DXCreateTeapot(Device, &pMesh, NULL);
+	//D3DXCreateSphere(Device, 1.0f, 10, 10, &pMesh, NULL);
+	//D3DXCreatePolygon(Device, 1.0f, 4, &pMesh, NULL);
 	ComputeEdge2(pMesh, &pEdges, &pEdgeIndices, &pFaceNormals,&pFaceNormalIndices);
 	hr = D3DXCreateTextureFromFile(Device, L"brightness.bmp", &pBrightTexture);
 	D3DVERTEXELEMENT9 toonElems[] =
@@ -593,7 +600,7 @@ bool Setup()
 
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-	D3DXVECTOR3 eye(0.00f, 0.00f, 2.50f);
+	D3DXVECTOR3 eye(1.00f, 1.00f, 3.50f);
 	D3DXMatrixLookAtLH(&mtView, &eye, &target, &up);
 
 	D3DXMatrixIdentity(&mtWorld);
@@ -628,6 +635,13 @@ bool Display(float timeDelta)
 	
 	if (SUCCEEDED(Device->BeginScene()))
 	{
+		D3DXVECTOR3 DirLight(-1.0f, 0.0f, 0.0f);
+
+		pToonConst->SetFloatArray(Device, hDirLight, DirLight, 3);
+		D3DXVECTOR4 toonColor(0.1f, 0.2f, 0.4f, 1.0f);
+		pToonConst->SetVector(Device, hToonColor, &toonColor);
+		D3DXVECTOR4 edgeColor(1.0f, 0.0f, 0.0f, 0.0f);
+		pEdgeConst->SetVector(Device, hEdgeColor, &edgeColor);
 		Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 		Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
@@ -637,11 +651,13 @@ bool Display(float timeDelta)
 		Device->SetVertexDeclaration(pToonDecl);
 		Device->SetVertexShader(pToonSH);
 		Device->SetTexture(0, pBrightTexture);
-		Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		//Device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		pMesh->DrawSubset(0);
 
 		
-		Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+		D3DXVECTOR3 eye(1.00f, 1.00f, 3.50f);
+		pEdgeConst->SetFloatArray(Device, hEye, eye, 3);
+		Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		pEdgeConst->SetMatrix(Device, hEdgeWorld, &mtWorld);
 		pEdgeConst->SetMatrix(Device, hEdgeWVP, &(mtView*mtProj));
@@ -651,15 +667,16 @@ bool Display(float timeDelta)
 		Device->SetRenderState(D3DRS_FILLMODE,D3DFILL_SOLID);
 		Device->SetStreamSource(0, pEdges, 0, sizeof(EdgeVertex));
 		Device->SetIndices(pEdgeIndices);
-		//Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, numEdgeVertices, 0, numEdgePrims);
+		Device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, numEdgeVertices, 0, numEdgePrims);
 		
+		/*
 		pFaceNormalConst->SetMatrix(Device, hFaceNormalWVP, &(mtWorld*mtView*mtProj));
 		Device->SetVertexShader(pFaceNormalSH);
 		Device->SetVertexDeclaration(pFaceNormalDecl);
 		Device->SetStreamSource(0, pFaceNormals, 0, sizeof(SimpleVertex));
 		Device->SetIndices(pFaceNormalIndices);
 		Device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, numEdgeVertices * 2, 0, numEdgeVertices * 2);
-
+		*/
 		Device->EndScene();
 		
 	}
