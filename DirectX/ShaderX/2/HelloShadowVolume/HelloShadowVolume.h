@@ -1,5 +1,11 @@
 #include "Application.h"
 
+struct Vertex
+{
+	float x, y, z;
+	float nx, ny, nz;
+};
+
 class HelloShadowVolume : public CD3DApplication
 {
 public:
@@ -23,6 +29,10 @@ private:
 	D3DPRESENT_PARAMETERS m_dpps;
 
 	std::shared_ptr<ID3DXMesh> m_spHerizonPlane;
+	std::shared_ptr<IDirect3DVertexBuffer8> m_spPlaneVB;
+	std::shared_ptr<IDirect3DIndexBuffer8> m_spPlaneIB;
+	DWORD m_dwPlaneNumVertices;
+	DWORD m_dwPlaneNumFaces;
 	DWORD m_dwPlaneVSH;
 	DWORD m_dwPlanePSH;
 	D3DXVECTOR4 m_cPlaneTint;

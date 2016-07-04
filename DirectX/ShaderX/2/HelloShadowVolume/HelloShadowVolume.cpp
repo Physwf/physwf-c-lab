@@ -13,6 +13,7 @@ HelloShadowVolume::~HelloShadowVolume()
 
 HRESULT HelloShadowVolume::Frame()
 {
+	FrameMove(0.0f);
 	Render();
 	return S_OK;
 }
@@ -27,7 +28,7 @@ HRESULT HelloShadowVolume::OneTimeSceneInit()
 	}
 	m_spD3D.reset(d3d, [](IDirect3D8* d3d){ d3d->Release(); });
 
-	return InitDeviceObjects();
+	return S_OK;
 }
 
 HRESULT HelloShadowVolume::InitDeviceObjects()
@@ -68,18 +69,19 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	m_spDevice.reset(device, [](IDirect3DDevice8* device){ device->Release(); });
 
 	m_spDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
-	m_spDevice->SetRenderState(D3DRS_LIGHTING, false);
+	m_spDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	m_spDevice->SetRenderState(D3DRS_DITHERENABLE, TRUE);
 	D3DVIEWPORT8 viewport = { 0, 0, m_iWidth, m_iHeight };
 	m_spDevice->SetViewport(&viewport);
 
-	D3DXVECTOR3 eye(1000.0f, 1000.0f, 1000.0f);
+	D3DXVECTOR3 eye(10.0f, 10.0f, 10.0f);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &target, &up);
 
-	D3DXMatrixPerspectiveFovLH(&m_mtProj, 0.2*D3DX_PI, (float)m_iWidth / m_iHeight, 1.0f, 1000.f);
+	D3DXMatrixPerspectiveFovLH(&m_mtProj, 0.2*D3DX_PI, (float)m_iWidth / (float)m_iHeight, 1.0f, 100.f);
 
-	m_cPlaneTint = { 0.2f, 0.5f, 0.4f, 1.0f };
+	m_cPlaneTint = { 0.7f, 0.6f, 0.4f, 1.0f };
 
 	DWORD decl[] = {
 		D3DVSD_STREAM(0),
@@ -100,9 +102,27 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 		return E_FAIL;
 	}
 	ID3DXMesh* plane;
-	D3DXCreatePolygon(m_spDevice.get(), 100.0f, 4, &plane, NULL);
-	//D3DXCreateSphere(m_spDevice.get(), 100.f,20,20, &plane, NULL);
+	D3DXCreatePolygon(m_spDevice.get(), 1.0f, 4, &plane, NULL);
+	//D3DXCreateSphere(m_spDevice.get(), 1.0f,20,20, &plane, NULL);
 	m_spHerizonPlane.reset(plane, [](ID3DXMesh* plane){plane->Release(); });
+
+	IDirect3DVertexBuffer8* vb;
+	IDirect3DIndexBuffer8* ib;
+	plane->GetVertexBuffer(&vb);
+	plane->GetIndexBuffer(&ib);
+	m_spPlaneVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+	m_spPlaneIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	m_dwPlaneNumVertices = plane->GetNumFaces();
+	m_dwPlaneNumFaces = plane->GetNumFaces();
+	m_spDevice->SetPixelShaderConstant(0, m_cPlaneTint, 1);
+
+	D3DXMATRIX w;
+	D3DXMatrixIdentity(&w);
+	D3DXMATRIX temp = w*m_mtView*m_mtProj;
+	D3DXMatrixTranspose(&temp, &temp);
+	m_spDevice->SetVertexShaderConstant(0, &temp, 4);
+	//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	return S_OK;
 }
 
@@ -113,16 +133,18 @@ HRESULT HelloShadowVolume::DeleteDeviceObjects()
 
 HRESULT HelloShadowVolume::Render()
 {
-	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0);
-	if (m_spDevice->BeginScene())
+	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
+	if (SUCCEEDED( m_spDevice->BeginScene()))
 	{
-		m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-		m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+		
 		m_spDevice->SetVertexShader(m_dwPlaneVSH);
 		m_spDevice->SetPixelShader(m_dwPlanePSH);
-		m_spDevice->SetVertexShaderConstant(0, &(m_mtView*m_mtProj), 4);
-		m_spDevice->SetPixelShaderConstant(0, &m_cPlaneTint, 1);
+		
+		
 		m_spHerizonPlane->DrawSubset(0);
+		//m_spDevice->SetStreamSource(0, m_spPlaneVB.get(), sizeof Vertex);
+		//m_spDevice->SetIndices(m_spPlaneIB.get(),0);
+		//m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLEFAN, 0, m_dwPlaneNumVertices, 0, m_dwPlaneNumFaces);
 		m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);
