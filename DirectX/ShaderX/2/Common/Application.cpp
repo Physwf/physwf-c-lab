@@ -275,7 +275,7 @@ HRESULT CD3DApplication::CreatePlane(LPDIRECT3DDEVICE8 pDevice, float fSize, WOR
 				v[y*(strip + 1) + x].nz = 1.0f;
 			}
 		}
-		OutputDebugStringA(log.str().c_str());
+		//OutputDebugStringA(log.str().c_str());
 	}
 	WORD *indices;
 	if (SUCCEEDED(plane->LockIndexBuffer(0, (BYTE**)&indices)))
@@ -285,7 +285,7 @@ HRESULT CD3DApplication::CreatePlane(LPDIRECT3DDEVICE8 pDevice, float fSize, WOR
 		{
 			WORD row = f / strip;
 			WORD col = f % strip;
-			WORD i0 = col * (strip+1)*row;
+			WORD i0 = col + (strip+1)*row;
 			WORD i1 = i0 + 1;
 			WORD i2 = i0 + strip + 1;
 			WORD i3 = i2 + 1;
@@ -298,7 +298,7 @@ HRESULT CD3DApplication::CreatePlane(LPDIRECT3DDEVICE8 pDevice, float fSize, WOR
 			log << "row:" << row << " col:" << col << "\n";
 			log << "indices:" << i0 << " " << i1 << " " << i2 << " " << i2 << " " << i1 << " " << i3 << "\n";
 		}
-		OutputDebugStringA(log.str().c_str());
+		//OutputDebugStringA(log.str().c_str());
 	}
 	*ppPlane = plane;
 	plane->AddRef();

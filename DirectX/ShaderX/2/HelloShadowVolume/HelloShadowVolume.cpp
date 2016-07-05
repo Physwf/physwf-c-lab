@@ -74,7 +74,7 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	D3DVIEWPORT8 viewport = { 0, 0, m_iWidth, m_iHeight };
 	m_spDevice->SetViewport(&viewport);
 
-	D3DXVECTOR3 eye(0.0f, 0.0f, 10.0f);
+	D3DXVECTOR3 eye(0.0f, 0.0f, 30.0f);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &target, &up);
@@ -83,10 +83,27 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 
 	m_cPlaneTint = { 0.7f, 0.6f, 0.4f, 1.0f };
 
+
+	ID3DXMesh* plane;
+	//D3DXCreatePolygon(m_spDevice.get(), 2.0f, 4, &plane, NULL);
+	CreatePlane(m_spDevice.get(), 15.0f, 10, &plane);
+	//D3DXCreateSphere(m_spDevice.get(), 1.0f,20,20, &plane, NULL);
+
+	IDirect3DVertexBuffer8* vb;
+	IDirect3DIndexBuffer8* ib;
+	plane->GetVertexBuffer(&vb);
+	plane->GetIndexBuffer(&ib);
+	m_spPlaneVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+	m_spPlaneIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	m_dwPlaneNumVertices = plane->GetNumVertices();
+	m_dwPlaneNumFaces = plane->GetNumFaces();
+	
+	plane->Release();
+
 	DWORD decl[] = {
 		D3DVSD_STREAM(0),
 		D3DVSD_REG(0, D3DVSDT_FLOAT3),
-		//D3DVSD_REG(3, D3DVSDT_FLOAT3),
+		D3DVSD_REG(3, D3DVSDT_FLOAT3),
 		D3DVSD_END()
 	};
 	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"plane.vso", &m_dwPlaneVSH);
@@ -101,28 +118,44 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 		MessageBox(0, 0, L"CreatePSFromBinFile failed", 0);
 		return E_FAIL;
 	}
-	ID3DXMesh* plane;
-	//D3DXCreatePolygon(m_spDevice.get(), 2.0f, 4, &plane, NULL);
-	CreatePlane(m_spDevice.get(), 10.0f, 10, &plane);
-	//D3DXCreateSphere(m_spDevice.get(), 1.0f,20,20, &plane, NULL);
-	m_spHerizonPlane.reset(plane, [](ID3DXMesh* plane){plane->Release(); });
 
-	IDirect3DVertexBuffer8* vb;
-	IDirect3DIndexBuffer8* ib;
-	plane->GetVertexBuffer(&vb);
-	plane->GetIndexBuffer(&ib);
-	m_spPlaneVB.reset(vb, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
-	m_spPlaneIB.reset(ib, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
-	m_dwPlaneNumVertices = plane->GetNumFaces();
-	m_dwPlaneNumFaces = plane->GetNumFaces();
-	m_spDevice->SetPixelShaderConstant(0, m_cPlaneTint, 1);
+	D3DXMATRIX Rx, Tz;
+	D3DXMatrixRotationX(&Rx, D3DX_PI*0.5f);
+	D3DXMatrixTranslation(&Tz, 0.0f, -3.0f, 0.0f);
+	m_mtPlaneWorld = Rx * Tz;
 
-	D3DXMATRIX w;
-	D3DXMatrixIdentity(&w);
-	D3DXMATRIX temp = w*m_mtView*m_mtProj;
-	D3DXMatrixTranspose(&temp, &temp);
-	m_spDevice->SetVertexShaderConstant(0, &temp, 4);
-	//
+	ID3DXMesh* volume;
+	CreateVolume(m_spDevice.get(), &volume);
+	IDirect3DVertexBuffer8* vbVolume;
+	IDirect3DIndexBuffer8* ibVolume;
+	volume->GetVertexBuffer(&vbVolume);
+	volume->GetIndexBuffer(&ibVolume);
+	m_spVolumeVB.reset(vbVolume, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+	m_spVolumeIB.reset(ibVolume, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	m_dwVolumeNumVertices = volume->GetNumVertices();
+	m_dwVolumeNumFaces = volume->GetNumFaces();
+	volume->Release();
+	
+	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"volume.vso", &m_dwVolumeVSH);
+	if (FAILED(hr))
+	{
+		MessageBox(0, 0, L"CreateVSFromBinFile failed", 0);
+		return E_FAIL;
+	}
+	hr = CreatePSFromBinFile(m_spDevice.get(), L"volume.pso", &m_dwVolumePSH);
+	if (FAILED(hr))
+	{
+		MessageBox(0, 0, L"CreatePSFromBinFile failed", 0);
+		return E_FAIL;
+	}
+	m_cVolumeTint = { 0.7f, 0.0f, 0.0f, 1.0f };
+
+	D3DXMATRIX Sx , Rz;
+	D3DXMatrixIdentity(&m_mtVolumeWorld);
+	D3DXMatrixScaling(&Sx, 6.0f, 1.0f, 1.0f);
+	D3DXMatrixRotationZ(&Rz, 0.5f);
+	D3DXMatrixTranslation(&Tz, 0.0f, 6.0f, 0.0f);
+	m_mtVolumeWorld = Sx * Rz;
 	return S_OK;
 }
 
@@ -136,16 +169,32 @@ HRESULT HelloShadowVolume::Render()
 	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 	if (SUCCEEDED( m_spDevice->BeginScene()))
 	{
-		//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		
+		m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+		D3DXMATRIX temp = m_mtPlaneWorld*m_mtView*m_mtProj;
+		D3DXMatrixTranspose(&temp, &temp);
+		m_spDevice->SetVertexShaderConstant(0, &temp, 4);
+		m_spDevice->SetPixelShaderConstant(0, m_cPlaneTint, 1);
 		m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		m_spDevice->SetVertexShader(m_dwPlaneVSH);
 		m_spDevice->SetPixelShader(m_dwPlanePSH);
 		
-		
-		//m_spHerizonPlane->DrawSubset(0);
 		m_spDevice->SetStreamSource(0, m_spPlaneVB.get(), sizeof Vertex);
 		m_spDevice->SetIndices(m_spPlaneIB.get(),0);
 		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_dwPlaneNumVertices, 0, m_dwPlaneNumFaces);
+
+
+		m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		temp = m_mtVolumeWorld*m_mtView*m_mtProj;
+		D3DXMatrixTranspose(&temp, &temp);
+		m_spDevice->SetVertexShaderConstant(0, &temp, 4);
+		m_spDevice->SetPixelShaderConstant(0, m_cVolumeTint, 1);
+		m_spDevice->SetVertexShader(m_dwVolumeVSH);
+		m_spDevice->SetPixelShader(m_dwVolumePSH);
+		m_spDevice->SetStreamSource(0, m_spVolumeVB.get(), sizeof Vertex);
+		m_spDevice->SetIndices(m_spVolumeIB.get(), 0);
+		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_dwVolumeNumVertices, 0, m_dwVolumeNumFaces);
+
 		m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);
@@ -155,6 +204,11 @@ HRESULT HelloShadowVolume::Render()
 
 HRESULT HelloShadowVolume::FrameMove(FLOAT)
 {
+	D3DXMATRIX Ry;
+	D3DXMatrixRotationY(&Ry, 0.01f);
+	//D3DXMatrixMultiply(&m_mtVolumeWorld, &m_mtVolumeWorld, &Ry);
+	
+	
 	return S_OK;
 
 }
@@ -163,4 +217,12 @@ HRESULT HelloShadowVolume::FinalCleanup()
 {
 	return S_OK;
 
+}
+
+HRESULT HelloShadowVolume::CreateVolume(IDirect3DDevice8* pDevice, ID3DXMesh** ppOut)
+{
+	ID3DXMesh* pMesh;
+	D3DXCreateBox(pDevice, 2.0f, 2.0f, 2.0f, &pMesh, NULL);
+	*ppOut = pMesh;
+	return S_OK;
 }
