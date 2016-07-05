@@ -124,6 +124,37 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	D3DXMatrixTranslation(&Tz, 0.0f, -3.0f, 0.0f);
 	m_mtPlaneWorld = Rx * Tz;
 
+	ID3DXMesh* occluder;
+	CreateOccluder(m_spDevice.get(), &occluder);
+	IDirect3DVertexBuffer8* vbOccluder;
+	IDirect3DIndexBuffer8* ibOccluder;
+	occluder->GetVertexBuffer(&vbOccluder);
+	occluder->GetIndexBuffer(&ibOccluder);
+	m_spOccluderVB.reset(vbOccluder, [](IDirect3DVertexBuffer8* vb){vb->Release(); });
+	m_spOccluderIB.reset(ibOccluder, [](IDirect3DIndexBuffer8* ib){ib->Release(); });
+	m_dwOccluderNumVertices = occluder->GetNumVertices();
+	m_dwOccluderNumFaces = occluder->GetNumFaces();
+	occluder->Release();
+
+	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"occluder.vso", &m_dwOccluderVSH);
+	if (FAILED(hr))
+	{
+		MessageBox(0, 0, L"CreateVSFromBinFile failed", 0);
+		return E_FAIL;
+	}
+	hr = CreatePSFromBinFile(m_spDevice.get(), L"occluder.pso", &m_dwOccluderPSH);
+	if (FAILED(hr))
+	{
+		MessageBox(0, 0, L"CreatePSFromBinFile failed", 0);
+		return E_FAIL;
+	}
+	m_cOccluderTint = { 0.3f, 0.0f, 0.8f, 1.0f };
+	D3DXMATRIX Rz, T;
+	D3DXMatrixTranslation(&T, 5.1f * cosf(0.5), 0.0f, 5.1f * sinf(0.5));
+	D3DXMatrixIdentity(&m_mtVolumeWorld);
+	D3DXMatrixRotationZ(&Rz, 0.5f);
+	m_mtOccluderWorld = T * Rz;
+
 	ID3DXMesh* volume;
 	CreateVolume(m_spDevice.get(), &volume);
 	IDirect3DVertexBuffer8* vbVolume;
@@ -150,12 +181,12 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	}
 	m_cVolumeTint = { 0.7f, 0.0f, 0.0f, 1.0f };
 
-	D3DXMATRIX Sx , Rz;
+	D3DXMATRIX Sx;
 	D3DXMatrixIdentity(&m_mtVolumeWorld);
 	D3DXMatrixScaling(&Sx, 6.0f, 1.0f, 1.0f);
 	D3DXMatrixRotationZ(&Rz, 0.5f);
-	D3DXMatrixTranslation(&Tz, 0.0f, 6.0f, 0.0f);
 	m_mtVolumeWorld = Sx * Rz;
+
 	return S_OK;
 }
 
@@ -166,7 +197,7 @@ HRESULT HelloShadowVolume::DeleteDeviceObjects()
 
 HRESULT HelloShadowVolume::Render()
 {
-	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
+	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, 0, 1.0f, 0);
 	if (SUCCEEDED( m_spDevice->BeginScene()))
 	{
 		
@@ -183,7 +214,18 @@ HRESULT HelloShadowVolume::Render()
 		m_spDevice->SetIndices(m_spPlaneIB.get(),0);
 		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_dwPlaneNumVertices, 0, m_dwPlaneNumFaces);
 
+		//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		temp = m_mtOccluderWorld*m_mtView*m_mtProj;
+		D3DXMatrixTranspose(&temp, &temp);
+		m_spDevice->SetVertexShaderConstant(0, &temp, 4);
+		m_spDevice->SetPixelShaderConstant(0, m_cOccluderTint, 1);
+		m_spDevice->SetVertexShader(m_dwOccluderVSH);
+		m_spDevice->SetPixelShader(m_dwOccluderPSH);
+		m_spDevice->SetStreamSource(0, m_spOccluderVB.get(), sizeof Vertex);
+		m_spDevice->SetIndices(m_spOccluderIB.get(), 0);
+		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_dwOccluderNumVertices, 0, m_dwOccluderNumFaces);
 
+		//m_spDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 		m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 		temp = m_mtVolumeWorld*m_mtView*m_mtProj;
 		D3DXMatrixTranspose(&temp, &temp);
@@ -220,6 +262,14 @@ HRESULT HelloShadowVolume::FinalCleanup()
 }
 
 HRESULT HelloShadowVolume::CreateVolume(IDirect3DDevice8* pDevice, ID3DXMesh** ppOut)
+{
+	ID3DXMesh* pMesh;
+	D3DXCreateBox(pDevice, 2.0f, 2.0f, 2.0f, &pMesh, NULL);
+	*ppOut = pMesh;
+	return S_OK;
+}
+
+HRESULT HelloShadowVolume::CreateOccluder(IDirect3DDevice8* pDevice, ID3DXMesh** ppOut)
 {
 	ID3DXMesh* pMesh;
 	D3DXCreateBox(pDevice, 2.0f, 2.0f, 2.0f, &pMesh, NULL);

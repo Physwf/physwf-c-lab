@@ -4,11 +4,12 @@ nvasm.exe -x plane.vsh plane.vso
 nvasm.exe -x plane.psh plane.pso
 nvasm.exe -x volume.vsh volume.vso
 nvasm.exe -x volume.psh volume.pso
+nvasm.exe -x occluder.vsh occluder.vso
+nvasm.exe -x occluder.psh occluder.pso
 
-COPY plane.vso D:\vs_ws\ShaderX2\Debug\plane.vso
-COPY plane.pso D:\vs_ws\ShaderX2\Debug\plane.pso
-COPY volume.vso D:\vs_ws\ShaderX2\Debug\volume.vso
-COPY volume.pso D:\vs_ws\ShaderX2\Debug\volume.pso
+COPY *.vso D:\vs_ws\ShaderX2\Debug\*.vso
+COPY *.pso D:\vs_ws\ShaderX2\Debug\*.pso
+
 
 del *.vso
 del *.pso

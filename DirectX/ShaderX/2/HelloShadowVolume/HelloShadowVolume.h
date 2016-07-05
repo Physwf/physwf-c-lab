@@ -22,7 +22,8 @@ protected:
 	virtual HRESULT FrameMove(FLOAT);
 	virtual HRESULT FinalCleanup();
 
-	virtual HRESULT CreateVolume(IDirect3DDevice8* pDevice, ID3DXMesh** ppOut);;
+	virtual HRESULT CreateVolume(IDirect3DDevice8* pDevice, ID3DXMesh** ppOut);
+	virtual HRESULT CreateOccluder(IDirect3DDevice8* pDevice, ID3DXMesh** ppOut);
 private:
 	std::shared_ptr<IDirect3D8> m_spD3D;
 	std::shared_ptr<IDirect3DDevice8> m_spDevice;
@@ -38,6 +39,16 @@ private:
 	D3DXVECTOR4 m_cPlaneTint;
 
 	D3DXMATRIX m_mtPlaneWorld;
+
+	std::shared_ptr<IDirect3DVertexBuffer8> m_spOccluderVB;
+	std::shared_ptr<IDirect3DIndexBuffer8> m_spOccluderIB;
+	DWORD m_dwOccluderNumVertices;
+	DWORD m_dwOccluderNumFaces;
+	DWORD m_dwOccluderVSH;
+	DWORD m_dwOccluderPSH;
+
+	D3DXMATRIX m_mtOccluderWorld;
+	D3DXVECTOR4 m_cOccluderTint;
 
 	std::shared_ptr<IDirect3DVertexBuffer8> m_spVolumeVB;
 	std::shared_ptr<IDirect3DIndexBuffer8> m_spVolumeIB;
