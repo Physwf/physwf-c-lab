@@ -1,3 +1,2 @@
 ps.1.1
-def c1, 1.0f, 0.0f, 1.0f, 0.0f
-mov r0, c1
+mov r0, c0

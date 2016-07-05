@@ -236,6 +236,75 @@ HRESULT CD3DApplication::CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice, LPD3DXMESH*
 
 
 
+HRESULT CD3DApplication::CreatePlane(LPDIRECT3DDEVICE8 pDevice, float fSize, WORD strip, LPD3DXMESH* ppPlane)
+{
+	ID3DXMesh* plane;
+	WORD numfaces = strip*strip * 2;
+	DWORD numvertices = (strip + 1)*(strip + 1);
+	DWORD decl[] = {
+		D3DVSD_STREAM(0),
+		D3DVSD_REG(D3DVSDE_POSITION, D3DVSDT_FLOAT3),
+		D3DVSD_REG(D3DVSDE_NORMAL, D3DVSDT_FLOAT3),
+		D3DVSD_END()
+	};
+	D3DXCreateMesh(
+		numfaces,
+		numvertices,
+		D3DXMESH_MANAGED | D3DXMESH_WRITEONLY,
+		decl, 
+		pDevice, 
+		&plane);
+	struct Vertex
+	{
+		Vertex(float  _x, float _y, float _z) { x = _x; y = _y; z = _z; }
+		float x, y, z;
+		float nx, ny, nz;
+	};
+	Vertex* v;
+	float unitSize = fSize / strip;
+	float offset = -fSize / 2;
+	if (SUCCEEDED(plane->LockVertexBuffer(0, (BYTE**)&v)))
+	{
+		std::stringstream log;
+		for (DWORD y = 0; y <= strip; ++y)
+		{
+			for (DWORD x = 0; x <= strip; ++x)
+			{
+				log << "vertex:" << y*(strip + 1) + x  << "\n";
+				v[y*(strip + 1) + x] = Vertex(offset + x*unitSize, offset + y*unitSize, 0.0f);
+				v[y*(strip + 1) + x].nz = 1.0f;
+			}
+		}
+		OutputDebugStringA(log.str().c_str());
+	}
+	WORD *indices;
+	if (SUCCEEDED(plane->LockIndexBuffer(0, (BYTE**)&indices)))
+	{
+		std::stringstream log;
+		for (WORD f = 0; f < numfaces/2; ++f)
+		{
+			WORD row = f / strip;
+			WORD col = f % strip;
+			WORD i0 = col * (strip+1)*row;
+			WORD i1 = i0 + 1;
+			WORD i2 = i0 + strip + 1;
+			WORD i3 = i2 + 1;
+			indices[f * 6 + 0] = i0;
+			indices[f * 6 + 1] = i1;
+			indices[f * 6 + 2] = i2;
+			indices[f * 6 + 3] = i2;
+			indices[f * 6 + 4] = i1;
+			indices[f * 6 + 5] = i3;
+			log << "row:" << row << " col:" << col << "\n";
+			log << "indices:" << i0 << " " << i1 << " " << i2 << " " << i2 << " " << i1 << " " << i3 << "\n";
+		}
+		OutputDebugStringA(log.str().c_str());
+	}
+	*ppPlane = plane;
+	plane->AddRef();
+	return S_OK;
+}
+
 BOOL CD3DApplication::InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	HWND hwnd = CreateWindow(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);

@@ -74,7 +74,7 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	D3DVIEWPORT8 viewport = { 0, 0, m_iWidth, m_iHeight };
 	m_spDevice->SetViewport(&viewport);
 
-	D3DXVECTOR3 eye(10.0f, 10.0f, 10.0f);
+	D3DXVECTOR3 eye(0.0f, 0.0f, 10.0f);
 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
 	D3DXMatrixLookAtLH(&m_mtView, &eye, &target, &up);
@@ -86,7 +86,7 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	DWORD decl[] = {
 		D3DVSD_STREAM(0),
 		D3DVSD_REG(0, D3DVSDT_FLOAT3),
-		D3DVSD_REG(3, D3DVSDT_FLOAT3),
+		//D3DVSD_REG(3, D3DVSDT_FLOAT3),
 		D3DVSD_END()
 	};
 	hr = CreateVSFromBinFile(m_spDevice.get(), decl, L"plane.vso", &m_dwPlaneVSH);
@@ -102,7 +102,8 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 		return E_FAIL;
 	}
 	ID3DXMesh* plane;
-	D3DXCreatePolygon(m_spDevice.get(), 1.0f, 4, &plane, NULL);
+	//D3DXCreatePolygon(m_spDevice.get(), 2.0f, 4, &plane, NULL);
+	CreatePlane(m_spDevice.get(), 10.0f, 10, &plane);
 	//D3DXCreateSphere(m_spDevice.get(), 1.0f,20,20, &plane, NULL);
 	m_spHerizonPlane.reset(plane, [](ID3DXMesh* plane){plane->Release(); });
 
@@ -121,8 +122,7 @@ HRESULT HelloShadowVolume::RestoreDeviceObjects()
 	D3DXMATRIX temp = w*m_mtView*m_mtProj;
 	D3DXMatrixTranspose(&temp, &temp);
 	m_spDevice->SetVertexShaderConstant(0, &temp, 4);
-	//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-	m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	//
 	return S_OK;
 }
 
@@ -136,15 +136,16 @@ HRESULT HelloShadowVolume::Render()
 	m_spDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1.0f, 0);
 	if (SUCCEEDED( m_spDevice->BeginScene()))
 	{
-		
+		//m_spDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+		m_spDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 		m_spDevice->SetVertexShader(m_dwPlaneVSH);
 		m_spDevice->SetPixelShader(m_dwPlanePSH);
 		
 		
-		m_spHerizonPlane->DrawSubset(0);
-		//m_spDevice->SetStreamSource(0, m_spPlaneVB.get(), sizeof Vertex);
-		//m_spDevice->SetIndices(m_spPlaneIB.get(),0);
-		//m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLEFAN, 0, m_dwPlaneNumVertices, 0, m_dwPlaneNumFaces);
+		//m_spHerizonPlane->DrawSubset(0);
+		m_spDevice->SetStreamSource(0, m_spPlaneVB.get(), sizeof Vertex);
+		m_spDevice->SetIndices(m_spPlaneIB.get(),0);
+		m_spDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, m_dwPlaneNumVertices, 0, m_dwPlaneNumFaces);
 		m_spDevice->EndScene();
 	}
 	m_spDevice->Present(0, 0, 0, 0);

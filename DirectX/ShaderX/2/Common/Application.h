@@ -35,6 +35,7 @@ protected:
 	virtual HRESULT CreatePSFromBinFile(IDirect3DDevice8* device, TCHAR* strVSPath, DWORD* m_dwPS);
 
 	virtual HRESULT CreateSphereMesh(LPDIRECT3DDEVICE8 pDevice,LPD3DXMESH* ppSphere);
+	virtual HRESULT CreatePlane(LPDIRECT3DDEVICE8 pDevice, float fSize, WORD strip, LPD3DXMESH* ppSphere);
 	template<typename T1, typename T2> HRESULT CreateNormal(IDirect3DVertexBuffer8* vbIn, IDirect3DVertexBuffer8* vbOut);
 	template<typename T1, typename T2> HRESULT CreateTangent(IDirect3DVertexBuffer8* vbIn, IDirect3DVertexBuffer8* vbOut);
 	virtual LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
