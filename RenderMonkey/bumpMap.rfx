@@ -937,7 +937,7 @@
       <RmRegistryBranch NAME="Effect Workspace.Effect Group 1.Effect1" API="" XML_VERSION="RenderMonkey 1.71">
        <RmRegistryBranch NAME="Disassembly" API="" XML_VERSION="RenderMonkey 1.71"/>
        <RmStringVariable NAME="Editing Shader" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-Vertex Shader]]></RmTextDataBlock></RmStringVariable>
+Pixel Shader]]></RmTextDataBlock></RmStringVariable>
        <RmStringVariable NAME="Editing Pass" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 Pass 0]]></RmTextDataBlock></RmStringVariable>
        <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
@@ -955,14 +955,14 @@ Pass 0]]></RmTextDataBlock></RmStringVariable>
 Vertex Shader]]></RmTextDataBlock></RmStringVariable>
        <RmStringVariable NAME="Editing Pass" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 Pass 0]]></RmTextDataBlock></RmStringVariable>
-       <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="9" MIN="-10" MAX="10" CLAMP="FALSE"/>
+       <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="6" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="837" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Height" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="650" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="ShowStatus" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="2" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Visible" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Minimized X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="0" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Minimized Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="520" MIN="-10" MAX="10" CLAMP="FALSE"/>
-       <RmIntegerVariable NAME="X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="22" MIN="-10" MAX="10" CLAMP="FALSE"/>
+       <RmIntegerVariable NAME="X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="272" MIN="-10" MAX="10" CLAMP="FALSE"/>
       </RmRegistryBranch>
      </RmRegistryBranch>
      <RmRegistryBranch NAME="RmPreviewDx9Window" API="" XML_VERSION="RenderMonkey 1.71">
@@ -1059,7 +1059,7 @@ Pass 0]]></RmTextDataBlock></RmStringVariable>
     </RmRegistryBranch>
     <RmRegistryBranch NAME="WORKSPACE" API="" XML_VERSION="RenderMonkey 1.71">
      <RmStringVariable NAME="LAST_SAVE" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-6/7/2016 23:56:46]]></RmTextDataBlock></RmStringVariable>
+7/7/2016 0:44:28]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 RenderMonkey Version 1.82 (build 322)]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="XML_VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
@@ -1071,7 +1071,7 @@ D:\physwf-c-lab\RenderMonkey\]]></RmTextDataBlock></RmStringVariable>
   </RmRegistryBranch>
   <RmEffectGroup NAME="Effect Group 1" API="">
    <RmDirectXEffect NAME="Effect1" API="D3D" ACTIVE_CAMERA="Camera">
-    <RmCamera NAME="Camera" API="" CAMERA_POSITION_X="23.911600" CAMERA_POSITION_Y="189.560379" CAMERA_POSITION_Z="-180.764557" LOOK_AT_VECTOR_X="0.000000" LOOK_AT_VECTOR_Y="0.000000" LOOK_AT_VECTOR_Z="0.000000" UP_VECTOR_X="-0.118453" UP_VECTOR_Y="-0.677391" UP_VECTOR_Z="-0.726023" FOV="45.000000" NEAR_CLIP_PLANE="1.000000" FAR_CLIP_PLANE="1000.000000"/>
+    <RmCamera NAME="Camera" API="" CAMERA_POSITION_X="171.311325" CAMERA_POSITION_Y="78.216194" CAMERA_POSITION_Z="-13.480092" LOOK_AT_VECTOR_X="0.000000" LOOK_AT_VECTOR_Y="0.000000" LOOK_AT_VECTOR_Z="0.000000" UP_VECTOR_X="-0.282116" UP_VECTOR_Y="0.725988" UP_VECTOR_Z="0.627178" FOV="45.000000" NEAR_CLIP_PLANE="1.000000" FAR_CLIP_PLANE="1000.000000"/>
     <RmDynamicVariable NAME="fvLightPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VARIABLE_TYPE="FLOAT" ROWS="3" COLUMNS="1" FIXED_SIZE="TRUE" MIN="-100.000000" MAX="100.000000" CLAMP="TRUE" NORMALIZE="FALSE">
      <RmDynamicVariableValueContainer>
       <RmDynamicVariableValue ROW_INDEX="0" COLUMN_INDEX="0" VALUE="-100.000000"/>
@@ -1079,10 +1079,10 @@ D:\physwf-c-lab\RenderMonkey\]]></RmTextDataBlock></RmStringVariable>
       <RmDynamicVariableValue ROW_INDEX="2" COLUMN_INDEX="0" VALUE="0.000000"/>
      </RmDynamicVariableValueContainer>
     </RmDynamicVariable>
-    <RmMatrixVariable NAME="matView" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="View" VALUE_0="-0.988789" VALUE_1="0.147412" VALUE_2="0.023787" VALUE_3="-0.000001" VALUE_4="-0.118453" VALUE_5="-0.677391" VALUE_6="-0.726023" VALUE_7="-0.000381" VALUE_8="-0.090911" VALUE_9="-0.720701" VALUE_10="0.687259" VALUE_11="263.022308" VALUE_12="0.000000" VALUE_13="0.000000" VALUE_14="0.000000" VALUE_15="1.000000"/>
+    <RmMatrixVariable NAME="matView" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="View" VALUE_0="0.311655" VALUE_1="-0.548927" VALUE_2="0.775597" VALUE_3="0.000002" VALUE_4="-0.282116" VALUE_5="0.725988" VALUE_6="0.627178" VALUE_7="0.000073" VALUE_8="-0.907349" VALUE_9="-0.414271" VALUE_10="0.071397" VALUE_11="188.804291" VALUE_12="0.000000" VALUE_13="0.000000" VALUE_14="0.000000" VALUE_15="1.000000"/>
     <RmMatrixVariable NAME="matViewTranspose" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewTranspose" VALUE_0="-0.955266" VALUE_1="-0.288900" VALUE_2="-0.063266" VALUE_3="0.000000" VALUE_4="0.102306" VALUE_5="-0.122088" VALUE_6="-0.987232" VALUE_7="0.000000" VALUE_8="0.277488" VALUE_9="-0.949543" VALUE_10="0.146184" VALUE_11="0.000000" VALUE_12="0.000000" VALUE_13="-0.000088" VALUE_14="181.434433" VALUE_15="1.000000"/>
-    <RmMatrixVariable NAME="matViewProjection" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewProjection" VALUE_0="-1.935008" VALUE_1="0.288477" VALUE_2="0.046550" VALUE_3="-0.000003" VALUE_4="-0.285972" VALUE_5="-1.635367" VALUE_6="-1.752776" VALUE_7="-0.000921" VALUE_8="-0.091002" VALUE_9="-0.721422" VALUE_10="0.687947" VALUE_11="262.284576" VALUE_12="-0.090911" VALUE_13="-0.720701" VALUE_14="0.687259" VALUE_15="263.022308"/>
-    <RmVectorVariable NAME="vViewPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewPosition" VALUE_0="247.763474" VALUE_1="53.035748" VALUE_2="-14.252522" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
+    <RmMatrixVariable NAME="matViewProjection" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewProjection" VALUE_0="0.609893" VALUE_1="-1.074220" VALUE_2="1.517802" VALUE_3="0.000004" VALUE_4="-0.681088" VALUE_5="1.752690" VALUE_6="1.514141" VALUE_7="0.000177" VALUE_8="-0.908257" VALUE_9="-0.414686" VALUE_10="0.071469" VALUE_11="187.992279" VALUE_12="-0.907349" VALUE_13="-0.414271" VALUE_14="0.071397" VALUE_15="188.804291"/>
+    <RmVectorVariable NAME="vViewPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewPosition" VALUE_0="-196.966141" VALUE_1="-8.269196" VALUE_2="-107.465271" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
     <RmColorVariable NAME="specularColor" API="" ARTIST_EDITABLE="TRUE" VARIABLE_SEMANTIC="" VALUE_0="0.729412" VALUE_1="0.740741" VALUE_2="0.740741" VALUE_3="1.000000"/>
     <Rm2DTextureVariable NAME="bump" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="D:\physwf-c-lab\RenderMonkey\bump.png" ORIGIN="0"/>
     <Rm2DTextureVariable NAME="diffuse" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" FILE_NAME="C:\Program Files (x86)\AMD\RenderMonkey 1.82\Examples\Media\Textures\Fieldstone.tga" ORIGIN="0"/>
@@ -1119,24 +1119,28 @@ float4 ps_main(PS_INPUT Input) : COLOR0
    Input.LightDir = normalize(Input.LightDir);
    
    float4 color = tex2D(diffuseMap, Input.TexCoords);
+   float4 bump = tex2D(bumpMap,Input.TexCoords);
    
    float diffuse = dot(Input.Normal, Input.LightDir);
    
-   
+   float offsetNormal = bump.x - 0.5f;
+   Input.Normal += Input.Normal*offsetNormal;
    float3 Ln = dot(Input.Normal, Input.LightDir) * Input.LightDir;
    float3 Lt = Input.LightDir - Ln;
-   float3 Rl = Ln - Lt;
+   float3 Rl = - Ln + Lt;
    float RdotV = max(0.0f, dot(Input.View, Rl));
    float4 specular = pow(RdotV , 25) * specularColor;
    
-   return  saturate( color * diffuse);
+   return  saturate( color * diffuse + specular);
    
 }
 
 
 
 ]]></RmShaderCode>
+      <RmSampler NAME="bumpMap" API="" REGISTER="1"/>
       <RmSampler NAME="diffuseMap" API="" REGISTER="0"/>
+      <RmShaderConstant NAME="specularColor" API="" REGISTER="0"/>
      </RmHLSLShader>
      <RmHLSLShader NAME="Vertex Shader" API="D3D" PIXEL_SHADER="FALSE" TARGET="vs_2_0" ENTRY_POINT="vs_main" COMPILER_FLAGS="0"><RmShaderCode TYPE="TEXT"><![CDATA[
 float4x4 matViewProjection;
@@ -1168,7 +1172,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    Output.Position     = mul( Input.Position, matViewProjection );
    Output.TexCoords    = Input.TexCoords;
    
-   float3 eyePos       = mul( vViewPosition, matView);
    float3 lightPos     = mul( fvLightPosition, matView);
    
    float3 viewSpacePos = mul( Input.Position, matView );
