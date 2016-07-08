@@ -975,14 +975,14 @@ Pass 0]]></RmTextDataBlock></RmStringVariable>
 Pixel Shader]]></RmTextDataBlock></RmStringVariable>
        <RmStringVariable NAME="Editing Pass" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 Pass 0]]></RmTextDataBlock></RmStringVariable>
-       <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="17" MIN="-10" MAX="10" CLAMP="FALSE"/>
+       <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="21" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="795" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Height" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="602" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="ShowStatus" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Visible" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Minimized X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="-1" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Minimized Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="-1" MIN="-10" MAX="10" CLAMP="FALSE"/>
-       <RmIntegerVariable NAME="X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="783" MIN="-10" MAX="10" CLAMP="FALSE"/>
+       <RmIntegerVariable NAME="X" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="568" MIN="-10" MAX="10" CLAMP="FALSE"/>
       </RmRegistryBranch>
       <RmRegistryBranch NAME="Effect Workspace.bump.parallax mapping" API="" XML_VERSION="RenderMonkey 1.71">
        <RmRegistryBranch NAME="Disassembly" API="" XML_VERSION="RenderMonkey 1.71"/>
@@ -991,7 +991,7 @@ Pixel Shader]]></RmTextDataBlock></RmStringVariable>
        <RmStringVariable NAME="Editing Pass" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 Pass 0]]></RmTextDataBlock></RmStringVariable>
        <RmIntegerVariable NAME="Y" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="13" MIN="-10" MAX="10" CLAMP="FALSE"/>
-       <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="777" MIN="-10" MAX="10" CLAMP="FALSE"/>
+       <RmIntegerVariable NAME="Width" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="726" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Height" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="609" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="ShowStatus" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
        <RmIntegerVariable NAME="Visible" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE="1" MIN="-10" MAX="10" CLAMP="FALSE"/>
@@ -1190,7 +1190,7 @@ Pass 0]]></RmTextDataBlock></RmStringVariable>
     </RmRegistryBranch>
     <RmRegistryBranch NAME="WORKSPACE" API="" XML_VERSION="RenderMonkey 1.71">
      <RmStringVariable NAME="LAST_SAVE" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
-8/7/2016 11:52:11]]></RmTextDataBlock></RmStringVariable>
+8/7/2016 17:55:6]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
 RenderMonkey Version 1.82 (build 322)]]></RmTextDataBlock></RmStringVariable>
      <RmStringVariable NAME="XML_VERSION" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC=""><RmTextDataBlock TYPE="TEXT"><![CDATA[
@@ -1478,7 +1478,7 @@ float4 ps_main(PS_INPUT Input) : COLOR0
     </RmPass>
    </RmDirectXEffect>
    <RmDirectXEffect NAME="parallax mapping" API="D3D" ACTIVE_CAMERA="">
-    <RmMatrixVariable NAME="matViewProjection" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewProjection" VALUE_0="1.677658" VALUE_1="0.911789" VALUE_2="-1.141714" VALUE_3="-0.000001" VALUE_4="-1.293630" VALUE_5="-0.163887" VALUE_6="-2.031770" VALUE_7="-0.000498" VALUE_8="-0.380136" VALUE_9="0.910537" VALUE_10="0.168588" VALUE_11="226.851425" VALUE_12="-0.379756" VALUE_13="0.909627" VALUE_14="0.168420" VALUE_15="227.624573"/>
+    <RmMatrixVariable NAME="matViewProjection" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewProjection" VALUE_0="-0.186727" VALUE_1="0.056343" VALUE_2="-2.216160" VALUE_3="-0.000001" VALUE_4="2.332079" VALUE_5="-0.587479" VALUE_6="-0.211430" VALUE_7="-0.000067" VALUE_8="-0.244868" VALUE_9="-0.970581" VALUE_10="-0.004044" VALUE_11="132.448425" VALUE_12="-0.244623" VALUE_13="-0.969610" VALUE_14="-0.004040" VALUE_15="133.315979"/>
     <RmVectorVariable NAME="vViewPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="ViewPosition" VALUE_0="0.000000" VALUE_1="0.000000" VALUE_2="0.000000" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
     <RmDynamicVariable NAME="fvLightPosition" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VARIABLE_TYPE="FLOAT" ROWS="3" COLUMNS="1" FIXED_SIZE="TRUE" MIN="-100.000000" MAX="100.000000" CLAMP="TRUE" NORMALIZE="FALSE">
      <RmDynamicVariableValueContainer>
@@ -1487,7 +1487,7 @@ float4 ps_main(PS_INPUT Input) : COLOR0
       <RmDynamicVariableValue ROW_INDEX="2" COLUMN_INDEX="0" VALUE="0.000000"/>
      </RmDynamicVariableValueContainer>
     </RmDynamicVariable>
-    <RmMatrixVariable NAME="matView" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="View" VALUE_0="0.754097" VALUE_1="0.409843" VALUE_2="-0.513193" VALUE_3="-0.000000" VALUE_4="-0.535839" VALUE_5="-0.067884" VALUE_6="-0.841587" VALUE_7="-0.000206" VALUE_8="-0.379756" VALUE_9="0.909627" VALUE_10="0.168420" VALUE_11="227.624573" VALUE_12="0.000000" VALUE_13="0.000000" VALUE_14="0.000000" VALUE_15="1.000000"/>
+    <RmMatrixVariable NAME="matView" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="View" VALUE_0="-0.083932" VALUE_1="0.025326" VALUE_2="-0.996150" VALUE_3="-0.000000" VALUE_4="0.965979" VALUE_5="-0.243342" VALUE_6="-0.087577" VALUE_7="-0.000028" VALUE_8="-0.244623" VALUE_9="-0.969610" VALUE_10="-0.004040" VALUE_11="133.315979" VALUE_12="0.000000" VALUE_13="0.000000" VALUE_14="0.000000" VALUE_15="1.000000"/>
     <RmVectorVariable NAME="fAmbientIntensity" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE_0="0.500000" VALUE_1="0.500000" VALUE_2="0.500000" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
     <RmVectorVariable NAME="fDiffuseIntensity" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE_0="0.500000" VALUE_1="0.500000" VALUE_2="0.500000" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
     <RmVectorVariable NAME="fSpecularIntensity" API="" ARTIST_EDITABLE="FALSE" VARIABLE_SEMANTIC="" VALUE_0="0.500000" VALUE_1="0.500000" VALUE_2="0.500000" VALUE_3="1.000000" MIN="-10.000000" MAX="10.000000" CLAMP="FALSE" NORMALIZE="FALSE"/>
@@ -1585,11 +1585,11 @@ float4 ps_main(PS_INPUT Input) : COLOR0
    Input.LightDir = normalize( Input.LightDir );
    Input.ViewDir  = normalize( Input.ViewDir );
    float  fDepth = tex2D( sDepthMap, Input.Tex ).r;
-   float2 vDepthProj = fDepth * Input.ViewDir.xy / Input.ViewDir.z  * 0.1f;
+   float2 deltaTex = fDepth * Input.ViewDir.xy / Input.ViewDir.z  * 0.1f;
    
-   float2 parallaxTex = Input.Tex - vDepthProj;
-   float4 cColor = tex2D( sColorMap, parallaxTex );
-   float3 vNormal = normalize( tex2D( sNormalMap, parallaxTex).xyz * 2 - 1.0f);
+   float2 palxTex = Input.Tex - deltaTex;
+   float4 cColor = tex2D( sColorMap, palxTex );
+   float3 vNormal = normalize( tex2D( sNormalMap, palxTex).xyz * 2 - 1.0f);
    
    
    float LdotN  = max( 0, dot( vNormal, Input.LightDir ) );
@@ -1605,13 +1605,7 @@ float4 ps_main(PS_INPUT Input) : COLOR0
 
 
 
-]]></RmShaderCode>
-      <RmSampler NAME="sColorMap" API="" REGISTER="0"/>
-      <RmSampler NAME="sDepthMap" API="" REGISTER="1"/>
-      <RmSampler NAME="sNormalMap" API="" REGISTER="2"/>
-      <RmShaderConstant NAME="fSpecularIntensity" API="" REGISTER="1"/>
-      <RmShaderConstant NAME="fDiffuseIntensity" API="" REGISTER="0"/>
-     </RmHLSLShader>
+]]></RmShaderCode></RmHLSLShader>
      <RmStreamMapReference NAME="Stream Mapping" API=""/>
      <RmTextureObject NAME="sColorMap" API="D3D" STATE_INDEX="0" VERTEX_TEXTURE="FALSE">
       <RmTextureReference NAME="brick_color" API=""/>
