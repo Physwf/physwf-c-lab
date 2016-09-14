@@ -13,7 +13,7 @@ bool Toy3D::Application::Initialize()
 {
 	int screenW = 0; int screenH = 0;
 	InitializeWindows(screenW, screenH);
-	InitDXC(m_hwnd, screenW, screenH);
+	InitDX(m_hwnd, screenW, screenH);
 	return true;
 }
 
@@ -79,7 +79,7 @@ LRESULT Toy3D::Application::MessageHandler(HWND hwnd, UINT umsg, WPARAM wParam, 
 
 bool Toy3D::Application::Frame()
 {
-	RenderDXC();
+	RenderDX();
 	return false;
 }
 

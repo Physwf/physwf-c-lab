@@ -21,6 +21,7 @@ extern UINT GMAXXQuality4x;
 extern ID3D11RenderTargetView* GRenderTargetView;
 extern ID3D11DepthStencilView* GDepthStencilView;
 
-HRESULT InitDXC(HWND hWnd, int BufferWidth, int BufferHeight);
-void RenderDXC();
+HRESULT InitDX(HWND hWnd, int BufferWidth, int BufferHeight);
+void RenderDX();
+void ReleaseDX();
 

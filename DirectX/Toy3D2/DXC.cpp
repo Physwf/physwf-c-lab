@@ -9,7 +9,7 @@ ID3D11Texture2D* GDepthStencilBuffer;
 ID3D11DepthStencilView* GDepthStencilView;
 FLOAT GClearColor[] = { 0.0f,0.0f,0.6f,0.0f };
 
-HRESULT InitDXC(HWND hWnd, int BufferWidth, int BufferHeight)
+HRESULT InitDX(HWND hWnd, int BufferWidth, int BufferHeight)
 {
 	/*Create Device*/
 	D3D_FEATURE_LEVEL FetureLevels[] = {
@@ -97,9 +97,14 @@ HRESULT InitDXC(HWND hWnd, int BufferWidth, int BufferHeight)
 	return S_OK;
 }
 
-void RenderDXC()
+void RenderDX()
 {
 	GImmediateContext->ClearRenderTargetView(GRenderTargetView, GClearColor);
 	GImmediateContext->ClearDepthStencilView(GDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	GSwapChain->Present(0, 0);
+}
+
+void ReleaseDX()
+{
+	
 }
